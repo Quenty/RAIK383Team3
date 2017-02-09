@@ -1,4 +1,4 @@
-- # Release candidates
+# Release candidates
 Release candidates emerge in develop when a good, stable set of features have been merged in, and their integration tested. Each release candidate will be pushed to the master branch where I can review it (at the two checkpoints during implementation later in the term). That way, while I review your master versions, you can continue working on your develop versions. 
 
 # Requirements folder
