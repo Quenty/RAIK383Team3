@@ -4,11 +4,17 @@ namespace PracticalWerewolf.Models
 {
     public interface IContractorInfo
     {
+        ITruck Truck { get; set; }
+        Boolean isAvailable { get; set; }
     }
 
     public interface ICustomerInfo
     {
-        
+        IBillingInfo BillingInfo { get; set; }
+    }
+
+    public interface IBillingInfo
+    {
     }
 
     public interface IEmployeeInfo
