@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Device.Location;
 
 namespace PracticalWerewolf.Models
 {
