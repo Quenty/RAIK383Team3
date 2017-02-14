@@ -173,6 +173,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\IdentityInterfaces.cs" />
     <Compile Include="Migrations\201701292303341_InitialCreate.cs" />
     <Compile Include="Migrations\201701292303341_InitialCreate.Designer.cs">
       <DependentUpon>201701292303341_InitialCreate.cs</DependentUpon>
