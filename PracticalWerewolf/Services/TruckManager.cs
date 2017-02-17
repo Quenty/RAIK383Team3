@@ -9,11 +9,11 @@ namespace PracticalWerewolf.Services
 {
     public class TruckManager : ITruckManager
     {
-        private ITruckStore truckStore;
+        private ITruckStore TruckStore;
 
         public TruckManager(ITruckStore store)
         {
-            truckStore = store;
+            TruckStore = store;
         }
     }
 }

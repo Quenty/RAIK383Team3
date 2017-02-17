@@ -9,11 +9,11 @@ namespace PracticalWerewolf.Services
 {
     public class OrderManager : IOrderManager
     {
-        private IOrderStore orderStore;
+        private IOrderStore OrderStore;
 
         public OrderManager(IOrderStore store)
         {
-            orderStore = store;
+            OrderStore = store;
         }
     }
 }

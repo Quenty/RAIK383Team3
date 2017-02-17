@@ -7,13 +7,13 @@ using System.Web;
 
 namespace PracticalWerewolf.Services
 {
-    public class ContractorManager : UserManager, IContractorManager
+    public class ContractorManager : IContractorManager
     {
-        private IContractorStore contractorStore;
+        private IContractorStore ContractorStore;
 
-        public ContractorManager(IContractorStore store) : base(store)
+        public ContractorManager(IContractorStore store)
         {
-            contractorStore = store;
+            ContractorStore = store;
         }
     }
 }

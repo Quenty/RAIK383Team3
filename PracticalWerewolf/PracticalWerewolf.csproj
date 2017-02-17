@@ -211,10 +211,8 @@
     <Compile Include="Repository\Interfaces\IEmployeeStore.cs" />
     <Compile Include="Repository\Interfaces\IOrderStore.cs" />
     <Compile Include="Repository\Interfaces\ITruckStore.cs" />
-    <Compile Include="Repository\Interfaces\IUserStore.cs" />
     <Compile Include="Repository\OrderStore.cs" />
     <Compile Include="Repository\TruckStore.cs" />
-    <Compile Include="Repository\UserStore.cs" />
     <Compile Include="Services\ContractorManager.cs" />
     <Compile Include="Services\CustomerManager.cs" />
     <Compile Include="Services\EmployeeManager.cs" />
@@ -223,10 +221,8 @@
     <Compile Include="Services\Interfaces\IEmployeeManager.cs" />
     <Compile Include="Services\Interfaces\IOrderManager.cs" />
     <Compile Include="Services\Interfaces\ITruckManager.cs" />
-    <Compile Include="Services\Interfaces\IUserManager.cs" />
     <Compile Include="Services\OrderManager.cs" />
     <Compile Include="Services\TruckManager.cs" />
-    <Compile Include="Services\UserManager.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>

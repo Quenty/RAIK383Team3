@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PracticalWerewolf.Repository.Interfaces
 {
-    public interface ICustomerStore : IUserStore 
+    public interface ICustomerStore
     {
     }
 }

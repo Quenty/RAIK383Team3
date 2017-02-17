@@ -7,8 +7,12 @@ using System.Web;
 
 namespace PracticalWerewolf.Repository
 {
-    public class ContractorStore : UserStore, IContractorStore
+    public class ContractorStore : IContractorStore
     {
-        public ContractorStore(ApplicationDbContext dbContext) : base(dbContext){ }
+        private ApplicationDbContext Db;
+        public ContractorStore(ApplicationDbContext dbContext)
+        {
+            Db = dbContext;
+        }
     }
 }

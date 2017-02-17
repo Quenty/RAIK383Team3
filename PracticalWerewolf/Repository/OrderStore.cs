@@ -9,11 +9,11 @@ namespace PracticalWerewolf.Repository
 {
     public class OrderStore : IOrderStore
     {
-        private ApplicationDbContext db;
+        private ApplicationDbContext Db;
 
         public OrderStore(ApplicationDbContext dbContext)
         {
-            this.db = dbContext;
+            this.Db = dbContext;
         }
     }
 }

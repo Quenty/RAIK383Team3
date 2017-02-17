@@ -9,11 +9,11 @@ namespace PracticalWerewolf.Repository
 {
     public class TruckStore : ITruckStore
     {
-        private ApplicationDbContext db;
+        private ApplicationDbContext Db;
 
         public TruckStore(ApplicationDbContext dbContext)
         {
-            this.db = dbContext;
+            this.Db = dbContext;
         }
     }
 }
