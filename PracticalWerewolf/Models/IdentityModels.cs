@@ -10,11 +10,11 @@ namespace PracticalWerewolf.Models
     public class ApplicationUser : IdentityUser
     {
 
-        public IContractorInfo ContractorInfo { get; set; }
-        public ICustomerInfo CustomerInfo { get; set; }
-        public IEmployeeInfo EmployeeInfo { get; set; }
-        public IUserInfo UserInfo { get; set; }
-        public IPermission Permissions { get; set; }
+        public virtual IContractorInfo ContractorInfo { get; set; }
+        public virtual ICustomerInfo CustomerInfo { get; set; }
+        public virtual IEmployeeInfo EmployeeInfo { get; set; }
+        public virtual IUserInfo UserInfo { get; set; }
+        public virtual IPermission Permissions { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
