@@ -21,18 +21,13 @@ namespace PracticalWerewolf.Models
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Add custom user claims here
+
             return userIdentity;
         }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public DbSet<IContractorInfo> ContractorInfo { get; set; }
-        public DbSet<ICustomerInfo> CustomerInfo { get; set; }
-        public DbSet<IEmployeeInfo> EmployeeInfo { get; set; }
-        public DbSet<IUserInfo> UserInfo { get; set; }
-        public DbSet<IPermission> Permissions { get; set; }
-
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
