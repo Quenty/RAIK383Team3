@@ -183,11 +183,18 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ContractorManager.cs" />
+    <Compile Include="Services\CustomerManager.cs" />
+    <Compile Include="Services\EmployeeManager.cs" />
     <Compile Include="Services\Interfaces\IContractorManager.cs" />
     <Compile Include="Services\Interfaces\ICustomerManager.cs" />
     <Compile Include="Services\Interfaces\IEmployeeManager.cs" />
     <Compile Include="Services\Interfaces\IOrderManager.cs" />
+    <Compile Include="Services\Interfaces\ITruckManager.cs" />
     <Compile Include="Services\Interfaces\IUserManager.cs" />
+    <Compile Include="Services\OrderManager.cs" />
+    <Compile Include="Services\TruckManager.cs" />
+    <Compile Include="Services\UserManager.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
