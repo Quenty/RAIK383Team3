@@ -27,6 +27,12 @@ namespace PracticalWerewolf.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        public DbSet<IContractorInfo> ContractorInfo { get; set; }
+        public DbSet<ICustomerInfo> CustomerInfo { get; set; }
+        public DbSet<IEmployeeInfo> EmployeeInfo { get; set; }
+        public DbSet<IUserInfo> UserInfo { get; set; }
+        public DbSet<IPermission> Permissions { get; set; }
+
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
