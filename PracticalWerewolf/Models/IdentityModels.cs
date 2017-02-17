@@ -25,21 +25,6 @@ namespace PracticalWerewolf.Models
         }
     }
 
-    public class ContractorInfo : IContractorInfo
-    {
-        
-    }
-
-    public class CustomerInfo : ICustomerInfo 
-    {
-
-    }
-
-    public class EmployeeInfo : IEmployeeInfo
-    {
-
-    }
-
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
