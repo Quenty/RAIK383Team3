@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PracticalWerewolf.Services.Interfaces
+namespace PracticalWerewolf.Repository.Interfaces
 {
-    interface ICustomerManager
+    public interface IEmployeeStore
     {
     }
 }
