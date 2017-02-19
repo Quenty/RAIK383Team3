@@ -14,7 +14,6 @@ namespace PracticalWerewolf.Models
         public virtual ICustomerInfo CustomerInfo { get; set; }
         public virtual IEmployeeInfo EmployeeInfo { get; set; }
         public virtual IUserInfo UserInfo { get; set; }
-        public virtual IPermission Permissions { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
