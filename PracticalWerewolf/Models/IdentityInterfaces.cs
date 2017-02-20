@@ -2,6 +2,14 @@
 
 namespace PracticalWerewolf.Models
 {
+    public interface IApplicationUser
+    {
+        IContractorInfo ContractorInfo { get; set; } 
+        ICustomerInfo CustomerInfo { get; set; }
+        IEmployeeInfo EmployeeInfo { get; set; }
+        IUserInfo UserInfo { get; set; }
+    }
+
     public interface IContractorInfo
     {
         ITruck Truck { get; set; }
