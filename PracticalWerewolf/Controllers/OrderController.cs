@@ -85,5 +85,23 @@ namespace PracticalWerewolf.Controllers
                 return View();
             }
         }
+
+        public ActionResult ContractorOrders(int id)
+        {
+            //Details on all the shipments for a contractor
+            return View();
+        }
+
+        public ActionResult RejectOrder(int id)
+        {
+            //contractor has rejected offer and now we must find a new persona
+            return View();
+        }
+
+        public ActionResult UpdateOrder(int id)
+        {
+            //contractor sends in the order deliever confirmation or updates status
+            return View();
+        }
     }
 }
