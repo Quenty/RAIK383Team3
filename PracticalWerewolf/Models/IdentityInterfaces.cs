@@ -13,7 +13,7 @@ namespace PracticalWerewolf.Models
     public interface IContractorInfo
     {
         ITruck Truck { get; set; }
-        Boolean isAvailable { get; set; }
+        Boolean IsAvailable { get; set; }
     }
 
     public interface ICustomerInfo
@@ -33,11 +33,5 @@ namespace PracticalWerewolf.Models
     {
         string FirstName { get; set; }
         string LastName { get; set; }        
-    }
-
-    public interface IPermission
-    {
-        Boolean Read { get; set; }
-        Boolean Write { get; set; }
     }
 }
