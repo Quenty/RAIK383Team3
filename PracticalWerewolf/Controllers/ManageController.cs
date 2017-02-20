@@ -99,6 +99,30 @@ namespace PracticalWerewolf.Controllers
             return RedirectToAction("ManageLogins", new { Message = message });
         }
 
+        public ActionResult ViewUsers()
+        {
+            //Get list of all users
+            return View();
+        }
+
+        public ActionResult ContractorShipments(int id)
+        {
+            //Details on all the shipments for a contractor
+            return View();
+        }
+
+        public ActionResult RejectOffer(int id)
+        {
+            //contractor has rejected offer and now we must find a new persona
+            return View();
+        }
+
+        public ActionResult UpdateOrder(int id)
+        {
+            //contractor sends in the order deliever confirmation or updates status
+            return View();
+        }
+
         //
         // GET: /Manage/AddPhoneNumber
         public ActionResult AddPhoneNumber()
