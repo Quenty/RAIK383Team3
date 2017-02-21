@@ -9,15 +9,17 @@ using System.ComponentModel.DataAnnotations;
 using PracticalWerewolf.Models.UserInfos;
 using PracticalWerewolf.Models.Trucks;
 using PracticalWerewolf.Models.Orders;
+using PracticalWerewolf.Stores.Interfaces;
+using PracticalWerewolf.Stores.Interfaces.Contexts;
 
 namespace PracticalWerewolf.Models
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser, IApplicationUser
     {
         public virtual ContractorInfo ContractorInfo { get; set; }
         public virtual CustomerInfo CustomerInfo { get; set; }
         public virtual EmployeeInfo EmployeeInfo { get; set; }
-        public virtual UserInfo UserInfo { get; set; } // 1-1
+        public virtual UserInfo UserInfo { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
@@ -30,19 +32,19 @@ namespace PracticalWerewolf.Models
     }
 
 
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IOrderDbContext, IUserInfoContext, ITruckDbContext
     {
-        DbSet<CustomerInfo> CustomerInfo { get; set; }
-        DbSet<UserInfo> UserInfo { get; set; }
-        DbSet<EmployeeInfo> EmployeeInfo { get; set; }
-        DbSet<ContractorInfo> ContractorInfo { get; set; }
+        public DbSet<CustomerInfo> CustomerInfo { get; set; }
+        public DbSet<UserInfo> UserInfo { get; set; }
+        public DbSet<EmployeeInfo> EmployeeInfo { get; set; }
+        public DbSet<ContractorInfo> ContractorInfo { get; set; }
 
-        DbSet<Truck> Truck { get; set; }
-        DbSet<TruckCapacityUnit> TruckCapacityUnit { get; set; }
+        public DbSet<Truck> Truck { get; set; }
+        public DbSet<TruckCapacityUnit> TruckCapacityUnit { get; set; }
 
-        DbSet<Order> Order { get; set; }
-        DbSet<OrderRequestInfo> OrderRequestInfo { get; set; }
-        DbSet<OrderTrackInfo> OrderTrackInfo { get; set; }
+        public DbSet<Order> Order { get; set; }
+        public DbSet<OrderRequestInfo> OrderRequestInfo { get; set; }
+        public DbSet<OrderTrackInfo> OrderTrackInfo { get; set; }
 
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
