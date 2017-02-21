@@ -1,67 +1,70 @@
 ﻿using PracticalWerewolf.Models;
-using PracticalWerewolf.Repository.Interfaces;
+using PracticalWerewolf.Models.Orders;
+using PracticalWerewolf.Models.Trucks;
+using PracticalWerewolf.Stores.Interfaces;
+using PracticalWerewolf.Stores.Interfaces.Contexts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace PracticalWerewolf.Repository
+namespace PracticalWerewolf.Stores
 {
     public class OrderStore : IOrderStore
     {
-        private ApplicationDbContext Db;
+        private IOrderDbContext context;
 
-        public OrderStore(ApplicationDbContext dbContext)
+        public OrderStore(IOrderDbContext orderDbContext)
         {
-            this.Db = dbContext;
+            context = orderDbContext;
         }
 
-        public void Add(IEnumerable<IOrder> orderList)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Add(IOrder order)
+        public void Add(IEnumerable<Order> orderList)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(IEnumerable<IOrder> orderList)
+        public void Add(Order order)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(IOrder order)
+        public void Delete(IEnumerable<Order> orderList)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IOrder> Get()
+        public void Delete(Order order)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IOrder> Get(IEnumerable<Guid> guids)
+        public IEnumerable<Order> Get()
         {
             throw new NotImplementedException();
         }
 
-        public IOrder Get(Guid guid)
+        public IEnumerable<Order> Get(IEnumerable<Guid> guids)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IOrder> GetByTruck(ITruck truck)
+        public Order Get(Guid guid)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(IEnumerable<IOrder> orderList)
+        public IEnumerable<Order> GetByTruck(Truck truck)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(IOrder order)
+        public void Update(IEnumerable<Order> orderList)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(Order order)
         {
             throw new NotImplementedException();
         }

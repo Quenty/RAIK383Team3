@@ -1,42 +1,43 @@
 ﻿using PracticalWerewolf.Models;
+using PracticalWerewolf.Models.UserInfos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PracticalWerewolf.Repository.Interfaces
+namespace PracticalWerewolf.Stores.Interfaces
 {
     public interface ICustomerStore
     {
         //Get all CustomerInfo
-        IEnumerable<ICustomerInfo> Get();
+        IEnumerable<CustomerInfo> Get();
 
         //Get CustomerInfo by guid
-        ICustomerInfo Get(Guid guid);
+        CustomerInfo Get(Guid guid);
 
         //Batch Get CustomerInfo by guid
-        IEnumerable<ICustomerInfo> Get(IEnumerable<Guid> guids);
+        IEnumerable<CustomerInfo> Get(IEnumerable<Guid> guids);
 
         //Get User by CustomerInfo guid
         IApplicationUser GetUser(Guid guid);
 
         //Add CustomerInfo
-        void Add(ICustomerInfo customerInfo);
+        void Add(CustomerInfo customerInfo);
 
         //Batch Add CustomerInfo
-        void Add(IEnumerable<ICustomerInfo> customerInfoList);
+        void Add(IEnumerable<CustomerInfo> customerInfoList);
 
         //Update CustomerInfo
-        void Update(ICustomerInfo customerInfo);
+        void Update(CustomerInfo customerInfo);
 
         //Batch Update CustomerInfo
-        void Update(IEnumerable<ICustomerInfo> customerInfoList);
+        void Update(IEnumerable<CustomerInfo> customerInfoList);
 
         //Delete CustomerInfo
-        void Delete(ICustomerInfo customerInfo);
+        void Delete(CustomerInfo customerInfo);
 
         //Batch DeleteContactorInfo
-        void Delete(IEnumerable<ICustomerInfo> customerInfoList);
+        void Delete(IEnumerable<CustomerInfo> customerInfoList);
     }
 }

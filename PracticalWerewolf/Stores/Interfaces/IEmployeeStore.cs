@@ -1,42 +1,43 @@
 ﻿using PracticalWerewolf.Models;
+using PracticalWerewolf.Models.UserInfos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PracticalWerewolf.Repository.Interfaces
+namespace PracticalWerewolf.Stores.Interfaces
 {
     public interface IEmployeeStore
     {
         //Get all EmployeeInfo
-        IEnumerable<IEmployeeInfo> Get();
+        IEnumerable<EmployeeInfo> Get();
 
         //Get EmployeeInfo by guid
-        IEmployeeInfo Get(Guid guid);
+        EmployeeInfo Get(Guid guid);
 
         //Batch Get EmployeeInfo by guid
-        IEnumerable<IEmployeeInfo> Get(IEnumerable<Guid> guids);
+        IEnumerable<EmployeeInfo> Get(IEnumerable<Guid> guids);
 
         //Get User by EmployeeInfo guid
         IApplicationUser GetUser(Guid guid);
 
         //Add EmployeeInfo
-        void Add(IEmployeeInfo employeeInfo);
+        void Add(EmployeeInfo employeeInfo);
 
         //Batch Add EmployeeInfo
-        void Add(IEnumerable<IEmployeeInfo> employeeInfoList);
+        void Add(IEnumerable<EmployeeInfo> employeeInfoList);
 
         //Update EmployeeInfo
-        void Update(IEmployeeInfo employeeInfo);
+        void Update(EmployeeInfo employeeInfo);
 
         //Batch Update EmployeeInfo
-        void Update(IEnumerable<IEmployeeInfo> employeeInfoList);
+        void Update(IEnumerable<EmployeeInfo> employeeInfoList);
 
         //Delete EmployeeInfo
-        void Delete(IEmployeeInfo employeeInfo);
+        void Delete(EmployeeInfo employeeInfo);
 
         //Batch DeleteContactorInfo
-        void Delete(IEnumerable<IEmployeeInfo> employeeInfoList);
+        void Delete(IEnumerable<EmployeeInfo> employeeInfoList);
     }
 }

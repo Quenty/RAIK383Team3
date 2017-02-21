@@ -1,4 +1,4 @@
-﻿using PracticalWerewolf.Repository.Interfaces;
+﻿using PracticalWerewolf.Stores.Interfaces;
 using PracticalWerewolf.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -7,11 +7,11 @@ using System.Web;
 
 namespace PracticalWerewolf.Services
 {
-    public class OrderManager : IOrderManager
+    public class OrderService : IOrderManager
     {
         private IOrderStore OrderStore;
 
-        public OrderManager(IOrderStore store)
+        public OrderService(IOrderStore store)
         {
             OrderStore = store;
         }

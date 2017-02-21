@@ -1,39 +1,40 @@
 ﻿using PracticalWerewolf.Models;
+using PracticalWerewolf.Models.Trucks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PracticalWerewolf.Repository.Interfaces
+namespace PracticalWerewolf.Stores.Interfaces
 {
     public interface ITruckStore
     {
         //Get all Truck
-        List<ITruck> Get();
+        List<Truck> Get();
 
         //Get Truck by guid
-        ITruck Get(Guid guid);
+        Truck Get(Guid guid);
 
         //Batch Get Trucks by guid
-        IEnumerable<ITruck> Get(IEnumerable<Guid> guids);
+        IEnumerable<Truck> Get(IEnumerable<Guid> guids);
 
         //Add Truck
-        void Add(ITruck truck);
+        void Add(Truck truck);
 
         //Batch Add Truck
-        void Add(IEnumerable<ITruck> truckList);
+        void Add(IEnumerable<Truck> truckList);
 
         //Update Truck
-        void Update(ITruck truck);
+        void Update(Truck truck);
 
         //Batch Update Truck
-        void Update(IEnumerable<ITruck> truckList);
+        void Update(IEnumerable<Truck> truckList);
 
         //Delete Truck
-        void Delete(ITruck Truck);
+        void Delete(Truck Truck);
 
         //Batch DeleteContactorInfo
-        void Delete(IEnumerable<ITruck> truckList);
+        void Delete(IEnumerable<Truck> truckList);
     }
 }
