@@ -41,6 +41,11 @@ namespace PracticalWerewolf.Repository
             throw new NotImplementedException();
         }
 
+        public IEnumerable<ITruck> Get(IEnumerable<Guid> guids)
+        {
+            throw new NotImplementedException();
+        }
+
         public ITruck Get(Guid guid)
         {
             throw new NotImplementedException();

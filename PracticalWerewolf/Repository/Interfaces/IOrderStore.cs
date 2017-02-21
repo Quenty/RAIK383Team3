@@ -15,6 +15,9 @@ namespace PracticalWerewolf.Repository.Interfaces
         //Get Order by guid
         IOrder Get(Guid guid);
 
+        //Batch Get Orders by guid
+        IEnumerable<IOrder> Get(IEnumerable<Guid> guids);
+
         //Get Order by truck
         IEnumerable<IOrder> GetByTruck(ITruck truck);
 

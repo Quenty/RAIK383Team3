@@ -15,6 +15,9 @@ namespace PracticalWerewolf.Repository.Interfaces
         //Get Truck by guid
         ITruck Get(Guid guid);
 
+        //Batch Get Trucks by guid
+        IEnumerable<ITruck> Get(IEnumerable<Guid> guids);
+
         //Add Truck
         void Add(ITruck truck);
 

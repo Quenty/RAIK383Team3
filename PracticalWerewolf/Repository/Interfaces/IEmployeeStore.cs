@@ -15,6 +15,9 @@ namespace PracticalWerewolf.Repository.Interfaces
         //Get EmployeeInfo by guid
         IEmployeeInfo Get(Guid guid);
 
+        //Batch Get EmployeeInfo by guid
+        IEnumerable<IEmployeeInfo> Get(IEnumerable<Guid> guids);
+
         //Get User by EmployeeInfo guid
         IApplicationUser GetUser(Guid guid);
 
