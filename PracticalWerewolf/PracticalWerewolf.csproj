@@ -191,18 +191,30 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\IdentityInterfaces.cs" />
     <Compile Include="Migrations\201701292303341_InitialCreate.cs" />
     <Compile Include="Migrations\201701292303341_InitialCreate.Designer.cs">
       <DependentUpon>201701292303341_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702212009454_BasicDataClasses.cs" />
+    <Compile Include="Migrations\201702212009454_BasicDataClasses.Designer.cs">
+      <DependentUpon>201702212009454_BasicDataClasses.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702212013150_BasicDataClassesFixed.cs" />
+    <Compile Include="Migrations\201702212013150_BasicDataClassesFixed.Designer.cs">
+      <DependentUpon>201702212013150_BasicDataClassesFixed.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\UserInfos\ContractorInfo.cs" />
+    <Compile Include="Models\UserInfos\UserInfo.cs" />
+    <Compile Include="Models\UserInfos\EmployeeInfo.cs" />
+    <Compile Include="Models\UserInfos\CustomerInfo.cs" />
+    <Compile Include="Models\Orders\OrderRequestInfo.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\OrderInterfaces.cs" />
-    <Compile Include="Models\TruckInterfaces.cs" />
-    <Compile Include="Models\TruckModels.cs" />
+    <Compile Include="Models\Orders\Order.cs" />
+    <Compile Include="Models\Orders\OrderTrackInfo.cs" />
+    <Compile Include="Models\Trucks\Truck.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\ContractorStore.cs" />
     <Compile Include="Repository\CustomerStore.cs" />
@@ -235,6 +247,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="ClassDiagram1.cd" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -297,6 +310,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201701292303341_InitialCreate.resx">
       <DependentUpon>201701292303341_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702212009454_BasicDataClasses.resx">
+      <DependentUpon>201702212009454_BasicDataClasses.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702212013150_BasicDataClassesFixed.resx">
+      <DependentUpon>201702212013150_BasicDataClassesFixed.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
