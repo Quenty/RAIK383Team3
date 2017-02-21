@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using PracticalWerewolf.Models;
 
 namespace PracticalWerewolf.Services
 {
@@ -14,6 +15,26 @@ namespace PracticalWerewolf.Services
         public TruckManager(ITruckStore store)
         {
             TruckStore = store;
+        }
+
+        public void CreateTruck(ITruck truck)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteTruck(Guid orderGuid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ITruck GetTruck(Guid orderGuid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateTruck(ITruck truck)
+        {
+            throw new NotImplementedException();
         }
     }
 }
