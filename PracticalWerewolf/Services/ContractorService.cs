@@ -1,4 +1,4 @@
-﻿using PracticalWerewolf.Repository.Interfaces;
+﻿using PracticalWerewolf.Stores.Interfaces;
 using PracticalWerewolf.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -7,11 +7,11 @@ using System.Web;
 
 namespace PracticalWerewolf.Services
 {
-    public class ContractorManager : IContractorManager
+    public class ContractorService : IContractorService
     {
         private IContractorStore ContractorStore;
 
-        public ContractorManager(IContractorStore store)
+        public ContractorService(IContractorStore store)
         {
             ContractorStore = store;
         }

@@ -19,8 +19,8 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
@@ -193,38 +193,56 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\IdentityInterfaces.cs" />
     <Compile Include="Migrations\201701292303341_InitialCreate.cs" />
     <Compile Include="Migrations\201701292303341_InitialCreate.Designer.cs">
       <DependentUpon>201701292303341_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702212009454_BasicDataClasses.cs" />
+    <Compile Include="Migrations\201702212009454_BasicDataClasses.Designer.cs">
+      <DependentUpon>201702212009454_BasicDataClasses.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702212013150_BasicDataClassesFixed.cs" />
+    <Compile Include="Migrations\201702212013150_BasicDataClassesFixed.Designer.cs">
+      <DependentUpon>201702212013150_BasicDataClassesFixed.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\IApplicationUser.cs" />
+    <Compile Include="Models\IUserInfoContext.cs" />
+    <Compile Include="Stores\Interfaces\Contexts\ITruckDbContext.cs" />
+    <Compile Include="Stores\Interfaces\Contexts\IUserInfoDbContext.cs" />
+    <Compile Include="Stores\Interfaces\Contexts\IOrderDbContext.cs" />
+    <Compile Include="Models\UserInfos\ContractorInfo.cs" />
+    <Compile Include="Models\UserInfos\UserInfo.cs" />
+    <Compile Include="Models\UserInfos\EmployeeInfo.cs" />
+    <Compile Include="Models\UserInfos\CustomerInfo.cs" />
+    <Compile Include="Models\Orders\OrderRequestInfo.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\OrderInterfaces.cs" />
-    <Compile Include="Models\TruckInterfaces.cs" />
+    <Compile Include="Models\Orders\Order.cs" />
+    <Compile Include="Models\Orders\OrderTrackInfo.cs" />
+    <Compile Include="Models\Trucks\Truck.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository\ContractorStore.cs" />
-    <Compile Include="Repository\CustomerStore.cs" />
-    <Compile Include="Repository\EmployeeStore.cs" />
-    <Compile Include="Repository\Interfaces\IContractorStore.cs" />
-    <Compile Include="Repository\Interfaces\ICustomerStore.cs" />
-    <Compile Include="Repository\Interfaces\IEmployeeStore.cs" />
-    <Compile Include="Repository\Interfaces\IOrderStore.cs" />
-    <Compile Include="Repository\Interfaces\ITruckStore.cs" />
-    <Compile Include="Repository\OrderStore.cs" />
-    <Compile Include="Repository\TruckStore.cs" />
-    <Compile Include="Services\ContractorManager.cs" />
-    <Compile Include="Services\CustomerManager.cs" />
-    <Compile Include="Services\EmployeeManager.cs" />
+    <Compile Include="Stores\ContractorStore.cs" />
+    <Compile Include="Stores\CustomerStore.cs" />
+    <Compile Include="Stores\EmployeeStore.cs" />
+    <Compile Include="Stores\Interfaces\IContractorStore.cs" />
+    <Compile Include="Stores\Interfaces\ICustomerStore.cs" />
+    <Compile Include="Stores\Interfaces\IEmployeeStore.cs" />
+    <Compile Include="Stores\Interfaces\IOrderStore.cs" />
+    <Compile Include="Stores\Interfaces\ITruckStore.cs" />
+    <Compile Include="Stores\OrderStore.cs" />
+    <Compile Include="Stores\TruckStore.cs" />
+    <Compile Include="Services\ContractorService.cs" />
+    <Compile Include="Services\CustomerService.cs" />
+    <Compile Include="Services\EmployeeService.cs" />
     <Compile Include="Services\Interfaces\IContractorManager.cs" />
     <Compile Include="Services\Interfaces\ICustomerManager.cs" />
     <Compile Include="Services\Interfaces\IEmployeeManager.cs" />
     <Compile Include="Services\Interfaces\IOrderManager.cs" />
     <Compile Include="Services\Interfaces\ITruckManager.cs" />
-    <Compile Include="Services\OrderManager.cs" />
-    <Compile Include="Services\TruckManager.cs" />
+    <Compile Include="Services\OrderService.cs" />
+    <Compile Include="Services\TruckService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -236,6 +254,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="ClassDiagram1.cd" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -299,6 +318,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201701292303341_InitialCreate.resx">
       <DependentUpon>201701292303341_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702212009454_BasicDataClasses.resx">
+      <DependentUpon>201702212009454_BasicDataClasses.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702212013150_BasicDataClassesFixed.resx">
+      <DependentUpon>201702212013150_BasicDataClassesFixed.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
