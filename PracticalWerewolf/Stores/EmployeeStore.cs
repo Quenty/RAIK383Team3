@@ -1,51 +1,53 @@
 ﻿using PracticalWerewolf.Models;
-using PracticalWerewolf.Repository.Interfaces;
+using PracticalWerewolf.Models.UserInfos;
+using PracticalWerewolf.Stores.Interfaces;
+using PracticalWerewolf.Stores.Interfaces.Contexts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace PracticalWerewolf.Repository
+namespace PracticalWerewolf.Stores
 {
-    public class ContractorStore : IContractorStore
+    public class EmployeeStore : IEmployeeStore
     {
-        private ApplicationDbContext Db;
-        public ContractorStore(ApplicationDbContext dbContext)
+        private IUserInfoDbContext context;
+        public EmployeeStore(IUserInfoDbContext userInfoDbContext)
         {
-            Db = dbContext;
+            context = userInfoDbContext;
         }
 
-        public void Add(IEnumerable<IContractorInfo> contractorInfoList)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Add(IContractorInfo contractorInfo)
+        public void Add(IEnumerable<EmployeeInfo> employeeInfoList)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(IEnumerable<IContractorInfo> contractorInfoList)
+        public void Add(EmployeeInfo employeeInfo)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(IContractorInfo contractorInfo)
+        public void Delete(IEnumerable<EmployeeInfo> employeeInfoList)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IContractorInfo> Get()
+        public void Delete(EmployeeInfo employeeInfo)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IContractorInfo> Get(IEnumerable<Guid> guids)
+        public IEnumerable<EmployeeInfo> Get()
         {
             throw new NotImplementedException();
         }
 
-        public IContractorInfo Get(Guid guid)
+        public IEnumerable<EmployeeInfo> Get(IEnumerable<Guid> guids)
+        {
+            throw new NotImplementedException();
+        }
+
+        public EmployeeInfo Get(Guid guid)
         {
             throw new NotImplementedException();
         }
@@ -55,12 +57,12 @@ namespace PracticalWerewolf.Repository
             throw new NotImplementedException();
         }
 
-        public void Update(IEnumerable<IContractorInfo> contractorInfoList)
+        public void Update(IEnumerable<EmployeeInfo> employeeInfoList)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(IContractorInfo contractorInfo)
+        public void Update(EmployeeInfo employeeInfo)
         {
             throw new NotImplementedException();
         }
