@@ -14,5 +14,55 @@ namespace PracticalWerewolf.Repository
         {
             Db = dbContext;
         }
+
+        public void Add(IEnumerable<IEmployeeInfo> employeeInfoList)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Add(IEmployeeInfo employeeInfo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(IEnumerable<IEmployeeInfo> employeeInfoList)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(IEmployeeInfo employeeInfo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<IEmployeeInfo> Get()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<IEmployeeInfo> Get(IEnumerable<Guid> guids)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEmployeeInfo Get(Guid guid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IApplicationUser GetUser(Guid guid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(IEnumerable<IEmployeeInfo> employeeInfoList)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(IEmployeeInfo employeeInfo)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -7,7 +7,7 @@ using PracticalWerewolf.Models;
 
 namespace PracticalWerewolf.Models
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser, IApplicationUser
     {
 
         public virtual IContractorInfo ContractorInfo { get; set; }
