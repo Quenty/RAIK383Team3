@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using PracticalWerewolf.Models;
+using System.ComponentModel.DataAnnotations;
+using PracticalWerewolf.Models.UserInfos;
+using PracticalWerewolf.Models.Trucks;
+using PracticalWerewolf.Models.Orders;
 
 namespace PracticalWerewolf.Models
 {
@@ -25,29 +29,6 @@ namespace PracticalWerewolf.Models
         }
     }
 
-    public class UserInfo : IUserInfo {
-        public System.Guid UserInfoGuid { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-    }
-
-    public class CustomerInfo : ICustomerInfo
-    {
-        public System.Guid CustomerInfoGuid { get; set; }
-        public virtual IBillingInfo BillingInfo { get; set; }
-    }
-
-    public class EmployeeInfo : IEmployeeInfo
-    {
-        public System.Guid CustomerInfoGuid { get; set; }
-    }
-
-    public class ContractorInfo : IContractorInfo
-    {
-        public System.Guid ContractorInfoGuid { get; set; }
-        public virtual ITruck Truck { get; set; }
-        public bool IsAvailable { get; set; }
-    }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
@@ -55,6 +36,13 @@ namespace PracticalWerewolf.Models
         DbSet<UserInfo> UserInfo { get; set; }
         DbSet<EmployeeInfo> EmployeeInfo { get; set; }
         DbSet<ContractorInfo> ContractorInfo { get; set; }
+
+        DbSet<Truck> Truck { get; set; }
+        DbSet<TruckCapacityUnit> TruckCapacityUnit { get; set; }
+
+        DbSet<Order> Order { get; set; }
+        DbSet<OrderRequestInfo> OrderRequestInfo { get; set; }
+        DbSet<OrderTrackInfo> OrderTrackInfo { get; set; }
 
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
