@@ -9,7 +9,7 @@ namespace PracticalWerewolf.Models.UserInfos
     public class EmployeeInfo
     {
         [Key]
-        public Guid CustomerInfoGuid { get; set; }
+        public Guid EmployeeInfoGuid { get; set; }
     }
 
 }
