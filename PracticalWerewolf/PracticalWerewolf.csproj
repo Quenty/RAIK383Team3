@@ -205,6 +205,10 @@
     <Compile Include="Migrations\201702212013150_BasicDataClassesFixed.Designer.cs">
       <DependentUpon>201702212013150_BasicDataClassesFixed.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702242218225_Add-Roles.cs" />
+    <Compile Include="Migrations\201702242218225_Add-Roles.Designer.cs">
+      <DependentUpon>201702242218225_Add-Roles.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\IApplicationUser.cs" />
@@ -324,6 +328,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702212013150_BasicDataClassesFixed.resx">
       <DependentUpon>201702212013150_BasicDataClassesFixed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702242218225_Add-Roles.resx">
+      <DependentUpon>201702242218225_Add-Roles.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
