@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PracticalWerewolf.Services.Interfaces
 {
-    interface IContractorManager
+    interface IContractorService
     {
     }
 }
