@@ -97,19 +97,16 @@ namespace PracticalWerewolf.Controllers
             return RedirectToAction("ManageLogins", new { Message = message });
         }
 
-<<<<<<< HEAD
-        public ActionResult ViewUsers()
-=======
+
         // GET: /Manage/Users
         [Authorize (Roles = "Employees")]
         public ActionResult Users()
->>>>>>> integration
         {
             //Get list of all users
             return View();
         }
 
-<<<<<<< HEAD
+
         public ActionResult ContractorShipments(int id)
         {
             //Details on all the shipments for a contractor
@@ -128,8 +125,6 @@ namespace PracticalWerewolf.Controllers
             return View();
         }
 
-        //
-=======
         // GET: /Manage/Users/5
         [Authorize(Roles = "Employees")]
         public ActionResult Users(int id)
@@ -138,7 +133,6 @@ namespace PracticalWerewolf.Controllers
             return View();
         }
 
->>>>>>> integration
         // GET: /Manage/AddPhoneNumber
         public ActionResult AddPhoneNumber()
         {
