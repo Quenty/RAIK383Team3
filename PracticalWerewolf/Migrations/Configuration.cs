@@ -4,6 +4,7 @@ namespace PracticalWerewolf.Migrations
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
+    using Microsoft.AspNet.Identity.EntityFramework;
 
     internal sealed class Configuration : DbMigrationsConfiguration<PracticalWerewolf.Models.ApplicationDbContext>
     {
@@ -27,6 +28,16 @@ namespace PracticalWerewolf.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
+
+            if (!context.Roles.Any())
+            {
+                context.Roles.AddOrUpdate(
+                        r => r.Name,
+                        new IdentityRole { Name = "Employee" },
+                        new IdentityRole { Name = "Customer" },
+                        new IdentityRole { Name = "Contractor" }
+                    );
+            }
         }
     }
 }
