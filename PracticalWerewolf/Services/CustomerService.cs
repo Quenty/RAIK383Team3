@@ -1,4 +1,4 @@
-﻿using PracticalWerewolf.Repository.Interfaces;
+﻿using PracticalWerewolf.Stores.Interfaces;
 using PracticalWerewolf.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -8,11 +8,11 @@ using PracticalWerewolf.Models;
 
 namespace PracticalWerewolf.Services
 {
-    public class CustomerManager : ICustomerManager
+    public class CustomerService : ICustomerManager
     {
         private ICustomerStore CustomerStore;
 
-        public CustomerManager(ICustomerStore store)
+        public CustomerService(ICustomerStore store)
         {
             CustomerStore = store;
         }

@@ -1,4 +1,4 @@
-﻿using PracticalWerewolf.Repository.Interfaces;
+﻿using PracticalWerewolf.Stores.Interfaces;
 using PracticalWerewolf.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -8,31 +8,31 @@ using PracticalWerewolf.Models;
 
 namespace PracticalWerewolf.Services
 {
-    public class OrderManager : IOrderManager
+    public class TruckService : ITruckManager
     {
-        private IOrderStore OrderStore;
+        private ITruckStore TruckStore;
 
-        public OrderManager(IOrderStore store)
+        public TruckService(ITruckStore store)
         {
-            OrderStore = store;
+            TruckStore = store;
         }
 
-        public void CreateOrder(IOrder order)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeleteOrder(Guid orderGuid)
+        public void CreateTruck(ITruck truck)
         {
             throw new NotImplementedException();
         }
 
-        public IOrder GetOrder(Guid orderGuid)
+        public void DeleteTruck(Guid orderGuid)
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateOrder(IOrder order)
+        public ITruck GetTruck(Guid orderGuid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateTruck(ITruck truck)
         {
             throw new NotImplementedException();
         }
