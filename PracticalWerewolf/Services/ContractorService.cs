@@ -24,17 +24,17 @@ namespace PracticalWerewolf.Services
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Order> GetCurrentOrders()
+        public IEnumerable<Order> GetCurrentOrders(Guid contractorGuid)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Order> GetPreviousOrders()
+        public IEnumerable<Order> GetPreviousOrders(Guid contractorGuid)
         {
             throw new NotImplementedException();
         }
 
-        public void RejectOrder()
+        public void RejectOrder(Guid orderGuid)
         {
             throw new NotImplementedException();
         }
@@ -44,8 +44,9 @@ namespace PracticalWerewolf.Services
             throw new NotImplementedException();
         }
 
-        public CustomerInfo ViewCustomerInfo()
+        public CustomerInfo ViewCustomerInfo(Guid customerInfoGuid)
         {
             throw new NotImplementedException();
         }
     }
+}

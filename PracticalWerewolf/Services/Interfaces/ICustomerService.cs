@@ -15,17 +15,17 @@ namespace PracticalWerewolf.Services.Interfaces
         void CreateOrderRequest(OrderRequestInfo orderRequestInfo);
 
         //See current orders
-        IEnumerable<Order> ViewCurrentOrders();
+        IEnumerable<Order> ViewCurrentOrders(Guid customerInfoId);
 
         //See order history
-        IEnumerable<Order> ViewPreviousOrders();
+        IEnumerable<Order> ViewPreviousOrders(Guid customerInfoId);
 
         //Change billing info
         //void UpdateBillingInfo(BillingInfo billingInfo);
         //TODO?
 
         //Cancel order
-        void DeleteOrder(Guid orderId);
+        void DeleteOrder(Guid orderGuid);
 
         //See billing info
         //IBillingInfo GetBillingInfo();
@@ -34,6 +34,6 @@ namespace PracticalWerewolf.Services.Interfaces
         void ChangeOrder(Order order);
 
         //Cancel order
-        void CancelOrder(Guid orderId);
+        void CancelOrder(Guid orderGuid);
     }
 }

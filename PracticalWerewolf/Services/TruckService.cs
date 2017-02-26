@@ -28,11 +28,6 @@ namespace PracticalWerewolf.Services
             throw new NotImplementedException();
         }
 
-        public Truck GetTruck(Guid orderGuid)
-        {
-            throw new NotImplementedException();
-        }
-
         public void UpdateTruck(Truck truck)
         {
             throw new NotImplementedException();

@@ -18,7 +18,7 @@ namespace PracticalWerewolf.Services
             CustomerStore = store;
         }
 
-        public void CancelOrder(Guid orderId)
+        public void CancelOrder(Guid orderGuid)
         {
             throw new NotImplementedException();
         }
@@ -33,17 +33,17 @@ namespace PracticalWerewolf.Services
             throw new NotImplementedException();
         }
 
-        public void DeleteOrder(Guid orderId)
+        public void DeleteOrder(Guid orderGuid)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Order> ViewCurrentOrders()
+        public IEnumerable<Order> ViewCurrentOrders(Guid customerInfoId)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Order> ViewPreviousOrders()
+        public IEnumerable<Order> ViewPreviousOrders(Guid customerInfoId)
         {
             throw new NotImplementedException();
         }

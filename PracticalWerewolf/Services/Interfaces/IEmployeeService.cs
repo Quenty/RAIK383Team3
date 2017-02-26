@@ -33,7 +33,7 @@ namespace PracticalWerewolf.Services.Interfaces
         void UpdateTruckInfo(Truck truck);
 
         //Approve contractor
-        void ApproveContractor();
+        void ApproveContractor(Guid contractorInfoGuid);
 
         //View users
         IEnumerable<UserInfo> ViewUsers();

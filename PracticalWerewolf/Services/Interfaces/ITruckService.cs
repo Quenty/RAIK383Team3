@@ -11,8 +11,6 @@ namespace PracticalWerewolf.Services.Interfaces
     {
         void CreateTruck(Truck truck);
 
-        Truck GetTruck(Guid orderGuid);
-
         void UpdateTruck(Truck truck);
 
         void DeleteTruck(Guid orderGuid);

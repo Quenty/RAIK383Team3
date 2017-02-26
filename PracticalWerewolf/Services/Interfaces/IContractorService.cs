@@ -12,7 +12,7 @@ namespace PracticalWerewolf.Services.Interfaces
     interface IContractorService
     {
         //View Current Orders
-        IEnumerable<Order> GetCurrentOrders();
+        IEnumerable<Order> GetCurrentOrders(Guid contractorGuid);
  
         //Change Status
         void ChangeContractorStatus(Boolean status);
@@ -21,12 +21,12 @@ namespace PracticalWerewolf.Services.Interfaces
         void UpdateOrderTrackInfo(OrderTrackInfo orderTrackInfo);
 
         //reject Order
-        void RejectOrder();
+        void RejectOrder(Guid orderGuid);
 
         //View Customer Info
-        CustomerInfo ViewCustomerInfo();
+        CustomerInfo ViewCustomerInfo(Guid customerInfoGuid);
 
         //View Current Orders
-        IEnumerable<Order> GetPreviousOrders();
+        IEnumerable<Order> GetPreviousOrders(Guid contractorGuid);
     }
 }

@@ -20,7 +20,7 @@ namespace PracticalWerewolf.Services
             EmployeeStore = store;
         }
 
-        public void ApproveContractor()
+        public void ApproveContractor(Guid contractorInfoGuid)
         {
             throw new NotImplementedException();
         }
