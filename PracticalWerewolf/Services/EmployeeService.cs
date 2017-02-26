@@ -30,7 +30,7 @@ namespace PracticalWerewolf.Services
             throw new NotImplementedException();
         }
 
-        public IEnumerable<UserInfo> SearchUsers(string Query)
+        public IEnumerable<UserInfo> SearchUsers(string query)
         {
             throw new NotImplementedException();
         }
