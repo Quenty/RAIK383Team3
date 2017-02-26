@@ -42,10 +42,6 @@ namespace PracticalWerewolf.Controllers
 
         // POST: Order/Create
         [HttpPost]
-<<<<<<< HEAD
-        public ActionResult Create(FormCollection collection)
-        {
-=======
         [Authorize(Roles = "Customer, Employees")]
         public ActionResult Create(FormCollection collection)
         {
