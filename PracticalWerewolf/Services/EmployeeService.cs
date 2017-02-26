@@ -5,10 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using PracticalWerewolf.Models;
+using PracticalWerewolf.Models.Orders;
+using PracticalWerewolf.Models.Trucks;
+using PracticalWerewolf.Models.UserInfos;
 
 namespace PracticalWerewolf.Services
 {
-    public class EmployeeService : IEmployeeManager
+    public class EmployeeService : IEmployeeService
     {
         private IEmployeeStore EmployeeStore;
 
@@ -22,37 +25,47 @@ namespace PracticalWerewolf.Services
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IOrder> GetOrders()
+        public IEnumerable<Order> SearchOrders(string query)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IUserInfo> GetUser()
+        public IEnumerable<UserInfo> SearchUsers(string Query)
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateContractorInfo(IContractorInfo contractorInfo)
+        public void UpdateContractorInfo(ContractorInfo contractorInfo)
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateCustomerInfo(ICustomerInfo customerInfo)
+        public void UpdateCustomerInfo(CustomerInfo customerInfo)
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateEmployeeInfo(IEmployeeInfo employeeInfo)
+        public void UpdateEmployeeInfo(EmployeeInfo employeeInfo)
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateOrderInfo(IOrder order)
+        public void UpdateOrderInfo(Order order)
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateTruckInfo(ITruck truck)
+        public void UpdateTruckInfo(Truck truck)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Order> ViewAllOrders()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<UserInfo> ViewUsers()
         {
             throw new NotImplementedException();
         }

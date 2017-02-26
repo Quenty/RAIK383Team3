@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using PracticalWerewolf.Models;
+using PracticalWerewolf.Models.Orders;
 
 namespace PracticalWerewolf.Services
 {
-    public class CustomerService : ICustomerManager
+    public class CustomerService : ICustomerService
     {
         private ICustomerStore CustomerStore;
 
@@ -17,37 +18,32 @@ namespace PracticalWerewolf.Services
             CustomerStore = store;
         }
 
-        public void CreateOrderRequest(IOrderRequestInfo orderRequestInfo)
+        public void CancelOrder(Guid orderId)
         {
             throw new NotImplementedException();
         }
 
-        public void DeleteOrder()
+        public void ChangeOrder(Order order)
         {
             throw new NotImplementedException();
         }
 
-        public IBillingInfo GetBillingInfo()
+        public void CreateOrderRequest(OrderRequestInfo orderRequestInfo)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IOrder> GetCurrentOrders()
+        public void DeleteOrder(Guid orderId)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IOrder> GetPreviousOrders()
+        public IEnumerable<Order> ViewCurrentOrders()
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateBillingInfo(IBillingInfo billingInfo)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateOrder(IOrder order)
+        public IEnumerable<Order> ViewPreviousOrders()
         {
             throw new NotImplementedException();
         }

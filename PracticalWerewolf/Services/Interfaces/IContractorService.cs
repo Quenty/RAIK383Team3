@@ -1,5 +1,7 @@
 ﻿using System;
 using PracticalWerewolf.Models;
+using PracticalWerewolf.Models.UserInfos;
+using PracticalWerewolf.Models.Orders;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,22 +12,21 @@ namespace PracticalWerewolf.Services.Interfaces
     interface IContractorService
     {
         //View Current Orders
-        IEnumerable<IOrder> GetCurrentOrderInfo();
-
+        IEnumerable<Order> GetCurrentOrders();
+ 
         //Change Status
         void UpdateStatus(Boolean status);
 
         //Update track info
-        void UpdateOrderTrackInfo(IOrderTrackInfo orderTrackInfo);
+        void UpdateOrderTrackInfo(OrderTrackInfo orderTrackInfo);
 
         //reject Order
         void RejectOrder();
 
         //View Customer Info
-        //Should this be in Orders instead?
-        ICustomerInfo GetICustomerInfo();
+        CustomerInfo ViewCustomerInfos();
 
         //View Current Orders
-        IEnumerable<IOrder> GetPreviousOrderInfo();
+        IEnumerable<Order> GetPreviousOrders();
     }
 }

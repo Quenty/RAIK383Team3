@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using PracticalWerewolf.Models;
+using PracticalWerewolf.Models.Trucks;
 
 namespace PracticalWerewolf.Services
 {
-    public class TruckService : ITruckManager
+    public class TruckService : ITruckService
     {
         private ITruckStore TruckStore;
 
@@ -17,7 +18,7 @@ namespace PracticalWerewolf.Services
             TruckStore = store;
         }
 
-        public void CreateTruck(ITruck truck)
+        public void CreateTruck(Truck truck)
         {
             throw new NotImplementedException();
         }
@@ -27,12 +28,12 @@ namespace PracticalWerewolf.Services
             throw new NotImplementedException();
         }
 
-        public ITruck GetTruck(Guid orderGuid)
+        public Truck GetTruck(Guid orderGuid)
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateTruck(ITruck truck)
+        public void UpdateTruck(Truck truck)
         {
             throw new NotImplementedException();
         }

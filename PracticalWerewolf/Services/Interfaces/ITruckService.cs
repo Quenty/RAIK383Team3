@@ -1,5 +1,5 @@
 ﻿using System;
-using PracticalWerewolf.Models;
+using PracticalWerewolf.Models.Trucks;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace PracticalWerewolf.Services.Interfaces
 {
-    interface ITruckManager
+    interface ITruckService
     {
-        void CreateTruck(ITruck truck);
+        void CreateTruck(Truck truck);
 
-        ITruck GetTruck(Guid orderGuid);
+        Truck GetTruck(Guid orderGuid);
 
-        void UpdateTruck(ITruck truck);
+        void UpdateTruck(Truck truck);
 
         void DeleteTruck(Guid orderGuid);
     }

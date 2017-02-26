@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using PracticalWerewolf.Models;
+using PracticalWerewolf.Models.Orders;
+using PracticalWerewolf.Models.UserInfos;
 
 namespace PracticalWerewolf.Services
 {
@@ -17,17 +19,17 @@ namespace PracticalWerewolf.Services
             ContractorStore = store;
         }
 
-        public IEnumerable<IOrder> GetCurrentOrderInfo()
+        public void ChangeContractorStatus(bool status)
         {
             throw new NotImplementedException();
         }
 
-        public ICustomerInfo GetICustomerInfo()
+        public IEnumerable<Order> GetCurrentOrders()
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IOrder> GetPreviousOrderInfo()
+        public IEnumerable<Order> GetPreviousOrders()
         {
             throw new NotImplementedException();
         }
@@ -37,14 +39,13 @@ namespace PracticalWerewolf.Services
             throw new NotImplementedException();
         }
 
-        public void UpdateOrderTrackInfo(IOrderTrackInfo orderTrackInfo)
+        public void UpdateOrderTrackInfo(OrderTrackInfo orderTrackInfo)
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateStatus(bool status)
+        public CustomerInfo ViewCustomerInfo()
         {
             throw new NotImplementedException();
         }
     }
-}

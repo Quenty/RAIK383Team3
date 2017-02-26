@@ -1,5 +1,5 @@
 ﻿using System;
-using PracticalWerewolf.Models;
+using PracticalWerewolf.Models.Orders;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace PracticalWerewolf.Services.Interfaces
 {
-    interface IOrderManager
+    interface IOrderService
     {
-        void CreateOrder(IOrder order);
+        void CreateOrder(Order order);
 
-        IOrder GetOrder(Guid orderGuid);
+        Order GetOrder(Guid orderGuid);
 
-        void UpdateOrder(IOrder order);
+        void UpdateOrder(Order order);
 
         void DeleteOrder(Guid orderGuid);
     }

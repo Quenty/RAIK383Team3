@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using PracticalWerewolf.Models;
+using PracticalWerewolf.Models.Orders;
 
 namespace PracticalWerewolf.Services
 {
-    public class OrderService : IOrderManager
+    public class OrderService : IOrderService
     {
         private IOrderStore OrderStore;
 
@@ -17,7 +18,7 @@ namespace PracticalWerewolf.Services
             OrderStore = store;
         }
 
-        public void CreateOrder(IOrder order)
+        public void CreateOrder(Order order)
         {
             throw new NotImplementedException();
         }
@@ -27,12 +28,12 @@ namespace PracticalWerewolf.Services
             throw new NotImplementedException();
         }
 
-        public IOrder GetOrder(Guid orderGuid)
+        public Order GetOrder(Guid orderGuid)
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateOrder(IOrder order)
+        public void UpdateOrder(Order order)
         {
             throw new NotImplementedException();
         }
