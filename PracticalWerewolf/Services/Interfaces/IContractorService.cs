@@ -15,7 +15,7 @@ namespace PracticalWerewolf.Services.Interfaces
         IEnumerable<Order> GetCurrentOrders();
  
         //Change Status
-        void UpdateStatus(Boolean status);
+        void ChangeContractorStatus(Boolean status);
 
         //Update track info
         void UpdateOrderTrackInfo(OrderTrackInfo orderTrackInfo);
@@ -24,7 +24,7 @@ namespace PracticalWerewolf.Services.Interfaces
         void RejectOrder();
 
         //View Customer Info
-        CustomerInfo ViewCustomerInfos();
+        CustomerInfo ViewCustomerInfo();
 
         //View Current Orders
         IEnumerable<Order> GetPreviousOrders();
