@@ -22,7 +22,7 @@ namespace PracticalWerewolf.Controllers
         [Authorize(Roles = ("Customers"))]
         public ActionResult Index(string guid)
         {
-            // Customer or contractor will see a list of past and present orders associated to them
+            // Customer will see a list of past and present orders associated to them
             // Depends upon IOrderRequestService.GetCustomerOrders
             return View();
         }
@@ -31,7 +31,7 @@ namespace PracticalWerewolf.Controllers
         [Authorize(Roles = ("Contractors"))]
         public ActionResult ContractedIndex(string guid)
         {
-            // Customer or contractor will see a list of past and present orders associated to them
+            // Contractor will see a list of past and present orders associated to them
             // Depends upon IOrderTrackService.GetContractorOrders
             return View();
         }
