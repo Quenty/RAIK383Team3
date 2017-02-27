@@ -8,12 +8,16 @@ using System.Web;
 
 namespace PracticalWerewolf.Models.Orders
 {
+    public enum OrderStatus { Complete, Cancelled, InProgress, Queued }
+
     public class OrderTrackInfo
     {
         [Key]
         public Guid OrderTrackInfoGuid { get; set; }
 
-        Truck CurrentTruck { get; set; }
-        ContractorInfo Assignee { get; set; }
+        public OrderStatus OrderStatus { get; set; }
+
+        public virtual Truck CurrentTruck { get; set; }
+        public virtual ContractorInfo Assignee { get; set; }
     }
 }
