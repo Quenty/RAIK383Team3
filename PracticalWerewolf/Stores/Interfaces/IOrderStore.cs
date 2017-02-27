@@ -41,6 +41,7 @@ namespace PracticalWerewolf.Stores.Interfaces
         //Batch Update Order
         void Update(IEnumerable<Order> orderList);
 
+
         IEnumerable<Order> GetOrdersByContractorInfoGuid(Guid contractorInfoGuid);
         IEnumerable<Order> GetOrdersByCustomerInfoGuid(Guid customerInfoGuid);
 

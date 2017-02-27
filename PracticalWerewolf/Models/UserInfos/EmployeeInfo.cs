@@ -8,6 +8,7 @@ namespace PracticalWerewolf.Models.UserInfos
 {
     public class EmployeeInfo
     {
+        // This table will hold employee specific information
         [Key]
         public Guid EmployeeInfoGuid { get; set; }
     }

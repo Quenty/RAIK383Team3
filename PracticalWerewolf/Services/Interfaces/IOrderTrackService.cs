@@ -11,6 +11,7 @@ namespace PracticalWerewolf.Services.Interfaces
 {
     interface IOrderTrackService
     {
+
         // Depends upon IOrderStore.GetOrdersByContractorInfoGuid
         IEnumerable<Order> GetContractorOrders(Guid contractorInfoGuid);
 

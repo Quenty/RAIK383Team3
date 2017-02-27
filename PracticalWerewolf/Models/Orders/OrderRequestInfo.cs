@@ -14,16 +14,16 @@ namespace PracticalWerewolf.Models.Orders
         [Key]
         public Guid OrderRequestInfoGuid { get; set; }
 
-        CustomerInfo Requester { get; set; }
+        // One-to-many relationship, a customer can own multiple orders
+        CustomerInfo Requester { get; set; } 
+        // One-to-one relationship                       
         TruckCapacityUnit Size { get; set; }
-
         [Required]
         DateTime RequestDate { get; set; }
-
         [Required]
         CivicAddress PickUpAddress { get; set; }
-
         [Required]
         CivicAddress DropOffAddress { get; set; }
+
     }
 }
