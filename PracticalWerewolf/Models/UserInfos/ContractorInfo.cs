@@ -14,6 +14,9 @@ namespace PracticalWerewolf.Models.UserInfos
         public virtual Truck Truck { get; set; }
 
         [Required]
+        public bool IsApproved { get; set; }
+
+        [Required]
         public bool IsAvailable { get; set; }
     }
 }
