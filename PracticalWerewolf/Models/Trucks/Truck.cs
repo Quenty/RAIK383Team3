@@ -11,7 +11,6 @@ namespace PracticalWerewolf.Models.Trucks
 
     public class TruckCapacityUnit
     {
-        // Each truck owns a truck capacity unit
         [Key]
         public Guid TruckCapacityUnitGuid { get; set; }
     }
@@ -26,6 +25,7 @@ namespace PracticalWerewolf.Models.Trucks
         public GeoCoordinate Location { get; set; } 
 
         public TruckCapacityUnit AvailableCapacity { get; }
+        // One-to-one, each truck will have one Current and Max capacity
         public TruckCapacityUnit CurrentCapacity { get; set; }
         public TruckCapacityUnit MaxCapacity { get; set; }
     }
