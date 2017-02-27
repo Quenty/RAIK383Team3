@@ -13,6 +13,6 @@ namespace PracticalWerewolf.Services.Interfaces
 
         void UpdateTruck(Truck truck);
 
-        void DeleteTruck(Guid orderGuid);
+        void DeleteTruck(Guid truckId);
     }
 }
