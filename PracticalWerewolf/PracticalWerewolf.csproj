@@ -229,7 +229,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stores\ContractorStore.cs" />
     <Compile Include="Stores\CustomerStore.cs" />
-    <Compile Include="Views\EmployeeStore.cs" />
+    <Compile Include="Stores\EmployeeStore.cs" />
     <Compile Include="Stores\Interfaces\IContractorStore.cs" />
     <Compile Include="Stores\Interfaces\ICustomerStore.cs" />
     <Compile Include="Stores\Interfaces\IEmployeeStore.cs" />
@@ -240,11 +240,11 @@
     <Compile Include="Services\ContractorService.cs" />
     <Compile Include="Services\CustomerService.cs" />
     <Compile Include="Services\EmployeeService.cs" />
-    <Compile Include="Services\Interfaces\IContractorService.cs" />
-    <Compile Include="Services\Interfaces\ICustomerService.cs" />
-    <Compile Include="Services\Interfaces\IEmployeeService.cs" />
-    <Compile Include="Services\Interfaces\IOrderService.cs" />
-    <Compile Include="Services\Interfaces\ITruckService.cs" />
+    <Compile Include="Services\Interfaces\IContractorManager.cs" />
+    <Compile Include="Services\Interfaces\ICustomerManager.cs" />
+    <Compile Include="Services\Interfaces\IEmployeeManager.cs" />
+    <Compile Include="Services\Interfaces\IOrderManager.cs" />
+    <Compile Include="Services\Interfaces\ITruckManager.cs" />
     <Compile Include="Services\OrderService.cs" />
     <Compile Include="Services\TruckService.cs" />
     <Compile Include="Startup.cs" />

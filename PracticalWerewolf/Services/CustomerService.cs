@@ -4,48 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using PracticalWerewolf.Models;
-using PracticalWerewolf.Models.Orders;
 
 namespace PracticalWerewolf.Services
 {
-    public class CustomerService : ICustomerService
+    public class CustomerService : ICustomerManager
     {
         private ICustomerStore CustomerStore;
 
         public CustomerService(ICustomerStore store)
         {
             CustomerStore = store;
-        }
-
-        public void CancelOrder(Guid orderGuid)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ChangeOrder(Order order)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void CreateOrderRequest(OrderRequestInfo orderRequestInfo)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeleteOrder(Guid orderGuid)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Order> ViewCurrentOrders(Guid customerInfoId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Order> ViewPreviousOrders(Guid customerInfoId)
-        {
-            throw new NotImplementedException();
         }
     }
 }
