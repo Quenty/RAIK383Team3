@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using PracticalWerewolf.Models;
+using PracticalWerewolf.ViewModels;
 
 namespace PracticalWerewolf.Controllers
 {
