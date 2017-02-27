@@ -10,9 +10,11 @@ namespace PracticalWerewolf.Controllers
 
     public class TruckController : Controller
     {
+        ITruckService TruckService;
+
         public TruckController(ITruckService TruckService)
         {
-
+            this.TruckService = TruckService;
         }
 
         // GET: Truck
