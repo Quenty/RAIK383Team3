@@ -40,6 +40,6 @@ namespace PracticalWerewolf.Services.Interfaces
 
         //Search users
         //Should this be in js?
-        IEnumerable<UserInfo> SearchUsers(string Query);
+        IEnumerable<UserInfo> SearchUsers(string query);
     }
 }
