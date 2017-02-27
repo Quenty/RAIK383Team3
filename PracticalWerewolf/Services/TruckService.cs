@@ -23,7 +23,7 @@ namespace PracticalWerewolf.Services
             throw new NotImplementedException();
         }
 
-        public void DeleteTruck(Guid orderGuid)
+        public void DeleteTruck(Guid truckId)
         {
             throw new NotImplementedException();
         }
