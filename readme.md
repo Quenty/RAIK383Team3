@@ -1,3 +1,6 @@
+# Build status of integration
+![alt text](https://quenty.visualstudio.com/_apis/public/build/definitions/2fa045d1-fed3-4109-9fd0-31e9de0ba80b/1/badge")
+
 # Team 3
 * Abbie Jarratt
 * James Onnen
