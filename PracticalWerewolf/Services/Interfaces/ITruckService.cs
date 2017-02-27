@@ -10,6 +10,9 @@ namespace PracticalWerewolf.Services.Interfaces
 {
     interface ITruckService
     {
+        // ITruckStore.
+        IEnumerable<Truck> GetAllTrucks();
+
         // Depends upon ITruckStore.Create
         void CreateTruck(Truck truck);
 
