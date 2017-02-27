@@ -7,170 +7,26 @@ namespace PracticalWerewolf.Migrations
     {
         public override void Up()
         {
-            CreateTable(
-                "dbo.ContractorInfoes",
-                c => new
-                    {
-                        ContractorInfoGuid = c.Guid(nullable: false),
-                        IsAvailable = c.Boolean(nullable: false),
-                        Truck_TruckGuid = c.Guid(),
-                    })
-                .PrimaryKey(t => t.ContractorInfoGuid)
-                .ForeignKey("dbo.Trucks", t => t.Truck_TruckGuid)
-                .Index(t => t.Truck_TruckGuid);
-            
-            CreateTable(
-                "dbo.Trucks",
-                c => new
-                    {
-                        TruckGuid = c.Guid(nullable: false),
-                        Location_Latitude = c.Double(nullable: false),
-                        Location_Longitude = c.Double(nullable: false),
-                        Location_Altitude = c.Double(nullable: false),
-                        Location_HorizontalAccuracy = c.Double(nullable: false),
-                        Location_VerticalAccuracy = c.Double(nullable: false),
-                        Location_Speed = c.Double(nullable: false),
-                        Location_Course = c.Double(nullable: false),
-                        CurrentCapacity_TruckCapacityUnitGuid = c.Guid(),
-                        MaxCapacity_TruckCapacityUnitGuid = c.Guid(),
-                    })
-                .PrimaryKey(t => t.TruckGuid)
-                .ForeignKey("dbo.TruckCapacityUnits", t => t.CurrentCapacity_TruckCapacityUnitGuid)
-                .ForeignKey("dbo.TruckCapacityUnits", t => t.MaxCapacity_TruckCapacityUnitGuid)
-                .Index(t => t.CurrentCapacity_TruckCapacityUnitGuid)
-                .Index(t => t.MaxCapacity_TruckCapacityUnitGuid);
-            
-            CreateTable(
-                "dbo.TruckCapacityUnits",
-                c => new
-                    {
-                        TruckCapacityUnitGuid = c.Guid(nullable: false),
-                    })
-                .PrimaryKey(t => t.TruckCapacityUnitGuid);
-            
-            CreateTable(
-                "dbo.CustomerInfoes",
-                c => new
-                    {
-                        CustomerInfoGuid = c.Guid(nullable: false),
-                    })
-                .PrimaryKey(t => t.CustomerInfoGuid);
-            
-            CreateTable(
-                "dbo.EmployeeInfoes",
-                c => new
-                    {
-                        EmployeeInfoGuid = c.Guid(nullable: false),
-                    })
-                .PrimaryKey(t => t.EmployeeInfoGuid);
-            
-            CreateTable(
-                "dbo.Orders",
-                c => new
-                    {
-                        OrderGuid = c.Guid(nullable: false),
-                        RequestInfo_OrderRequestInfoGuid = c.Guid(),
-                        TrackInfo_OrderTrackInfoGuid = c.Guid(),
-                    })
-                .PrimaryKey(t => t.OrderGuid)
-                .ForeignKey("dbo.OrderRequestInfoes", t => t.RequestInfo_OrderRequestInfoGuid)
-                .ForeignKey("dbo.OrderTrackInfoes", t => t.TrackInfo_OrderTrackInfoGuid)
-                .Index(t => t.RequestInfo_OrderRequestInfoGuid)
-                .Index(t => t.TrackInfo_OrderTrackInfoGuid);
-            
-            CreateTable(
-                "dbo.OrderRequestInfoes",
-                c => new
-                    {
-                        OrderRequestInfoGuid = c.Guid(nullable: false),
-                        Requester_CustomerInfoGuid = c.Guid(),
-                        Size_TruckCapacityUnitGuid = c.Guid(),
-                    })
-                .PrimaryKey(t => t.OrderRequestInfoGuid)
-                .ForeignKey("dbo.CustomerInfoes", t => t.Requester_CustomerInfoGuid)
-                .ForeignKey("dbo.TruckCapacityUnits", t => t.Size_TruckCapacityUnitGuid)
-                .Index(t => t.Requester_CustomerInfoGuid)
-                .Index(t => t.Size_TruckCapacityUnitGuid);
-            
-            CreateTable(
-                "dbo.OrderTrackInfoes",
-                c => new
-                    {
-                        OrderTrackInfoGuid = c.Guid(nullable: false),
-                        Assignee_ContractorInfoGuid = c.Guid(),
-                        CurrentTruck_TruckGuid = c.Guid(),
-                    })
-                .PrimaryKey(t => t.OrderTrackInfoGuid)
-                .ForeignKey("dbo.ContractorInfoes", t => t.Assignee_ContractorInfoGuid)
-                .ForeignKey("dbo.Trucks", t => t.CurrentTruck_TruckGuid)
-                .Index(t => t.Assignee_ContractorInfoGuid)
-                .Index(t => t.CurrentTruck_TruckGuid);
-            
-            CreateTable(
-                "dbo.UserInfoes",
-                c => new
-                    {
-                        UserInfoGuid = c.Guid(nullable: false),
-                        FirstName = c.String(maxLength: 50),
-                        LastName = c.String(maxLength: 50),
-                    })
-                .PrimaryKey(t => t.UserInfoGuid);
-            
-            AddColumn("dbo.AspNetUsers", "ContractorInfo_ContractorInfoGuid", c => c.Guid());
-            AddColumn("dbo.AspNetUsers", "CustomerInfo_CustomerInfoGuid", c => c.Guid());
-            AddColumn("dbo.AspNetUsers", "EmployeeInfo_EmployeeInfoGuid", c => c.Guid());
-            AddColumn("dbo.AspNetUsers", "UserInfo_UserInfoGuid", c => c.Guid());
-            CreateIndex("dbo.AspNetUsers", "ContractorInfo_ContractorInfoGuid");
-            CreateIndex("dbo.AspNetUsers", "CustomerInfo_CustomerInfoGuid");
-            CreateIndex("dbo.AspNetUsers", "EmployeeInfo_EmployeeInfoGuid");
-            CreateIndex("dbo.AspNetUsers", "UserInfo_UserInfoGuid");
-            AddForeignKey("dbo.AspNetUsers", "ContractorInfo_ContractorInfoGuid", "dbo.ContractorInfoes", "ContractorInfoGuid");
-            AddForeignKey("dbo.AspNetUsers", "CustomerInfo_CustomerInfoGuid", "dbo.CustomerInfoes", "CustomerInfoGuid");
+            DropForeignKey("dbo.AspNetUsers", "EmployeeInfo_CustomerInfoGuid", "dbo.EmployeeInfoes");
+            RenameColumn(table: "dbo.AspNetUsers", name: "EmployeeInfo_CustomerInfoGuid", newName: "EmployeeInfo_EmployeeInfoGuid");
+            RenameIndex(table: "dbo.AspNetUsers", name: "IX_EmployeeInfo_CustomerInfoGuid", newName: "IX_EmployeeInfo_EmployeeInfoGuid");
+            DropPrimaryKey("dbo.EmployeeInfoes");
+            AddColumn("dbo.EmployeeInfoes", "EmployeeInfoGuid", c => c.Guid(nullable: false));
+            AddPrimaryKey("dbo.EmployeeInfoes", "EmployeeInfoGuid");
             AddForeignKey("dbo.AspNetUsers", "EmployeeInfo_EmployeeInfoGuid", "dbo.EmployeeInfoes", "EmployeeInfoGuid");
-            AddForeignKey("dbo.AspNetUsers", "UserInfo_UserInfoGuid", "dbo.UserInfoes", "UserInfoGuid");
+            DropColumn("dbo.EmployeeInfoes", "CustomerInfoGuid");
         }
         
         public override void Down()
         {
-            DropForeignKey("dbo.AspNetUsers", "UserInfo_UserInfoGuid", "dbo.UserInfoes");
+            AddColumn("dbo.EmployeeInfoes", "CustomerInfoGuid", c => c.Guid(nullable: false));
             DropForeignKey("dbo.AspNetUsers", "EmployeeInfo_EmployeeInfoGuid", "dbo.EmployeeInfoes");
-            DropForeignKey("dbo.AspNetUsers", "CustomerInfo_CustomerInfoGuid", "dbo.CustomerInfoes");
-            DropForeignKey("dbo.AspNetUsers", "ContractorInfo_ContractorInfoGuid", "dbo.ContractorInfoes");
-            DropForeignKey("dbo.Orders", "TrackInfo_OrderTrackInfoGuid", "dbo.OrderTrackInfoes");
-            DropForeignKey("dbo.OrderTrackInfoes", "CurrentTruck_TruckGuid", "dbo.Trucks");
-            DropForeignKey("dbo.OrderTrackInfoes", "Assignee_ContractorInfoGuid", "dbo.ContractorInfoes");
-            DropForeignKey("dbo.Orders", "RequestInfo_OrderRequestInfoGuid", "dbo.OrderRequestInfoes");
-            DropForeignKey("dbo.OrderRequestInfoes", "Size_TruckCapacityUnitGuid", "dbo.TruckCapacityUnits");
-            DropForeignKey("dbo.OrderRequestInfoes", "Requester_CustomerInfoGuid", "dbo.CustomerInfoes");
-            DropForeignKey("dbo.ContractorInfoes", "Truck_TruckGuid", "dbo.Trucks");
-            DropForeignKey("dbo.Trucks", "MaxCapacity_TruckCapacityUnitGuid", "dbo.TruckCapacityUnits");
-            DropForeignKey("dbo.Trucks", "CurrentCapacity_TruckCapacityUnitGuid", "dbo.TruckCapacityUnits");
-            DropIndex("dbo.AspNetUsers", new[] { "UserInfo_UserInfoGuid" });
-            DropIndex("dbo.AspNetUsers", new[] { "EmployeeInfo_EmployeeInfoGuid" });
-            DropIndex("dbo.AspNetUsers", new[] { "CustomerInfo_CustomerInfoGuid" });
-            DropIndex("dbo.AspNetUsers", new[] { "ContractorInfo_ContractorInfoGuid" });
-            DropIndex("dbo.OrderTrackInfoes", new[] { "CurrentTruck_TruckGuid" });
-            DropIndex("dbo.OrderTrackInfoes", new[] { "Assignee_ContractorInfoGuid" });
-            DropIndex("dbo.OrderRequestInfoes", new[] { "Size_TruckCapacityUnitGuid" });
-            DropIndex("dbo.OrderRequestInfoes", new[] { "Requester_CustomerInfoGuid" });
-            DropIndex("dbo.Orders", new[] { "TrackInfo_OrderTrackInfoGuid" });
-            DropIndex("dbo.Orders", new[] { "RequestInfo_OrderRequestInfoGuid" });
-            DropIndex("dbo.Trucks", new[] { "MaxCapacity_TruckCapacityUnitGuid" });
-            DropIndex("dbo.Trucks", new[] { "CurrentCapacity_TruckCapacityUnitGuid" });
-            DropIndex("dbo.ContractorInfoes", new[] { "Truck_TruckGuid" });
-            DropColumn("dbo.AspNetUsers", "UserInfo_UserInfoGuid");
-            DropColumn("dbo.AspNetUsers", "EmployeeInfo_EmployeeInfoGuid");
-            DropColumn("dbo.AspNetUsers", "CustomerInfo_CustomerInfoGuid");
-            DropColumn("dbo.AspNetUsers", "ContractorInfo_ContractorInfoGuid");
-            DropTable("dbo.UserInfoes");
-            DropTable("dbo.OrderTrackInfoes");
-            DropTable("dbo.OrderRequestInfoes");
-            DropTable("dbo.Orders");
-            DropTable("dbo.EmployeeInfoes");
-            DropTable("dbo.CustomerInfoes");
-            DropTable("dbo.TruckCapacityUnits");
-            DropTable("dbo.Trucks");
-            DropTable("dbo.ContractorInfoes");
+            DropPrimaryKey("dbo.EmployeeInfoes");
+            DropColumn("dbo.EmployeeInfoes", "EmployeeInfoGuid");
+            AddPrimaryKey("dbo.EmployeeInfoes", "CustomerInfoGuid");
+            RenameIndex(table: "dbo.AspNetUsers", name: "IX_EmployeeInfo_EmployeeInfoGuid", newName: "IX_EmployeeInfo_CustomerInfoGuid");
+            RenameColumn(table: "dbo.AspNetUsers", name: "EmployeeInfo_EmployeeInfoGuid", newName: "EmployeeInfo_CustomerInfoGuid");
+            AddForeignKey("dbo.AspNetUsers", "EmployeeInfo_CustomerInfoGuid", "dbo.EmployeeInfoes", "CustomerInfoGuid");
         }
     }
 }
