@@ -18,6 +18,12 @@ namespace PracticalWerewolf.Services.Interfaces
         // Depends upon IOrderStore.Get(OrderStatus orderStatus)
         IEnumerable<Order> GetOrders(OrderStatus orderStatus);
 
+        // Depends upon IOrderStore.GetOrdersByCustomerInfoGuid
+        IEnumerable<Order> GetOrdersByCustomerInfo(Guid customerInfoGuid);
+
+        // Depends upon IOrderStore.GetByUserGuids
+        IEnumerable<Order> GetByUserGuids(Guid userId);
+
         // Depends upon this.GetOrders
         IEnumerable<Order> GetQueuedOrders(OrderStatus orderStatus);
 
