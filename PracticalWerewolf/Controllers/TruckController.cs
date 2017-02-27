@@ -13,15 +13,17 @@ namespace PracticalWerewolf.Controllers
         [Authorize(Roles = "Employees")]
         public ActionResult Index()
         {
-            //shows list of all truck options
+            // Shows list of all truck options
+            // Depends upon TruckService.GetAllTrucks
             return View();
         }
 
-        // GET: Truck/Details/5
+        // GET: Truck/Details/guid
         [Authorize(Roles = "Contractor, Employees")]
-        public ActionResult Details(int id)
+        public ActionResult Details(string guid)
         {
-            //Gets details on a specific truck
+            // Gets details on a specific truck
+            // Depends upon TruckService.Get
             return View();
         }
 
@@ -29,16 +31,18 @@ namespace PracticalWerewolf.Controllers
         [Authorize(Roles = "Contractor")]
         public ActionResult Create()
         {
-            //Takes contractors to a form to add a truck to their account
+            // Takes contractors to a form to add a truck to their account
+            // Shouldn't depend upon nothing
             return View();
         }
 
-        // POST: Truck/Create
+        // POST: Truck/Register
         [HttpPost]
         [Authorize(Roles = "Contractor")]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Register(FormCollection collection)
         {
-            //Updates the database with the new truck
+            // Updates the database with the new truck
+            // Depends upon TruckService.Create
             try
             {
                 // TODO: Add insert logic here
@@ -51,45 +55,26 @@ namespace PracticalWerewolf.Controllers
             }
         }
 
-        // GET: Truck/Edit/5
+        // GET: Truck/Edit/guid
         [Authorize(Roles = "Contractor")]
         public ActionResult Edit(int id)
         {
-            //User is taken to a page where they can change information
+            // User is taken to a page where they can change information
+            // Depends upon TruckService.GetTruck
+
             return View();
         }
 
-        // POST: Truck/Edit/5
+        // POST: Truck/Edit/guid
         [HttpPost]
         [Authorize(Roles = "Contractor")]
         public ActionResult Edit(int id, FormCollection collection)
         {
-            //The database is updated with the new user information
+            // The database is updated with the new user information
+            // Depends upon TruckService.UpdateTruckLocation, TruckService.UpdateTruckCurrentCapacity, TruckService.UpdateTruckMaxCapacity
             try
             {
                 // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Truck/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Truck/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
 
                 return RedirectToAction("Index");
             }
