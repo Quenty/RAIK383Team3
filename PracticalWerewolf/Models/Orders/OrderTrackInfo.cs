@@ -12,7 +12,7 @@ namespace PracticalWerewolf.Models.Orders
     {
         [Key]
         public Guid OrderTrackInfoGuid { get; set; }
-        // One-to-one relationship
+        // One-to-many relationship
         Truck CurrentTruck { get; set; }
         // Many-to-one relationship, A truck driver can only have many orders at a time
         ContractorInfo Assignee { get; set; }               
