@@ -16,10 +16,10 @@ namespace PracticalWerewolf.Models
 {
     public class ApplicationUser : IdentityUser, IApplicationUser
     {
-        public virtual ContractorInfo ContractorInfo { get; set; }
-        public virtual CustomerInfo CustomerInfo { get; set; }
-        public virtual EmployeeInfo EmployeeInfo { get; set; }
-        public virtual UserInfo UserInfo { get; set; }
+        public virtual ContractorInfo ContractorInfo { get; set; }          // One-to-one relationship, nullable field in an application user table
+        public virtual CustomerInfo CustomerInfo { get; set; }              // One-to-one relationship, nullable field in an application user table
+        public virtual EmployeeInfo EmployeeInfo { get; set; }              // One-to-one relationship, nullable field in an application user table
+        public virtual UserInfo UserInfo { get; set; }                      // One-to-one relationship, nullable field in an application user table
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

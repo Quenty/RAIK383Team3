@@ -10,10 +10,10 @@ namespace PracticalWerewolf.Models.UserInfos
     public class ContractorInfo
     {
         [Key]
-        public Guid ContractorInfoGuid { get; set; }
-        public virtual Truck Truck { get; set; }
+        public Guid ContractorInfoGuid { get; set; }                // One-to-one relationship with ApplicationUser
+        public virtual Truck Truck { get; set; }                    // One-to-one relationship, a contractor can only have 1 truck
 
         [Required]
-        public bool IsAvailable { get; set; }
+        public bool IsAvailable { get; set; }                       // One-to-one relationship
     }
 }

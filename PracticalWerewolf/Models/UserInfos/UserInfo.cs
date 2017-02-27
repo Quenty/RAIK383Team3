@@ -9,7 +9,7 @@ namespace PracticalWerewolf.Models.UserInfos
     public class UserInfo
     {
         [Key]
-        public Guid UserInfoGuid { get; set; }
+        public Guid UserInfoGuid { get; set; }              // Primary key for UserInfo table, One-to-One
 
         [MaxLength(50, ErrorMessage = "FirstName must be 50 characters or less")]
         public string FirstName { get; set; }
