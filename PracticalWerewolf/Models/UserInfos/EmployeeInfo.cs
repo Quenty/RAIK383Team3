@@ -9,7 +9,7 @@ namespace PracticalWerewolf.Models.UserInfos
     public class EmployeeInfo
     {
         [Key]
-        public Guid EmployeeInfoGuid { get; set; }              // Primary key for EmployeeInfo table, One-to-One
+        public Guid EmployeeInfoGuid { get; set; }
     }
 
 }

@@ -7,9 +7,9 @@ namespace PracticalWerewolf.Models.Orders
     public class Order
     {
         [Key]
-        public Guid OrderGuid { get; set; }             // Primary key for Order table
+        public Guid OrderGuid { get; set; }             // An order has a one-to-many relationship to customers (a customer can have multiple orders)
 
-        OrderRequestInfo RequestInfo { get; set; }      // One-to-one relationship
-        OrderTrackInfo TrackInfo { get; set; }          // One-to-one relationship
+        OrderRequestInfo RequestInfo { get; set; }
+        OrderTrackInfo TrackInfo { get; set; }
     }
 }

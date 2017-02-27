@@ -9,7 +9,7 @@ namespace PracticalWerewolf.Models.UserInfos
     public class CustomerInfo
     {
         [Key]
-        public Guid CustomerInfoGuid { get; set; }          // Primary key for CustomerInfo table, One-to-One
+        public Guid CustomerInfoGuid { get; set; }
                                                             // Note: a customer can be tied to multiple orderRequestInfo (One-to-many relationship)
     }
 }

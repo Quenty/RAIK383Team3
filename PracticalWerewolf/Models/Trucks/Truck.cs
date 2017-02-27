@@ -12,19 +12,19 @@ namespace PracticalWerewolf.Models.Trucks
     public class TruckCapacityUnit
     {
         [Key]
-        public Guid TruckCapacityUnitGuid { get; set; }             // One-to-one relationship with truck
+        public Guid TruckCapacityUnitGuid { get; set; }
     }
 
     public class Truck
     {
         [Key]
-        public Guid TruckGuid { get; set; }                         // One-to-one relationship with contractor
+        public Guid TruckGuid { get; set; }                         // A truck has a One-to-one relationship with contractor
 
 
-        public GeoCoordinate Location { get; set; }                 // One-to-one relationship 
+        public GeoCoordinate Location { get; set; } 
 
-        public TruckCapacityUnit AvailableCapacity { get; }         // One-to-one relationship
-        public TruckCapacityUnit CurrentCapacity { get; set; }      // One-to-one relationship
-        public TruckCapacityUnit MaxCapacity { get; set; }          // One-to-one relationship
+        public TruckCapacityUnit AvailableCapacity { get; }
+        public TruckCapacityUnit CurrentCapacity { get; set; }
+        public TruckCapacityUnit MaxCapacity { get; set; }
     }
 }
