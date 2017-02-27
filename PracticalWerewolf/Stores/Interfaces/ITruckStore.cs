@@ -16,6 +16,8 @@ namespace PracticalWerewolf.Stores.Interfaces
         //Get Truck by guid
         Truck Get(Guid guid);
 
+        Truck GetByCustomerInfoGuid(Guid customerInfo);
+
         //Batch Get Trucks by guid
         IEnumerable<Truck> Get(IEnumerable<Guid> guids);
 
@@ -34,7 +36,7 @@ namespace PracticalWerewolf.Stores.Interfaces
         //Delete Truck
         void Delete(Truck Truck);
 
-        //Batch DeleteContactorInfo
+        //Batch DeleteTruck
         void Delete(IEnumerable<Truck> truckList);
     }
 }
