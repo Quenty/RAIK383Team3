@@ -44,6 +44,11 @@ namespace PracticalWerewolf.Stores
             throw new NotImplementedException();
         }
 
+        public IEnumerable<Order> Get(OrderStatus orderStatus)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Order> Get(IEnumerable<Guid> guids)
         {
             throw new NotImplementedException();
@@ -55,6 +60,11 @@ namespace PracticalWerewolf.Stores
         }
 
         public IEnumerable<Order> GetByTruck(Truck truck)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Order> GetOrdersByCustomerInfoGuid(Guid customerInfoGuid)
         {
             throw new NotImplementedException();
         }
