@@ -16,8 +16,9 @@ namespace PracticalWerewolf.Models.Orders
         public Guid OrderTrackInfoGuid { get; set; }
 
         public OrderStatus OrderStatus { get; set; }
-
-        public virtual Truck CurrentTruck { get; set; }
-        public virtual ContractorInfo Assignee { get; set; }
+        // One-to-many relationship
+        Truck CurrentTruck { get; set; }
+        // Many-to-one relationship, A truck driver can only have many orders at a time
+        ContractorInfo Assignee { get; set; }               
     }
 }

@@ -11,6 +11,7 @@ namespace PracticalWerewolf.Models.UserInfos
         [Key]
         public Guid UserInfoGuid { get; set; }
 
+        // UserInfo table keeps generic information that appplies to all users
         [MaxLength(50, ErrorMessage = "FirstName must be 50 characters or less")]
         public string FirstName { get; set; }
 

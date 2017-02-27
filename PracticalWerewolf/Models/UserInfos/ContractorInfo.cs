@@ -11,6 +11,7 @@ namespace PracticalWerewolf.Models.UserInfos
     {
         [Key]
         public Guid ContractorInfoGuid { get; set; }
+        // One-to-one relationship, a contractor can only have 1 truck
         public virtual Truck Truck { get; set; }
 
         [Required]
