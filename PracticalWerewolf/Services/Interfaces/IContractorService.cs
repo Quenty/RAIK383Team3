@@ -11,22 +11,16 @@ namespace PracticalWerewolf.Services.Interfaces
 {
     interface IContractorService
     {
-        //View Current Orders
-        IEnumerable<Order> GetCurrentOrders(Guid contractorGuid);
- 
-        //Change Status
-        void ChangeContractorStatus(Boolean status);
+        // Depends upon IContractorStore.Update
+        void UpdateContractorIsAvailable(Guid contractorInfoGuid, Boolean isAvailable);
 
-        //Update track info
-        void UpdateOrderTrackInfo(OrderTrackInfo orderTrackInfo);
+        // Depends upon IContractorStore.Update
+        void UpdateContractorApproval(Guid contractorInfoGuid);
 
-        //reject Order
-        void RejectOrder(Guid orderGuid);
+        // Depends upon the IContractorStore.GetUser
+        void GetUserContractorInfo(Guid userId);
 
-        //View Customer Info
-        CustomerInfo ViewCustomerInfo(Guid customerInfoGuid);
-
-        //View Current Orders
-        IEnumerable<Order> GetPreviousOrders(Guid contractorGuid);
+        // Depends upon the IContractorStore.Create
+        void RegisterContractorInfo(Guid userId, ContractorInfo newContractorInfo);
     }
 }

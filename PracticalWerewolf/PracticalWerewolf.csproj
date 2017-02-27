@@ -209,7 +209,19 @@
     <Compile Include="Migrations\201702242218225_Add-Roles.Designer.cs">
       <DependentUpon>201702242218225_Add-Roles.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702270351026_Updated-Data-Models-OrderStatus.cs" />
+    <Compile Include="Migrations\201702270351026_Updated-Data-Models-OrderStatus.Designer.cs">
+      <DependentUpon>201702270351026_Updated-Data-Models-OrderStatus.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Services\Interfaces\IOrderRequestService.cs" />
+    <Compile Include="Services\Interfaces\IOrderTrackService.cs" />
+    <Compile Include="Services\Interfaces\IUserInfoService.cs" />
+    <Compile Include="Stores\ContractorStore.cs" />
+    <Compile Include="Stores\CustomerStore.cs" />
+    <Compile Include="Stores\EmployeeStore.cs" />
+    <Compile Include="Stores\OrderStore.cs" />
+    <Compile Include="Stores\TruckStore.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\IApplicationUser.cs" />
     <Compile Include="Models\IUserInfoContext.cs" />
@@ -227,26 +239,16 @@
     <Compile Include="Models\Orders\OrderTrackInfo.cs" />
     <Compile Include="Models\Trucks\Truck.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Stores\ContractorStore.cs" />
-    <Compile Include="Stores\CustomerStore.cs" />
-    <Compile Include="Stores\EmployeeStore.cs" />
     <Compile Include="Stores\Interfaces\IContractorStore.cs" />
     <Compile Include="Stores\Interfaces\ICustomerStore.cs" />
     <Compile Include="Stores\Interfaces\IEmployeeStore.cs" />
     <Compile Include="Stores\Interfaces\IOrderStore.cs" />
     <Compile Include="Stores\Interfaces\ITruckStore.cs" />
-    <Compile Include="Stores\OrderStore.cs" />
-    <Compile Include="Stores\TruckStore.cs" />
-    <Compile Include="Services\ContractorService.cs" />
-    <Compile Include="Services\CustomerService.cs" />
-    <Compile Include="Services\EmployeeService.cs" />
     <Compile Include="Services\Interfaces\IContractorService.cs" />
     <Compile Include="Services\Interfaces\ICustomerService.cs" />
     <Compile Include="Services\Interfaces\IEmployeeService.cs" />
     <Compile Include="Services\Interfaces\IOrderService.cs" />
     <Compile Include="Services\Interfaces\ITruckService.cs" />
-    <Compile Include="Services\OrderService.cs" />
-    <Compile Include="Services\TruckService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -331,6 +333,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702242218225_Add-Roles.resx">
       <DependentUpon>201702242218225_Add-Roles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702270351026_Updated-Data-Models-OrderStatus.resx">
+      <DependentUpon>201702270351026_Updated-Data-Models-OrderStatus.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
