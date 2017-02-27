@@ -212,7 +212,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\IApplicationUser.cs" />
-    <Compile Include="Models\IUserInfoContext.cs" />
+    <Compile Include="Stores\Interfaces\Contexts\IUserInfoContext.cs" />
     <Compile Include="Stores\Interfaces\Contexts\ITruckDbContext.cs" />
     <Compile Include="Stores\Interfaces\Contexts\IUserInfoDbContext.cs" />
     <Compile Include="Stores\Interfaces\Contexts\IOrderDbContext.cs" />
