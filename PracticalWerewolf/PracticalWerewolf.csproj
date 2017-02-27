@@ -217,6 +217,11 @@
     <Compile Include="Services\Interfaces\IOrderRequestService.cs" />
     <Compile Include="Services\Interfaces\IOrderTrackService.cs" />
     <Compile Include="Services\Interfaces\IUserInfoService.cs" />
+    <Compile Include="Stores\ContractorStore.cs" />
+    <Compile Include="Stores\CustomerStore.cs" />
+    <Compile Include="Stores\EmployeeStore.cs" />
+    <Compile Include="Stores\OrderStore.cs" />
+    <Compile Include="Stores\TruckStore.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\IApplicationUser.cs" />
     <Compile Include="Models\IUserInfoContext.cs" />
