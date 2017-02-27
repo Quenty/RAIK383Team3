@@ -21,6 +21,9 @@ namespace PracticalWerewolf.Stores.Interfaces
         IEnumerable<Order> Get(IEnumerable<Guid> guids);
 
         //Batch Get Orders by guid
+        IEnumerable<Order> GetByUserGuids(IEnumerable<Guid> userGuids);
+
+        //Batch Get Orders by guid
         IEnumerable<Order> Get(OrderStatus orderStatus);
 
         //Get Order by truck
