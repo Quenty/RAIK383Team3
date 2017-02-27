@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PracticalWerewolf.Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -9,6 +10,13 @@ namespace PracticalWerewolf.Controllers
 
     public class TruckController : Controller
     {
+        ITruckService TruckService;
+
+        public TruckController(ITruckService TruckService)
+        {
+            this.TruckService = TruckService;
+        }
+
         // GET: Truck
         [Authorize(Roles = "Employees")]
         public ActionResult Index()

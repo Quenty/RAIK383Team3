@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PracticalWerewolf.Services.Interfaces
 {
-    interface IOrderRequestService
+    public interface IOrderRequestService
     {
         // Depends upon IOrderStore.GetOrdersByCustomerInfoGuid
         IEnumerable<Order> GetCustomerOrders(Guid customerInfoGuid);

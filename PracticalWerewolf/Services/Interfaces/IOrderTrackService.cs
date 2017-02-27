@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PracticalWerewolf.Services.Interfaces
 {
-    interface IOrderTrackService
+    public interface IOrderTrackService
     {
 
         // Depends upon IOrderStore.GetOrdersByContractorInfoGuid
