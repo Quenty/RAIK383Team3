@@ -20,6 +20,9 @@ namespace PracticalWerewolf.Stores.Interfaces
         //Batch Get Orders by guid
         IEnumerable<Order> Get(IEnumerable<Guid> guids);
 
+        //Batch Get Orders by guid
+        IEnumerable<Order> Get(OrderStatus orderStatus);
+
         //Get Order by truck
         IEnumerable<Order> GetByTruck(Truck truck);
 
@@ -34,6 +37,8 @@ namespace PracticalWerewolf.Stores.Interfaces
 
         //Batch Update Order
         void Update(IEnumerable<Order> orderList);
+
+        IEnumerable<Order> GetOrdersByCustomerInfoGuid(Guid customerInfoGuid);
 
         //Delete Order
         void Delete(Order order);
