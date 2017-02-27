@@ -9,12 +9,28 @@ namespace PracticalWerewolf.Services.Interfaces
 {
     interface IOrderService
     {
-        void CreateOrder(Order order);
+        // Depends upon IOrderStore.Create
+        void CreateOrder(OrderRequestInfo order);
 
+        // Depends upon IOrderStore.Get
         Order GetOrder(Guid orderGuid);
 
-        void UpdateOrder(Order order);
+        // Depends upon IOrderStore.Get(OrderStatus orderStatus)
+        IEnumerable<Order> GetOrders(OrderStatus orderStatus);
 
-        void DeleteOrder(Guid orderGuid);
+        // Depends upon IOrderStore.GetOrdersByCustomerInfoGuid
+        IEnumerable<Order> GetOrdersByCustomerInfo(Guid customerInfoGuid);
+
+        // Depends upon IOrderStore.GetByUserGuids
+        IEnumerable<Order> GetByUserGuids(Guid userId);
+
+        // Depends upon this.GetOrders
+        IEnumerable<Order> GetQueuedOrders(OrderStatus orderStatus);
+
+        // Depends upon IOrderStore.Get
+        IEnumerable<Order> GetOrders();
+
+        // Depends upon IOrderRequestService.UpdateOrderStatus
+        void CancelOrder(Guid orderGuid);
     }
 }

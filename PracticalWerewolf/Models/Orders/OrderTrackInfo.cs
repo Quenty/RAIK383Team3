@@ -8,10 +8,14 @@ using System.Web;
 
 namespace PracticalWerewolf.Models.Orders
 {
+    public enum OrderStatus { Complete, Cancelled, InProgress, Queued }
+
     public class OrderTrackInfo
     {
         [Key]
         public Guid OrderTrackInfoGuid { get; set; }
+
+        public OrderStatus OrderStatus { get; set; }
         // One-to-many relationship
         Truck CurrentTruck { get; set; }
         // Many-to-one relationship, A truck driver can only have many orders at a time

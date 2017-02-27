@@ -11,35 +11,10 @@ namespace PracticalWerewolf.Services.Interfaces
 {
     interface IEmployeeService
     {
-        //See all orders
-        IEnumerable<Order> ViewAllOrders();
+        // Depends upon IEmployeeStore.GetUser
+        void GetUserEmployeeInfo(Guid userId);
 
-        //See all orders
-        IEnumerable<Order> SearchOrders(string query);
-
-        //Update EmployeeInfo
-        void UpdateEmployeeInfo(EmployeeInfo employeeInfo);
-
-        //Update CustomerInfo
-        void UpdateCustomerInfo(CustomerInfo customerInfo);
-
-        //Update ContractorInfo
-        void UpdateContractorInfo(ContractorInfo contractorInfo);
-
-        //Update OrderInfo
-        void UpdateOrderInfo(Order order);
-
-        //UpdateTruckInfo
-        void UpdateTruckInfo(Truck truck);
-
-        //Approve contractor
-        void ApproveContractor(Guid contractorInfoGuid);
-
-        //View users
-        IEnumerable<UserInfo> ViewUsers();
-
-        //Search users
-        //Should this be in js?
-        IEnumerable<UserInfo> SearchUsers(string query);
+        // Depend upon IEmployeeStore.Create
+        void RegisterEmployeeInfo(Guid userId, EmployeeInfo newContractorInfo);
     }
 }
