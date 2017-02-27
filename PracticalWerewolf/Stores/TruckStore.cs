@@ -53,6 +53,11 @@ namespace PracticalWerewolf.Stores
             throw new NotImplementedException();
         }
 
+        public Truck GetByCustomerInfoGuid(Guid customerInfo)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Update(IEnumerable<Truck> truckList)
         {
             throw new NotImplementedException();
