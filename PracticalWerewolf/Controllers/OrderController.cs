@@ -12,23 +12,36 @@ namespace PracticalWerewolf.Controllers
         [Authorize (Roles= "Employees")]
         public ActionResult Index()
         {
-            //Users will see a list of all orders
+            // Users will see a list of all orders
+
+            // Depends upon IOrderRequestService.GetCustomerOrders
             return View();
         }
 
-        // GET: Order/Index/5
-        [Authorize(Roles = "Contractors, Customers")]
-        public ActionResult Index(int id)
+        // GET: Order/Index/guid
+        [Authorize(Roles = ("Customers"))]
+        public ActionResult Index(string guid)
         {
-            //customer or contractor will see a list of past and present orders associated to them
+            // Customer or contractor will see a list of past and present orders associated to them
+            // Depends upon IOrderRequestService.GetCustomerOrders
             return View();
         }
 
-        // GET: Order/Details/5
+        // GET: Order/ContractedIndex/guid
+        [Authorize(Roles = ("Contractors"))]
+        public ActionResult ContractedIndex(string guid)
+        {
+            // Customer or contractor will see a list of past and present orders associated to them
+            // Depends upon IOrderTrackService.GetContractorOrders
+            return View();
+        }
+
+        // GET: Order/Details/guid
         [Authorize (Roles = "Employees, Contractors, Customers")]
-        public ActionResult Details(int id)
+        public ActionResult Details(string guid)
         {
-            //Will get detailed information on a specific order
+            // Will get detailed information on a specific order
+            // Depends upon IOrderService.GetOrdersByCustomerInfo, IOrderService
             return View();
         }
 
@@ -36,7 +49,7 @@ namespace PracticalWerewolf.Controllers
         [Authorize (Roles = "Customer, Employees")]
         public ActionResult Create()
         {
-            //takes user to a form to create a new order
+            // Takes user to a form to create a new order
             return View();
         }
 
@@ -45,7 +58,7 @@ namespace PracticalWerewolf.Controllers
         [Authorize(Roles = "Customer, Employees")]
         public ActionResult Create(FormCollection collection)
         {
-            //Takes the info from customer or employee and updates the database
+            // Takes the info from customer or employee and updates the database
             try
             {
                 // TODO: Add insert logic here
@@ -62,7 +75,7 @@ namespace PracticalWerewolf.Controllers
         [Authorize(Roles = "Customer, Employees")]
         public ActionResult Edit(int id)
         {
-            //Allow for the information to be updated
+            // Allow for the information to be updated
             return View();
         }
 
@@ -71,7 +84,7 @@ namespace PracticalWerewolf.Controllers
         [Authorize(Roles = "Customer, Employees")]
         public ActionResult Edit(int id, FormCollection collection)
         {
-            //Save the updated information to the database
+            // Save the updated information to the database
             try
             {
                 // TODO: Add update logic here
@@ -88,7 +101,7 @@ namespace PracticalWerewolf.Controllers
         [Authorize(Roles = "Customer, Employees")]
         public ActionResult Delete(int id)
         {
-            //Gives customer and employee the option to delete an order
+            // Gives customer and employee the option to delete an order
             return View();
         }
 
@@ -97,11 +110,10 @@ namespace PracticalWerewolf.Controllers
         [Authorize(Roles = "Customer, Employees")]
         public ActionResult Delete(int id, FormCollection collection)
         {
-            //updates the database by removing the specific order
+            // Updates the database by removing the specific order
             try
             {
                 // TODO: Add delete logic here
-
                 return RedirectToAction("Index");
             }
             catch
@@ -115,7 +127,7 @@ namespace PracticalWerewolf.Controllers
         [Authorize(Roles = "Contractor")]
         public ActionResult Reject(int id)
         {
-            //contractor has rejected offer and now we must find a new persona
+            // Contractor has rejected offer and now we must find a new person
             return View();
         }
 
@@ -123,15 +135,15 @@ namespace PracticalWerewolf.Controllers
         [Authorize(Roles = "Contractor")]
         public ActionResult Confirmation(int id)
         {
-            //Page for the contractor to collect signature once product is delivered
+            // Page for the contractor to collect signature once product is delivered
             return View();
         }
 
-        //POST: Order/Confirmation/5
+        // POST: Order/Confirmation/5
         [Authorize(Roles = "Contractor")]
         public ActionResult Confirmation(int id, FormCollection collection)
         {
-            //updates the database by marking the order as completed
+            // Updates the database by marking the order as completed
             try
             {
                 // TODO: Add delete logic here
