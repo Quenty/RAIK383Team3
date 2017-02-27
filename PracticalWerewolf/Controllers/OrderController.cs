@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PracticalWerewolf.Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,6 +9,11 @@ namespace PracticalWerewolf.Controllers
 {
     public class OrderController : Controller
     {
+        public OrderController(IOrderRequestService OrderRequestService, IOrderTrackService OrderTrackService)
+        {
+
+        }
+
         // GET: Order/Index
         [Authorize (Roles= "Employees")]
         public ActionResult Index()

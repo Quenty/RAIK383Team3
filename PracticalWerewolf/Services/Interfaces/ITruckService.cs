@@ -8,7 +8,7 @@ using System;
 
 namespace PracticalWerewolf.Services.Interfaces
 {
-    interface ITruckService
+    public interface ITruckService
     {
         // ITruckStore.
         IEnumerable<Truck> GetAllTrucks();
