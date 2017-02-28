@@ -38,9 +38,10 @@ namespace PracticalWerewolf.Stores
             throw new NotImplementedException();
         }
 
-        public List<Truck> Get()
+        public IEnumerable<Truck> GetAllTrucks()
         {
-            throw new NotImplementedException();
+            var trucks = context.Truck.ToList();
+            return trucks;
         }
 
         public IEnumerable<Truck> Get(IEnumerable<Guid> guids)

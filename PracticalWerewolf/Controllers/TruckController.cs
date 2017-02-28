@@ -1,9 +1,11 @@
-﻿using PracticalWerewolf.Services.Interfaces;
+﻿using PracticalWerewolf.Models.Trucks;
+using PracticalWerewolf.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using PracticalWerewolf.ViewModels;
 
 namespace PracticalWerewolf.Controllers
 {
@@ -21,15 +23,20 @@ namespace PracticalWerewolf.Controllers
         [Authorize(Roles = "Employees")]
         public ActionResult Index()
         {
-            // Shows list of all truck options
-            // Depends upon TruckService.GetAllTrucks
-            return View();
+            ViewBag.Message = "Trucks, Trucks and even more Trucks!";
+            IEnumerable<Truck> trucks = TruckService.GetAllTrucks();
+            var model = new TruckIndexViewModel
+            {
+                Trucks = trucks
+            };
+            return View(model);
         }
 
         // GET: Truck/Details/guid
         [Authorize(Roles = "Contractor, Employees")]
         public ActionResult Details(string guid)
         {
+
             // Gets details on a specific truck
             // Depends upon TruckService.Get
             return View();
