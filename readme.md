@@ -1,5 +1,5 @@
-![Integration build status](https://quenty.visualstudio.com/_apis/public/build/definitions/2fa045d1-fed3-4109-9fd0-31e9de0ba80b/1/badge)
-![Master build status](https://quenty.visualstudio.com/_apis/public/build/definitions/2fa045d1-fed3-4109-9fd0-31e9de0ba80b/2/badge)
+![Integration build status](https://quenty.visualstudio.com/_apis/public/build/definitions/2fa045d1-fed3-4109-9fd0-31e9de0ba80b/1/badge "Integration build status")
+![Master build status](https://quenty.visualstudio.com/_apis/public/build/definitions/2fa045d1-fed3-4109-9fd0-31e9de0ba80b/2/badge "Master build status")
 
 # Team 3
 * Abbie Jarratt
