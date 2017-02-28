@@ -14,7 +14,7 @@ namespace PracticalWerewolf.Services
             throw new NotImplementedException();
         }
 
-        public void RegisterEmployeeInfo(Guid userId, EmployeeInfo newContractorInfo)
+        public void RegisterEmployeeInfo(Guid userId, EmployeeInfo newEmployeeInfo)
         {
             throw new NotImplementedException();
         }
