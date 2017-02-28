@@ -10,7 +10,12 @@ namespace PracticalWerewolf.App_Start
 
     using Ninject;
     using Ninject.Web.Common;
-
+    using Stores.Interfaces.Contexts;
+    using Models;
+    using Stores.Interfaces;
+    using Stores;
+    using Services.Interfaces;
+    using Services;
     public static class NinjectWebCommon 
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
@@ -61,6 +66,26 @@ namespace PracticalWerewolf.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
+            kernel.Bind<IUserInfoDbContext>().To<ApplicationDbContext>();
+            kernel.Bind<IOrderDbContext>().To<ApplicationDbContext>();
+            kernel.Bind<ITruckDbContext>().To<ApplicationDbContext>();
+
+            //Stores
+            kernel.Bind<IContractorStore>().To<ContractorStore>();
+            kernel.Bind<ICustomerStore>().To<CustomerStore>();
+            kernel.Bind<IEmployeeStore>().To<EmployeeStore>();
+            kernel.Bind<IOrderStore>().To<OrderStore>();
+            kernel.Bind<ITruckStore>().To<TruckStore>();
+
+            //Services
+            kernel.Bind<IContractorService>().To<ContractorService>();
+            kernel.Bind<ICustomerService>().To<CustomerService>();
+            kernel.Bind<IEmployeeService>().To<EmployeeService>();
+            kernel.Bind<IOrderRequestService>().To<OrderRequestService>();
+            kernel.Bind<IOrderService>().To<OrderService>();
+            kernel.Bind<IOrderTrackService>().To<OrderTrackService>();
+            kernel.Bind<ITruckService>().To<TruckService>();
+            kernel.Bind<IUserInfoService>().To<UserInfoService>();
         }        
     }
 }

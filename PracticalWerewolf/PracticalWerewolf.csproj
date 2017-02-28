@@ -214,9 +214,17 @@
       <DependentUpon>201702270351026_Updated-Data-Models-OrderStatus.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Services\ContractorService.cs" />
+    <Compile Include="Services\CustomerService.cs" />
+    <Compile Include="Services\EmployeeService.cs" />
     <Compile Include="Services\Interfaces\IOrderRequestService.cs" />
     <Compile Include="Services\Interfaces\IOrderTrackService.cs" />
     <Compile Include="Services\Interfaces\IUserInfoService.cs" />
+    <Compile Include="Services\OrderRequestService.cs" />
+    <Compile Include="Services\OrderService.cs" />
+    <Compile Include="Services\OrderTrackService.cs" />
+    <Compile Include="Services\TruckService.cs" />
+    <Compile Include="Services\UserInfoService.cs" />
     <Compile Include="Stores\ContractorStore.cs" />
     <Compile Include="Stores\CustomerStore.cs" />
     <Compile Include="Stores\EmployeeStore.cs" />
@@ -224,7 +232,6 @@
     <Compile Include="Stores\TruckStore.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\IApplicationUser.cs" />
-    <Compile Include="Stores\Interfaces\Contexts\IUserInfoContext.cs" />
     <Compile Include="Stores\Interfaces\Contexts\ITruckDbContext.cs" />
     <Compile Include="Stores\Interfaces\Contexts\IUserInfoDbContext.cs" />
     <Compile Include="Stores\Interfaces\Contexts\IOrderDbContext.cs" />
