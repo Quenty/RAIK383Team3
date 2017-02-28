@@ -32,7 +32,7 @@ namespace PracticalWerewolf.Models
     }
 
 
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IOrderDbContext, IUserInfoContext, ITruckDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IOrderDbContext, IUserInfoDbContext, ITruckDbContext
     {
         public DbSet<CustomerInfo> CustomerInfo { get; set; }
         public DbSet<UserInfo> UserInfo { get; set; }
