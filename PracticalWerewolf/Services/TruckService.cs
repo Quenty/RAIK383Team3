@@ -5,11 +5,19 @@ using System.Linq;
 using System.Web;
 using PracticalWerewolf.Models.Trucks;
 using System.Device.Location;
+using PracticalWerewolf.Stores.Interfaces;
 
 namespace PracticalWerewolf.Services
 {
     public class TruckService : ITruckService
     {
+        private ITruckStore TruckStore;
+        
+        public TruckService(ITruckStore TruckStore)
+        {
+            this.TruckStore = TruckStore;
+        }
+
         public void CreateTruck(Truck truck)
         {
             throw new NotImplementedException();
@@ -17,7 +25,7 @@ namespace PracticalWerewolf.Services
 
         public IEnumerable<Truck> GetAllTrucks()
         {
-            throw new NotImplementedException();
+            return TruckStore.GetAllTrucks();
         }
 
         public Truck GetTruck(Guid truckId)

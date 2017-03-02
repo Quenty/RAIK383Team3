@@ -213,6 +213,10 @@
     <Compile Include="Migrations\201702270351026_Updated-Data-Models-OrderStatus.Designer.cs">
       <DependentUpon>201702270351026_Updated-Data-Models-OrderStatus.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702282049544_Changing Geocoordinate.cs" />
+    <Compile Include="Migrations\201702282049544_Changing Geocoordinate.Designer.cs">
+      <DependentUpon>201702282049544_Changing Geocoordinate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\ContractorService.cs" />
     <Compile Include="Services\CustomerService.cs" />
@@ -343,6 +347,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702270351026_Updated-Data-Models-OrderStatus.resx">
       <DependentUpon>201702270351026_Updated-Data-Models-OrderStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702282049544_Changing Geocoordinate.resx">
+      <DependentUpon>201702282049544_Changing Geocoordinate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

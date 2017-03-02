@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PracticalWerewolf.Models.Trucks.Truck>
+﻿@model PracticalWerewolf.ViewModels.TruckIndexViewModel
 
 @{
     ViewBag.Title = "Index";
@@ -14,7 +14,7 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
+@foreach (var item in Model.Trucks) {
     <tr>
         <td>
             

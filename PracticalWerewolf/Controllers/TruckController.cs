@@ -20,7 +20,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         // GET: Truck
-        [Authorize(Roles = "Employees")]
+        [Authorize (Roles = "Employee")]
         public ActionResult Index()
         {
             ViewBag.Message = "Trucks, Trucks and even more Trucks!";
@@ -33,7 +33,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         // GET: Truck/Details/guid
-        [Authorize(Roles = "Contractor, Employees")]
+        [Authorize(Roles = "Contractor, Employee")]
         public ActionResult Details(string guid)
         {
 
