@@ -66,9 +66,10 @@ namespace PracticalWerewolf.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<IUserInfoDbContext>().To<ApplicationDbContext>();
-            kernel.Bind<IOrderDbContext>().To<ApplicationDbContext>();
-            kernel.Bind<ITruckDbContext>().To<ApplicationDbContext>();
+            kernel.Bind<ApplicationDbContext>().ToSelf().InSingletonScope();
+            kernel.Bind<IUserInfoDbContext>().To<ApplicationDbContext>().InSingletonScope();
+            kernel.Bind<IOrderDbContext>().To<ApplicationDbContext>().InSingletonScope();
+            kernel.Bind<ITruckDbContext>().To<ApplicationDbContext>().InSingletonScope();
 
             //Stores
             kernel.Bind<IContractorStore>().To<ContractorStore>();
