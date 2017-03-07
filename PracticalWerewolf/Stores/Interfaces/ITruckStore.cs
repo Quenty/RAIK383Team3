@@ -11,7 +11,7 @@ namespace PracticalWerewolf.Stores.Interfaces
     public interface ITruckStore
     {
         //Get all Truck
-        List<Truck> Get();
+        IEnumerable<Truck> GetAllTrucks();
 
         //Get Truck by guid
         Truck Get(Guid guid);
