@@ -10,8 +10,8 @@ namespace PracticalWerewolf.Models.Orders
         public Guid OrderGuid { get; set; }
 
         // One-to-one relationship, keeps track of who placed the order and where it goes
-        OrderRequestInfo RequestInfo { get; set; }
+        public OrderRequestInfo RequestInfo { get; set; }
         // One-to-one relationship, keeps track of where the order is
-        OrderTrackInfo TrackInfo { get; set; }          
+        public OrderTrackInfo TrackInfo { get; set; }          
     }
 }
