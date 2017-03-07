@@ -23,19 +23,18 @@ namespace PracticalWerewolf.Tests.Services
         };
 
         [TestMethod]
-        public void TestMethod1()
-        {
-            Assert.IsTrue(true);
-        }
-
-        [TestMethod]
         public void GetAllTrucks_ThreeTrucks_GetAll()
         {
             var truckStore = new Mock<ITruckStore>();
             truckStore.Setup(x => x.GetAllTrucks()).Returns(_trucks);
             var truckService = new TruckService(truckStore.Object);
+            
+            var trucks = truckService.GetAllTrucks();
 
-            Assert.AreEqual(3, truckService.GetAllTrucks().Count());
+            Assert.AreEqual(3, trucks.Count());
+            Assert.IsTrue(trucks.Contains(_trucks.ElementAt(0)));
+            Assert.IsTrue(trucks.Contains(_trucks.ElementAt(1)));
+            Assert.IsTrue(trucks.Contains(_trucks.ElementAt(2)));
         }
 
     }
