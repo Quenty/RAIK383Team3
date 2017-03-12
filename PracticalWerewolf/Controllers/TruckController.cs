@@ -6,21 +6,25 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using PracticalWerewolf.ViewModels;
+using PracticalWerewolf;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.AspNet.Identity;
 
 namespace PracticalWerewolf.Controllers
 {
-
     public class TruckController : Controller
     {
         ITruckService TruckService;
+        IContractorService ContractorService;
 
-        public TruckController(ITruckService TruckService)
+        public TruckController(ITruckService TruckService, IContractorService ContractorService)
         {
             this.TruckService = TruckService;
+            this.ContractorService = ContractorService;
         }
 
         // GET: Truck
-        [Authorize (Roles = "Employee")]
+        [Authorize(Roles = "Employee")]
         public ActionResult Index()
         {
             ViewBag.Message = "Trucks, Trucks and even more Trucks!";
@@ -33,69 +37,69 @@ namespace PracticalWerewolf.Controllers
         }
 
         // GET: Truck/Details/guid
-        [Authorize(Roles = "Contractor, Employee")]
-        public ActionResult Details(string guid)
+        //[Authorize(Roles = "Contractor, Employee")]
+        public ActionResult Details(string id)
         {
-
-            // Gets details on a specific truck
-            // Depends upon TruckService.Get
-            return View();
-        }
-
-        // GET: Truck/Create
-        [Authorize(Roles = "Contractor")]
-        public ActionResult Create()
-        {
-            // Takes contractors to a form to add a truck to their account
-            // Shouldn't depend upon nothing
-            return View();
-        }
-
-        // POST: Truck/Register
-        [HttpPost]
-        [Authorize(Roles = "Contractor")]
-        public ActionResult Register(FormCollection collection)
-        {
-            // Updates the database with the new truck
-            // Depends upon TruckService.Create
-            try
+            if (!String.IsNullOrEmpty(id))
             {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
+                var guid = new Guid(id);
+                Truck truck = TruckService.GetTruck(guid);
+                var model = new TruckDetailsViewModel
+                {
+                    Guid = id,
+                    AvailableCapacity = truck.AvailableCapacity,
+                    MaxCapacity = truck.MaxCapacity,
+                    Lat = truck.Location.Latitude,
+                    Long = truck.Location.Longitude
+                };
+                return View(model);
             }
-            catch
-            {
-                return View();
-            }
+            else
+                return HttpNotFound();
         }
 
         // GET: Truck/Edit/guid
         [Authorize(Roles = "Contractor")]
-        public ActionResult Edit(int id)
+        public ActionResult Update(string id)
         {
-            // User is taken to a page where they can change information
-            // Depends upon TruckService.GetTruck
+            var guid = new Guid(id);
+            var truck = TruckService.GetTruck(guid);
+            var model = new TruckUpdateViewModel
+            {
+                Guid = id,
+                Volume = truck.MaxCapacity.Volume,
+                Mass = truck.MaxCapacity.Mass
+            };
 
-            return View();
+            return View(model);
         }
 
-        // POST: Truck/Edit/guid
+        // POST: Truck/Update/guid
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Contractor")]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Update(string id, TruckUpdateViewModel model)
         {
-            // The database is updated with the new user information
-            // Depends upon TruckService.UpdateTruckLocation, TruckService.UpdateTruckCurrentCapacity, TruckService.UpdateTruckMaxCapacity
             try
             {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    var guid = new Guid(id);
+                    var NewModel = new TruckCapacityUnit
+                    {
+                        TruckCapacityUnitGuid = new Guid(model.Guid),
+                        Volume = model.Volume,
+                        Mass = model.Mass
+                    };
+                    TruckService.UpdateTruckMaxCapacity(guid, NewModel);
+                    return RedirectToAction("Index");
+                }
+                else
+                    return View(model);
             }
             catch
             {
-                return View();
+                return View(model);
             }
         }
     }

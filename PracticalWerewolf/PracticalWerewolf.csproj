@@ -217,6 +217,10 @@
     <Compile Include="Migrations\201702282049544_Changing Geocoordinate.Designer.cs">
       <DependentUpon>201702282049544_Changing Geocoordinate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703071933191_Updated truck model.cs" />
+    <Compile Include="Migrations\201703071933191_Updated truck model.Designer.cs">
+      <DependentUpon>201703071933191_Updated truck model.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\ContractorService.cs" />
     <Compile Include="Services\CustomerService.cs" />
@@ -319,6 +323,8 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Truck\Index.cshtml" />
+    <Content Include="Views\Truck\Details.cshtml" />
+    <Content Include="Views\Truck\Update.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -350,6 +356,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702282049544_Changing Geocoordinate.resx">
       <DependentUpon>201702282049544_Changing Geocoordinate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703071933191_Updated truck model.resx">
+      <DependentUpon>201703071933191_Updated truck model.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
