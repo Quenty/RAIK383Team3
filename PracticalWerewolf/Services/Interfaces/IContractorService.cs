@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PracticalWerewolf.Services.Interfaces
 {
-    interface IContractorService
+    public interface IContractorService
     {
         // Depends upon IContractorStore.Update
         void UpdateContractorIsAvailable(Guid contractorInfoGuid, Boolean isAvailable);
@@ -22,5 +22,6 @@ namespace PracticalWerewolf.Services.Interfaces
 
         // Depends upon the IContractorStore.Create
         void RegisterContractorInfo(Guid userId, ContractorInfo newContractorInfo);
+        IEnumerable<UserInfo> GetAllContractors();
     }
 }
