@@ -22,6 +22,19 @@ namespace PracticalWerewolf.Tests.Services
             new Truck {TruckGuid = Guid.NewGuid(), CurrentCapacity = unit, MaxCapacity = unit, Location = location}
         };
 
+
+        [TestMethod]
+        public void GetAllTrucks_NoTrucks_EmptyList()
+        {
+            var truckStore = new Mock<ITruckStore>();
+            truckStore.Setup(x => x.GetAllTrucks()).Returns(new List<Truck>());
+            var truckService = new TruckService(truckStore.Object);
+
+            var trucks = truckService.GetAllTrucks();
+
+            Assert.AreEqual(0, trucks.Count());
+        }
+
         [TestMethod]
         public void GetAllTrucks_ThreeTrucks_GetAll()
         {

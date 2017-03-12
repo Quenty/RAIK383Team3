@@ -93,9 +93,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\TruckControllerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
     <Compile Include="Services\TruckServiceTest.cs" />
+    <Compile Include="Stores\DbContext\MockDbSet.cs" />
+    <Compile Include="Stores\TruckStoreTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

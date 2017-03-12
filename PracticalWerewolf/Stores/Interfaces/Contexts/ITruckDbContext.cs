@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PracticalWerewolf.Stores.Interfaces.Contexts
 {
-    interface ITruckDbContext
+    public interface ITruckDbContext
     {
         DbSet<Truck> Truck { get; set; }
         DbSet<TruckCapacityUnit> TruckCapacityUnit { get; set; }

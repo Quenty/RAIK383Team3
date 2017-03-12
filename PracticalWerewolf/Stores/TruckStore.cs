@@ -13,7 +13,7 @@ namespace PracticalWerewolf.Stores
     {
         private ITruckDbContext context;
 
-        public TruckStore(ApplicationDbContext truckDbContext)
+        public TruckStore(ITruckDbContext truckDbContext)
         {
             context = truckDbContext;
         }
