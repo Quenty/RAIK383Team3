@@ -14,6 +14,8 @@ namespace PracticalWerewolf.Models.Trucks
     {
         [Key]
         public Guid TruckCapacityUnitGuid { get; set; }
+        public double Mass { get; set; }
+        public double Volume { get; set; }
     }
 
     public class Truck
