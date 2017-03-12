@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -11,6 +12,8 @@ namespace PracticalWerewolf.Models.UserInfos
     {
         [Key]
         public Guid ContractorInfoGuid { get; set; }
+
+
         // One-to-one relationship, a contractor can only have 1 truck
         public virtual Truck Truck { get; set; }
 

@@ -186,6 +186,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ContractorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
@@ -213,9 +214,13 @@
     <Compile Include="Migrations\201702270351026_Updated-Data-Models-OrderStatus.Designer.cs">
       <DependentUpon>201702270351026_Updated-Data-Models-OrderStatus.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201702282049544_Changing Geocoordinate.cs" />
-    <Compile Include="Migrations\201702282049544_Changing Geocoordinate.Designer.cs">
-      <DependentUpon>201702282049544_Changing Geocoordinate.cs</DependentUpon>
+    <Compile Include="Migrations\201703072104012_Generate-GUIDs.cs" />
+    <Compile Include="Migrations\201703072104012_Generate-GUIDs.Designer.cs">
+      <DependentUpon>201703072104012_Generate-GUIDs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703122235589_Add-More-Guids.cs" />
+    <Compile Include="Migrations\201703122235589_Add-More-Guids.Designer.cs">
+      <DependentUpon>201703122235589_Add-More-Guids.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\ContractorService.cs" />
@@ -245,6 +250,7 @@
     <Compile Include="Models\UserInfos\CustomerInfo.cs" />
     <Compile Include="Models\Orders\OrderRequestInfo.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="ViewModels\ContractorViewModels.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="Models\Orders\Order.cs" />
     <Compile Include="Models\Orders\OrderTrackInfo.cs" />
@@ -261,7 +267,6 @@
     <Compile Include="Services\Interfaces\IOrderService.cs" />
     <Compile Include="Services\Interfaces\ITruckService.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="ViewModels\TruckViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -318,11 +323,13 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Truck\Index.cshtml" />
+    <Content Include="Views\Contractor\Register.cshtml" />
+    <Content Include="Views\Contractor\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Order\" />
+    <Folder Include="Views\Truck\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -348,8 +355,11 @@
     <EmbeddedResource Include="Migrations\201702270351026_Updated-Data-Models-OrderStatus.resx">
       <DependentUpon>201702270351026_Updated-Data-Models-OrderStatus.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201702282049544_Changing Geocoordinate.resx">
-      <DependentUpon>201702282049544_Changing Geocoordinate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201703072104012_Generate-GUIDs.resx">
+      <DependentUpon>201703072104012_Generate-GUIDs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703122235589_Add-More-Guids.resx">
+      <DependentUpon>201703122235589_Add-More-Guids.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -9,6 +9,7 @@ namespace PracticalWerewolf
 {
     public partial class Startup
     {
+
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
@@ -17,8 +18,8 @@ namespace PracticalWerewolf
 
         public void CreateRolesandUsers()
         {
-            ApplicationDbContext context = new ApplicationDbContext();
-
+            // ApplicationDbContext context = new ApplicationDbContext();
+            /*
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
 
             // creating Creating Employee role     
@@ -39,7 +40,7 @@ namespace PracticalWerewolf
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
                 role.Name = "Customer";
                 roleManager.Create(role);
-            }
+            }*/
         }
     }
 }
