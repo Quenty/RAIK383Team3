@@ -24,7 +24,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         // GET: Truck
-        [Authorize (Roles = "Employee")]
+        [Authorize(Roles = "Employee")]
         public ActionResult Index()
         {
             ViewBag.Message = "Trucks, Trucks and even more Trucks!";
@@ -57,7 +57,7 @@ namespace PracticalWerewolf.Controllers
             else
                 return HttpNotFound();
         }
-        
+
         // GET: Truck/Edit/guid
         [Authorize(Roles = "Contractor")]
         public ActionResult Update(string id)
@@ -76,6 +76,7 @@ namespace PracticalWerewolf.Controllers
 
         // POST: Truck/Update/guid
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Contractor")]
         public ActionResult Update(string id, TruckUpdateViewModel model)
         {
@@ -95,7 +96,6 @@ namespace PracticalWerewolf.Controllers
                 }
                 else
                     return View(model);
-
             }
             catch
             {
