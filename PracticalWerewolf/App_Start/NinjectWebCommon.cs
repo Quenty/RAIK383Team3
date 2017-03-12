@@ -16,6 +16,11 @@ namespace PracticalWerewolf.App_Start
     using Stores;
     using Services.Interfaces;
     using Services;
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.EntityFramework;
+    using Microsoft.AspNet.Identity.Owin;
+    using System.Data.Entity;
+
     public static class NinjectWebCommon 
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
@@ -70,6 +75,18 @@ namespace PracticalWerewolf.App_Start
             kernel.Bind<IUserInfoDbContext>().To<ApplicationDbContext>().InSingletonScope();
             kernel.Bind<IOrderDbContext>().To<ApplicationDbContext>().InSingletonScope();
             kernel.Bind<ITruckDbContext>().To<ApplicationDbContext>().InSingletonScope();
+
+            kernel.Bind<DbContext>().To<ApplicationDbContext>().InSingletonScope();
+
+            kernel.Bind<IUserStore<ApplicationUser>>().To<UserStore<ApplicationUser>>();
+            kernel.Bind<UserManager<ApplicationUser>>().ToSelf();
+            kernel.Bind<HttpContextBase>().ToMethod(ctx => new HttpContextWrapper(HttpContext.Current)).InTransientScope();
+            kernel.Bind<ApplicationSignInManager>().ToMethod((context) =>
+            {
+                var cbase = new HttpContextWrapper(HttpContext.Current);
+                return cbase.GetOwinContext().Get<ApplicationSignInManager>();
+            });
+            kernel.Bind<ApplicationUserManager>().ToSelf();
 
             //Stores
             kernel.Bind<IContractorStore>().To<ContractorStore>();

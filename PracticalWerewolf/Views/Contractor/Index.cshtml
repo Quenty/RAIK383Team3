@@ -5,7 +5,7 @@
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 
-@if (!@Model.HasContractorInfo)
+@if (@Model.ContractorInfo == null)
 {
     <div class="jumbotron">
         <h1>Contract</h1>
@@ -17,7 +17,7 @@ else
 {
     if (!Model.ContractorInfo.IsApproved)
     {
-        <div class="alert alert-info" role="alert"><strong>Approval pending</strong>Your contractor request is pending approval by a manager.</div>
+        <div class="alert alert-info" role="alert"><span class="glyphicon glyphicon-ok-circle"></span> <strong>Approval pending!</strong> Your application pending approval by a manager. You'll receive an email.</div>
     }
     else
     {

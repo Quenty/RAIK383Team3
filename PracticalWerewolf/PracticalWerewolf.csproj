@@ -214,6 +214,14 @@
     <Compile Include="Migrations\201702270351026_Updated-Data-Models-OrderStatus.Designer.cs">
       <DependentUpon>201702270351026_Updated-Data-Models-OrderStatus.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703072104012_Generate-GUIDs.cs" />
+    <Compile Include="Migrations\201703072104012_Generate-GUIDs.Designer.cs">
+      <DependentUpon>201703072104012_Generate-GUIDs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703122235589_Add-More-Guids.cs" />
+    <Compile Include="Migrations\201703122235589_Add-More-Guids.Designer.cs">
+      <DependentUpon>201703122235589_Add-More-Guids.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\ContractorService.cs" />
     <Compile Include="Services\CustomerService.cs" />
@@ -346,6 +354,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702270351026_Updated-Data-Models-OrderStatus.resx">
       <DependentUpon>201702270351026_Updated-Data-Models-OrderStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703072104012_Generate-GUIDs.resx">
+      <DependentUpon>201703072104012_Generate-GUIDs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703122235589_Add-More-Guids.resx">
+      <DependentUpon>201703122235589_Add-More-Guids.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

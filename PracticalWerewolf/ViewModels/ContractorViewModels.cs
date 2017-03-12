@@ -14,7 +14,6 @@ namespace PracticalWerewolf.ViewModels.Contractor
 
     public class ContractorIndexModel
     {
-        public bool HasContractorInfo { get; set;}
         public ContractorInfo ContractorInfo { get; set; }
     }
 }
