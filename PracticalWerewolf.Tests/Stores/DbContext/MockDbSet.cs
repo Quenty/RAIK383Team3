@@ -13,7 +13,7 @@ namespace PracticalWerewolf.Tests.Stores.DbContext
     //Copied from http://stackoverflow.com/questions/25960192/mocking-ef-dbcontext-with-moq 
     public class MockDbSet<T> : DbSet<T>, IQueryable<T>, IEnumerable<T> where T : class
     {
-        List<T> _data;
+        protected List<T> _data;
 
         public MockDbSet()
         {

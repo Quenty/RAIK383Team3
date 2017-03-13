@@ -28,8 +28,9 @@ namespace PracticalWerewolf.Tests.Controllers
         public void Index_NoTrucks_TestViewModel()
         {
             var truckService = new Mock<ITruckService>();
+            var contractorService = new Mock<IContractorService>();
             truckService.Setup(x => x.GetAllTrucks()).Returns(new List<Truck>());
-            var controller = new TruckController(truckService.Object);
+            var controller = new TruckController(truckService.Object, contractorService.Object);
 
             var result = controller.Index() as ViewResult;
             var model = result.Model as TruckIndexViewModel;
@@ -42,8 +43,9 @@ namespace PracticalWerewolf.Tests.Controllers
         public void Index_ThreeTrucks_TestViewModel()
         {
             var truckService = new Mock<ITruckService>();
+            var contractorService = new Mock<IContractorService>();
             truckService.Setup(x => x.GetAllTrucks()).Returns(_trucks);
-            var controller = new TruckController(truckService.Object);
+            var controller = new TruckController(truckService.Object, contractorService.Object);
 
             var result = controller.Index() as ViewResult;
             var model = result.Model as TruckIndexViewModel;

@@ -25,7 +25,7 @@ namespace PracticalWerewolf.Tests.Stores
         };
 
         [TestMethod]
-        public void TestGetAll_EmptyDbSetList_SizeZero()
+        public void GetAll_EmptyDbSetList_SizeZero()
         {
             //TruckDbSet
             Mock<ITruckDbContext> dbContext = new Mock<ITruckDbContext>();
@@ -36,20 +36,68 @@ namespace PracticalWerewolf.Tests.Stores
         }
 
         [TestMethod]
-        public void TestGetAll_ThreeTrucks_SizeZero()
+        public void GetAll_ThreeTrucks_SizeZero()
         {
-            //TruckDbSet
             Mock<ITruckDbContext> dbContext = new Mock<ITruckDbContext>();
-            var dbSet = new MockDbSet<Truck>();
+            var dbSet = new MockTruckDbSet();
             dbSet.AddRange(_trucks);
             dbContext.Setup(x => x.Truck).Returns(dbSet);
             ITruckStore store = new TruckStore(dbContext.Object);
 
             var trucks = store.GetAllTrucks();
+
             Assert.AreEqual(3, trucks.Count());
             Assert.IsTrue(trucks.Contains(_trucks.ElementAt(0)));
             Assert.IsTrue(trucks.Contains(_trucks.ElementAt(1)));
             Assert.IsTrue(trucks.Contains(_trucks.ElementAt(2)));
+        }
+
+        [TestMethod]
+        public void Get_OneMatchingTruck_ReturnTruck()
+        {
+            var chosenGuid = _trucks.ElementAt(0).TruckGuid;
+            var context = new Mock<ITruckDbContext>();
+            var dbSet = new MockTruckDbSet();
+            dbSet.AddRange(_trucks);
+            context.Setup(x => x.Truck).Returns(dbSet);
+            ITruckStore store = new TruckStore(context.Object);
+
+            var truck = store.Get(chosenGuid);
+
+            Assert.IsNotNull(truck);
+            Assert.AreEqual(_trucks.ElementAt(0), truck);
+        }
+
+        [TestMethod]
+        public void Get_NoMatchingTrucks_ReturnTruck()
+        {
+            var chosenGuid = Guid.NewGuid();
+            var context = new Mock<ITruckDbContext>();
+            var dbSet = new MockTruckDbSet();
+            dbSet.AddRange(_trucks);
+            context.Setup(x => x.Truck).Returns(dbSet);
+            ITruckStore store = new TruckStore(context.Object);
+
+            var truck = store.Get(chosenGuid);
+
+            Assert.IsNull(truck);
+        }
+
+        [TestMethod]
+        public void Get_MultipleMatchingTrucks_ReturnTruck()
+        {
+            var chosenGuid = _trucks.ElementAt(0).TruckGuid;
+            var context = new Mock<ITruckDbContext>();
+            var dbSet = new MockTruckDbSet();
+            dbSet.AddRange(_trucks);
+            dbSet.Add(new Truck() { TruckGuid = chosenGuid, Location = location, CurrentCapacity = unit, MaxCapacity = unit });
+            context.Setup(x => x.Truck).Returns(dbSet);
+            ITruckStore store = new TruckStore(context.Object);
+
+            var truck = store.Get(chosenGuid);
+
+            Assert.IsNotNull(truck);
+            Assert.AreEqual(_trucks.ElementAt(0), truck);
         }
     }
 }
