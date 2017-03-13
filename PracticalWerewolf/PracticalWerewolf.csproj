@@ -222,7 +222,12 @@
     <Compile Include="Migrations\201703122235589_Add-More-Guids.Designer.cs">
       <DependentUpon>201703122235589_Add-More-Guids.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703130024441_Add-CivicAddress-Guids.cs" />
+    <Compile Include="Migrations\201703130024441_Add-CivicAddress-Guids.Designer.cs">
+      <DependentUpon>201703130024441_Add-CivicAddress-Guids.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\CivicAddressDb.cs" />
     <Compile Include="Services\ContractorService.cs" />
     <Compile Include="Services\CustomerService.cs" />
     <Compile Include="Services\EmployeeService.cs" />
@@ -325,6 +330,7 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Contractor\Register.cshtml" />
     <Content Include="Views\Contractor\Index.cshtml" />
+    <Content Include="Views\Contractor\Approve.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -360,6 +366,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703122235589_Add-More-Guids.resx">
       <DependentUpon>201703122235589_Add-More-Guids.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703130024441_Add-CivicAddress-Guids.resx">
+      <DependentUpon>201703130024441_Add-CivicAddress-Guids.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

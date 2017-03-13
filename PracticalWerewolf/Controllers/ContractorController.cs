@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using PracticalWerewolf.Models.UserInfos;
+using PracticalWerewolf.Stores.Interfaces;
 using PracticalWerewolf.ViewModels.Contractor;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,8 @@ namespace PracticalWerewolf.Controllers
             Error
         }
 
-        private ApplicationUserManager UserManager {get; set;}
+        private ApplicationUserManager UserManager { get; set; }
+        private IContractorStore ContractorStore { get; set; }
 
         public ContractorController(ApplicationUserManager UserManager)
         {
@@ -56,6 +58,25 @@ namespace PracticalWerewolf.Controllers
             }
 
             return View();
+        }
+
+        [Authorize(Roles = "Employee")]
+        public ActionResult Approve()
+        {
+            PendingContractorsModel model = new PendingContractorsModel()
+            {
+                Pending = new List<ContractorInfo>(),
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Approve(ContractorApprovalModel model)
+        {
+            
+            return RedirectToAction("Approve", new { Message = ContractorMessageId.Error });
         }
 
         [HttpPost]

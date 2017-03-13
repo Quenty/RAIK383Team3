@@ -12,6 +12,17 @@ namespace PracticalWerewolf.ViewModels.Contractor
         
     }
 
+    public class ContractorApprovalModel
+    {
+        ContractorInfo ApprovedContractor { get; set; }
+        Boolean IsApproved { get; set; }
+    }
+
+    public class PendingContractorsModel
+    {
+        public IEnumerable<ContractorInfo> Pending { get; set; }
+    }
+
     public class ContractorIndexModel
     {
         public ContractorInfo ContractorInfo { get; set; }
