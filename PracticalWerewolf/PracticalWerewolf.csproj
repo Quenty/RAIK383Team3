@@ -239,9 +239,11 @@
     <Compile Include="Services\OrderTrackService.cs" />
     <Compile Include="Services\TruckService.cs" />
     <Compile Include="Services\UserInfoService.cs" />
+    <Compile Include="Stores\EntityStore.cs" />
     <Compile Include="Stores\ContractorStore.cs" />
     <Compile Include="Stores\CustomerStore.cs" />
     <Compile Include="Stores\EmployeeStore.cs" />
+    <Compile Include="Stores\Interfaces\IEntityStore.cs" />
     <Compile Include="Stores\OrderStore.cs" />
     <Compile Include="Stores\TruckStore.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />

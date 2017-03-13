@@ -10,12 +10,10 @@
 <table class="table">
     <tr>
         <th>
-            Blah
-            @*@Html.DisplayNameFor(model => Model.Pending)*@
+            @Html.DisplayNameFor(model => model.Pending.FirstOrDefault().DriversLicenseId)
         </th>
         <th>
-            Bleh
-           @* @Html.DisplayNameFor(model => model.IsAvailable)*@
+           @Html.DisplayNameFor(model => model.Pending.FirstOrDefault().ContractorInfoGuid)
         </th>
         <th></th>
     </tr>
@@ -23,10 +21,10 @@
 @foreach (var item in Model.Pending) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.IsApproved)
+            @Html.DisplayFor(modelItem => item.DriversLicenseId)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.IsAvailable)
+            @Html.DisplayFor(modelItem => item.ContractorInfoGuid)
         </td>
         <td>
             @Html.ActionLink("Approve", "Approve", new { id=item.ContractorInfoGuid }) |

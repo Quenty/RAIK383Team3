@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using PracticalWerewolf.Models.UserInfos;
+using PracticalWerewolf.Services.Interfaces;
 using PracticalWerewolf.Stores.Interfaces;
 using PracticalWerewolf.ViewModels.Contractor;
 using System;
@@ -22,11 +23,12 @@ namespace PracticalWerewolf.Controllers
         }
 
         private ApplicationUserManager UserManager { get; set; }
-        private IContractorStore ContractorStore { get; set; }
+        private IContractorService ContractorService { get; set; }
 
-        public ContractorController(ApplicationUserManager UserManager)
+        public ContractorController(ApplicationUserManager UserManager, IContractorService ContractorService)
         {
             this.UserManager = UserManager;
+            this.ContractorService = ContractorService;
         }
 
         public async Task<ActionResult> Index(ContractorMessageId? message)
@@ -65,7 +67,7 @@ namespace PracticalWerewolf.Controllers
         {
             PendingContractorsModel model = new PendingContractorsModel()
             {
-                Pending = new List<ContractorInfo>(),
+                Pending = ContractorService.GetUnapprovedContractors(),
             };
 
             return View(model);

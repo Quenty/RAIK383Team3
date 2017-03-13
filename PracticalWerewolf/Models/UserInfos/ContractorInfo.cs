@@ -15,9 +15,11 @@ namespace PracticalWerewolf.Models.UserInfos
         public Guid ContractorInfoGuid { get; set; }
 
         [MaxLength(20, ErrorMessage = "License must be shorter than 20 characters")]
+        [Display(Name = "Drivers license ID")]
         public String DriversLicenseId;
 
-        public CivicAddressDb Address;
+        [Display(Name = "Home address")]
+        public CivicAddressDb HomeAddress;
 
         // One-to-one relationship, a contractor can only have 1 truck
         public virtual Truck Truck { get; set; }
