@@ -77,7 +77,11 @@ namespace PracticalWerewolf.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Approve(ContractorApprovalModel model)
         {
-            
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             return RedirectToAction("Approve", new { Message = ContractorMessageId.Error });
         }
 
@@ -85,6 +89,11 @@ namespace PracticalWerewolf.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(ContractorRegisterModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
             if (user.ContractorInfo != null)
             {
