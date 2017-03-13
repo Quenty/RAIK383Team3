@@ -18,54 +18,9 @@ namespace PracticalWerewolf.Stores
             context = userInfoDbContext;
         }
 
-        public void Add(IEnumerable<ContractorInfo> contractorInfoList)
+        public IEnumerable<ContractorInfo> GetUnapprovedContractorInfos()
         {
-            throw new NotImplementedException();
-        }
-
-        public void Add(ContractorInfo contractorInfo)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(IEnumerable<ContractorInfo> contractorInfoList)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(ContractorInfo contractorInfo)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<ContractorInfo> Get()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<ContractorInfo> Get(IEnumerable<Guid> guids)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ContractorInfo Get(Guid guid)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IApplicationUser GetUser(Guid guid)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(IEnumerable<ContractorInfo> contractorInfoList)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(ContractorInfo contractorInfo)
-        {
-            throw new NotImplementedException();
+            return context.ContractorInfo.Where(c => !c.IsApproved);
         }
     }
 }

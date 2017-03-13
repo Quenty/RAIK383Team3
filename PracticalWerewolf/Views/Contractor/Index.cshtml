@@ -1,0 +1,26 @@
+﻿@model PracticalWerewolf.ViewModels.Contractor.ContractorIndexModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+
+@if (@Model.ContractorInfo == null)
+{
+    <div class="jumbotron">
+        <h1>Contract</h1>
+        <p class="lead">Contract with Practical Werewolf and earn lots of tasty money! </p>
+        <p><a href="@Url.Action("Register", "Contractor")" class="btn btn-primary btn-lg">Register &raquo;</a></p>
+    </div>
+}
+else
+{
+    if (!Model.ContractorInfo.IsApproved)
+    {
+        <div class="alert alert-info" role="alert"><span class="glyphicon glyphicon-ok-circle"></span> <strong>Approval pending!</strong> Your application pending approval by a manager. You'll receive an email.</div>
+    }
+    else
+    {
+
+    }
+}

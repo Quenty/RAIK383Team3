@@ -11,6 +11,7 @@ using PracticalWerewolf.Models.Trucks;
 using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.Stores.Interfaces;
 using PracticalWerewolf.Stores.Interfaces.Contexts;
+using System.Device.Location;
 
 namespace PracticalWerewolf.Models
 {
@@ -27,6 +28,18 @@ namespace PracticalWerewolf.Models
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Add custom user claims here
 
+            var user = await manager.FindByIdAsync(userIdentity.GetUserId());
+            if (user.EmployeeInfo != null)
+            {
+                userIdentity.AddClaim(new Claim(ClaimTypes.Role, "Employee"));
+            }
+
+            if (user.ContractorInfo != null)
+            {
+                userIdentity.AddClaim(new Claim(ClaimTypes.Role, "Contractor"));
+            }
+
+
             return userIdentity;
         }
     }
@@ -41,6 +54,7 @@ namespace PracticalWerewolf.Models
 
         public DbSet<Truck> Truck { get; set; }
         public DbSet<TruckCapacityUnit> TruckCapacityUnit { get; set; }
+        public DbSet<CivicAddressDb> CivicAddressDb { get; set; }
 
         public DbSet<Order> Order { get; set; }
         public DbSet<OrderRequestInfo> OrderRequestInfo { get; set; }
