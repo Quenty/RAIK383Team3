@@ -47,6 +47,7 @@ namespace PracticalWerewolf.Controllers
                 var model = new TruckDetailsViewModel
                 {
                     Guid = id,
+                    LicenseNumber = truck.LicenseNumber,
                     AvailableCapacity = truck.AvailableCapacity,
                     MaxCapacity = truck.MaxCapacity,
                     Lat = truck.Location.Latitude,
@@ -62,16 +63,22 @@ namespace PracticalWerewolf.Controllers
         [Authorize(Roles = "Contractor")]
         public ActionResult Update(string id)
         {
-            var guid = new Guid(id);
-            var truck = TruckService.GetTruck(guid);
-            var model = new TruckUpdateViewModel
+            if (!String.IsNullOrEmpty(id))
             {
-                Guid = id,
-                Volume = truck.MaxCapacity.Volume,
-                Mass = truck.MaxCapacity.Mass
-            };
+                var guid = new Guid(id);
+                var truck = TruckService.GetTruck(guid);
+                var model = new TruckUpdateViewModel
+                {
+                    Guid = id,
+                    LicenseNumber = truck.LicenseNumber,
+                    Volume = truck.MaxCapacity.Volume,
+                    Mass = truck.MaxCapacity.Mass
+                };
 
-            return View(model);
+                return View(model);
+            }
+            else
+                return HttpNotFound();
         }
 
         // POST: Truck/Update/guid
@@ -102,5 +109,37 @@ namespace PracticalWerewolf.Controllers
                 return View(model);
             }
         }
+
+        // GET: Truck/Create/
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Truck/Create/
+        [HttpPost]
+        public ActionResult Create(Truck truck)
+        {
+            if (ModelState.IsValid)
+            {
+                var capacityUnit = new TruckCapacityUnit
+                {
+                    Mass = truck.MaxCapacity.Mass,
+                    Volume = truck.MaxCapacity.Volume
+                };
+                var model = new Truck
+                {
+                    LicenseNumber = truck.LicenseNumber,
+                    MaxCapacity = capacityUnit
+                };
+                TruckService.CreateTruck(model);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return HttpNotFound();
+            }
+        }
+
     }
 }

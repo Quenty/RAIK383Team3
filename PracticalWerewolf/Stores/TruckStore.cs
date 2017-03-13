@@ -18,24 +18,9 @@ namespace PracticalWerewolf.Stores
             context = truckDbContext;
         }
 
-        public void Add(IEnumerable<Truck> truckList)
+        public void Create(Truck truck)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Add(Truck truck)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(IEnumerable<Truck> truckList)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(Truck Truck)
-        {
-            throw new NotImplementedException();
+            context.Truck.Add(truck);
         }
 
         public IEnumerable<Truck> GetAllTrucks()
@@ -56,11 +41,6 @@ namespace PracticalWerewolf.Stores
         }
 
         public Truck GetByCustomerInfoGuid(Guid customerInfo)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(IEnumerable<Truck> truckList)
         {
             throw new NotImplementedException();
         }

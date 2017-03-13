@@ -16,6 +16,7 @@ namespace PracticalWerewolf.ViewModels
     public class TruckDetailsViewModel
     {
         public String Guid { get; set; }
+        public String LicenseNumber { get; set; }
         public double? Lat { get; set; }
         public double? Long { get; set; }
         public String State { get; set; }
@@ -26,6 +27,7 @@ namespace PracticalWerewolf.ViewModels
     public class TruckUpdateViewModel
     {
         public String Guid { get; set; }
+        public String LicenseNumber { get; set; }
         public double Mass { get; set; }
         public double Volume { get; set; }
     }
