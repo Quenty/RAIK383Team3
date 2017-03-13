@@ -221,6 +221,10 @@
     <Compile Include="Migrations\201703071933191_Updated truck model.Designer.cs">
       <DependentUpon>201703071933191_Updated truck model.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703122356447_Add license to truck.cs" />
+    <Compile Include="Migrations\201703122356447_Add license to truck.Designer.cs">
+      <DependentUpon>201703122356447_Add license to truck.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\ContractorService.cs" />
     <Compile Include="Services\CustomerService.cs" />
@@ -325,6 +329,7 @@
     <Content Include="Views\Truck\Index.cshtml" />
     <Content Include="Views\Truck\Details.cshtml" />
     <Content Include="Views\Truck\Update.cshtml" />
+    <Content Include="Views\Truck\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -359,6 +364,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703071933191_Updated truck model.resx">
       <DependentUpon>201703071933191_Updated truck model.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703122356447_Add license to truck.resx">
+      <DependentUpon>201703122356447_Add license to truck.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
