@@ -56,5 +56,10 @@ namespace PracticalWerewolf.Tests.Controllers
             Assert.IsTrue(model.Trucks.Contains(_trucks.ElementAt(1)));
             Assert.IsTrue(model.Trucks.Contains(_trucks.ElementAt(2)));
         }
+
+        [TestMethod]
+        public void Details_OneTruckValidId_ExpectedOutput() {
+
+        }
     }
 }
