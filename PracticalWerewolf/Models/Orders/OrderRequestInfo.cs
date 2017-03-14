@@ -24,10 +24,9 @@ namespace PracticalWerewolf.Models.Orders
         public DateTime RequestDate { get; set; }
 
         [Required]
-        public CivicAddress PickUpAddress { get; set; }
+        public CivicAddressDb PickUpAddress { get; set; }
 
-        [Required]
-        public CivicAddress DropOffAddress { get; set; }
+        public CivicAddressDb DropOffAddress { get; set; }
 
     }
 }

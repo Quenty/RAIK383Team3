@@ -214,6 +214,7 @@
       <DependentUpon>201702270351026_Updated-Data-Models-OrderStatus.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\CivicAddressDb.cs" />
     <Compile Include="Services\ContractorService.cs" />
     <Compile Include="Services\CustomerService.cs" />
     <Compile Include="Services\EmployeeService.cs" />

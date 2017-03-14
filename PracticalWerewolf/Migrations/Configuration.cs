@@ -76,9 +76,8 @@ namespace PracticalWerewolf.Migrations
             context.ContractorInfo.AddOrUpdate(
                 contractor
                 );
-            
-            CivicAddress address = new CivicAddress("640 N 14th St", "", "Kauffman", "Lincoln", "USA", "", "68508", "NE");
-            OrderRequestInfo orderRequest = new OrderRequestInfo { OrderRequestInfoGuid = Guid.NewGuid(), Requester = customer, Size = truckCapacityUnit, RequestDate = DateTime.Now/*DropOffAddress = address, PickUpAddress = address, RequestDate = DateTime.Now */};
+            CivicAddressDb address = new CivicAddressDb { CivicAddressGuid = Guid.NewGuid(), AddressLine1 = "640 N 14th St", Building = "Kauffman", City = "Lincoln", PostalCode = "68508", CountryRegion = "USA", StateProvince = "NE" };
+            OrderRequestInfo orderRequest = new OrderRequestInfo { OrderRequestInfoGuid = Guid.NewGuid(), Requester = customer, Size = truckCapacityUnit, RequestDate = DateTime.Now, DropOffAddress = address, PickUpAddress = address};
             context.OrderRequestInfo.AddOrUpdate(
                 orderRequest
                 );
