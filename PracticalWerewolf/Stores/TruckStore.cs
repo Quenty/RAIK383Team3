@@ -67,6 +67,8 @@ namespace PracticalWerewolf.Stores
 
         public void Update(Truck truck)
         {
+            if(truck == null) throw new ArgumentNullException();
+
             //http://stackoverflow.com/a/15339512
             var oldTruck = context.Truck.Find(truck.TruckGuid);
             

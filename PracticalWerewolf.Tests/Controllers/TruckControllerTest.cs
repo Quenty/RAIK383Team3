@@ -163,7 +163,35 @@ namespace PracticalWerewolf.Tests.Controllers
             Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
         }
 
-        //TODO test Update with view model
+        [TestMethod]
+        public void UpdatePostback_NullViewModel_ReturnNullViewModel()
+        {
+            var truckService = new Mock<ITruckService>();
+            var contractorService = new Mock<IContractorService>();
+            var controller = new TruckController(truckService.Object, contractorService.Object);
+            var id = Guid.NewGuid().ToString();
+            TruckUpdateViewModel viewModel = null;
 
+            var result = controller.Update(id, viewModel) as ViewResult;
+            var model = result.Model as TruckUpdateViewModel;
+
+            Assert.IsNull(model);
+        }
+
+
+        [TestMethod]
+        public void UpdatePostback_ValidViewModel_ReturnRedirectToIndex()
+        {
+            var truckService = new Mock<ITruckService>();
+            var contractorService = new Mock<IContractorService>();
+            var controller = new TruckController(truckService.Object, contractorService.Object);
+            var id = Guid.NewGuid().ToString();
+            TruckUpdateViewModel viewModel = new TruckUpdateViewModel() { Guid = Guid.NewGuid().ToString(), Mass = 12, Volume = 13 };
+
+            var result = controller.Update(id, viewModel) as RedirectToRouteResult;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Index", result.RouteValues["action"]);
+        }
     }
 }

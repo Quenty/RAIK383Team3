@@ -54,18 +54,22 @@ namespace PracticalWerewolf.Services
 
         public void UpdateTruckMaxCapacity(Guid truckGuid, TruckCapacityUnit capacity)
         {
+            if (capacity == null) throw new ArgumentNullException();
+            //TODO: Maybe return an IdentityResult for this?
             var oldTruck = GetTruck(truckGuid);
-
-            var truck = new Truck
+            if(oldTruck != null)
             {
-                Location = oldTruck.Location,
-                TruckGuid = oldTruck.TruckGuid,
-                CurrentCapacity = oldTruck.CurrentCapacity,
-                MaxCapacity = oldTruck.MaxCapacity
-            };
+                var truck = new Truck
+                {
+                    Location = oldTruck.Location,
+                    TruckGuid = oldTruck.TruckGuid,
+                    CurrentCapacity = oldTruck.CurrentCapacity,
+                    MaxCapacity = capacity
+                };
 
-            TruckStore.Update(truck);
-            context.SaveChanges();
+                TruckStore.Update(truck);
+                context.SaveChanges();
+            }
         }
     }
 }

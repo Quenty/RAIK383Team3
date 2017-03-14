@@ -8,6 +8,9 @@ using PracticalWerewolf.Services;
 using System.Linq;
 using PracticalWerewolf.Models;
 using System.Device.Location;
+using PracticalWerewolf.Tests.Stores.DbContext;
+using PracticalWerewolf.Stores.Interfaces.Contexts;
+using PracticalWerewolf.Stores;
 
 namespace PracticalWerewolf.Tests.Services
 {
@@ -85,6 +88,73 @@ namespace PracticalWerewolf.Tests.Services
             Assert.IsNull(truck);
         }
 
+        [TestMethod]
+        public void UpdateTruckMaxCapacity_ValidTruck_TruckIsUpdated()
+        {
+            var dbSet = new MockTruckDbSet();
+            var guid = Guid.NewGuid();
+            var location = new GeoCoordinate(4, 7);
+            var capacity = new TruckCapacityUnit() { TruckCapacityUnitGuid = Guid.NewGuid(), Mass = 3.14, Volume = 7 };
+            var newCapacity = new TruckCapacityUnit() { TruckCapacityUnitGuid = Guid.NewGuid(), Mass = 51, Volume = 7 };
+            dbSet.Add(new Truck() { TruckGuid = guid, CurrentCapacity = capacity, MaxCapacity = capacity, Location = location });
+            var mockContext = new Mock<ITruckDbContext>();
+            mockContext.Setup(x => x.Truck).Returns(dbSet);
+            var store = new TruckStore(mockContext.Object);
+            var dbContext = new Mock<ApplicationDbContext>();
+            var truckService = new TruckService(store, dbContext.Object);
 
+            truckService.UpdateTruckMaxCapacity(guid, newCapacity);
+
+            var truck = truckService.GetTruck(guid);
+            Assert.AreEqual(guid, truck.TruckGuid);
+            Assert.AreEqual(location, truck.Location);
+            Assert.AreEqual(capacity, truck.CurrentCapacity);
+            Assert.AreEqual(newCapacity, truck.MaxCapacity);
+        }
+        
+        [TestMethod]
+        public void UpdateTruckMaxCapacity_InvalidGuid_DoesNothing()
+        {
+            var dbSet = new MockTruckDbSet();
+            var guid = Guid.NewGuid();
+            var location = new GeoCoordinate(4, 7);
+            var capacity = new TruckCapacityUnit() { TruckCapacityUnitGuid = Guid.NewGuid(), Mass = 3.14, Volume = 7 };
+            var newCapacity = new TruckCapacityUnit() { TruckCapacityUnitGuid = Guid.NewGuid(), Mass = 51, Volume = 7 };
+            dbSet.Add(new Truck() { TruckGuid = guid, CurrentCapacity = capacity, MaxCapacity = capacity, Location = location });
+            var mockContext = new Mock<ITruckDbContext>();
+            mockContext.Setup(x => x.Truck).Returns(dbSet);
+            var store = new TruckStore(mockContext.Object);
+            var dbContext = new Mock<ApplicationDbContext>();
+            var truckService = new TruckService(store, dbContext.Object);
+
+            var newGuid = Guid.NewGuid();
+            truckService.UpdateTruckMaxCapacity(newGuid, newCapacity);
+
+            var truck = truckService.GetTruck(guid);
+            Assert.AreEqual(guid, truck.TruckGuid);
+            Assert.AreEqual(location, truck.Location);
+            Assert.AreEqual(capacity, truck.CurrentCapacity);
+            Assert.AreEqual(capacity, truck.MaxCapacity);
+            Assert.IsNull(truckService.GetTruck(newGuid));
+        }
+
+        [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+        public void UpdateTruckMaxCapacity_NullCapacity_ThrowsException()
+        {
+            var dbSet = new MockTruckDbSet();
+            var guid = Guid.NewGuid();
+            var location = new GeoCoordinate(4, 7);
+            var capacity = new TruckCapacityUnit() { TruckCapacityUnitGuid = Guid.NewGuid(), Mass = 3.14, Volume = 7 };
+            TruckCapacityUnit newCapacity = null;
+            dbSet.Add(new Truck() { TruckGuid = guid, CurrentCapacity = capacity, MaxCapacity = capacity, Location = location });
+            var mockContext = new Mock<ITruckDbContext>();
+            mockContext.Setup(x => x.Truck).Returns(dbSet);
+            var store = new TruckStore(mockContext.Object);
+            var dbContext = new Mock<ApplicationDbContext>();
+            var truckService = new TruckService(store, dbContext.Object);
+
+            var newGuid = Guid.NewGuid();
+            truckService.UpdateTruckMaxCapacity(newGuid, newCapacity);
+        }
     }
 }

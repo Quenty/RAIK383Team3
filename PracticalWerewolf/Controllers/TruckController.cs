@@ -96,17 +96,20 @@ namespace PracticalWerewolf.Controllers
                 if (ModelState.IsValid)
                 {
                     var guid = new Guid(id);
-                    var NewModel = new TruckCapacityUnit
+                    var newCapacity = new TruckCapacityUnit
                     {
                         TruckCapacityUnitGuid = new Guid(model.Guid),
                         Volume = model.Volume,
                         Mass = model.Mass
                     };
-                    TruckService.UpdateTruckMaxCapacity(guid, NewModel);
+                    //Here's where the IdentityResultWouldBeNice
+                    TruckService.UpdateTruckMaxCapacity(guid, newCapacity);
                     return RedirectToAction("Index");
                 }
                 else
+                {
                     return View(model);
+                }
             }
             catch
             {

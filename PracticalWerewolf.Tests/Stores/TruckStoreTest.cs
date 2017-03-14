@@ -113,14 +113,58 @@ namespace PracticalWerewolf.Tests.Stores
             var dbSet = new MockTruckDbSet();
             dbSet.Add(truck);
             context.Setup(x => x.Truck).Returns(dbSet);
+            var truckStore = new TruckStore(context.Object);
 
             var newLocation = new GeoCoordinate(3.14, 2.18);
             var newCapacity = new TruckCapacityUnit() { Mass = 24, Volume = 24, TruckCapacityUnitGuid = capacityGuid };
             var newTruck = new Truck() { TruckGuid = truck.TruckGuid, CurrentCapacity = newCapacity, MaxCapacity = newCapacity, Location = newLocation };
+            truckStore.Update(newTruck);
 
-            //TODO finish this
+            var result = truckStore.Get(guid);
+            Assert.AreEqual(guid, result.TruckGuid);
+            Assert.AreEqual(newLocation, result.Location);
+            Assert.AreEqual(newCapacity, result.MaxCapacity);
+            Assert.AreEqual(newCapacity, result.CurrentCapacity); 
         }
 
+        [TestMethod]
+        public void Update_InvalidTruck_NoChangesMade()
+        {
+            var guid = Guid.NewGuid();
+            var location = new GeoCoordinate(2.18, 3.14);
+            var capacity = new TruckCapacityUnit() { Mass = 12, Volume = 12, TruckCapacityUnitGuid = Guid.NewGuid() };
+            var capacityGuid = Guid.NewGuid();
+            var truck = new Truck() { TruckGuid = guid, CurrentCapacity = capacity, MaxCapacity = capacity, Location = location };
+            var context = new Mock<ITruckDbContext>();
+            var dbSet = new MockTruckDbSet();
+            dbSet.Add(truck);
+            context.Setup(x => x.Truck).Returns(dbSet);
+            var truckStore = new TruckStore(context.Object);
+
+            var newLocation = new GeoCoordinate(3.14, 2.18);
+            var newCapacity = new TruckCapacityUnit() { Mass = 24, Volume = 24, TruckCapacityUnitGuid = capacityGuid };
+            var newTruck = new Truck() { TruckGuid = Guid.NewGuid(), CurrentCapacity = newCapacity, MaxCapacity = newCapacity, Location = newLocation };
+            truckStore.Update(newTruck);
+
+            var result = truckStore.Get(guid);
+            Assert.AreEqual(guid, result.TruckGuid);
+            Assert.AreEqual(location, result.Location);
+            Assert.AreEqual(capacity, result.MaxCapacity);
+            Assert.AreEqual(capacity, result.CurrentCapacity);
+        }
+
+        [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+        public void Update_NullTruck_ThrowsException()
+        {
+            
+            var context = new Mock<ITruckDbContext>();
+            var dbSet = new MockTruckDbSet();
+            context.Setup(x => x.Truck).Returns(dbSet);
+            var truckStore = new TruckStore(context.Object);
+            Truck truck = null;
+
+            truckStore.Update(truck);
+        }
 
     }
 }
