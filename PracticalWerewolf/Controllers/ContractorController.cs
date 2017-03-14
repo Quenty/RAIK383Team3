@@ -5,6 +5,7 @@ using PracticalWerewolf.Stores.Interfaces;
 using PracticalWerewolf.ViewModels.Contractor;
 using System;
 using System.Collections.Generic;
+using System.Device.Location;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -67,7 +68,7 @@ namespace PracticalWerewolf.Controllers
         {
             PendingContractorsModel model = new PendingContractorsModel()
             {
-                Pending = ContractorService.GetUnapprovedContractors(),
+                Pending = ContractorService.GetUnapprovedContractors().ToList(),
             };
 
             return View(model);
@@ -100,12 +101,18 @@ namespace PracticalWerewolf.Controllers
                 return RedirectToAction("Index", new { Message = ContractorMessageId.AlreadyRegisteredError });
             }
 
+
+            CivicAddressDb Address = model.Address;
+            Address.CivicAddressGuid = Guid.NewGuid();
+
             user.ContractorInfo = new ContractorInfo()
             {
                 ContractorInfoGuid = Guid.NewGuid(),
                 Truck = null,
                 ApprovalState = ContractorApprovalState.Pending,
-                IsAvailable = false
+                IsAvailable = false,
+                HomeAddress = Address,
+                DriversLicenseId = model.DriversLicenseId
             };
 
             var result = await UserManager.UpdateAsync(user);

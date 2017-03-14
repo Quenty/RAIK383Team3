@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PracticalWerewolf.Stores.Interfaces
 {
-    public interface IEmployeeStore
+    public interface IEmployeeStore : IEntityStore<EmployeeInfo>
     {
         //Get all EmployeeInfo
         IEnumerable<EmployeeInfo> Get();

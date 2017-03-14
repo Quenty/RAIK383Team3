@@ -5,26 +5,37 @@
 }
 
 <h2>Approve contractor requests</h2>
-
-
 <table class="table">
     <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Email
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.Pending.FirstOrDefault().DriversLicenseId)
         </th>
         <th>
-           @Html.DisplayNameFor(model => model.Pending.FirstOrDefault().ContractorInfoGuid)
+           @Html.DisplayNameFor(model => model.Pending.FirstOrDefault().HomeAddress)
         </th>
-        <th></th>
+        <th>
+            Background check
+        </th>
+        <th>Approve</th>
     </tr>
-
 @foreach (var item in Model.Pending) {
     <tr>
+        <td>Harry Hardcoded</td>
+        <td><a href="mailto:weneedthisinfo@info.com">weneedthisinfo@info.com</a></td>
         <td>
             @Html.DisplayFor(modelItem => item.DriversLicenseId)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.ContractorInfoGuid)
+            @Html.DisplayFor(modelItem => item.HomeAddress)
+        </td>
+        <td>
+            <a href="#"><span class="label label-success"><span class="glyphicon glyphicon-check"></span> Passed</span></a>
         </td>
         <td>
             @Html.ActionLink("Approve", "Approve", new { id=item.ContractorInfoGuid }) |

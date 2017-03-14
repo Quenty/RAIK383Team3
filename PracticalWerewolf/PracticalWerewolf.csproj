@@ -241,6 +241,18 @@
     <Compile Include="Migrations\201703141956236_Approval-As-Enum.Designer.cs">
       <DependentUpon>201703141956236_Approval-As-Enum.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703142101256_Get-Set-Properties.cs" />
+    <Compile Include="Migrations\201703142101256_Get-Set-Properties.Designer.cs">
+      <DependentUpon>201703142101256_Get-Set-Properties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703142125042_Fix-Contractor-Info-Required.cs" />
+    <Compile Include="Migrations\201703142125042_Fix-Contractor-Info-Required.Designer.cs">
+      <DependentUpon>201703142125042_Fix-Contractor-Info-Required.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703142137171_RawInputString-Addresses.cs" />
+    <Compile Include="Migrations\201703142137171_RawInputString-Addresses.Designer.cs">
+      <DependentUpon>201703142137171_RawInputString-Addresses.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CivicAddressDb.cs" />
     <Compile Include="Services\ContractorService.cs" />
@@ -263,9 +275,6 @@
     <Compile Include="Stores\TruckStore.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\IApplicationUser.cs" />
-    <Compile Include="Stores\Interfaces\Contexts\ITruckDbContext.cs" />
-    <Compile Include="Stores\Interfaces\Contexts\IUserInfoDbContext.cs" />
-    <Compile Include="Stores\Interfaces\Contexts\IOrderDbContext.cs" />
     <Compile Include="Models\UserInfos\ContractorInfo.cs" />
     <Compile Include="Models\UserInfos\UserInfo.cs" />
     <Compile Include="Models\UserInfos\EmployeeInfo.cs" />
@@ -324,7 +333,6 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
@@ -350,9 +358,11 @@
     <Content Include="Views\Contractor\Index.cshtml" />
     <Content Include="Views\Contractor\Approve.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\CivicAddressDb.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\CivicAddressDb.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Stores\Interfaces\Contexts\" />
     <Folder Include="Views\Order\" />
     <Folder Include="Views\Truck\" />
   </ItemGroup>
@@ -397,6 +407,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703141956236_Approval-As-Enum.resx">
       <DependentUpon>201703141956236_Approval-As-Enum.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703142101256_Get-Set-Properties.resx">
+      <DependentUpon>201703142101256_Get-Set-Properties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703142125042_Fix-Contractor-Info-Required.resx">
+      <DependentUpon>201703142125042_Fix-Contractor-Info-Required.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703142137171_RawInputString-Addresses.resx">
+      <DependentUpon>201703142137171_RawInputString-Addresses.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

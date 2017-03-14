@@ -33,5 +33,8 @@ namespace System.Device.Location
 
         [Key]
         public Guid CivicAddressGuid { get; set; }
+
+        [Display(Prompt = "Street address")]
+        public String RawInputAddress { get; set; }
     }
 }

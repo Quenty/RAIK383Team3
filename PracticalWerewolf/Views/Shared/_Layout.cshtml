@@ -25,7 +25,6 @@
                 <ul class="nav navbar-nav">
                     <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">@Html.ActionLink("Home", "Index", "Home")</li>
                     <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "About" ? "active" : "")">@Html.ActionLink("About", "About", "Home")</li>
-                    <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Contact" ? "active" : "")">@Html.ActionLink("Contact", "Contact", "Home")</li>
                     <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Contractor" ? "active" : "")">@Html.ActionLink("Contract", "Index", "Contractor")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
@@ -37,7 +36,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - Practical Werewolf</p>
+            <p>&copy; @DateTime.Now.Year Practical Werewolf</p>
         </footer>
     </div>
 
