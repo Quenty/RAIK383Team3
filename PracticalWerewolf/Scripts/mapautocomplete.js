@@ -27,6 +27,12 @@ function initAutocomplete() {
     // When the user selects an address from the dropdown, populate the address
     // fields in the form.
     autocomplete.addListener('place_changed', fillInAddress);
+    for (var component in componentForm) {
+        if (document.getElementById(component).value)
+        {
+            document.getElementById(component).disabled = false;
+        }
+    }
 }
 
 function fillInAddress() {
