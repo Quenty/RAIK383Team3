@@ -2,7 +2,6 @@
 using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.Models.Trucks;
 using PracticalWerewolf.Stores.Interfaces;
-using PracticalWerewolf.Stores.Interfaces.Contexts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +11,11 @@ namespace PracticalWerewolf.Stores
 {
     public class OrderStore : IOrderStore
     {
-        private IOrderDbContext context;
+        private ApplicationDbContext context;
 
-        public OrderStore(IOrderDbContext orderDbContext)
+        public OrderStore(ApplicationDbContext context)
         {
-            context = orderDbContext;
+            this.context = context;
         }
 
         public void Add(IEnumerable<Order> orderList)

@@ -10,7 +10,6 @@ namespace PracticalWerewolf.App_Start
 
     using Ninject;
     using Ninject.Web.Common;
-    using Stores.Interfaces.Contexts;
     using Models;
     using Stores.Interfaces;
     using Stores;
@@ -66,10 +65,7 @@ namespace PracticalWerewolf.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<IUserInfoDbContext>().To<ApplicationDbContext>();
-            kernel.Bind<IOrderDbContext>().To<ApplicationDbContext>();
-            kernel.Bind<ITruckDbContext>().To<ApplicationDbContext>();
-
+           
             //Stores
             kernel.Bind<IContractorStore>().To<ContractorStore>();
             kernel.Bind<ICustomerStore>().To<CustomerStore>();
