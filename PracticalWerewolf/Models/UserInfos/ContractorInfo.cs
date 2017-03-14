@@ -9,6 +9,13 @@ using System.Web;
 
 namespace PracticalWerewolf.Models.UserInfos
 {
+    public enum ContractorApprovalState
+    {
+        Pending,
+        Approved,
+        Denied
+    }
+
     public class ContractorInfo
     {
         [Key]
@@ -25,7 +32,7 @@ namespace PracticalWerewolf.Models.UserInfos
         public virtual Truck Truck { get; set; }
 
         [Required]
-        public bool IsApproved { get; set; }
+        public ContractorApprovalState ApprovalState { get; set; } = ContractorApprovalState.Pending;
 
         [Required]
         public bool IsAvailable { get; set; }

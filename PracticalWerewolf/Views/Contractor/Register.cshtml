@@ -21,60 +21,7 @@
         </div>
     </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            <input id="autocomplete" placeholder="Street address" onFocus="geolocate()" type="text" class="form-control"/>
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Address.Route, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(model => model.Address.Route, new { id = "route", disabled = "disabled", @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.Address.Route, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Address.StreetNumber, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(model => model.Address.StreetNumber, new { id = "street_number", disabled = "disabled", @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.Address.Route, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Address.City, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(model => model.Address.City, new { id = "locality", disabled = "disabled", @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.Address.City, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Address.State, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(model => model.Address.State, new { id = "administrative_area_level_1", disabled = "disabled", @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.Address.State, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Address.ZipCode, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(model => model.Address.ZipCode, new { id = "postal_code", disabled = "disabled", @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.Address.ZipCode, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Address.Country, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(model => model.Address.Country, new { id = "country", disabled = "disabled", @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.Address.Country, "", new { @class = "text-danger" })
-        </div>
-    </div>
+    @Html.EditorFor(m => m.Address)
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
@@ -98,3 +45,5 @@
     @Scripts.Render("~/bundles/mapautocomplete")
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZ7pBFhPlZvw9Hm2CDAL7gFoI7s5WsPpc&libraries=places&callback=initAutocomplete" async defer></script>
 }
+
+

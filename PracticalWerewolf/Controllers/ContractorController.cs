@@ -104,7 +104,7 @@ namespace PracticalWerewolf.Controllers
             {
                 ContractorInfoGuid = Guid.NewGuid(),
                 Truck = null,
-                IsApproved = false,
+                ApprovalState = ContractorApprovalState.Pending,
                 IsAvailable = false
             };
 

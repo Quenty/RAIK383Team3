@@ -19,7 +19,7 @@ namespace PracticalWerewolf.Services
 
         public IEnumerable<ContractorInfo> GetUnapprovedContractors()
         {
-            return Store.Find(c => !c.IsApproved);
+            return Store.Find(c => c.ApprovalState == ContractorApprovalState.Pending);
         }
 
         public void SetIsApproved(Guid contractorInfoGuid, bool isApproved)

@@ -1,3 +1,61 @@
-﻿@{
+﻿@model System.Device.Location.CivicAddressDb
+
+@{
     ViewData["type"] = "CivicAddressDb";
 }
+
+<div class="form-group">
+    @Html.LabelFor(model => model, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        <input id="autocomplete" placeholder="Street address" onFocus="geolocate()" type="text" class="form-control" />
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(model => model.Route, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.TextBoxFor(model => model.Route, new { id = "route", disabled = "disabled", @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Route, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(model => model.StreetNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.TextBoxFor(model => model.StreetNumber, new { id = "street_number", disabled = "disabled", @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.StreetNumber, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.TextBoxFor(model => model.City, new { id = "locality", disabled = "disabled", @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.TextBoxFor(model => model.State, new { id = "administrative_area_level_1", disabled = "disabled", @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(model => model.ZipCode, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.TextBoxFor(model => model.ZipCode, new { id = "postal_code", disabled = "disabled", @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(model => model.Country, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.TextBoxFor(model => model.Country, new { id = "country", disabled = "disabled", @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Country, "", new { @class = "text-danger" })
+    </div>
+</div>
+

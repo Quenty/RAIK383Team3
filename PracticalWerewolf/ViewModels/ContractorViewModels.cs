@@ -1,4 +1,5 @@
-﻿using PracticalWerewolf.Models.UserInfos;
+﻿using PracticalWerewolf.Controllers.Validation;
+using PracticalWerewolf.Models.UserInfos;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,7 +23,7 @@ namespace PracticalWerewolf.ViewModels.Contractor
 
         [Required]
         [Display(Name = "I have read and agree to the contractor terms and conditions")]
-        [Range(typeof(bool), "true", "true", ErrorMessage = "You must agree to the terms and conditions to register")]
+        [MustBeTrue(ErrorMessage = "You must agree to the terms and conditions to register")]
         public Boolean TermsOfService { get; set; }
     }
 
