@@ -1,7 +1,6 @@
 ﻿using PracticalWerewolf.Models;
 using PracticalWerewolf.Models.Trucks;
 using PracticalWerewolf.Stores.Interfaces;
-using PracticalWerewolf.Stores.Interfaces.Contexts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +10,11 @@ namespace PracticalWerewolf.Stores
 {
     public class TruckStore : ITruckStore
     {
-        private ITruckDbContext context;
+        private ApplicationDbContext context;
 
-        public TruckStore(ApplicationDbContext truckDbContext)
+        public TruckStore(ApplicationDbContext context)
         {
-            context = truckDbContext;
+            this.context = context;
         }
 
         public void Add(IEnumerable<Truck> truckList)
