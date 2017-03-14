@@ -7,6 +7,7 @@ using Moq;
 using PracticalWerewolf.Services;
 using System.Linq;
 using PracticalWerewolf.Models;
+using System.Device.Location;
 
 namespace PracticalWerewolf.Tests.Services
 {
@@ -14,7 +15,7 @@ namespace PracticalWerewolf.Tests.Services
     public class TruckServiceTest
     {
         private static TruckCapacityUnit unit = new TruckCapacityUnit { TruckCapacityUnitGuid = Guid.NewGuid()};
-        private static System.Data.Entity.Spatial.DbGeography location = null;
+        private static GeoCoordinate location = null;
 
         private static IEnumerable<Truck> _trucks = new List<Truck>
         {

@@ -8,6 +8,7 @@ using PracticalWerewolf.Stores.Interfaces.Contexts;
 using PracticalWerewolf.Tests.Stores.DbContext;
 using PracticalWerewolf.Stores.Interfaces;
 using PracticalWerewolf.Stores;
+using System.Device.Location;
 
 namespace PracticalWerewolf.Tests.Stores
 {
@@ -15,7 +16,7 @@ namespace PracticalWerewolf.Tests.Stores
     public class TruckStoreTest
     {
         private static TruckCapacityUnit unit = new TruckCapacityUnit { TruckCapacityUnitGuid = Guid.NewGuid() };
-        private static System.Data.Entity.Spatial.DbGeography location = null;
+        private static GeoCoordinate location = null;
 
         private static IEnumerable<Truck> _trucks = new List<Truck>
         {
@@ -99,5 +100,27 @@ namespace PracticalWerewolf.Tests.Stores
             Assert.IsNotNull(truck);
             Assert.AreEqual(_trucks.ElementAt(0), truck);
         }
+
+        [TestMethod]
+        public void Update_ValidTruck_UpdatesTruck()
+        {
+            var guid = Guid.NewGuid();
+            var location = new GeoCoordinate(2.18, 3.14);
+            var capacity = new TruckCapacityUnit() { Mass = 12, Volume = 12, TruckCapacityUnitGuid = Guid.NewGuid() };
+            var capacityGuid = Guid.NewGuid();
+            var truck = new Truck() { TruckGuid = guid, CurrentCapacity = capacity, MaxCapacity = capacity, Location = location};
+            var context = new Mock<ITruckDbContext>();
+            var dbSet = new MockTruckDbSet();
+            dbSet.Add(truck);
+            context.Setup(x => x.Truck).Returns(dbSet);
+
+            var newLocation = new GeoCoordinate(3.14, 2.18);
+            var newCapacity = new TruckCapacityUnit() { Mass = 24, Volume = 24, TruckCapacityUnitGuid = capacityGuid };
+            var newTruck = new Truck() { TruckGuid = truck.TruckGuid, CurrentCapacity = newCapacity, MaxCapacity = newCapacity, Location = newLocation };
+
+            //TODO finish this
+        }
+
+
     }
 }

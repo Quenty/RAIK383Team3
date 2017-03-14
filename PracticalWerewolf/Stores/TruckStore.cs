@@ -67,6 +67,7 @@ namespace PracticalWerewolf.Stores
 
         public void Update(Truck truck)
         {
+            //http://stackoverflow.com/a/15339512
             var oldTruck = context.Truck.Find(truck.TruckGuid);
             
             if(oldTruck != null)

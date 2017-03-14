@@ -44,34 +44,45 @@ namespace PracticalWerewolf.Controllers
             {
                 var guid = new Guid(id);
                 Truck truck = TruckService.GetTruck(guid);
-                var model = new TruckDetailsViewModel
+                if(truck != null)
                 {
-                    Guid = id,
-                    AvailableCapacity = truck.AvailableCapacity,
-                    MaxCapacity = truck.MaxCapacity,
-                    Lat = truck.Location.Latitude,
-                    Long = truck.Location.Longitude
-                };
-                return View(model);
+                    var model = new TruckDetailsViewModel
+                    {
+                        Guid = id,
+                        AvailableCapacity = truck.GetAvailableCapacity(),
+                        MaxCapacity = truck.MaxCapacity,
+                        Lat = truck.Location.Latitude,
+                        Long = truck.Location.Longitude
+                    };
+                    return View(model);
+                }
             }
-            else
-                return HttpNotFound();
+            return HttpNotFound();
         }
 
         // GET: Truck/Edit/guid
         [Authorize(Roles = "Contractor")]
         public ActionResult Update(string id)
         {
-            var guid = new Guid(id);
-            var truck = TruckService.GetTruck(guid);
-            var model = new TruckUpdateViewModel
+            if (!String.IsNullOrEmpty(id))
             {
-                Guid = id,
-                Volume = truck.MaxCapacity.Volume,
-                Mass = truck.MaxCapacity.Mass
-            };
 
-            return View(model);
+                var guid = new Guid(id);
+                var truck = TruckService.GetTruck(guid);
+                if (truck != null)
+                {
+                    var model = new TruckUpdateViewModel
+                    {
+                        Guid = id,
+                        Volume = truck.MaxCapacity.Volume,
+                        Mass = truck.MaxCapacity.Mass
+                    };
+
+                    return View(model);
+                }
+            }
+
+            return HttpNotFound();
         }
 
         // POST: Truck/Update/guid

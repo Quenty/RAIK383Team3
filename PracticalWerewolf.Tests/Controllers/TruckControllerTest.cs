@@ -8,6 +8,7 @@ using PracticalWerewolf.Controllers;
 using System.Web.Mvc;
 using PracticalWerewolf.ViewModels;
 using System.Linq;
+using System.Device.Location;
 
 namespace PracticalWerewolf.Tests.Controllers
 {
@@ -15,7 +16,7 @@ namespace PracticalWerewolf.Tests.Controllers
     public class TruckControllerTest
     {
         private static TruckCapacityUnit unit = new TruckCapacityUnit { TruckCapacityUnitGuid = Guid.NewGuid() };
-        private static System.Data.Entity.Spatial.DbGeography location = null;
+        private static GeoCoordinate location = null;
 
         private static IEnumerable<Truck> _trucks = new List<Truck>
         {
@@ -58,8 +59,111 @@ namespace PracticalWerewolf.Tests.Controllers
         }
 
         [TestMethod]
-        public void Details_OneTruckValidId_ExpectedOutput() {
+        public void Details_OneTruckValidId_ExpectedOutput()
+        {
+            var capacity = new TruckCapacityUnit() { Mass = 12, Volume = 12, TruckCapacityUnitGuid = Guid.NewGuid() };
+            var guid = Guid.NewGuid();
+            var truck = new Truck()
+            {
+                TruckGuid = guid,
+                CurrentCapacity = capacity,
+                MaxCapacity = capacity,
+                Location = new GeoCoordinate(3.14, 2.18)
+            };
+            var truckService = new Mock<ITruckService>();
+            truckService.Setup(x => x.GetTruck(It.IsAny<Guid>())).Returns(truck);
+            var contractorService = new Mock<IContractorService>();
+            var controller = new TruckController(truckService.Object, contractorService.Object);
 
+            var result = controller.Details(guid.ToString()) as ViewResult;
+            var model = result.Model as TruckDetailsViewModel;
+
+            Assert.IsNotNull(model);
+            Assert.AreEqual(model.Guid, guid.ToString());
+            Assert.AreEqual(model.MaxCapacity, capacity);
+            Assert.AreEqual(model.Lat, 3.14);
+            Assert.AreEqual(model.Long, 2.18);
+            Assert.IsNotNull(model.AvailableCapacity);
         }
+
+        [TestMethod]
+        public void Details_NoTruck_ReturnsHttpNotFound()
+        {
+            var truckService = new Mock<ITruckService>();
+            truckService.Setup(x => x.GetTruck(It.IsAny<Guid>())).Returns((Truck) null);
+            var contractorService = new Mock<IContractorService>();
+            var controller = new TruckController(truckService.Object, contractorService.Object);
+
+            var result = controller.Details(Guid.Empty.ToString());
+
+            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+        }
+
+        [TestMethod]
+        public void Details_NoInput_ReturnsHttpNotFound()
+        {
+            var truckService = new Mock<ITruckService>();
+            var contractorService = new Mock<IContractorService>();
+            var controller = new TruckController(truckService.Object, contractorService.Object);
+
+            var result = controller.Details(String.Empty);
+
+            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+        }
+
+        [TestMethod]
+        public void Update_OneTruck_ValidOutput()
+        {
+            var capacity = new TruckCapacityUnit() { Mass = 12, Volume = 12, TruckCapacityUnitGuid = Guid.NewGuid() };
+            var guid = Guid.NewGuid();
+            var truck = new Truck()
+            {
+                TruckGuid = guid,
+                CurrentCapacity = capacity,
+                MaxCapacity = capacity,
+                Location = new GeoCoordinate(3.14, 2.18)
+            };
+            var truckService = new Mock<ITruckService>();
+            truckService.Setup(x => x.GetTruck(It.IsAny<Guid>())).Returns(truck);
+            var contractorService = new Mock<IContractorService>();
+            var controller = new TruckController(truckService.Object, contractorService.Object);
+
+            var result = controller.Update(guid.ToString()) as ViewResult;
+            var model = result.Model as TruckUpdateViewModel;
+
+            Assert.IsNotNull(model);
+            Assert.AreEqual(model.Guid, guid.ToString());
+            Assert.AreEqual(model.Volume, capacity.Volume);
+            Assert.AreEqual(model.Mass, capacity.Mass);
+        }
+
+
+        [TestMethod]
+        public void Update_NoTruck_ReturnsHttpNotFound()
+        {
+            var truckService = new Mock<ITruckService>();
+            truckService.Setup(x => x.GetTruck(It.IsAny<Guid>())).Returns((Truck)null);
+            var contractorService = new Mock<IContractorService>();
+            var controller = new TruckController(truckService.Object, contractorService.Object);
+
+            var result = controller.Update(Guid.Empty.ToString());
+
+            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+        }
+
+        [TestMethod]
+        public void Update_NoInput_ReturnsHttpNotFound()
+        {
+            var truckService = new Mock<ITruckService>();
+            var contractorService = new Mock<IContractorService>();
+            var controller = new TruckController(truckService.Object, contractorService.Object);
+
+            var result = controller.Update(String.Empty);
+
+            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+        }
+
+        //TODO test Update with view model
+
     }
 }

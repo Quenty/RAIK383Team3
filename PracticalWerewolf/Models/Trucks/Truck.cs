@@ -25,11 +25,22 @@ namespace PracticalWerewolf.Models.Trucks
         public Guid TruckGuid { get; set; }
                                                                 
         // Gets broken down into different props but stays in the truck table
-        public DbGeography Location { get; set; } 
+        public GeoCoordinate Location { get; set; } 
 
-        public TruckCapacityUnit AvailableCapacity { get; }
         // One-to-one, each truck will have one Current and Max capacity
         public TruckCapacityUnit CurrentCapacity { get; set; }
         public TruckCapacityUnit MaxCapacity { get; set; }
+
+        public TruckCapacityUnit GetAvailableCapacity()
+        {
+            //This may or may not be how we want to do this, but for now, it's to make tests work
+            var capacity = new TruckCapacityUnit
+            {
+                //Guid?
+                Mass = MaxCapacity.Mass - CurrentCapacity.Mass,
+                Volume = MaxCapacity.Volume - CurrentCapacity.Volume
+            };
+            return capacity;
+        }
     }
 }
