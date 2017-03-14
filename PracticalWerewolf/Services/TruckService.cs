@@ -24,7 +24,14 @@ namespace PracticalWerewolf.Services
 
         public void CreateTruck(Truck truck)
         {
-            throw new NotImplementedException();
+            try
+            {
+                TruckStore.Create(truck);
+            }
+            catch
+            {
+                throw new Exception();
+            }
         }
 
         public IEnumerable<Truck> GetAllTrucks()
