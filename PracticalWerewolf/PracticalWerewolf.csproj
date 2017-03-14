@@ -63,7 +63,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Device" />
+    <Reference Include="System.Device, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -226,6 +228,10 @@
     <Compile Include="Migrations\201703130024441_Add-CivicAddress-Guids.Designer.cs">
       <DependentUpon>201703130024441_Add-CivicAddress-Guids.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703141904268_CivicAddress-DB-Migration.cs" />
+    <Compile Include="Migrations\201703141904268_CivicAddress-DB-Migration.Designer.cs">
+      <DependentUpon>201703141904268_CivicAddress-DB-Migration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CivicAddressDb.cs" />
     <Compile Include="Services\ContractorService.cs" />
@@ -334,6 +340,7 @@
     <Content Include="Views\Contractor\Register.cshtml" />
     <Content Include="Views\Contractor\Index.cshtml" />
     <Content Include="Views\Contractor\Approve.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CivicAddressDb.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -372,6 +379,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703130024441_Add-CivicAddress-Guids.resx">
       <DependentUpon>201703130024441_Add-CivicAddress-Guids.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703141904268_CivicAddress-DB-Migration.resx">
+      <DependentUpon>201703141904268_CivicAddress-DB-Migration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -6,7 +6,7 @@
 
 <h2>Apply</h2>
 
-@using (Html.BeginForm("Contractor", "Register", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("Register", "Contractor", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
     <h4>Apply as a contractor</h4>
@@ -19,45 +19,60 @@
             @Html.TextBoxFor(m => m.DriversLicenseId, new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.DriversLicenseId, "", new { @class = "text-danger" })
         </div>
-            
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.StreetAddress, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             <input id="autocomplete" placeholder="Street address" onFocus="geolocate()" type="text" class="form-control"/>
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.Address.Route, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.TextBoxFor(model => model.City, new { id = "locality", disabled = "disabled", @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+            @Html.TextBoxFor(model => model.Address.Route, new { id = "route", disabled = "disabled", @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Address.Route, "", new { @class = "text-danger" })
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.Address.StreetNumber, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.TextBoxFor(model => model.State, new { id = "administrative_area_level_1", disabled = "disabled", @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+            @Html.TextBoxFor(model => model.Address.StreetNumber, new { id = "street_number", disabled = "disabled", @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Address.Route, "", new { @class = "text-danger" })
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.ZipCode, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.Address.City, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.TextBoxFor(model => model.ZipCode, new { id = "postal_code", disabled = "disabled", @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger" })
+            @Html.TextBoxFor(model => model.Address.City, new { id = "locality", disabled = "disabled", @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Address.City, "", new { @class = "text-danger" })
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.Country, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.Address.State, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.TextBoxFor(model => model.Country, new { id = "country", disabled = "disabled", @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.Country, "", new { @class = "text-danger" })
+            @Html.TextBoxFor(model => model.Address.State, new { id = "administrative_area_level_1", disabled = "disabled", @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Address.State, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Address.ZipCode, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(model => model.Address.ZipCode, new { id = "postal_code", disabled = "disabled", @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Address.ZipCode, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Address.Country, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(model => model.Address.Country, new { id = "country", disabled = "disabled", @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Address.Country, "", new { @class = "text-danger" })
         </div>
     </div>
 
@@ -67,12 +82,13 @@
                 @Html.CheckBoxFor(m => m.TermsOfService)
                 @Html.LabelFor(m => m.TermsOfService)
             </div>
+            @Html.ValidationMessageFor(model => model.TermsOfService, "", new { @class = "text-danger" })
         </div>
     </div>
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Register" />
+            <input type="submit" class="btn btn-default" value="Apply" />
         </div>
     </div>
 }
