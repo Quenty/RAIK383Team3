@@ -190,6 +190,8 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\TruckController.cs" />
+    <Compile Include="Controllers\UnitOfWork\UnitOfWork.cs" />
+    <Compile Include="Controllers\UnitOfWork\IUnitOfWork.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -313,7 +315,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Stores\Interfaces\Contexts\" />
     <Folder Include="Views\Order\" />
     <Folder Include="Views\Truck\" />
   </ItemGroup>

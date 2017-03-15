@@ -11,6 +11,7 @@ namespace PracticalWerewolf.App_Start
     using Ninject;
     using Ninject.Web.Common;
     using Models;
+    using Controllers.UnitOfWork;
     using Stores.Interfaces;
     using Stores;
     using Services.Interfaces;
@@ -65,9 +66,14 @@ namespace PracticalWerewolf.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-           
+            //TODO: Make some of these inrequestscope
+
+            //UnitOfWork
+            kernel.Bind<ApplicationDbContext>().ToSelf().InSingletonScope();
+            kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
+
             //Stores
-            kernel.Bind<IContractorStore>().To<ContractorStore>();
+            kernel.Bind<IContractorStore>().To<ContractorStore>().;
             kernel.Bind<ICustomerStore>().To<CustomerStore>();
             kernel.Bind<IEmployeeStore>().To<EmployeeStore>();
             kernel.Bind<IOrderStore>().To<OrderStore>();
