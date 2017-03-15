@@ -83,6 +83,7 @@ namespace PracticalWerewolf.Controllers
                 return View(model);
             }
 
+            // TODO: Implement
             return RedirectToAction("Approve", new { Message = ContractorMessageId.Error });
         }
 
