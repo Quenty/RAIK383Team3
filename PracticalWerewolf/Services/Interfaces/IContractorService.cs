@@ -16,5 +16,7 @@ namespace PracticalWerewolf.Services.Interfaces
 
         // Depends upon IContractorStore.Update
         void SetIsApproved(Guid contractorInfoGuid, bool isApproved);
+
+        IEnumerable<ContractorInfo> GetUnapprovedContractors();
     }
 }

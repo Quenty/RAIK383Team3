@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PracticalWerewolf.Stores.Interfaces
 {
-    public interface ITruckStore
+    public interface ITruckStore : IEntityStore<Truck>
     {
         //Get all Truck
         IEnumerable<Truck> GetAllTrucks();

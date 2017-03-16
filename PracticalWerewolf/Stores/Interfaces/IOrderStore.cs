@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PracticalWerewolf.Stores.Interfaces
 {
-    public interface IOrderStore
+    public interface IOrderStore : IEntityStore<Order>
     {
         //Get all Order
         IEnumerable<Order> Get();

@@ -8,11 +8,11 @@ using System.Web;
 
 namespace PracticalWerewolf.Stores
 {
-    public class TruckStore : ITruckStore
+    public class TruckStore : EntityStore<Truck>, ITruckStore
     {
-        private ApplicationDbContext context;
+        private readonly ApplicationDbContext context;
 
-        public TruckStore(ApplicationDbContext context)
+        public TruckStore(ApplicationDbContext context) : base(context.Truck)
         {
             this.context = context;
         }

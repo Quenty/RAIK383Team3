@@ -17,9 +17,9 @@ namespace PracticalWerewolf.Services
             this.Store = store;
         }
 
-        public ICollection<ContractorInfo> GetUnapprovedContractors()
+        public IEnumerable<ContractorInfo> GetUnapprovedContractors()
         {
-            throw new NotImplementedException();
+            return Store.Find(c => c.ApprovalState == ContractorApprovalState.Pending);
         }
 
         public void SetIsApproved(Guid contractorInfoGuid, bool isApproved)
@@ -29,10 +29,6 @@ namespace PracticalWerewolf.Services
         }
 
         public void SetIsAvailable(Guid contractorInfoGuid, bool isAvailable)
-        {
-            throw new NotImplementedException();
-        }
-        public IEnumerable<UserInfo> GetAllContractors()
         {
             throw new NotImplementedException();
         }

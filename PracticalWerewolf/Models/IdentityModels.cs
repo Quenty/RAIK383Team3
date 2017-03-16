@@ -12,6 +12,7 @@ using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.Stores.Interfaces;
 using System.Device.Location;
 
+
 namespace PracticalWerewolf.Models
 {
     public class ApplicationUser : IdentityUser, IApplicationUser
@@ -36,6 +37,11 @@ namespace PracticalWerewolf.Models
             if (user.ContractorInfo != null)
             {
                 userIdentity.AddClaim(new Claim(ClaimTypes.Role, "Contractor"));
+            }
+
+            if (user.CustomerInfo != null)
+            {
+                userIdentity.AddClaim(new Claim(ClaimTypes.Role, "Customer"));
             }
 
 
