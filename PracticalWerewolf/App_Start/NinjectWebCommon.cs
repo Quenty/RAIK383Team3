@@ -73,7 +73,7 @@ namespace PracticalWerewolf.App_Start
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
 
             //Stores
-            kernel.Bind<IContractorStore>().To<ContractorStore>().;
+            kernel.Bind<IContractorStore>().To<ContractorStore>();
             kernel.Bind<ICustomerStore>().To<CustomerStore>();
             kernel.Bind<IEmployeeStore>().To<EmployeeStore>();
             kernel.Bind<IOrderStore>().To<OrderStore>();
