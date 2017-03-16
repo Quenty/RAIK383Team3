@@ -63,7 +63,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Device" />
+    <Reference Include="System.Device, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -186,10 +188,12 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ContractorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\TruckController.cs" />
+    <Compile Include="Controllers\Validation\MustBeTrueAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -213,7 +217,44 @@
     <Compile Include="Migrations\201702270351026_Updated-Data-Models-OrderStatus.Designer.cs">
       <DependentUpon>201702270351026_Updated-Data-Models-OrderStatus.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703072104012_Generate-GUIDs.cs" />
+    <Compile Include="Migrations\201703072104012_Generate-GUIDs.Designer.cs">
+      <DependentUpon>201703072104012_Generate-GUIDs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703122235589_Add-More-Guids.cs" />
+    <Compile Include="Migrations\201703122235589_Add-More-Guids.Designer.cs">
+      <DependentUpon>201703122235589_Add-More-Guids.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703130024441_Add-CivicAddress-Guids.cs" />
+    <Compile Include="Migrations\201703130024441_Add-CivicAddress-Guids.Designer.cs">
+      <DependentUpon>201703130024441_Add-CivicAddress-Guids.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703141904268_CivicAddress-DB-Migration.cs" />
+    <Compile Include="Migrations\201703141904268_CivicAddress-DB-Migration.Designer.cs">
+      <DependentUpon>201703141904268_CivicAddress-DB-Migration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703141929112_CivicAddress-DB-Migration-Update.cs" />
+    <Compile Include="Migrations\201703141929112_CivicAddress-DB-Migration-Update.Designer.cs">
+      <DependentUpon>201703141929112_CivicAddress-DB-Migration-Update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703141956236_Approval-As-Enum.cs" />
+    <Compile Include="Migrations\201703141956236_Approval-As-Enum.Designer.cs">
+      <DependentUpon>201703141956236_Approval-As-Enum.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703142101256_Get-Set-Properties.cs" />
+    <Compile Include="Migrations\201703142101256_Get-Set-Properties.Designer.cs">
+      <DependentUpon>201703142101256_Get-Set-Properties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703142125042_Fix-Contractor-Info-Required.cs" />
+    <Compile Include="Migrations\201703142125042_Fix-Contractor-Info-Required.Designer.cs">
+      <DependentUpon>201703142125042_Fix-Contractor-Info-Required.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703142137171_RawInputString-Addresses.cs" />
+    <Compile Include="Migrations\201703142137171_RawInputString-Addresses.Designer.cs">
+      <DependentUpon>201703142137171_RawInputString-Addresses.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\CivicAddressDb.cs" />
     <Compile Include="Services\ContractorService.cs" />
     <Compile Include="Services\CustomerService.cs" />
     <Compile Include="Services\EmployeeService.cs" />
@@ -225,9 +266,11 @@
     <Compile Include="Services\OrderTrackService.cs" />
     <Compile Include="Services\TruckService.cs" />
     <Compile Include="Services\UserInfoService.cs" />
+    <Compile Include="Stores\EntityStore.cs" />
     <Compile Include="Stores\ContractorStore.cs" />
     <Compile Include="Stores\CustomerStore.cs" />
     <Compile Include="Stores\EmployeeStore.cs" />
+    <Compile Include="Stores\Interfaces\IEntityStore.cs" />
     <Compile Include="Stores\OrderStore.cs" />
     <Compile Include="Stores\TruckStore.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
@@ -238,6 +281,7 @@
     <Compile Include="Models\UserInfos\CustomerInfo.cs" />
     <Compile Include="Models\Orders\OrderRequestInfo.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="ViewModels\ContractorViewModels.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="Models\Orders\Order.cs" />
     <Compile Include="Models\Orders\OrderTrackInfo.cs" />
@@ -265,6 +309,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\mapautocomplete.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -288,7 +333,6 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
@@ -310,6 +354,11 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Contractor\Register.cshtml" />
+    <Content Include="Views\Contractor\Index.cshtml" />
+    <Content Include="Views\Contractor\Approve.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CivicAddressDb.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\CivicAddressDb.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -340,6 +389,33 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702270351026_Updated-Data-Models-OrderStatus.resx">
       <DependentUpon>201702270351026_Updated-Data-Models-OrderStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703072104012_Generate-GUIDs.resx">
+      <DependentUpon>201703072104012_Generate-GUIDs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703122235589_Add-More-Guids.resx">
+      <DependentUpon>201703122235589_Add-More-Guids.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703130024441_Add-CivicAddress-Guids.resx">
+      <DependentUpon>201703130024441_Add-CivicAddress-Guids.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703141904268_CivicAddress-DB-Migration.resx">
+      <DependentUpon>201703141904268_CivicAddress-DB-Migration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703141929112_CivicAddress-DB-Migration-Update.resx">
+      <DependentUpon>201703141929112_CivicAddress-DB-Migration-Update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703141956236_Approval-As-Enum.resx">
+      <DependentUpon>201703141956236_Approval-As-Enum.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703142101256_Get-Set-Properties.resx">
+      <DependentUpon>201703142101256_Get-Set-Properties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703142125042_Fix-Contractor-Info-Required.resx">
+      <DependentUpon>201703142125042_Fix-Contractor-Info-Required.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703142137171_RawInputString-Addresses.resx">
+      <DependentUpon>201703142137171_RawInputString-Addresses.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -9,11 +9,11 @@ using System.Web;
 
 namespace PracticalWerewolf.Stores
 {
-    public class OrderStore : IOrderStore
+    public class OrderStore : EntityStore<Order>, IOrderStore 
     {
-        private ApplicationDbContext context;
+        private readonly ApplicationDbContext context;
 
-        public OrderStore(ApplicationDbContext context)
+        public OrderStore(ApplicationDbContext context) : base(context.Order)
         {
             this.context = context;
         }

@@ -13,43 +13,16 @@ namespace PracticalWerewolf.Controllers
     [Authorize]
     public class ManageController : Controller
     {
-        private ApplicationSignInManager _signInManager;
-        private ApplicationUserManager _userManager;
-
-        public ManageController()
-        {
-        }
+        //private ApplicationSignInManager _signInManager;
+        //private ApplicationUserManager _userManager;
+        private ApplicationUserManager UserManager { get; set; }
+        private ApplicationSignInManager SignInManager { get; set; }
 
         public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
         }
-
-        public ApplicationSignInManager SignInManager
-        {
-            get
-            {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            }
-            private set 
-            { 
-                _signInManager = value; 
-            }
-        }
-
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
-
 
         // GET: /Manage/Index
         public async Task<ActionResult> Index(ManageMessageId? message)
@@ -96,42 +69,6 @@ namespace PracticalWerewolf.Controllers
                 message = ManageMessageId.Error;
             }
             return RedirectToAction("ManageLogins", new { Message = message });
-        }
-
-
-        // GET: /Manage/Users
-        [Authorize (Roles = "Employees")]
-        public ActionResult Users()
-        {
-            //Get list of all users
-            return View();
-        }
-
-
-        public ActionResult ContractorShipments(int id)
-        {
-            //Details on all the shipments for a contractor
-            return View();
-        }
-
-        public ActionResult RejectOffer(int id)
-        {
-            //contractor has rejected offer and now we must find a new persona
-            return View();
-        }
-
-        public ActionResult UpdateOrder(int id)
-        {
-            //contractor sends in the order deliever confirmation or updates status
-            return View();
-        }
-
-        // GET: /Manage/Users/5
-        [Authorize(Roles = "Employees")]
-        public ActionResult Users(int id)
-        {
-            //Look at details for a specific user
-            return View();
         }
 
         // GET: /Manage/AddPhoneNumber
@@ -343,16 +280,16 @@ namespace PracticalWerewolf.Controllers
             return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && _userManager != null)
-            {
-                _userManager.Dispose();
-                _userManager = null;
-            }
+        //protected override void Dispose(bool disposing)
+        //{
+        //    if (disposing && _userManager != null)
+        //    {
+        //        _userManager.Dispose();
+        //        _userManager = null;
+        //    }
 
-            base.Dispose(disposing);
-        }
+        //    base.Dispose(disposing);
+        //}
 
 #region Helpers
         // Used for XSRF protection when adding external logins

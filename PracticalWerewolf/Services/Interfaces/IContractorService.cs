@@ -9,18 +9,14 @@ using System.Threading.Tasks;
 
 namespace PracticalWerewolf.Services.Interfaces
 {
-    interface IContractorService
+    public interface IContractorService
     {
         // Depends upon IContractorStore.Update
-        void UpdateContractorIsAvailable(Guid contractorInfoGuid, Boolean isAvailable);
+        void SetIsAvailable(Guid contractorInfoGuid, bool isAvailable);
 
         // Depends upon IContractorStore.Update
-        void UpdateContractorApproval(Guid contractorInfoGuid);
+        void SetIsApproved(Guid contractorInfoGuid, bool isApproved);
 
-        // Depends upon the IContractorStore.GetUser
-        void GetUserContractorInfo(Guid userId);
-
-        // Depends upon the IContractorStore.Create
-        void RegisterContractorInfo(Guid userId, ContractorInfo newContractorInfo);
+        IEnumerable<ContractorInfo> GetUnapprovedContractors();
     }
 }
