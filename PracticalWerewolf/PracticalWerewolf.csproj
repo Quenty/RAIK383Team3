@@ -253,6 +253,10 @@
     <Compile Include="Migrations\201703142137171_RawInputString-Addresses.Designer.cs">
       <DependentUpon>201703142137171_RawInputString-Addresses.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703161844073_Trucks-Are-Fun.cs" />
+    <Compile Include="Migrations\201703161844073_Trucks-Are-Fun.Designer.cs">
+      <DependentUpon>201703161844073_Trucks-Are-Fun.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CivicAddressDb.cs" />
     <Compile Include="Services\ContractorService.cs" />
@@ -370,7 +374,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Order\" />
-    <Folder Include="Views\Truck\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -422,6 +425,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703142137171_RawInputString-Addresses.resx">
       <DependentUpon>201703142137171_RawInputString-Addresses.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703161844073_Trucks-Are-Fun.resx">
+      <DependentUpon>201703161844073_Trucks-Are-Fun.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
