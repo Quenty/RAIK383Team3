@@ -193,6 +193,8 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\TruckController.cs" />
+    <Compile Include="Controllers\UnitOfWork\UnitOfWork.cs" />
+    <Compile Include="Controllers\UnitOfWork\IUnitOfWork.cs" />
     <Compile Include="Controllers\Validation\MustBeTrueAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -252,6 +254,10 @@
     <Compile Include="Migrations\201703142137171_RawInputString-Addresses.cs" />
     <Compile Include="Migrations\201703142137171_RawInputString-Addresses.Designer.cs">
       <DependentUpon>201703142137171_RawInputString-Addresses.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703161844073_Trucks-Are-Fun.cs" />
+    <Compile Include="Migrations\201703161844073_Trucks-Are-Fun.Designer.cs">
+      <DependentUpon>201703161844073_Trucks-Are-Fun.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CivicAddressDb.cs" />
@@ -367,10 +373,15 @@
     <Content Include="Views\Contractor\Approve.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\CivicAddressDb.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\CivicAddressDb.cshtml" />
+    <Content Include="Views\Contractor\Register.cshtml" />
+    <Content Include="Views\Contractor\Index.cshtml" />
+    <Content Include="Views\Truck\Index.cshtml" />
+    <Content Include="Views\Truck\Details.cshtml" />
+    <Content Include="Views\Truck\Update.cshtml" />
+    <Content Include="Views\Truck\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Stores\Interfaces\Contexts\" />
     <Folder Include="Views\Order\" />
   </ItemGroup>
   <ItemGroup>
@@ -441,6 +452,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703142137171_RawInputString-Addresses.resx">
       <DependentUpon>201703142137171_RawInputString-Addresses.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703161844073_Trucks-Are-Fun.resx">
+      <DependentUpon>201703161844073_Trucks-Are-Fun.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -26,7 +26,7 @@ namespace PracticalWerewolf.Models.Trucks
         public String LicenseNumber { get; set; }
                                                                 
         // Gets broken down into different props but stays in the truck table
-        public GeoCoordinate Location { get; set; } 
+        public DbGeography Location { get; set; } 
 
         // One-to-one, each truck will have one Current and Max capacity
         public TruckCapacityUnit CurrentCapacity { get; set; }

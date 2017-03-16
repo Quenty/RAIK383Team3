@@ -29,7 +29,7 @@ namespace PracticalWerewolf.Stores
             return trucks;
         }
 
-        public IEnumerable<Truck> Get(IEnumerable<Guid> guids)
+        public void Update(Truck truck)
         {
             throw new NotImplementedException();
         }
@@ -39,14 +39,6 @@ namespace PracticalWerewolf.Stores
             var truck = context.Truck.Find(guid);
             return truck;
         }
-
-        public Truck GetByCustomerInfoGuid(Guid customerInfo)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(Truck truck)
-        {
             if(truck == null) throw new ArgumentNullException();
 
             //http://stackoverflow.com/a/15339512
