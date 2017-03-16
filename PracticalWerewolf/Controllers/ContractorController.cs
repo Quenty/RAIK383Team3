@@ -32,6 +32,7 @@ namespace PracticalWerewolf.Controllers
             this.ContractorService = ContractorService;
         }
 
+        [AllowAnonymous]
         public async Task<ActionResult> Index(ContractorMessageId? message)
         {
             ViewBag.StatusMessage = 
@@ -40,15 +41,22 @@ namespace PracticalWerewolf.Controllers
                 : message == ContractorMessageId.AlreadyRegisteredError ? "You are already registered as a contractor"
                 : "";
 
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-
-            var model = new ContractorIndexModel
+            var userId = User.Identity.GetUserId();
+            if (userId != null)
             {
-                ContractorInfo = user.ContractorInfo,
-            };
+                var user = await UserManager.FindByIdAsync(userId);
 
-        
-            return View(model);
+                var model = new ContractorIndexModel
+                {
+                    ContractorInfo = user.ContractorInfo,
+                };
+                return View(model);
+            }
+            else
+            {
+                var model = new ContractorIndexModel();
+                return View(model);
+            }
         }
 
 
