@@ -10,6 +10,11 @@ namespace PracticalWerewolf.Controllers.UnitOfWork
     {
         private ApplicationDbContext context;
 
+        public UnitOfWork(ApplicationDbContext context)
+        {
+            this.context = context;
+        }
+
         public void Commit()
         {
             context.SaveChanges();
