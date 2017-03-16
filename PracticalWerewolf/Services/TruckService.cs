@@ -6,7 +6,6 @@ using System.Web;
 using PracticalWerewolf.Models.Trucks;
 using System.Device.Location;
 using PracticalWerewolf.Stores.Interfaces;
-using PracticalWerewolf.Stores.Interfaces.Contexts;
 using PracticalWerewolf.Models;
 
 namespace PracticalWerewolf.Services

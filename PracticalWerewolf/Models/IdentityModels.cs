@@ -10,7 +10,6 @@ using PracticalWerewolf.Models.UserInfos;
 using PracticalWerewolf.Models.Trucks;
 using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.Stores.Interfaces;
-using PracticalWerewolf.Stores.Interfaces.Contexts;
 using System.Device.Location;
 
 namespace PracticalWerewolf.Models
@@ -45,7 +44,7 @@ namespace PracticalWerewolf.Models
     }
 
 
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IOrderDbContext, IUserInfoDbContext, ITruckDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<CustomerInfo> CustomerInfo { get; set; }
         public DbSet<UserInfo> UserInfo { get; set; }

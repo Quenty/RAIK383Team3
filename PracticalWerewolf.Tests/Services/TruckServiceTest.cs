@@ -9,7 +9,6 @@ using System.Linq;
 using PracticalWerewolf.Models;
 using System.Device.Location;
 using PracticalWerewolf.Tests.Stores.DbContext;
-using PracticalWerewolf.Stores.Interfaces.Contexts;
 using PracticalWerewolf.Stores;
 
 namespace PracticalWerewolf.Tests.Services
