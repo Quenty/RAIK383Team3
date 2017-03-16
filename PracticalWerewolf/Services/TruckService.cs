@@ -24,6 +24,8 @@ namespace PracticalWerewolf.Services
 
         public void CreateTruck(Truck truck)
         {
+            //TODO possibly return an IdentityResult
+            if (truck == null) throw new ArgumentNullException();
             try
             {
                 TruckStore.Create(truck);

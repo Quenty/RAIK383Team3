@@ -20,6 +20,7 @@ namespace PracticalWerewolf.Stores
 
         public void Create(Truck truck)
         {
+            if (truck == null) throw new ArgumentNullException();
             context.Truck.Add(truck);
         }
 

@@ -131,23 +131,34 @@ namespace PracticalWerewolf.Controllers
         {
             if (ModelState.IsValid)
             {
-                var capacityUnit = new TruckCapacityUnit
+                try
                 {
-                    Mass = truck.MaxCapacity.Mass,
-                    Volume = truck.MaxCapacity.Volume
-                };
-                var model = new Truck
+                    var capacityUnit = new TruckCapacityUnit
+                    {
+                        //Guid?
+                        Mass = truck.MaxCapacity.Mass,
+                        Volume = truck.MaxCapacity.Volume
+                    };
+                    //what's wrong with using the truck they gave us?
+                    var model = new Truck
+                    {
+                        //Guid?
+                        //Will there be a problem if a truck has the same license number?
+                        //Do we need to set the current capacity or location?
+                        //Are we going to require they have a license number?
+                        LicenseNumber = truck.LicenseNumber,
+                        MaxCapacity = capacityUnit
+                    };
+                    TruckService.CreateTruck(model);
+                    return RedirectToAction("Index");
+
+                }
+                catch
                 {
-                    LicenseNumber = truck.LicenseNumber,
-                    MaxCapacity = capacityUnit
-                };
-                TruckService.CreateTruck(model);
-                return RedirectToAction("Index");
+                    //TODO: LOG IT
+                }
             }
-            else
-            {
-                return HttpNotFound();
-            }
+            return HttpNotFound();
         }
 
     }

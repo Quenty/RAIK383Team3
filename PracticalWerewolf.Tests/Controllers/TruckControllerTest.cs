@@ -20,9 +20,9 @@ namespace PracticalWerewolf.Tests.Controllers
 
         private static IEnumerable<Truck> _trucks = new List<Truck>
         {
-            new Truck {TruckGuid = Guid.NewGuid(), CurrentCapacity = unit, MaxCapacity = unit, Location = location},
-            new Truck {TruckGuid = Guid.NewGuid(), CurrentCapacity = unit, MaxCapacity = unit, Location = location},
-            new Truck {TruckGuid = Guid.NewGuid(), CurrentCapacity = unit, MaxCapacity = unit, Location = location}
+            new Truck {TruckGuid = Guid.NewGuid(), CurrentCapacity = unit, MaxCapacity = unit, Location = location, LicenseNumber = "Hergedy1"},
+            new Truck {TruckGuid = Guid.NewGuid(), CurrentCapacity = unit, MaxCapacity = unit, Location = location, LicenseNumber = "Hergedy2"},
+            new Truck {TruckGuid = Guid.NewGuid(), CurrentCapacity = unit, MaxCapacity = unit, Location = location, LicenseNumber = "Hergedy3"}
         };
 
         [TestMethod]
@@ -68,7 +68,8 @@ namespace PracticalWerewolf.Tests.Controllers
                 TruckGuid = guid,
                 CurrentCapacity = capacity,
                 MaxCapacity = capacity,
-                Location = new GeoCoordinate(3.14, 2.18)
+                Location = new GeoCoordinate(3.14, 2.18),
+                LicenseNumber = "James"
             };
             var truckService = new Mock<ITruckService>();
             truckService.Setup(x => x.GetTruck(It.IsAny<Guid>())).Returns(truck);
@@ -84,6 +85,7 @@ namespace PracticalWerewolf.Tests.Controllers
             Assert.AreEqual(model.Lat, 3.14);
             Assert.AreEqual(model.Long, 2.18);
             Assert.IsNotNull(model.AvailableCapacity);
+            Assert.AreEqual("James", model.LicenseNumber);
         }
 
         [TestMethod]
@@ -121,7 +123,8 @@ namespace PracticalWerewolf.Tests.Controllers
                 TruckGuid = guid,
                 CurrentCapacity = capacity,
                 MaxCapacity = capacity,
-                Location = new GeoCoordinate(3.14, 2.18)
+                Location = new GeoCoordinate(3.14, 2.18),
+                LicenseNumber = "Abbie"
             };
             var truckService = new Mock<ITruckService>();
             truckService.Setup(x => x.GetTruck(It.IsAny<Guid>())).Returns(truck);
@@ -135,6 +138,7 @@ namespace PracticalWerewolf.Tests.Controllers
             Assert.AreEqual(model.Guid, guid.ToString());
             Assert.AreEqual(model.Volume, capacity.Volume);
             Assert.AreEqual(model.Mass, capacity.Mass);
+            Assert.AreEqual("Abbie", model.LicenseNumber);
         }
 
 
@@ -192,6 +196,91 @@ namespace PracticalWerewolf.Tests.Controllers
 
             Assert.IsNotNull(result);
             Assert.AreEqual("Index", result.RouteValues["action"]);
+        }
+
+        [TestMethod]
+        public void Create_Nothing_TestItWorks()
+        {
+            var truckService = new Mock<ITruckService>();
+            var contractorService = new Mock<IContractorService>();
+            var controller = new TruckController(truckService.Object, contractorService.Object);
+
+            var result = controller.Create() as ViewResult;
+
+            Assert.IsNotNull(result);
+        }
+
+        [TestMethod]
+        public void CreatePostback_ValidTruck_TestItWorks()
+        {
+            var capacity = new TruckCapacityUnit() { Mass = 12, Volume = 12, TruckCapacityUnitGuid = Guid.NewGuid() };
+            var guid = Guid.NewGuid();
+            var truck = new Truck()
+            {
+                TruckGuid = guid,
+                CurrentCapacity = capacity,
+                MaxCapacity = capacity,
+                Location = new GeoCoordinate(3.14, 2.18),
+                LicenseNumber = "Matt"
+            };
+            var truckService = new Mock<ITruckService>();
+            var contractorService = new Mock<IContractorService>();
+            var controller = new TruckController(truckService.Object, contractorService.Object);
+
+            var result = controller.Create(truck) as RedirectToRouteResult;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Index", result.RouteValues["action"]);
+        }
+
+        [TestMethod]
+        public void CreatePostback_NullTruck_HttpNotFound()
+        {
+            Truck truck = null;
+            var truckService = new Mock<ITruckService>();
+            var contractorService = new Mock<IContractorService>();
+            var controller = new TruckController(truckService.Object, contractorService.Object);
+
+            var result = controller.Create(truck);
+
+            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+        }
+
+        [TestMethod]
+        public void CreatePostback_NullTruckCapacity_HttpNotFound()
+        {
+            var guid = Guid.NewGuid();
+            var truck = new Truck()
+            {
+                TruckGuid = guid,
+                LicenseNumber = "Jessee"
+            };
+            var truckService = new Mock<ITruckService>();
+            var contractorService = new Mock<IContractorService>();
+            var controller = new TruckController(truckService.Object, contractorService.Object);
+
+            var result = controller.Create(truck);
+
+            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+        }
+
+        [TestMethod]
+        public void CreatePostback_NullLicense_HttpNotFound()
+        {
+            var capacity = new TruckCapacityUnit() { Mass = 12, Volume = 12, TruckCapacityUnitGuid = Guid.NewGuid() };
+            var guid = Guid.NewGuid();
+            var truck = new Truck()
+            {
+                TruckGuid = guid,
+                MaxCapacity = capacity
+            };
+            var truckService = new Mock<ITruckService>();
+            var contractorService = new Mock<IContractorService>();
+            var controller = new TruckController(truckService.Object, contractorService.Object);
+
+            var result = controller.Create(truck);
+
+            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
         }
     }
 }

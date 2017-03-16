@@ -22,9 +22,9 @@ namespace PracticalWerewolf.Tests.Services
 
         private static IEnumerable<Truck> _trucks = new List<Truck>
         {
-            new Truck {TruckGuid = Guid.NewGuid(), CurrentCapacity = unit, MaxCapacity = unit, Location = location},
-            new Truck {TruckGuid = Guid.NewGuid(), CurrentCapacity = unit, MaxCapacity = unit, Location = location},
-            new Truck {TruckGuid = Guid.NewGuid(), CurrentCapacity = unit, MaxCapacity = unit, Location = location}
+            new Truck {TruckGuid = Guid.NewGuid(), CurrentCapacity = unit, MaxCapacity = unit, Location = location, LicenseNumber = "Hergedy1"},
+            new Truck {TruckGuid = Guid.NewGuid(), CurrentCapacity = unit, MaxCapacity = unit, Location = location, LicenseNumber = "Hergedy2"},
+            new Truck {TruckGuid = Guid.NewGuid(), CurrentCapacity = unit, MaxCapacity = unit, Location = location, LicenseNumber = "Hergedy3"}
         };
 
 
@@ -96,7 +96,7 @@ namespace PracticalWerewolf.Tests.Services
             var location = new GeoCoordinate(4, 7);
             var capacity = new TruckCapacityUnit() { TruckCapacityUnitGuid = Guid.NewGuid(), Mass = 3.14, Volume = 7 };
             var newCapacity = new TruckCapacityUnit() { TruckCapacityUnitGuid = Guid.NewGuid(), Mass = 51, Volume = 7 };
-            dbSet.Add(new Truck() { TruckGuid = guid, CurrentCapacity = capacity, MaxCapacity = capacity, Location = location });
+            dbSet.Add(new Truck() { TruckGuid = guid, CurrentCapacity = capacity, MaxCapacity = capacity, Location = location , LicenseNumber = "James"});
             var mockContext = new Mock<ITruckDbContext>();
             mockContext.Setup(x => x.Truck).Returns(dbSet);
             var store = new TruckStore(mockContext.Object);
@@ -110,6 +110,7 @@ namespace PracticalWerewolf.Tests.Services
             Assert.AreEqual(location, truck.Location);
             Assert.AreEqual(capacity, truck.CurrentCapacity);
             Assert.AreEqual(newCapacity, truck.MaxCapacity);
+            Assert.AreEqual("James", truck.LicenseNumber);
         }
         
         [TestMethod]
@@ -120,7 +121,7 @@ namespace PracticalWerewolf.Tests.Services
             var location = new GeoCoordinate(4, 7);
             var capacity = new TruckCapacityUnit() { TruckCapacityUnitGuid = Guid.NewGuid(), Mass = 3.14, Volume = 7 };
             var newCapacity = new TruckCapacityUnit() { TruckCapacityUnitGuid = Guid.NewGuid(), Mass = 51, Volume = 7 };
-            dbSet.Add(new Truck() { TruckGuid = guid, CurrentCapacity = capacity, MaxCapacity = capacity, Location = location });
+            dbSet.Add(new Truck() { TruckGuid = guid, CurrentCapacity = capacity, MaxCapacity = capacity, Location = location, LicenseNumber = "Abbie" });
             var mockContext = new Mock<ITruckDbContext>();
             mockContext.Setup(x => x.Truck).Returns(dbSet);
             var store = new TruckStore(mockContext.Object);
@@ -136,6 +137,7 @@ namespace PracticalWerewolf.Tests.Services
             Assert.AreEqual(capacity, truck.CurrentCapacity);
             Assert.AreEqual(capacity, truck.MaxCapacity);
             Assert.IsNull(truckService.GetTruck(newGuid));
+            Assert.AreEqual("Abbie", truck.LicenseNumber);
         }
 
         [TestMethod, ExpectedException(typeof(ArgumentNullException))]
@@ -146,7 +148,7 @@ namespace PracticalWerewolf.Tests.Services
             var location = new GeoCoordinate(4, 7);
             var capacity = new TruckCapacityUnit() { TruckCapacityUnitGuid = Guid.NewGuid(), Mass = 3.14, Volume = 7 };
             TruckCapacityUnit newCapacity = null;
-            dbSet.Add(new Truck() { TruckGuid = guid, CurrentCapacity = capacity, MaxCapacity = capacity, Location = location });
+            dbSet.Add(new Truck() { TruckGuid = guid, CurrentCapacity = capacity, MaxCapacity = capacity, Location = location, LicenseNumber = "Matt" });
             var mockContext = new Mock<ITruckDbContext>();
             mockContext.Setup(x => x.Truck).Returns(dbSet);
             var store = new TruckStore(mockContext.Object);
@@ -156,5 +158,41 @@ namespace PracticalWerewolf.Tests.Services
             var newGuid = Guid.NewGuid();
             truckService.UpdateTruckMaxCapacity(newGuid, newCapacity);
         }
+
+
+        [TestMethod]
+        public void CreateTruck_ValidTruck_TestExists()
+        {
+            var dbSet = new MockTruckDbSet();
+            var mockContext = new Mock<ITruckDbContext>();
+            mockContext.Setup(x => x.Truck).Returns(dbSet);
+            var truckStore = new TruckStore(mockContext.Object);
+            var mockDbContext = new Mock<ApplicationDbContext>();
+            var truckService = new TruckService(truckStore, mockDbContext.Object);
+
+            var guid = Guid.NewGuid();
+            var location = new GeoCoordinate(4, 7);
+            var capacity = new TruckCapacityUnit() { TruckCapacityUnitGuid = Guid.NewGuid(), Mass = 3.14, Volume = 7 };
+            var truck = new Truck { TruckGuid = guid, MaxCapacity = capacity, CurrentCapacity = capacity, LicenseNumber = "Matt", Location = location };
+            truckService.CreateTruck(truck);
+
+            var result = truckService.GetTruck(guid);
+            Assert.AreEqual(truck, result);
+        }
+
+        [TestMethod, ExpectedException(typeof(ArgumentNullException))]
+        public void CreateTruck_NullTruck_ThrowsException()
+        {
+            var dbSet = new MockTruckDbSet();
+            var mockContext = new Mock<ITruckDbContext>();
+            mockContext.Setup(x => x.Truck).Returns(dbSet);
+            var truckStore = new TruckStore(mockContext.Object);
+            var mockDbContext = new Mock<ApplicationDbContext>();
+            var truckService = new TruckService(truckStore, mockDbContext.Object);
+
+            Truck truck = null;
+            truckService.CreateTruck(truck);
+        }
+
     }
 }
