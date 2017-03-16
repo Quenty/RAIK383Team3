@@ -193,6 +193,8 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\TruckController.cs" />
+    <Compile Include="Controllers\UnitOfWork\UnitOfWork.cs" />
+    <Compile Include="Controllers\UnitOfWork\IUnitOfWork.cs" />
     <Compile Include="Controllers\Validation\MustBeTrueAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

@@ -12,7 +12,6 @@ using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.Stores.Interfaces;
 using System.Device.Location;
 
-
 namespace PracticalWerewolf.Models
 {
     public class ApplicationUser : IdentityUser, IApplicationUser
