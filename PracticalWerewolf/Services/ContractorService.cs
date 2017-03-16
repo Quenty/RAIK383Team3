@@ -32,5 +32,9 @@ namespace PracticalWerewolf.Services
         {
             throw new NotImplementedException();
         }
+        public IEnumerable<UserInfo> GetAllContractors()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

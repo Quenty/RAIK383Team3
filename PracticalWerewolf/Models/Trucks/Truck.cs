@@ -14,6 +14,8 @@ namespace PracticalWerewolf.Models.Trucks
     {
         [Key]
         public Guid TruckCapacityUnitGuid { get; set; }
+        public double Mass { get; set; }
+        public double Volume { get; set; }
     }
 
     public class Truck
@@ -21,6 +23,7 @@ namespace PracticalWerewolf.Models.Trucks
         // A truck has a One-to-one relationship with contractor
         [Key]
         public Guid TruckGuid { get; set; }
+        public String LicenseNumber { get; set; }
                                                                 
         // Gets broken down into different props but stays in the truck table
         public DbGeography Location { get; set; } 
