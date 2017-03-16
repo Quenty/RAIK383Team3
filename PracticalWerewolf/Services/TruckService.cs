@@ -5,24 +5,42 @@ using System.Linq;
 using System.Web;
 using PracticalWerewolf.Models.Trucks;
 using System.Device.Location;
+using PracticalWerewolf.Stores.Interfaces;
+using PracticalWerewolf.Models;
 
 namespace PracticalWerewolf.Services
 {
     public class TruckService : ITruckService
     {
+        private ITruckStore TruckStore;
+        private ApplicationDbContext context;
+
+        public TruckService(ITruckStore TruckStore, ApplicationDbContext DbContext)
+        {
+            this.context = DbContext;
+            this.TruckStore = TruckStore;
+        }
+
         public void CreateTruck(Truck truck)
         {
-            throw new NotImplementedException();
+            try
+            {
+                TruckStore.Create(truck);
+            }
+            catch
+            {
+                throw new Exception();
+            }
         }
 
         public IEnumerable<Truck> GetAllTrucks()
         {
-            throw new NotImplementedException();
+            return TruckStore.GetAllTrucks();
         }
 
         public Truck GetTruck(Guid truckId)
         {
-            throw new NotImplementedException();
+            return TruckStore.Get(truckId);
         }
 
         public Truck GetTruckByCustomerInfoGuid(Guid truckId)
@@ -42,7 +60,18 @@ namespace PracticalWerewolf.Services
 
         public void UpdateTruckMaxCapacity(Guid truckGuid, TruckCapacityUnit capacity)
         {
-            throw new NotImplementedException();
+            var oldTruck = GetTruck(truckGuid);
+
+            var truck = new Truck
+            {
+                Location = oldTruck.Location,
+                TruckGuid = oldTruck.TruckGuid,
+                CurrentCapacity = oldTruck.CurrentCapacity,
+                MaxCapacity = oldTruck.MaxCapacity
+            };
+
+            TruckStore.Update(truck);
+            context.SaveChanges();
         }
     }
 }
