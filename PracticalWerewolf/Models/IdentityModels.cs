@@ -52,18 +52,18 @@ namespace PracticalWerewolf.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public DbSet<CustomerInfo> CustomerInfo { get; set; }
-        public DbSet<UserInfo> UserInfo { get; set; }
-        public DbSet<EmployeeInfo> EmployeeInfo { get; set; }
-        public DbSet<ContractorInfo> ContractorInfo { get; set; }
-
-        public DbSet<Truck> Truck { get; set; }
-        public DbSet<TruckCapacityUnit> TruckCapacityUnit { get; set; }
-        public DbSet<CivicAddressDb> CivicAddressDb { get; set; }
-
-        public DbSet<Order> Order { get; set; }
-        public DbSet<OrderRequestInfo> OrderRequestInfo { get; set; }
-        public DbSet<OrderTrackInfo> OrderTrackInfo { get; set; }
+        public virtual DbSet<CustomerInfo> CustomerInfo { get; set; }
+        public virtual DbSet<UserInfo> UserInfo { get; set; }
+        public virtual DbSet<EmployeeInfo> EmployeeInfo { get; set; }
+        public virtual DbSet<ContractorInfo> ContractorInfo { get; set; }
+                
+        public virtual DbSet<Truck> Truck { get; set; }
+        public virtual DbSet<TruckCapacityUnit> TruckCapacityUnit { get; set; }
+        public virtual DbSet<CivicAddressDb> CivicAddressDb { get; set; }
+                
+        public virtual DbSet<Order> Order { get; set; }
+        public virtual DbSet<OrderRequestInfo> OrderRequestInfo { get; set; }
+        public virtual DbSet<OrderTrackInfo> OrderTrackInfo { get; set; }
 
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
