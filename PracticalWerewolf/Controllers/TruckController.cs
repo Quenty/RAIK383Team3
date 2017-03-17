@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using PracticalWerewolf.Controllers.UnitOfWork;
 
 namespace PracticalWerewolf.Controllers
 {
@@ -11,10 +12,14 @@ namespace PracticalWerewolf.Controllers
     public class TruckController : Controller
     {
         ITruckService TruckService;
+        IContractorService ContractorService;
+        IUnitOfWork UnitOfWork;
 
-        public TruckController(ITruckService TruckService)
+        public TruckController(ITruckService TruckService, IContractorService ContractorService, IUnitOfWork UnitOfWork)
         {
             this.TruckService = TruckService;
+            this.ContractorService = ContractorService;
+            this.UnitOfWork = UnitOfWork;
         }
 
         // GET: Truck
