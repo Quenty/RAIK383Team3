@@ -30,7 +30,7 @@ namespace PracticalWerewolf.Models.Trucks
 
         public TruckCapacityUnit AvailableCapacity { get; }
         // One-to-one, each truck will have one Current and Max capacity
-        public TruckCapacityUnit CurrentCapacity { get; set; }
-        public TruckCapacityUnit MaxCapacity { get; set; }
+        public virtual TruckCapacityUnit CurrentCapacity { get; set; }
+        public virtual TruckCapacityUnit MaxCapacity { get; set; }
     }
 }

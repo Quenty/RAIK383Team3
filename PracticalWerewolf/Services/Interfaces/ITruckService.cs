@@ -20,7 +20,7 @@ namespace PracticalWerewolf.Services.Interfaces
         void UpdateTruckLocation(Guid truckGuid, GeoCoordinate location);
 
         // Depends upon ITruckStore.Update
-        void UpdateTruckMaxCapacity(Guid truckGuid, TruckCapacityUnit capacity);
+        void UpdateTruck(Truck truck);
 
         // Depends upon ITruckStore.Update
         void UpdateTruckCurrentCapacity(Guid truckGuid, TruckCapacityUnit capacity);

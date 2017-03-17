@@ -58,20 +58,9 @@ namespace PracticalWerewolf.Services
             throw new NotImplementedException();
         }
 
-        public void UpdateTruckMaxCapacity(Guid truckGuid, TruckCapacityUnit capacity)
+        public void UpdateTruck(Truck newTruck)
         {
-            var oldTruck = GetTruck(truckGuid);
-
-            var truck = new Truck
-            {
-                Location = oldTruck.Location,
-                TruckGuid = oldTruck.TruckGuid,
-                CurrentCapacity = oldTruck.CurrentCapacity,
-                MaxCapacity = oldTruck.MaxCapacity
-            };
-
-            TruckStore.Update(truck);
-            context.SaveChanges();
+            TruckStore.Update(newTruck);
         }
     }
 }

@@ -16,12 +16,13 @@
 
 @foreach (var item in Model.Trucks) {
     <tr>
-        <td>
-            
-            @Html.ActionLink("Edit", "Edit", new { id=item.TruckGuid }) |
-            @Html.ActionLink("Details", "Details", new { id=item.TruckGuid }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.TruckGuid })
-        </td>
+        <td>@Html.DisplayFor(m => item.TruckGuid)</td>
+        <td>@Html.DisplayFor(m => item.LicenseNumber)</td>
+        <td>@Html.ActionLink("Edit", "Edit", new { id = item.TruckGuid }) |
+        @Html.ActionLink("Details", "Details", new { id = item.TruckGuid }) </td>
+
+
+        
     </tr>
 }
 

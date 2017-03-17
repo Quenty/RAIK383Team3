@@ -1,7 +1,7 @@
 ﻿@model PracticalWerewolf.ViewModels.TruckUpdateViewModel
 
 @{
-    ViewBag.Title = "Update";
+    ViewBag.Title = "Edit";
 }
 
 <h2>Update</h2>
@@ -39,6 +39,7 @@
                 @Html.ValidationMessageFor(model => model.Volume, "", new { @class = "text-danger" })
             </div>
         </div>
+        @Html.HiddenFor(model => model.Guid)
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

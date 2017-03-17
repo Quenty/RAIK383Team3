@@ -9,6 +9,9 @@ using PracticalWerewolf.ViewModels;
 using PracticalWerewolf;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity;
+using PracticalWerewolf.Models;
+using System.Activities;
+using System.Data.Entity.Spatial;
 
 namespace PracticalWerewolf.Controllers
 {
@@ -16,9 +19,11 @@ namespace PracticalWerewolf.Controllers
     {
         ITruckService TruckService;
         IContractorService ContractorService;
+        ApplicationDbContext context;
 
-        public TruckController(ITruckService TruckService, IContractorService ContractorService)
+        public TruckController(ITruckService TruckService, IContractorService ContractorService, ApplicationDbContext context)
         {
+            this.context = context;
             this.TruckService = TruckService;
             this.ContractorService = ContractorService;
         }
@@ -37,7 +42,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         // GET: Truck/Details/guid
-        //[Authorize(Roles = "Contractor, Employee")]
+        [Authorize(Roles = "Contractor, Employee")]
         public ActionResult Details(string id)
         {
             if (!String.IsNullOrEmpty(id))
@@ -48,7 +53,7 @@ namespace PracticalWerewolf.Controllers
                 {
                     Guid = id,
                     LicenseNumber = truck.LicenseNumber,
-                    AvailableCapacity = truck.AvailableCapacity,
+                    // AvailableCapacity = truck.AvailableCapacity,
                     MaxCapacity = truck.MaxCapacity,
                     Lat = truck.Location.Latitude,
                     Long = truck.Location.Longitude
@@ -61,7 +66,7 @@ namespace PracticalWerewolf.Controllers
 
         // GET: Truck/Edit/guid
         [Authorize(Roles = "Contractor")]
-        public ActionResult Update(string id)
+        public ActionResult Edit(string id)
         {
             if (!String.IsNullOrEmpty(id))
             {
@@ -85,54 +90,61 @@ namespace PracticalWerewolf.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Contractor")]
-        public ActionResult Update(string id, TruckUpdateViewModel model)
+        public ActionResult Edit(String id, TruckUpdateViewModel model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                var guid = new Guid(model.Guid);
+                var NewCapacityModel = new TruckCapacityUnit
                 {
-                    var guid = new Guid(id);
-                    var NewModel = new TruckCapacityUnit
-                    {
-                        TruckCapacityUnitGuid = new Guid(model.Guid),
-                        Volume = model.Volume,
-                        Mass = model.Mass
-                    };
-                    TruckService.UpdateTruckMaxCapacity(guid, NewModel);
-                    return RedirectToAction("Index");
-                }
-                else
-                    return View(model);
+                    TruckCapacityUnitGuid = Guid.NewGuid(),
+                    Volume = model.Volume,
+                    Mass = model.Mass
+                };
+                var newModel = new Truck
+                {
+                    TruckGuid = new Guid(model.Guid),
+                    LicenseNumber = model.LicenseNumber,
+                    MaxCapacity = NewCapacityModel
+                };
+                TruckService.UpdateTruck(newModel);
+                context.SaveChanges();
+                return RedirectToAction("Index");
             }
-            catch
-            {
+            else
                 return View(model);
-            }
         }
 
         // GET: Truck/Create/
+        [Authorize(Roles = "Contractor")]
         public ActionResult Create()
         {
             return View();
         }
 
         // POST: Truck/Create/
+        [Authorize(Roles = "Contractor")]
         [HttpPost]
-        public ActionResult Create(Truck truck)
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(TruckCreateViewModel returnedModel)
         {
             if (ModelState.IsValid)
             {
                 var capacityUnit = new TruckCapacityUnit
                 {
-                    Mass = truck.MaxCapacity.Mass,
-                    Volume = truck.MaxCapacity.Volume
+                    TruckCapacityUnitGuid = Guid.NewGuid(),
+                    Mass = returnedModel.Mass,
+                    Volume = returnedModel.Volume
                 };
                 var model = new Truck
                 {
-                    LicenseNumber = truck.LicenseNumber,
-                    MaxCapacity = capacityUnit
+                    TruckGuid = Guid.NewGuid(),
+                    LicenseNumber = returnedModel.LicenseNumber,
+                    MaxCapacity = capacityUnit,
+                    Location = CreatePoint(returnedModel.Lat, returnedModel.Long)
                 };
                 TruckService.CreateTruck(model);
+                context.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
@@ -140,6 +152,14 @@ namespace PracticalWerewolf.Controllers
                 return HttpNotFound();
             }
         }
+
+        private DbGeography CreatePoint(double lat, double lon, int srid = 4326)
+        {
+            string wkt = String.Format("POINT({0} {1})", lon, lat);
+
+            return DbGeography.PointFromText(wkt, srid);
+        }
+
 
     }
 }
