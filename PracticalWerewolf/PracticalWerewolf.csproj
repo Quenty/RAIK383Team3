@@ -259,6 +259,10 @@
     <Compile Include="Migrations\201703161844073_Trucks-Are-Fun.Designer.cs">
       <DependentUpon>201703161844073_Trucks-Are-Fun.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703161844073_Trucks-Are-Fun.cs" />
+    <Compile Include="Migrations\201703161844073_Trucks-Are-Fun.Designer.cs">
+      <DependentUpon>201703161844073_Trucks-Are-Fun.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CivicAddressDb.cs" />
     <Compile Include="Services\ContractorService.cs" />
@@ -364,6 +368,11 @@
     <Content Include="Views\Contractor\Register.cshtml" />
     <Content Include="Views\Contractor\Index.cshtml" />
     <Content Include="Views\Contractor\Approve.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CivicAddressDb.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\CivicAddressDb.cshtml" />
+    <Content Include="Views\Contractor\Register.cshtml" />
+    <Content Include="Views\Contractor\Index.cshtml" />
+    <Content Include="Views\Contractor\Approve.cshtml" />
     <Content Include="Views\Truck\Index.cshtml" />
     <Content Include="Views\Truck\Details.cshtml" />
     <Content Include="Views\Truck\Update.cshtml" />
@@ -407,24 +416,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702270351026_Updated-Data-Models-OrderStatus.resx">
       <DependentUpon>201702270351026_Updated-Data-Models-OrderStatus.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201702282049544_Changing Geocoordinate.resx">
-      <DependentUpon>201702282049544_Changing Geocoordinate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703071933191_Updated truck model.resx">
-      <DependentUpon>201703071933191_Updated truck model.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703122356447_Add license to truck.resx">
-      <DependentUpon>201703122356447_Add license to truck.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703072104012_Generate-GUIDs.resx">
-      <DependentUpon>201703072104012_Generate-GUIDs.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703122235589_Add-More-Guids.resx">
-      <DependentUpon>201703122235589_Add-More-Guids.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703130024441_Add-CivicAddress-Guids.resx">
-      <DependentUpon>201703130024441_Add-CivicAddress-Guids.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703072104012_Generate-GUIDs.resx">
       <DependentUpon>201703072104012_Generate-GUIDs.cs</DependentUpon>
