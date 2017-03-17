@@ -13,11 +13,9 @@ namespace PracticalWerewolf.Services
     public class TruckService : ITruckService
     {
         private ITruckStore TruckStore;
-        private ApplicationDbContext context;
 
-        public TruckService(ITruckStore TruckStore, ApplicationDbContext DbContext)
+        public TruckService(ITruckStore TruckStore)
         {
-            this.context = DbContext;
             this.TruckStore = TruckStore;
         }
 

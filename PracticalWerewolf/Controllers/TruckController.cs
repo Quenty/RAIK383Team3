@@ -57,8 +57,8 @@ namespace PracticalWerewolf.Controllers
                         LicenseNumber = truck.LicenseNumber,
                         AvailableCapacity = truck.GetAvailableCapacity(),
                         MaxCapacity = truck.MaxCapacity,
-                        Lat = truck.Location.Latitude,
-                        Long = truck.Location.Longitude
+                        //Lat = truck.Location.Latitude,
+                        //Long = truck.Location.Longitude
                     };
                     return View(model);
                 }
@@ -109,8 +109,15 @@ namespace PracticalWerewolf.Controllers
                         Volume = model.Volume,
                         Mass = model.Mass
                     };
+                    var newModel = new Truck
+                    {
+                        TruckGuid = new Guid(model.Guid),
+                        LicenseNumber = model.LicenseNumber,
+                        MaxCapacity = newCapacity
+                    };
                     //Here's where the IdentityResultWouldBeNice
-                    TruckService.UpdateTruckMaxCapacity(guid, newCapacity);
+                    TruckService.UpdateTruck(newModel);
+                    context.SaveChanges();
                     return RedirectToAction("Index");
                 }
                 else
