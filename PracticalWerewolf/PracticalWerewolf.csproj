@@ -259,10 +259,6 @@
     <Compile Include="Migrations\201703161844073_Trucks-Are-Fun.Designer.cs">
       <DependentUpon>201703161844073_Trucks-Are-Fun.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201703161844073_Trucks-Are-Fun.cs" />
-    <Compile Include="Migrations\201703161844073_Trucks-Are-Fun.Designer.cs">
-      <DependentUpon>201703161844073_Trucks-Are-Fun.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CivicAddressDb.cs" />
     <Compile Include="Services\ContractorService.cs" />

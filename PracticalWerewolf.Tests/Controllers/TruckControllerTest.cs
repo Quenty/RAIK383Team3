@@ -8,7 +8,7 @@ using PracticalWerewolf.Controllers;
 using System.Web.Mvc;
 using PracticalWerewolf.ViewModels;
 using System.Linq;
-using System.Device.Location;
+using System.Data.Entity.Spatial;
 
 namespace PracticalWerewolf.Tests.Controllers
 {
@@ -16,7 +16,7 @@ namespace PracticalWerewolf.Tests.Controllers
     public class TruckControllerTest
     {
         private static TruckCapacityUnit unit = new TruckCapacityUnit { TruckCapacityUnitGuid = Guid.NewGuid() };
-        private static GeoCoordinate location = null;
+        private static DbGeography location = null;
 
         private static IEnumerable<Truck> _trucks = new List<Truck>
         {
@@ -68,7 +68,6 @@ namespace PracticalWerewolf.Tests.Controllers
                 TruckGuid = guid,
                 CurrentCapacity = capacity,
                 MaxCapacity = capacity,
-                Location = new GeoCoordinate(3.14, 2.18),
                 LicenseNumber = "James"
             };
             var truckService = new Mock<ITruckService>();
@@ -123,7 +122,6 @@ namespace PracticalWerewolf.Tests.Controllers
                 TruckGuid = guid,
                 CurrentCapacity = capacity,
                 MaxCapacity = capacity,
-                Location = new GeoCoordinate(3.14, 2.18),
                 LicenseNumber = "Abbie"
             };
             var truckService = new Mock<ITruckService>();
@@ -220,7 +218,6 @@ namespace PracticalWerewolf.Tests.Controllers
                 TruckGuid = guid,
                 CurrentCapacity = capacity,
                 MaxCapacity = capacity,
-                Location = new GeoCoordinate(3.14, 2.18),
                 LicenseNumber = "Matt"
             };
             var truckService = new Mock<ITruckService>();

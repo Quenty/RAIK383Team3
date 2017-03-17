@@ -29,7 +29,7 @@ namespace PracticalWerewolf.Stores
             return trucks;
         }
 
-        public void Update(Truck truck)
+        public IEnumerable<Truck> Get(IEnumerable<Guid> guids)
         {
             throw new NotImplementedException();
         }
@@ -39,12 +39,20 @@ namespace PracticalWerewolf.Stores
             var truck = context.Truck.Find(guid);
             return truck;
         }
-            if(truck == null) throw new ArgumentNullException();
+
+        public Truck GetByCustomerInfoGuid(Guid customerInfo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(Truck truck)
+        {
+            if (truck == null) throw new ArgumentNullException();
 
             //http://stackoverflow.com/a/15339512
             var oldTruck = context.Truck.Find(truck.TruckGuid);
-            
-            if(oldTruck != null)
+
+            if (oldTruck != null)
             {
                 oldTruck.MaxCapacity = truck.MaxCapacity;
                 oldTruck.Location = truck.Location;
