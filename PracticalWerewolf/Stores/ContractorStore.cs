@@ -11,6 +11,7 @@ namespace PracticalWerewolf.Stores
 {
     public class ContractorStore : EntityStore<ContractorInfo>, IContractorStore
     {
+
         private readonly ApplicationDbContext context;
 
         public ContractorStore(ApplicationDbContext context) : base(context.ContractorInfo)

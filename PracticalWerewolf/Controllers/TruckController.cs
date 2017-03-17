@@ -160,6 +160,5 @@ namespace PracticalWerewolf.Controllers
             return DbGeography.PointFromText(wkt, srid);
         }
 
-
     }
 }
