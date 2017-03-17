@@ -9,6 +9,9 @@ using PracticalWerewolf.ViewModels;
 using PracticalWerewolf;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity;
+using PracticalWerewolf.Models;
+using System.Activities;
+using System.Data.Entity.Spatial;
 
 namespace PracticalWerewolf.Controllers
 {
@@ -16,9 +19,11 @@ namespace PracticalWerewolf.Controllers
     {
         ITruckService TruckService;
         IContractorService ContractorService;
+        ApplicationDbContext context;
 
-        public TruckController(ITruckService TruckService, IContractorService ContractorService)
+        public TruckController(ITruckService TruckService, IContractorService ContractorService, ApplicationDbContext context)
         {
+            this.context = context;
             this.TruckService = TruckService;
             this.ContractorService = ContractorService;
         }
@@ -37,7 +42,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         // GET: Truck/Details/guid
-        //[Authorize(Roles = "Contractor, Employee")]
+        [Authorize(Roles = "Contractor, Employee")]
         public ActionResult Details(string id)
         {
             if (!String.IsNullOrEmpty(id))
@@ -63,7 +68,7 @@ namespace PracticalWerewolf.Controllers
 
         // GET: Truck/Edit/guid
         [Authorize(Roles = "Contractor")]
-        public ActionResult Update(string id)
+        public ActionResult Edit(string id)
         {
             if (!String.IsNullOrEmpty(id))
             {
@@ -91,7 +96,7 @@ namespace PracticalWerewolf.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Contractor")]
-        public ActionResult Update(string id, TruckUpdateViewModel model)
+        public ActionResult Edit(String id, TruckUpdateViewModel model)
         {
             try
             {
@@ -120,14 +125,17 @@ namespace PracticalWerewolf.Controllers
         }
 
         // GET: Truck/Create/
+        [Authorize(Roles = "Contractor")]
         public ActionResult Create()
         {
             return View();
         }
 
         // POST: Truck/Create/
+        [Authorize(Roles = "Contractor")]
         [HttpPost]
-        public ActionResult Create(Truck truck)
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(TruckCreateViewModel returnedModel)
         {
             if (ModelState.IsValid)
             {
@@ -135,30 +143,35 @@ namespace PracticalWerewolf.Controllers
                 {
                     var capacityUnit = new TruckCapacityUnit
                     {
-                        //Guid?
-                        Mass = truck.MaxCapacity.Mass,
-                        Volume = truck.MaxCapacity.Volume
+                        TruckCapacityUnitGuid = Guid.NewGuid(),
+                        Mass = returnedModel.Mass,
+                        Volume = returnedModel.Volume
                     };
-                    //what's wrong with using the truck they gave us?
                     var model = new Truck
                     {
-                        //Guid?
-                        //Will there be a problem if a truck has the same license number?
-                        //Do we need to set the current capacity or location?
-                        //Are we going to require they have a license number?
-                        LicenseNumber = truck.LicenseNumber,
-                        MaxCapacity = capacityUnit
+                        TruckGuid = Guid.NewGuid(),
+                        LicenseNumber = returnedModel.LicenseNumber,
+                        MaxCapacity = capacityUnit,
+                        Location = CreatePoint(returnedModel.Lat, returnedModel.Long)
                     };
                     TruckService.CreateTruck(model);
+                    context.SaveChanges();
                     return RedirectToAction("Index");
-
                 }
                 catch
                 {
-                    //TODO: LOG IT
+                    //Log it
                 }
             }
             return HttpNotFound();
+
+        }
+
+        private DbGeography CreatePoint(double lat, double lon, int srid = 4326)
+        {
+            string wkt = String.Format("POINT({0} {1})", lon, lat);
+
+            return DbGeography.PointFromText(wkt, srid);
         }
 
     }

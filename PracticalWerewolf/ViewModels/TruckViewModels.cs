@@ -31,6 +31,15 @@ namespace PracticalWerewolf.ViewModels
         public double Mass { get; set; }
         public double Volume { get; set; }
     }
+    public class TruckCreateViewModel
+    {
+        public String Guid { get; set; }
+        public String LicenseNumber { get; set; }
+        public double Mass { get; set; }
+        public double Volume { get; set; }
+        public double Long { get; set; }
+        public double Lat { get; set; }
+    }
 
 
 
