@@ -16,7 +16,8 @@ namespace PracticalWerewolf.Tests.Controllers
     public class TruckControllerTest
     {
         private static TruckCapacityUnit unit = new TruckCapacityUnit { TruckCapacityUnitGuid = Guid.NewGuid() };
-        private static DbGeography location = null;
+        private static string point = String.Format("POINT({0} {1})", 3.14, 2.18);
+        private static DbGeography location = DbGeography.FromText(point);
 
         private static IEnumerable<Truck> _trucks = new List<Truck>
         {
@@ -61,6 +62,8 @@ namespace PracticalWerewolf.Tests.Controllers
         [TestMethod]
         public void Details_OneTruckValidId_ExpectedOutput()
         {
+            var point = String.Format("POINT({0} {1})", 3.14, 2.18);
+            var location = DbGeography.FromText(point);
             var capacity = new TruckCapacityUnit() { Mass = 12, Volume = 12, TruckCapacityUnitGuid = Guid.NewGuid() };
             var guid = Guid.NewGuid();
             var truck = new Truck()
@@ -68,7 +71,8 @@ namespace PracticalWerewolf.Tests.Controllers
                 TruckGuid = guid,
                 CurrentCapacity = capacity,
                 MaxCapacity = capacity,
-                LicenseNumber = "James"
+                LicenseNumber = "James",
+                Location = location
             };
             var truckService = new Mock<ITruckService>();
             truckService.Setup(x => x.GetTruck(It.IsAny<Guid>())).Returns(truck);
@@ -83,8 +87,10 @@ namespace PracticalWerewolf.Tests.Controllers
             Assert.AreEqual(model.MaxCapacity, capacity);
             Assert.AreEqual(model.Lat, 3.14);
             Assert.AreEqual(model.Long, 2.18);
-            Assert.IsNotNull(model.AvailableCapacity);
             Assert.AreEqual("James", model.LicenseNumber);
+            Assert.AreEqual(3.14, model.Lat);
+            Assert.AreEqual(2.18, model.Long);
+            Assert.IsNotNull(model.AvailableCapacity);
         }
 
         [TestMethod]
@@ -115,6 +121,8 @@ namespace PracticalWerewolf.Tests.Controllers
         [TestMethod]
         public void Update_OneTruck_ValidOutput()
         {
+            var point = String.Format("POINT({0} {1})", 3.14, 2.18);
+            var location = DbGeography.FromText(point);
             var capacity = new TruckCapacityUnit() { Mass = 12, Volume = 12, TruckCapacityUnitGuid = Guid.NewGuid() };
             var guid = Guid.NewGuid();
             var truck = new Truck()
@@ -122,7 +130,8 @@ namespace PracticalWerewolf.Tests.Controllers
                 TruckGuid = guid,
                 CurrentCapacity = capacity,
                 MaxCapacity = capacity,
-                LicenseNumber = "Abbie"
+                LicenseNumber = "Abbie",
+                Location = location
             };
             var truckService = new Mock<ITruckService>();
             truckService.Setup(x => x.GetTruck(It.IsAny<Guid>())).Returns(truck);
@@ -211,6 +220,8 @@ namespace PracticalWerewolf.Tests.Controllers
         [TestMethod]
         public void CreatePostback_ValidTruck_TestItWorks()
         {
+            var point = String.Format("POINT({0} {1})", 3.14, 2.18);
+            var location = DbGeography.FromText(point);
             var capacity = new TruckCapacityUnit() { Mass = 12, Volume = 12, TruckCapacityUnitGuid = Guid.NewGuid() };
             var guid = Guid.NewGuid();
             var truck = new Truck()
@@ -218,7 +229,8 @@ namespace PracticalWerewolf.Tests.Controllers
                 TruckGuid = guid,
                 CurrentCapacity = capacity,
                 MaxCapacity = capacity,
-                LicenseNumber = "Matt"
+                LicenseNumber = "Matt",
+                Location = location
             };
             var truckService = new Mock<ITruckService>();
             var contractorService = new Mock<IContractorService>();

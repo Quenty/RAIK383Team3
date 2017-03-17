@@ -72,7 +72,8 @@ namespace PracticalWerewolf.Services
                     Location = oldTruck.Location,
                     TruckGuid = oldTruck.TruckGuid,
                     CurrentCapacity = oldTruck.CurrentCapacity,
-                    MaxCapacity = capacity
+                    MaxCapacity = capacity,
+                    LicenseNumber = oldTruck.LicenseNumber
                 };
 
                 TruckStore.Update(truck);
