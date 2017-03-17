@@ -13,6 +13,7 @@ using System.Web.Mvc;
 
 namespace PracticalWerewolf.Controllers
 {
+    [RequireHttps]
     [Authorize]
     public class ContractorController : Controller
     {

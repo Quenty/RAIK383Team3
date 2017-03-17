@@ -10,6 +10,7 @@ using PracticalWerewolf.ViewModels;
 
 namespace PracticalWerewolf.Controllers
 {
+    [RequireHttps]
     [Authorize]
     public class ManageController : Controller
     {

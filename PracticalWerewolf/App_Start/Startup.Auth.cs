@@ -35,7 +35,7 @@ namespace PracticalWerewolf
                         validateInterval: TimeSpan.FromMinutes(30),
                         regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
                 }
-            });            
+            });
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             // Enables the application to temporarily store user information when they are verifying the second factor in the two-factor authentication process.
@@ -55,15 +55,18 @@ namespace PracticalWerewolf
             //   consumerKey: "",
             //   consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
+            app.UseFacebookAuthentication(
+               appId: System.Configuration.ConfigurationManager.AppSettings["FacebookClientID"],
+               appSecret: System.Configuration.ConfigurationManager.AppSettings["FacebookClientSecret"]);
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            var google = new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = System.Configuration.ConfigurationManager.AppSettings["GoogleClientID"],
+                ClientSecret = System.Configuration.ConfigurationManager.AppSettings["GoogleClientSecret"],
+                Provider = new GoogleOAuth2AuthenticationProvider()
+            };
+            google.Scope.Add("email");
+            app.UseGoogleAuthentication(google);
         }
     }
 }

@@ -10,6 +10,8 @@ namespace PracticalWerewolf.Migrations
     {
         public Configuration()
         {
+            SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
+
             AutomaticMigrationsEnabled = false;
             ContextKey = "PracticalWerewolf.Models.ApplicationDbContext";
         }
@@ -29,15 +31,6 @@ namespace PracticalWerewolf.Migrations
             //    );
             //
 
-            if (!context.Roles.Any())
-            {
-                context.Roles.AddOrUpdate(
-                        r => r.Name,
-                        new IdentityRole { Name = "Employee" },
-                        new IdentityRole { Name = "Customer" },
-                        new IdentityRole { Name = "Contractor" }
-                    );
-            }
         }
     }
 }
