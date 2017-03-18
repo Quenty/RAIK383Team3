@@ -51,12 +51,11 @@ namespace PracticalWerewolf.Stores
 
             //http://stackoverflow.com/a/15339512
             var oldTruck = context.Truck.Find(truck.TruckGuid);
-
+            
             if (oldTruck != null)
             {
                 oldTruck.MaxCapacity = truck.MaxCapacity;
-                oldTruck.Location = truck.Location;
-                oldTruck.CurrentCapacity = truck.CurrentCapacity;
+                //oldTruck.Location = truck.Location;
                 oldTruck.LicenseNumber = truck.LicenseNumber;
             }
 

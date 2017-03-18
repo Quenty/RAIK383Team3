@@ -13,11 +13,9 @@ namespace PracticalWerewolf.Services
     public class TruckService : ITruckService
     {
         private ITruckStore TruckStore;
-        private ApplicationDbContext context;
 
-        public TruckService(ITruckStore TruckStore, ApplicationDbContext DbContext)
+        public TruckService(ITruckStore TruckStore)
         {
-            this.context = DbContext;
             this.TruckStore = TruckStore;
         }
 
@@ -60,25 +58,9 @@ namespace PracticalWerewolf.Services
             throw new NotImplementedException();
         }
 
-        public void UpdateTruckMaxCapacity(Guid truckGuid, TruckCapacityUnit capacity)
+        public void UpdateTruck(Truck newTruck)
         {
-            if (capacity == null) throw new ArgumentNullException();
-            //TODO: Maybe return an IdentityResult for this?
-            var oldTruck = GetTruck(truckGuid);
-            if(oldTruck != null)
-            {
-                var truck = new Truck
-                {
-                    Location = oldTruck.Location,
-                    TruckGuid = oldTruck.TruckGuid,
-                    CurrentCapacity = oldTruck.CurrentCapacity,
-                    MaxCapacity = capacity,
-                    LicenseNumber = oldTruck.LicenseNumber
-                };
-
-                TruckStore.Update(truck);
-                context.SaveChanges();
-            }
+            TruckStore.Update(newTruck);
         }
     }
 }

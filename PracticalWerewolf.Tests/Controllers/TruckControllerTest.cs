@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using PracticalWerewolf.ViewModels;
 using System.Linq;
 using System.Data.Entity.Spatial;
+using PracticalWerewolf.Models;
 
 namespace PracticalWerewolf.Tests.Controllers
 {
@@ -32,7 +33,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var truckService = new Mock<ITruckService>();
             var contractorService = new Mock<IContractorService>();
             truckService.Setup(x => x.GetAllTrucks()).Returns(new List<Truck>());
-            var controller = new TruckController(truckService.Object, contractorService.Object);
+            var context = new Mock<ApplicationDbContext>();
+            var controller = new TruckController(truckService.Object, contractorService.Object, context.Object);
 
             var result = controller.Index() as ViewResult;
             var model = result.Model as TruckIndexViewModel;
@@ -47,7 +49,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var truckService = new Mock<ITruckService>();
             var contractorService = new Mock<IContractorService>();
             truckService.Setup(x => x.GetAllTrucks()).Returns(_trucks);
-            var controller = new TruckController(truckService.Object, contractorService.Object);
+            var context = new Mock<ApplicationDbContext>();
+            var controller = new TruckController(truckService.Object, contractorService.Object, context.Object);
 
             var result = controller.Index() as ViewResult;
             var model = result.Model as TruckIndexViewModel;
@@ -77,7 +80,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var truckService = new Mock<ITruckService>();
             truckService.Setup(x => x.GetTruck(It.IsAny<Guid>())).Returns(truck);
             var contractorService = new Mock<IContractorService>();
-            var controller = new TruckController(truckService.Object, contractorService.Object);
+            var context = new Mock<ApplicationDbContext>();
+            var controller = new TruckController(truckService.Object, contractorService.Object, context.Object);
 
             var result = controller.Details(guid.ToString()) as ViewResult;
             var model = result.Model as TruckDetailsViewModel;
@@ -99,7 +103,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var truckService = new Mock<ITruckService>();
             truckService.Setup(x => x.GetTruck(It.IsAny<Guid>())).Returns((Truck) null);
             var contractorService = new Mock<IContractorService>();
-            var controller = new TruckController(truckService.Object, contractorService.Object);
+            var context = new Mock<ApplicationDbContext>();
+            var controller = new TruckController(truckService.Object, contractorService.Object, context.Object);
 
             var result = controller.Details(Guid.Empty.ToString());
 
@@ -111,7 +116,8 @@ namespace PracticalWerewolf.Tests.Controllers
         {
             var truckService = new Mock<ITruckService>();
             var contractorService = new Mock<IContractorService>();
-            var controller = new TruckController(truckService.Object, contractorService.Object);
+            var context = new Mock<ApplicationDbContext>();
+            var controller = new TruckController(truckService.Object, contractorService.Object, context.Object);
 
             var result = controller.Details(String.Empty);
 
@@ -119,7 +125,7 @@ namespace PracticalWerewolf.Tests.Controllers
         }
 
         [TestMethod]
-        public void Update_OneTruck_ValidOutput()
+        public void Edit_OneTruck_ValidOutput()
         {
             var point = String.Format("POINT({0} {1})", 3.14, 2.18);
             var location = DbGeography.FromText(point);
@@ -136,9 +142,10 @@ namespace PracticalWerewolf.Tests.Controllers
             var truckService = new Mock<ITruckService>();
             truckService.Setup(x => x.GetTruck(It.IsAny<Guid>())).Returns(truck);
             var contractorService = new Mock<IContractorService>();
-            var controller = new TruckController(truckService.Object, contractorService.Object);
+            var context = new Mock<ApplicationDbContext>();
+            var controller = new TruckController(truckService.Object, contractorService.Object, context.Object);
 
-            var result = controller.Update(guid.ToString()) as ViewResult;
+            var result = controller.Edit(guid.ToString()) as ViewResult;
             var model = result.Model as TruckUpdateViewModel;
 
             Assert.IsNotNull(model);
@@ -155,35 +162,38 @@ namespace PracticalWerewolf.Tests.Controllers
             var truckService = new Mock<ITruckService>();
             truckService.Setup(x => x.GetTruck(It.IsAny<Guid>())).Returns((Truck)null);
             var contractorService = new Mock<IContractorService>();
-            var controller = new TruckController(truckService.Object, contractorService.Object);
+            var context = new Mock<ApplicationDbContext>();
+            var controller = new TruckController(truckService.Object, contractorService.Object, context.Object);
 
-            var result = controller.Update(Guid.Empty.ToString());
-
-            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
-        }
-
-        [TestMethod]
-        public void Update_NoInput_ReturnsHttpNotFound()
-        {
-            var truckService = new Mock<ITruckService>();
-            var contractorService = new Mock<IContractorService>();
-            var controller = new TruckController(truckService.Object, contractorService.Object);
-
-            var result = controller.Update(String.Empty);
+            var result = controller.Edit(Guid.Empty.ToString());
 
             Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
         }
 
         [TestMethod]
-        public void UpdatePostback_NullViewModel_ReturnNullViewModel()
+        public void Edit_NoInput_ReturnsHttpNotFound()
         {
             var truckService = new Mock<ITruckService>();
             var contractorService = new Mock<IContractorService>();
-            var controller = new TruckController(truckService.Object, contractorService.Object);
+            var context = new Mock<ApplicationDbContext>();
+            var controller = new TruckController(truckService.Object, contractorService.Object, context.Object);
+
+            var result = controller.Edit(String.Empty);
+
+            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+        }
+
+        [TestMethod]
+        public void EditPostback_NullViewModel_ReturnNullViewModel()
+        {
+            var truckService = new Mock<ITruckService>();
+            var contractorService = new Mock<IContractorService>();
+            var context = new Mock<ApplicationDbContext>();
+            var controller = new TruckController(truckService.Object, contractorService.Object, context.Object);
             var id = Guid.NewGuid().ToString();
             TruckUpdateViewModel viewModel = null;
 
-            var result = controller.Update(id, viewModel) as ViewResult;
+            var result = controller.Edit(id, viewModel) as ViewResult;
             var model = result.Model as TruckUpdateViewModel;
 
             Assert.IsNull(model);
@@ -191,15 +201,16 @@ namespace PracticalWerewolf.Tests.Controllers
 
 
         [TestMethod]
-        public void UpdatePostback_ValidViewModel_ReturnRedirectToIndex()
+        public void EditPostback_ValidViewModel_ReturnRedirectToIndex()
         {
             var truckService = new Mock<ITruckService>();
             var contractorService = new Mock<IContractorService>();
-            var controller = new TruckController(truckService.Object, contractorService.Object);
+            var context = new Mock<ApplicationDbContext>();
+            var controller = new TruckController(truckService.Object, contractorService.Object, context.Object);
             var id = Guid.NewGuid().ToString();
             TruckUpdateViewModel viewModel = new TruckUpdateViewModel() { Guid = Guid.NewGuid().ToString(), Mass = 12, Volume = 13 };
 
-            var result = controller.Update(id, viewModel) as RedirectToRouteResult;
+            var result = controller.Edit(id, viewModel) as RedirectToRouteResult;
 
             Assert.IsNotNull(result);
             Assert.AreEqual("Index", result.RouteValues["action"]);
@@ -210,7 +221,8 @@ namespace PracticalWerewolf.Tests.Controllers
         {
             var truckService = new Mock<ITruckService>();
             var contractorService = new Mock<IContractorService>();
-            var controller = new TruckController(truckService.Object, contractorService.Object);
+            var context = new Mock<ApplicationDbContext>();
+            var controller = new TruckController(truckService.Object, contractorService.Object, context.Object);
 
             var result = controller.Create() as ViewResult;
 
@@ -224,31 +236,35 @@ namespace PracticalWerewolf.Tests.Controllers
             var location = DbGeography.FromText(point);
             var capacity = new TruckCapacityUnit() { Mass = 12, Volume = 12, TruckCapacityUnitGuid = Guid.NewGuid() };
             var guid = Guid.NewGuid();
-            var truck = new Truck()
+
+            TruckCreateViewModel createModel = new TruckCreateViewModel()
             {
-                TruckGuid = guid,
-                CurrentCapacity = capacity,
-                MaxCapacity = capacity,
+                Guid = guid.ToString(),
                 LicenseNumber = "Matt",
-                Location = location
+                Mass = 12,
+                Volume = 12,
+                Lat = 3.14,
+                Long = 2.18
             };
             var truckService = new Mock<ITruckService>();
             var contractorService = new Mock<IContractorService>();
-            var controller = new TruckController(truckService.Object, contractorService.Object);
+            var context = new Mock<ApplicationDbContext>();
+            var controller = new TruckController(truckService.Object, contractorService.Object, context.Object);
 
-            var result = controller.Create(truck) as RedirectToRouteResult;
+            var result = controller.Create(createModel) as RedirectToRouteResult;
 
             Assert.IsNotNull(result);
             Assert.AreEqual("Index", result.RouteValues["action"]);
         }
 
         [TestMethod]
-        public void CreatePostback_NullTruck_HttpNotFound()
+        public void CreatePostback_NullTruckViewModel_HttpNotFound()
         {
-            Truck truck = null;
+            TruckCreateViewModel truck = null;
             var truckService = new Mock<ITruckService>();
             var contractorService = new Mock<IContractorService>();
-            var controller = new TruckController(truckService.Object, contractorService.Object);
+            var context = new Mock<ApplicationDbContext>();
+            var controller = new TruckController(truckService.Object, contractorService.Object, context.Object);
 
             var result = controller.Create(truck);
 
@@ -259,14 +275,15 @@ namespace PracticalWerewolf.Tests.Controllers
         public void CreatePostback_NullTruckCapacity_HttpNotFound()
         {
             var guid = Guid.NewGuid();
-            var truck = new Truck()
+            var truck = new TruckCreateViewModel()
             {
-                TruckGuid = guid,
+                Guid = guid.ToString(),
                 LicenseNumber = "Jessee"
             };
             var truckService = new Mock<ITruckService>();
             var contractorService = new Mock<IContractorService>();
-            var controller = new TruckController(truckService.Object, contractorService.Object);
+            var context = new Mock<ApplicationDbContext>();
+            var controller = new TruckController(truckService.Object, contractorService.Object, context.Object);
 
             var result = controller.Create(truck);
 
@@ -276,16 +293,19 @@ namespace PracticalWerewolf.Tests.Controllers
         [TestMethod]
         public void CreatePostback_NullLicense_HttpNotFound()
         {
-            var capacity = new TruckCapacityUnit() { Mass = 12, Volume = 12, TruckCapacityUnitGuid = Guid.NewGuid() };
             var guid = Guid.NewGuid();
-            var truck = new Truck()
+            var truck = new TruckCreateViewModel()
             {
-                TruckGuid = guid,
-                MaxCapacity = capacity
+                Guid = guid.ToString(),
+                Lat = 1,
+                Long = 2,
+                Mass = 3,
+                Volume = 4
             };
             var truckService = new Mock<ITruckService>();
             var contractorService = new Mock<IContractorService>();
-            var controller = new TruckController(truckService.Object, contractorService.Object);
+            var context = new Mock<ApplicationDbContext>();
+            var controller = new TruckController(truckService.Object, contractorService.Object, context.Object);
 
             var result = controller.Create(truck);
 
