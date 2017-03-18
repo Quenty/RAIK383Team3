@@ -3,6 +3,8 @@ using PracticalWerewolf.Models.Trucks;
 using PracticalWerewolf.Stores.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Web;
 
@@ -46,15 +48,13 @@ namespace PracticalWerewolf.Stores
 
         public void Update(Truck truck)
         {
-            var oldTruck = context.Truck.Find(truck.TruckGuid);
-            
-            if (oldTruck != null)
-            {
-                oldTruck.MaxCapacity = truck.MaxCapacity;
-                //oldTruck.Location = truck.Location;
-                oldTruck.LicenseNumber = truck.LicenseNumber;
-            }
-
+            var oldTruck = Get(truck.TruckGuid);
+            context.Entry(oldTruck).State = EntityState.Modified;
+            oldTruck.MaxCapacity = truck.MaxCapacity;
+            oldTruck.Location = truck.Location;
+            oldTruck.LicenseNumber = truck.LicenseNumber;
+            oldTruck.CurrentCapacity = truck.CurrentCapacity;
         }
+
     }
 }

@@ -1,12 +1,12 @@
 ﻿using PracticalWerewolf.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using PracticalWerewolf.Models.Trucks;
 using System.Device.Location;
 using PracticalWerewolf.Stores.Interfaces;
 using PracticalWerewolf.Models;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 
 namespace PracticalWerewolf.Services
 {
@@ -57,8 +57,7 @@ namespace PracticalWerewolf.Services
         {
             throw new NotImplementedException();
         }
-
-        public void UpdateTruck(Truck newTruck)
+        public void Update(Truck newTruck)
         {
             TruckStore.Update(newTruck);
         }

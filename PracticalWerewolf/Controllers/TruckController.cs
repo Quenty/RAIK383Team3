@@ -12,6 +12,7 @@ using Microsoft.AspNet.Identity;
 using PracticalWerewolf.Models;
 using System.Activities;
 using System.Data.Entity.Spatial;
+using PracticalWerewolf.Models.UserInfos;
 
 namespace PracticalWerewolf.Controllers
 {
@@ -29,20 +30,22 @@ namespace PracticalWerewolf.Controllers
         }
 
         // GET: Truck
-        [Authorize(Roles = "Employee")]
+        //[Authorize(Roles = "Employee")]
         public ActionResult Index()
         {
             ViewBag.Message = "Trucks, Trucks and even more Trucks!";
             IEnumerable<Truck> trucks = TruckService.GetAllTrucks();
+            IEnumerable<ContractorInfo> Contractors = ContractorService.GetAllContractors();
             var model = new TruckIndexViewModel
             {
-                Trucks = trucks
+                Trucks = trucks,
+                Contractor = Contractors
             };
             return View(model);
         }
 
         // GET: Truck/Details/guid
-        [Authorize(Roles = "Contractor, Employee")]
+        //[Authorize(Roles = "Contractor, Employee")]
         public ActionResult Details(string id)
         {
             if (!String.IsNullOrEmpty(id))
@@ -65,7 +68,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         // GET: Truck/Edit/guid
-        [Authorize(Roles = "Contractor")]
+        //[Authorize(Roles = "Contractor")]
         public ActionResult Edit(string id)
         {
             if (!String.IsNullOrEmpty(id))
@@ -89,12 +92,13 @@ namespace PracticalWerewolf.Controllers
         // POST: Truck/Update/guid
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Contractor")]
+        //[Authorize(Roles = "Contractor")]
         public ActionResult Edit(String id, TruckUpdateViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var guid = new Guid(model.Guid);
+                var oldTruck = TruckService.GetTruck(guid);
                 var NewCapacityModel = new TruckCapacityUnit
                 {
                     TruckCapacityUnitGuid = Guid.NewGuid(),
@@ -104,10 +108,12 @@ namespace PracticalWerewolf.Controllers
                 var newModel = new Truck
                 {
                     TruckGuid = new Guid(model.Guid),
-                    LicenseNumber = model.LicenseNumber,
-                    MaxCapacity = NewCapacityModel
+                    MaxCapacity = NewCapacityModel,
+                    CurrentCapacity = oldTruck.CurrentCapacity,
+                    Location = oldTruck.Location,
+                    LicenseNumber = model.LicenseNumber
                 };
-                TruckService.UpdateTruck(newModel);
+                TruckService.Update(newModel);
                 context.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -141,7 +147,7 @@ namespace PracticalWerewolf.Controllers
                     TruckGuid = Guid.NewGuid(),
                     LicenseNumber = returnedModel.LicenseNumber,
                     MaxCapacity = capacityUnit,
-                    Location = CreatePoint(returnedModel.Lat, returnedModel.Long)
+                    Location = LocationHelper.CreatePoint(returnedModel.Lat, returnedModel.Long)
                 };
                 TruckService.CreateTruck(model);
                 context.SaveChanges();
@@ -152,13 +158,5 @@ namespace PracticalWerewolf.Controllers
                 return HttpNotFound();
             }
         }
-
-        private DbGeography CreatePoint(double lat, double lon, int srid = 4326)
-        {
-            string wkt = String.Format("POINT({0} {1})", lon, lat);
-
-            return DbGeography.PointFromText(wkt, srid);
-        }
-
     }
 }
