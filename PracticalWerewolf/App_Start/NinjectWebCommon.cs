@@ -20,6 +20,7 @@ namespace PracticalWerewolf.App_Start
     using Microsoft.AspNet.Identity.EntityFramework;
     using Microsoft.AspNet.Identity.Owin;
     using System.Data.Entity;
+    using Application;
 
     public static class NinjectWebCommon 
     {
@@ -73,8 +74,9 @@ namespace PracticalWerewolf.App_Start
         {
 
             //UnitOfWork
-            kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
+            kernel.Bind<IUnitOfWork>().To<ApplicationContextAdapter>();
 
+            kernel.Bind<ApplicationContextAdapter>().ToSelf().InRequestScope();
             kernel.Bind<ApplicationDbContext>().ToSelf().InRequestScope();
             kernel.Bind<DbContext>().To<ApplicationDbContext>().InRequestScope();
 
