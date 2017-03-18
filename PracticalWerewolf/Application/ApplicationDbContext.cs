@@ -33,12 +33,24 @@ namespace PracticalWerewolf.Application
         public DbSet<Order> Order { get; set; }
         public DbSet<OrderRequestInfo> OrderRequestInfo { get; set; }
         public DbSet<OrderTrackInfo> OrderTrackInfo { get; set; }
+
+        public static ApplicationDbContext Create()
+        {
+            return new ApplicationDbContext();
+        }
+
     }
 
     // https://github.com/icotting/SETwitter/blob/9bf60ffe26cacee4b44b4a9eae48156bf2145949/ASP.NET/Twitter/Application/TwitterContext.cs
     public class ApplicationContextAdapter : IDbSetFactory, IUnitOfWork
     {
         private readonly DbContext _context;
+
+        public ApplicationContextAdapter(DbContext context)
+        {
+            _context = context;
+        }
+
 
         #region IUnitOfWork Members
 
