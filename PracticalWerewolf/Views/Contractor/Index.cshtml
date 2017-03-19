@@ -4,12 +4,7 @@
     ViewBag.Title = "Contract";
 }
 
-@if (!String.IsNullOrEmpty(ViewBag.StatusMessage))
-{
-    <div class="alert alert-success" role="alert">
-        <p class="text-success"><span class="glyphicon glyphicon-gift"> </span> @ViewBag.StatusMessage</p>
-    </div>
-}
+@Html.Partial("_StatusMessage")
 
 
 @if (@Model.ContractorInfo == null)
