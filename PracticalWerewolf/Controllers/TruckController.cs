@@ -12,6 +12,7 @@ using Microsoft.AspNet.Identity;
 
 namespace PracticalWerewolf.Controllers
 {
+    [RequireHttps]
     public class TruckController : Controller
     {
         ITruckService TruckService;

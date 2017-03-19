@@ -6,15 +6,17 @@ namespace PracticalWerewolf.Migrations
     using System.Linq;
     using Microsoft.AspNet.Identity.EntityFramework;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<PracticalWerewolf.Models.ApplicationDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<PracticalWerewolf.Application.ApplicationDbContext>
     {
         public Configuration()
         {
+            SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
+
             AutomaticMigrationsEnabled = false;
-            ContextKey = "PracticalWerewolf.Models.ApplicationDbContext";
+            ContextKey = "PracticalWerewolf.Application.ApplicationDbContext";
         }
 
-        protected override void Seed(PracticalWerewolf.Models.ApplicationDbContext context)
+        protected override void Seed(PracticalWerewolf.Application.ApplicationDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 
@@ -29,15 +31,6 @@ namespace PracticalWerewolf.Migrations
             //    );
             //
 
-            if (!context.Roles.Any())
-            {
-                context.Roles.AddOrUpdate(
-                        r => r.Name,
-                        new IdentityRole { Name = "Employee" },
-                        new IdentityRole { Name = "Customer" },
-                        new IdentityRole { Name = "Contractor" }
-                    );
-            }
         }
     }
 }
