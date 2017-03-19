@@ -21,7 +21,7 @@ namespace PracticalWerewolf.Services
 
         public ContractorInfo GetContractorByTruckGuid(Guid guid)
         {
-            return Store.Find(c => c.Truck.TruckGuid == guid).FirstOrDefault();
+            return _contractorStore.Find(c => c.Truck.TruckGuid == guid).FirstOrDefault();
         }
 
         public IEnumerable<ContractorInfo> GetUnapprovedContractors()
@@ -44,8 +44,8 @@ namespace PracticalWerewolf.Services
 
         public void UpdateContractorTruck(Truck truck, ApplicationUser driver)
         {
-            var contractor = Store.Find(c => c.ContractorInfoGuid == driver.ContractorInfo.ContractorInfoGuid).FirstOrDefault();
-            Store.UpdateContractorTruck(contractor, truck);
+            var contractor = _contractorStore.Find(c => c.ContractorInfoGuid == driver.ContractorInfo.ContractorInfoGuid).FirstOrDefault();
+            _contractorStore.UpdateContractorTruck(contractor, truck);
         }
     }
 }

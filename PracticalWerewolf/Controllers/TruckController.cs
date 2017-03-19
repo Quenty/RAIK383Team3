@@ -8,6 +8,7 @@ using PracticalWerewolf.ViewModels;
 using Microsoft.AspNet.Identity;
 using PracticalWerewolf.Models;
 using PracticalWerewolf.Models.UserInfos;
+using PracticalWerewolf.Controllers.UnitOfWork;
 
 namespace PracticalWerewolf.Controllers
 {
@@ -17,12 +18,12 @@ namespace PracticalWerewolf.Controllers
     {
         ITruckService TruckService;
         IContractorService ContractorService;
-        ApplicationDbContext context;
+        IUnitOfWork UnitOfWork;
         ApplicationUserManager UserManager;
 
-        public TruckController(ITruckService TruckService, IContractorService ContractorService, ApplicationDbContext context, ApplicationUserManager userManager)
+        public TruckController(ITruckService TruckService, IContractorService ContractorService, IUnitOfWork UnitOfWork, ApplicationUserManager userManager)
         {
-            this.context = context;
+            this.UnitOfWork = UnitOfWork;
             this.TruckService = TruckService;
             this.ContractorService = ContractorService;
             this.UserManager = userManager;
@@ -126,7 +127,7 @@ namespace PracticalWerewolf.Controllers
                     LicenseNumber = model.LicenseNumber
                 };
                 TruckService.Update(newModel);
-                context.SaveChanges();
+                UnitOfWork.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
@@ -164,7 +165,7 @@ namespace PracticalWerewolf.Controllers
                 };
                 TruckService.CreateTruck(model);
                 ContractorService.UpdateContractorTruck(model, user);
-                context.SaveChanges();
+                UnitOfWork.SaveChanges();
                 return RedirectToAction("Index");
             }
             else

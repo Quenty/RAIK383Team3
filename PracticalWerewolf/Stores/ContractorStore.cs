@@ -31,7 +31,7 @@ namespace PracticalWerewolf.Stores
 
         public void UpdateContractorTruck(ContractorInfo contractor, Truck truck)
         {
-            context.Entry(contractor).State = EntityState.Modified;
+            base.Update(contractor);
             contractor.Truck = truck;
             
         }

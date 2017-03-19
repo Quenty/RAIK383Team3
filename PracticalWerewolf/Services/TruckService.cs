@@ -58,7 +58,7 @@ namespace PracticalWerewolf.Services
         }
         public void Update(Truck newTruck)
         {
-            var oldTruck = GetTruck(truckGuid);
+            var oldTruck = GetTruck(newTruck.TruckGuid);
 
             var truck = new Truck
             {
