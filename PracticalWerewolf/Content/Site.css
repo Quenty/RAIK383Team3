@@ -22,3 +22,25 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.splash-lead {
+    margin-top:75px;
+}
+
+
+@media screen and (max-width: 1000px) {
+    .splash-lead {
+        margin-top:25px
+    }
+}
+
+.full-width-jumbotron {
+    background: scroll;
+    background-image: url(Images/lukas-budimaier-131294-small.jpg);
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-size: cover;
+    height:600px;
+    margin-top: -20px;
+    filter: contrast(120%)
+}

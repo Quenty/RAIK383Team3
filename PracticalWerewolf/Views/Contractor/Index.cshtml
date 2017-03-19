@@ -49,8 +49,16 @@ else
             <hr>
         </div>
     }
+    else if (Model.ContractorInfo.ApprovalState == ContractorApprovalState.Denied)
+    {
+        <div class="alert alert-info" role="alert"><span class="glyphicon glyphicon-warning-sign"></span> <strong>Approval denied!</strong> Your application has been denied by the manager</div>
+    }
+    else if (Model.ContractorInfo.ApprovalState == ContractorApprovalState.Approved)
+    {
+        <div class="alert alert-success" role="alert"><span class="glyphicon glyphicon-ok-circle"></span> <strong>Application approved!</strong> Your application has been approved by a manager!</div>
+    }
     else
     {
-
+        <p>Internal server error. Unknown contractor state.</p>
     }
 }
