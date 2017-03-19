@@ -76,6 +76,7 @@ namespace PracticalWerewolf.Application
         public void ChangeObjectState(object entity, EntityState state)
         {
             _context.Entry(entity).State = state;
+            
         }
 
         public void RefreshEntity<T>(ref T entity) where T : class

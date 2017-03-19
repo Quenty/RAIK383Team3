@@ -21,6 +21,9 @@ namespace PracticalWerewolf.App_Start
     using Microsoft.AspNet.Identity.Owin;
     using System.Data.Entity;
     using Application;
+    using System.Reflection;
+    using Microsoft.Owin.Security;
+    using Microsoft.Owin.Security.DataProtection;
 
     public static class NinjectWebCommon 
     {
@@ -66,29 +69,23 @@ namespace PracticalWerewolf.App_Start
             }
         }
 
+
         /// <summary>
         /// Load your modules or register your services here!
         /// </summary>
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-
-            //UnitOfWork
-            kernel.Bind<IUnitOfWork>().To<ApplicationContextAdapter>();
-
-            kernel.Bind<ApplicationContextAdapter>().ToSelf().InRequestScope();
-            kernel.Bind<ApplicationDbContext>().ToSelf().InRequestScope();
-            kernel.Bind<DbContext>().To<ApplicationDbContext>().InRequestScope();
-
-            kernel.Bind<IUserStore<ApplicationUser>>().To<UserStore<ApplicationUser>>();
-            kernel.Bind<UserManager<ApplicationUser>>().ToSelf();
-            kernel.Bind<HttpContextBase>().ToMethod(ctx => new HttpContextWrapper(HttpContext.Current)).InTransientScope();
-            kernel.Bind<ApplicationSignInManager>().ToMethod((context) =>
+            kernel.Bind<IUserStore<ApplicationUser>, UserStore<ApplicationUser>>().To<UserStore<ApplicationUser>>().InRequestScope();
+            kernel.Bind<ApplicationSignInManager>().ToSelf().InRequestScope();
+            kernel.Bind<ApplicationUserManager>().ToSelf().InRequestScope();
+            kernel.Bind<DbContext, IdentityDbContext<ApplicationUser>>().To<ApplicationDbContext>().InRequestScope();
+            kernel.Bind<IUnitOfWork, IDbSetFactory, ApplicationContextAdapter>().To<ApplicationContextAdapter>().InRequestScope();
+            kernel.Bind<IAuthenticationManager>().ToMethod((context) =>
             {
                 var cbase = new HttpContextWrapper(HttpContext.Current);
-                return cbase.GetOwinContext().Get<ApplicationSignInManager>();
-            });
-            kernel.Bind<ApplicationUserManager>().ToSelf();
+                return cbase.GetOwinContext().Authentication;
+            }).InRequestScope();
 
             //Stores
             kernel.Bind<IContractorStore>().To<ContractorStore>();

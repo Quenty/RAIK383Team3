@@ -14,8 +14,6 @@ namespace PracticalWerewolf.Controllers
     [Authorize]
     public class ManageController : Controller
     {
-        //private ApplicationSignInManager _signInManager;
-        //private ApplicationUserManager _userManager;
         private ApplicationUserManager UserManager { get; set; }
         private ApplicationSignInManager SignInManager { get; set; }
 
