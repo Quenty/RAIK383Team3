@@ -43,7 +43,9 @@ namespace PracticalWerewolf.Stores
 
         public void Update(Truck truck)
         {
-            base.Update(truck);
+            Truck oldTruck = Get(truck.TruckGuid);
+            base.Update(oldTruck);
+            oldTruck = truck;
         }
     }
 }
