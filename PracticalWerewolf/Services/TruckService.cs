@@ -7,15 +7,18 @@ using PracticalWerewolf.Models.Trucks;
 using System.Device.Location;
 using PracticalWerewolf.Stores.Interfaces;
 using PracticalWerewolf.Models;
+using PracticalWerewolf.Controllers.UnitOfWork;
 
 namespace PracticalWerewolf.Services
 {
     public class TruckService : ITruckService
     {
-        private ITruckStore TruckStore;
+        private readonly ITruckStore TruckStore;
+        private readonly IUnitOfWork UnitOfWork;
 
-        public TruckService(ITruckStore TruckStore)
+        public TruckService(ITruckStore TruckStore, IUnitOfWork UnitOfWork)
         {
+            this.UnitOfWork = UnitOfWork;
             this.TruckStore = TruckStore;
         }
 
@@ -60,7 +63,19 @@ namespace PracticalWerewolf.Services
 
         public void UpdateTruck(Truck newTruck)
         {
-            TruckStore.Update(newTruck);
+
+            var oldTruck = GetTruck(newTruck.TruckGuid);
+
+            var truck = new Truck
+            {
+                Location = oldTruck.Location,
+                TruckGuid = oldTruck.TruckGuid,
+                CurrentCapacity = oldTruck.CurrentCapacity,
+                MaxCapacity = oldTruck.MaxCapacity
+            };
+
+            TruckStore.Update(truck);
+            UnitOfWork.SaveChanges();
         }
     }
 }

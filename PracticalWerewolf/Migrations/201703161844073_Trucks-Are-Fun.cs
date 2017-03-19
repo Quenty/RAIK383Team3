@@ -3,7 +3,9 @@ namespace PracticalWerewolf.Migrations
     using System;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Spatial;
-    
+    using Microsoft.SqlServer.Types;
+
+
     public partial class TrucksAreFun : DbMigration
     {
         public override void Up()

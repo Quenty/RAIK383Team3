@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
+using PracticalWerewolf.Controllers.UnitOfWork;
 using PracticalWerewolf.Models.UserInfos;
 using PracticalWerewolf.Services.Interfaces;
 using PracticalWerewolf.Stores.Interfaces;
@@ -13,11 +14,14 @@ using System.Web.Mvc;
 
 namespace PracticalWerewolf.Controllers
 {
+    [RequireHttps]
     [Authorize]
     public class ContractorController : Controller
     {
         public enum ContractorMessageId
         {
+            ApprovedSuccess,
+            DeniedSuccess,
             RegisterSuccess,
             AlreadyRegisteredError,
             Error
@@ -25,21 +29,30 @@ namespace PracticalWerewolf.Controllers
 
         private ApplicationUserManager UserManager { get; set; }
         private IContractorService ContractorService { get; set; }
+        private IUnitOfWork UnitOfWork { get; set; }
 
-        public ContractorController(ApplicationUserManager UserManager, IContractorService ContractorService)
+        public ContractorController(ApplicationUserManager UserManager, IContractorService ContractorService, IUnitOfWork UnitOfWork)
         {
+            this.UnitOfWork = UnitOfWork;
             this.UserManager = UserManager;
             this.ContractorService = ContractorService;
+        }
+
+        private void GenerateErrorMessage(ContractorMessageId? message)
+        {
+            ViewBag.StatusMessage =
+                message == ContractorMessageId.RegisterSuccess ? "Registered as a contractor successfully"
+                : message == ContractorMessageId.Error ? "Error occured"
+                : message == ContractorMessageId.AlreadyRegisteredError ? "You are already registered as a contractor"
+                : message == ContractorMessageId.ApprovedSuccess ? "Contractor approved"
+                : message == ContractorMessageId.DeniedSuccess ? "Contractor denied"
+                : "";
         }
 
         [AllowAnonymous]
         public async Task<ActionResult> Index(ContractorMessageId? message)
         {
-            ViewBag.StatusMessage = 
-                message == ContractorMessageId.RegisterSuccess ? "Registered as a contractor successfully"
-                : message == ContractorMessageId.Error ? "Error occured"
-                : message == ContractorMessageId.AlreadyRegisteredError ? "You are already registered as a contractor"
-                : "";
+            GenerateErrorMessage(message);
 
             var userId = User.Identity.GetUserId();
             if (userId != null)
@@ -50,12 +63,12 @@ namespace PracticalWerewolf.Controllers
                 {
                     ContractorInfo = user.ContractorInfo,
                 };
+
                 return View(model);
             }
             else
             {
-                var model = new ContractorIndexModel();
-                return View(model);
+                return View(new ContractorIndexModel());
             }
         }
 
@@ -72,27 +85,33 @@ namespace PracticalWerewolf.Controllers
         }
 
         [Authorize(Roles = "Employee")]
-        public ActionResult Approve()
+        public ActionResult Unapproved(ContractorMessageId? message)
         {
+            GenerateErrorMessage(message);
+
             PendingContractorsModel model = new PendingContractorsModel()
             {
-                Pending = ContractorService.GetUnapprovedContractors().ToList(),
+                Pending = ContractorService.GetUnapprovedContractors().Select(m => new ContractorApprovalModel
+                {
+                    ContractorInfo = m,
+                }).ToList(),
             };
 
             return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Approve(ContractorApprovalModel model)
+        [Authorize(Roles="Employee")]
+        public ActionResult Approve(Guid guid, bool IsApproved)
         {
-            if (!ModelState.IsValid)
+            if (guid == null)
             {
-                return View(model);
+                return RedirectToAction("Unapproved", new { Message = ContractorMessageId.Error });
             }
 
-            // TODO: Implement
-            return RedirectToAction("Approve", new { Message = ContractorMessageId.Error });
+            ContractorService.SetApproval(guid, IsApproved ? ContractorApprovalState.Approved : ContractorApprovalState.Denied);
+            UnitOfWork.SaveChanges();
+
+            return RedirectToAction("Unapproved", new { Message = IsApproved ? ContractorMessageId.ApprovedSuccess : ContractorMessageId.DeniedSuccess });
         }
 
         [HttpPost]

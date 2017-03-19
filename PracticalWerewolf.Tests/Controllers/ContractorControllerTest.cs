@@ -17,6 +17,7 @@ using System.Security.Claims;
 using System.Collections.Generic;
 using static PracticalWerewolf.Controllers.ContractorController;
 using System.Linq;
+using PracticalWerewolf.Controllers.UnitOfWork;
 
 namespace PracticalWerewolf.Tests.Controllers
 {
@@ -44,7 +45,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var contractorService = new Mock<IContractorService>();
             var principal = GetMockUser(email);
             var context = GetMockControllerContext(principal);
-            var controller = new ContractorController(userManager.Object, contractorService.Object);
+            var unitOfWork = new Mock<IUnitOfWork>();
+            var controller = new ContractorController(userManager.Object, contractorService.Object, unitOfWork.Object);
             controller.ControllerContext = context;
 
 
@@ -66,7 +68,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var contractorService = new Mock<IContractorService>();
             var user = GetMockUserNullId();
             var context = GetMockControllerContext(user);
-            var controller = new ContractorController(userManager.Object, contractorService.Object);
+            var unitOfWork = new Mock<IUnitOfWork>();
+            var controller = new ContractorController(userManager.Object, contractorService.Object, unitOfWork.Object);
             controller.ControllerContext = context;
 
 
@@ -100,7 +103,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var contractorService = new Mock<IContractorService>();
             var principal = GetMockUser(email);
             var context = GetMockControllerContext(principal);
-            var controller = new ContractorController(userManager.Object, contractorService.Object);
+            var unitOfWork = new Mock<IUnitOfWork>();
+            var controller = new ContractorController(userManager.Object, contractorService.Object, unitOfWork.Object);
             controller.ControllerContext = context;
 
 
@@ -122,7 +126,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var contractorService = new Mock<IContractorService>();
             var principal = GetMockUser(email);
             var context = GetMockControllerContext(principal);
-            var controller = new ContractorController(userManager.Object, contractorService.Object);
+            var unitOfWork = new Mock<IUnitOfWork>();
+            var controller = new ContractorController(userManager.Object, contractorService.Object, unitOfWork.Object);
             controller.ControllerContext = context;
 
             var result = controller.Register().Result as ViewResult;
@@ -134,7 +139,7 @@ namespace PracticalWerewolf.Tests.Controllers
 
 
         [TestMethod]
-        public void Approve_ThreeUnapprovedContractors_ReturnViewModel()
+        public void Unapproved_ThreeUnapprovedContractors_ReturnViewModel()
         {
             var contractorInfo1 = new ContractorInfo()
             {
@@ -172,24 +177,25 @@ namespace PracticalWerewolf.Tests.Controllers
             contractorService.Setup(x => x.GetUnapprovedContractors()).Returns(contractorList);
             var userStore = new Mock<IUserStore<ApplicationUser>>();
             var userManager = new Mock<ApplicationUserManager>(userStore.Object);
-            var controller = new ContractorController(userManager.Object, contractorService.Object);
+            var unitOfWork = new Mock<IUnitOfWork>();
+            var controller = new ContractorController(userManager.Object, contractorService.Object, unitOfWork.Object);
 
 
-            var result = controller.Approve() as ViewResult;
+            var result = controller.Unapproved(null) as ViewResult;
             var model = result.Model as PendingContractorsModel;
 
 
             Assert.IsNotNull(result);
             Assert.IsNotNull(model);
             Assert.AreEqual(3, model.Pending.Count());
-            Assert.IsTrue(model.Pending.Contains(contractorInfo1));
-            Assert.IsTrue(model.Pending.Contains(contractorInfo2));
-            Assert.IsTrue(model.Pending.Contains(contractorInfo3));
+            Assert.IsNotNull(model.Pending.Where(x => x.ContractorInfo.Equals(contractorInfo1)).Single());
+            Assert.IsNotNull(model.Pending.Where(x => x.ContractorInfo.Equals(contractorInfo2)).Single());
+            Assert.IsNotNull(model.Pending.Where(x => x.ContractorInfo.Equals(contractorInfo3)).Single());
         }
 
 
         [TestMethod]
-        public void Approve_NoUnapprovedContractors_ReturnViewModel()
+        public void Unapproved_NoUnapprovedContractors_ReturnViewModel()
         {
             var contractorList = new List<ContractorInfo>();
 
@@ -197,10 +203,11 @@ namespace PracticalWerewolf.Tests.Controllers
             contractorService.Setup(x => x.GetUnapprovedContractors()).Returns(contractorList);
             var userStore = new Mock<IUserStore<ApplicationUser>>();
             var userManager = new Mock<ApplicationUserManager>(userStore.Object);
-            var controller = new ContractorController(userManager.Object, contractorService.Object);
+            var unitOfWork = new Mock<IUnitOfWork>();
+            var controller = new ContractorController(userManager.Object, contractorService.Object, unitOfWork.Object);
 
 
-            var result = controller.Approve() as ViewResult;
+            var result = controller.Unapproved(null) as ViewResult;
             var model = result.Model as PendingContractorsModel;
 
 

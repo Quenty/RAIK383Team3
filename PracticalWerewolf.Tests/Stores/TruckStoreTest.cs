@@ -9,6 +9,8 @@ using PracticalWerewolf.Stores.Interfaces;
 using PracticalWerewolf.Stores;
 using PracticalWerewolf.Models;
 using System.Data.Entity.Spatial;
+using PracticalWerewolf.Application;
+using System.Data.Entity;
 
 namespace PracticalWerewolf.Tests.Stores
 {
@@ -28,9 +30,7 @@ namespace PracticalWerewolf.Tests.Stores
         [TestMethod]
         public void GetAll_EmptyDbSetList_SizeZero()
         {
-            var dbContext = new Mock<ApplicationDbContext>();
-            dbContext.Setup(x => x.Truck).Returns(new MockDbSet<Truck>());
-            ITruckStore store = new TruckStore(dbContext.Object);
+            var store = GetTruckStoreWithDbSet(new MockTruckDbSet());
 
             Assert.AreEqual(0, store.GetAllTrucks().Count());
         }
@@ -38,11 +38,9 @@ namespace PracticalWerewolf.Tests.Stores
         [TestMethod]
         public void GetAll_ThreeTrucks_SizeZero()
         {
-            var dbContext = new Mock<ApplicationDbContext>();
             var dbSet = new MockTruckDbSet();
             dbSet.AddRange(_trucks);
-            dbContext.Setup(x => x.Truck).Returns(dbSet);
-            ITruckStore store = new TruckStore(dbContext.Object);
+            var store = GetTruckStoreWithDbSet(dbSet);
 
             var trucks = store.GetAllTrucks();
 
@@ -56,11 +54,9 @@ namespace PracticalWerewolf.Tests.Stores
         public void Get_OneMatchingTruck_ReturnTruck()
         {
             var chosenGuid = _trucks.ElementAt(0).TruckGuid;
-            var context = new Mock<ApplicationDbContext>();
             var dbSet = new MockTruckDbSet();
             dbSet.AddRange(_trucks);
-            context.Setup(x => x.Truck).Returns(dbSet);
-            ITruckStore store = new TruckStore(context.Object);
+            var store = GetTruckStoreWithDbSet(dbSet);
 
             var truck = store.Get(chosenGuid);
 
@@ -72,11 +68,9 @@ namespace PracticalWerewolf.Tests.Stores
         public void Get_NoMatchingTrucks_ReturnTruck()
         {
             var chosenGuid = Guid.NewGuid();
-            var context = new Mock<ApplicationDbContext>();
             var dbSet = new MockTruckDbSet();
             dbSet.AddRange(_trucks);
-            context.Setup(x => x.Truck).Returns(dbSet);
-            ITruckStore store = new TruckStore(context.Object);
+            var store = GetTruckStoreWithDbSet(dbSet);
 
             var truck = store.Get(chosenGuid);
 
@@ -87,12 +81,10 @@ namespace PracticalWerewolf.Tests.Stores
         public void Get_MultipleMatchingTrucks_ReturnTruck()
         {
             var chosenGuid = _trucks.ElementAt(0).TruckGuid;
-            var context = new Mock<ApplicationDbContext>();
             var dbSet = new MockTruckDbSet();
             dbSet.AddRange(_trucks);
             dbSet.Add(new Truck() { TruckGuid = chosenGuid, Location = location, CurrentCapacity = unit, MaxCapacity = unit, LicenseNumber = "James" });
-            context.Setup(x => x.Truck).Returns(dbSet);
-            ITruckStore store = new TruckStore(context.Object);
+            var store = GetTruckStoreWithDbSet(dbSet);
 
             var truck = store.Get(chosenGuid);
 
@@ -107,17 +99,18 @@ namespace PracticalWerewolf.Tests.Stores
             var capacity = new TruckCapacityUnit() { Mass = 12, Volume = 12, TruckCapacityUnitGuid = Guid.NewGuid() };
             var capacityGuid = Guid.NewGuid();
             var truck = new Truck() { TruckGuid = guid, CurrentCapacity = capacity, MaxCapacity = capacity, LicenseNumber = "Abbie"};
-            var context = new Mock<ApplicationDbContext>();
             var dbSet = new MockTruckDbSet();
             dbSet.Add(truck);
-            context.Setup(x => x.Truck).Returns(dbSet);
-            var truckStore = new TruckStore(context.Object);
+            var store = GetTruckStoreWithDbSet(dbSet);
 
             var newCapacity = new TruckCapacityUnit() { Mass = 24, Volume = 24, TruckCapacityUnitGuid = capacityGuid};
-            var newTruck = new Truck() { TruckGuid = truck.TruckGuid, CurrentCapacity = newCapacity, MaxCapacity = newCapacity, LicenseNumber = "Matt" };
-            truckStore.Update(newTruck);
+            truck = store.Get(guid);
+            truck.MaxCapacity = newCapacity;
+            truck.CurrentCapacity = newCapacity;
+            truck.LicenseNumber = "Matt";
+            store.Update(truck);
 
-            var result = truckStore.Get(guid);
+            var result = store.Get(guid);
             Assert.AreEqual(guid, result.TruckGuid);
             Assert.AreEqual(newCapacity, result.MaxCapacity);
             Assert.AreEqual(newCapacity, result.CurrentCapacity);
@@ -131,17 +124,15 @@ namespace PracticalWerewolf.Tests.Stores
             var capacity = new TruckCapacityUnit() { Mass = 12, Volume = 12, TruckCapacityUnitGuid = Guid.NewGuid() };
             var capacityGuid = Guid.NewGuid();
             var truck = new Truck() { TruckGuid = guid, CurrentCapacity = capacity, MaxCapacity = capacity,  LicenseNumber = "Jessee"};
-            var context = new Mock<ApplicationDbContext>();
             var dbSet = new MockTruckDbSet();
             dbSet.Add(truck);
-            context.Setup(x => x.Truck).Returns(dbSet);
-            var truckStore = new TruckStore(context.Object);
+            var store = GetTruckStoreWithDbSet(dbSet);
 
             var newCapacity = new TruckCapacityUnit() { Mass = 24, Volume = 24, TruckCapacityUnitGuid = capacityGuid };
             var newTruck = new Truck() { TruckGuid = Guid.NewGuid(), CurrentCapacity = newCapacity, MaxCapacity = newCapacity,  LicenseNumber = "Not James"};
-            truckStore.Update(newTruck);
+            store.Update(newTruck);
 
-            var result = truckStore.Get(guid);
+            var result = store.Get(guid);
             Assert.AreEqual(guid, result.TruckGuid);
             Assert.AreEqual(capacity, result.MaxCapacity);
             Assert.AreEqual(capacity, result.CurrentCapacity);
@@ -152,43 +143,51 @@ namespace PracticalWerewolf.Tests.Stores
         public void Update_NullTruck_ThrowsException()
         {
             
-            var context = new Mock<ApplicationDbContext>();
             var dbSet = new MockTruckDbSet();
-            context.Setup(x => x.Truck).Returns(dbSet);
-            var truckStore = new TruckStore(context.Object);
-            Truck truck = null;
+            var store = GetTruckStoreWithDbSet(dbSet);
 
-            truckStore.Update(truck);
+            Truck truck = null;
+            store.Update(truck);
         }
 
         [TestMethod]
         public void Create_ValidTruck_AddsToDbSet()
         {
-            var context = new Mock<ApplicationDbContext>();
             var dbSet = new MockTruckDbSet();
-            context.Setup(x => x.Truck).Returns(dbSet);
-            var truckStore = new TruckStore(context.Object);
+            var store = GetTruckStoreWithDbSet(dbSet);
 
             var guid = Guid.NewGuid();
             var capacity = new TruckCapacityUnit() { Mass = 12, Volume = 12, TruckCapacityUnitGuid = Guid.NewGuid() };
             var capacityGuid = Guid.NewGuid();
             var truck = new Truck() { TruckGuid = guid, CurrentCapacity = capacity, MaxCapacity = capacity, LicenseNumber =  "Cooper"};
-            truckStore.Create(truck);
+            store.Create(truck);
 
-            var result = truckStore.Get(guid);
+            var result = store.Get(guid);
             Assert.AreEqual(truck, result);
         }
 
         [TestMethod, ExpectedException(typeof(ArgumentNullException))]
         public void Create_NullTruck_ThrowsException()
         {
-            var context = new Mock<ApplicationDbContext>();
             var dbSet = new MockTruckDbSet();
-            context.Setup(x => x.Truck).Returns(dbSet);
-            var truckStore = new TruckStore(context.Object);
+            var store = GetTruckStoreWithDbSet(dbSet);
 
             Truck truck = null;
-            truckStore.Create(truck);
+            store.Create(truck);
         }
+
+
+
+
+
+        public static ITruckStore GetTruckStoreWithDbSet(DbSet<Truck> dbSet)
+        {
+            var dbContext = new Mock<IDbSetFactory>();
+            dbContext.Setup(x => x.CreateDbSet<Truck>()).Returns(dbSet);
+            ITruckStore store = new TruckStore(dbContext.Object);
+
+            return store;
+        }
+
     }
 }

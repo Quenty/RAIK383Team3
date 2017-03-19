@@ -12,9 +12,11 @@ using Microsoft.AspNet.Identity;
 using PracticalWerewolf.Models;
 using System.Activities;
 using System.Data.Entity.Spatial;
+using PracticalWerewolf.Application;
 
 namespace PracticalWerewolf.Controllers
 {
+    [RequireHttps]
     public class TruckController : Controller
     {
         ITruckService TruckService;
@@ -57,8 +59,8 @@ namespace PracticalWerewolf.Controllers
                         LicenseNumber = truck.LicenseNumber,
                         AvailableCapacity = truck.GetAvailableCapacity(),
                         MaxCapacity = truck.MaxCapacity,
-                        //Lat = truck.Location.Latitude,
-                        //Long = truck.Location.Longitude
+                        Lat = truck.Location.Latitude,
+                        Long = truck.Location.Longitude
                     };
                     return View(model);
                 }

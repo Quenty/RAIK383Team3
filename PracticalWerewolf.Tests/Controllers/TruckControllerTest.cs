@@ -10,6 +10,7 @@ using PracticalWerewolf.ViewModels;
 using System.Linq;
 using System.Data.Entity.Spatial;
 using PracticalWerewolf.Models;
+using PracticalWerewolf.Application;
 
 namespace PracticalWerewolf.Tests.Controllers
 {
@@ -89,8 +90,8 @@ namespace PracticalWerewolf.Tests.Controllers
             Assert.IsNotNull(model);
             Assert.AreEqual(model.Guid, guid.ToString());
             Assert.AreEqual(model.MaxCapacity, capacity);
-            Assert.AreEqual(model.Lat, 3.14);
-            Assert.AreEqual(model.Long, 2.18);
+            Assert.AreEqual(model.Lat, 2.18);
+            Assert.AreEqual(model.Long, 3.14);
             Assert.AreEqual("James", model.LicenseNumber);
             Assert.AreEqual(3.14, model.Lat);
             Assert.AreEqual(2.18, model.Long);
