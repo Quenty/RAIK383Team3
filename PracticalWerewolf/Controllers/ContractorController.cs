@@ -21,6 +21,7 @@ namespace PracticalWerewolf.Controllers
         public enum ContractorMessageId
         {
             ApprovedSuccess,
+            DeniedSuccess,
             RegisterSuccess,
             AlreadyRegisteredError,
             Error
@@ -44,6 +45,7 @@ namespace PracticalWerewolf.Controllers
                 : message == ContractorMessageId.Error ? "Error occured"
                 : message == ContractorMessageId.AlreadyRegisteredError ? "You are already registered as a contractor"
                 : message == ContractorMessageId.ApprovedSuccess ? "Contractor approved"
+                : message == ContractorMessageId.DeniedSuccess ? "Contractor denied"
                 : "";
         }
 
@@ -109,7 +111,7 @@ namespace PracticalWerewolf.Controllers
             ContractorService.SetApproval(guid, IsApproved ? ContractorApprovalState.Approved : ContractorApprovalState.Denied);
             UnitOfWork.SaveChanges();
 
-            return RedirectToAction("Unapproved", new { Message = ContractorMessageId.ApprovedSuccess });
+            return RedirectToAction("Unapproved", new { Message = IsApproved ? ContractorMessageId.ApprovedSuccess : ContractorMessageId.DeniedSuccess });
         }
 
         [HttpPost]
