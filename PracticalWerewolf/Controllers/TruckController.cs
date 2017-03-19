@@ -12,6 +12,7 @@ using PracticalWerewolf.Models.UserInfos;
 namespace PracticalWerewolf.Controllers
 {
     [Authorize(Roles = "Employee, Contractor")]
+    [RequireHttps]
     public class TruckController : Controller
     {
         ITruckService TruckService;

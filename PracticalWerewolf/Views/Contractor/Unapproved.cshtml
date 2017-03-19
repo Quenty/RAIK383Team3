@@ -1,0 +1,62 @@
+﻿@model PracticalWerewolf.ViewModels.Contractor.PendingContractorsModel
+
+
+@{
+    ViewBag.Title = "Approve contractor requests";
+}
+
+@Html.Partial("_StatusMessage")
+
+<div id="result">
+
+</div>
+
+<h2>Approve contractor requests</h2>
+
+<table class="table table-responsive table-hover">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pending.FirstOrDefault().ContractorInfo.DriversLicenseId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pending.FirstOrDefault().ContractorInfo.HomeAddress)
+            </th>
+            <th>
+                Background check
+            </th>
+            <th style="width:100px">Approve</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ApprovalModel in Model.Pending)
+        {
+            <tr>
+                <td>Harry Hardcoded</td>
+                <td><a href="mailto:weneedthisinfo@info.com">weneedthisinfo@info.com</a></td>
+                <td>
+                    @Html.DisplayFor(modelItem => ApprovalModel.ContractorInfo.DriversLicenseId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => ApprovalModel.ContractorInfo.HomeAddress)
+                </td>
+                <td>
+                    <a href="#"><span class="label label-success"><span class="glyphicon glyphicon-check"></span> Passed</span></a>
+                </td>
+                <td>
+                    @Html.ActionLink("Approve", "Approve", "Contractor", new { Guid = ApprovalModel.ContractorInfo.ContractorInfoGuid, IsApproved = true }, new { })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+}

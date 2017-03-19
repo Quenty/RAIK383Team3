@@ -16,7 +16,7 @@ namespace PracticalWerewolf.Services.Interfaces
         void SetIsAvailable(Guid contractorInfoGuid, bool isAvailable);
 
         // Depends upon IContractorStore.Update
-        void SetIsApproved(Guid contractorInfoGuid, bool isApproved);
+        void SetApproval(Guid contractorInfoGuid, ContractorApprovalState isApproved);
 
         IEnumerable<ContractorInfo> GetUnapprovedContractors();
 

@@ -14,6 +14,9 @@ namespace PracticalWerewolf.Stores.Interfaces
         T Find(object id);
         T Single(Expression<Func<T, bool>> where, params Expression<Func<T, object>>[] includeProperties);
         T First(Expression<Func<T, bool>> where, params Expression<Func<T, object>>[] includeProperties);
+        void Delete(T entity);
         void Insert(T entity);
+        void Update(T entity);
+        T Refresh(T entity);
     }
 }

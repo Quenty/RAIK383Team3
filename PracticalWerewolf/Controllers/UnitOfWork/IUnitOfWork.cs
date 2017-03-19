@@ -8,7 +8,7 @@ namespace PracticalWerewolf.Controllers.UnitOfWork
     public interface IUnitOfWork
     {
 
-        void Commit();
+        void SaveChanges();
       
     }
 }

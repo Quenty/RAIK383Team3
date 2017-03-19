@@ -11,11 +11,9 @@ namespace PracticalWerewolf.Stores
 {
     public class OrderStore : EntityStore<Order>, IOrderStore 
     {
-        private readonly ApplicationDbContext context;
-
-        public OrderStore(ApplicationDbContext context) : base(context.Order)
+        public OrderStore(IDbSetFactory context) : base(context)
         {
-            this.context = context;
+            
         }
 
         public void Add(IEnumerable<Order> orderList)
