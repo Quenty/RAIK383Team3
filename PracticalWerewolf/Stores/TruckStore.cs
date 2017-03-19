@@ -52,7 +52,7 @@ namespace PracticalWerewolf.Stores
             {
                 oldTruck.MaxCapacity = truck.MaxCapacity;
                 oldTruck.Location = truck.Location;
-                oldTruck.CurrentCapacity = truck.CurrentCapacity;
+                oldTruck.UsedCapacity = truck.UsedCapacity;
             }
 
         }
