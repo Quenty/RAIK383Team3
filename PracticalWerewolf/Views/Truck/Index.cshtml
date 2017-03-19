@@ -11,19 +11,21 @@
 </p>
 <table class="table">
     <tr>
-        <th>License Plate Number</th>
-        <th>Max Carrying Volume</th>
-        <th>Maxy Carrying Weight</th>
+        <th>@Html.DisplayNameFor(model => model.Trucks.FirstOrDefault().owner.Email )</th>
+        <th>@Html.DisplayNameFor(model => model.Trucks.FirstOrDefault().LicenseNumber )</th>
+        <th>@Html.DisplayNameFor(model => model.Trucks.FirstOrDefault().MaxCapacity.Volume )</th>
+        <th>@Html.DisplayNameFor(model => model.Trucks.FirstOrDefault().MaxCapacity.Mass )</th>
         <th></th>
     </tr>
 
 @foreach (var item in Model.Trucks) {
     <tr>
+        <td>@Html.DisplayFor(model => model.Trucks.FirstOrDefault().owner.Email)</td>
         <td>@Html.DisplayFor(m => item.LicenseNumber)</td>
         <td>@Html.DisplayFor(m => item.MaxCapacity.Volume )</td>
         <td>@Html.DisplayFor(m => item.MaxCapacity.Mass )</td>
-        <td>@Html.ActionLink("Edit", "Edit", new { id = item.TruckGuid }) |
-        @Html.ActionLink("Details", "Details", new { id = item.TruckGuid }) </td>
+        <td>@Html.ActionLink("Edit", "Edit", new { id = item.Guid }) |
+        @Html.ActionLink("Details", "Details", new { id = item.Guid }) </td>
 
 
         

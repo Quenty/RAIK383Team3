@@ -1,4 +1,5 @@
 ﻿using PracticalWerewolf.Models;
+using PracticalWerewolf.Models.Trucks;
 using PracticalWerewolf.Models.UserInfos;
 using PracticalWerewolf.Stores.Interfaces;
 using System;
@@ -17,6 +18,13 @@ namespace PracticalWerewolf.Stores
         public ContractorStore(ApplicationDbContext context) : base(context.ContractorInfo)
         {
             this.context = context;
+        }
+
+        public void UpdateContractorTruck(ContractorInfo contractor, Truck truck)
+        {
+            context.Entry(contractor).State = EntityState.Modified;
+            contractor.Truck = truck;
+            
         }
     }
 }

@@ -3,63 +3,76 @@ using PracticalWerewolf.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using PracticalWerewolf.ViewModels;
-using PracticalWerewolf;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity;
 using PracticalWerewolf.Models;
-using System.Activities;
-using System.Data.Entity.Spatial;
 using PracticalWerewolf.Models.UserInfos;
 
 namespace PracticalWerewolf.Controllers
 {
+    [Authorize(Roles = "Employee, Contractor")]
     public class TruckController : Controller
     {
         ITruckService TruckService;
         IContractorService ContractorService;
         ApplicationDbContext context;
+        ApplicationUserManager UserManager;
 
-        public TruckController(ITruckService TruckService, IContractorService ContractorService, ApplicationDbContext context)
+        public TruckController(ITruckService TruckService, IContractorService ContractorService, ApplicationDbContext context, ApplicationUserManager userManager)
         {
             this.context = context;
             this.TruckService = TruckService;
             this.ContractorService = ContractorService;
+            this.UserManager = userManager;
         }
 
         // GET: Truck
-        //[Authorize(Roles = "Employee")]
         public ActionResult Index()
         {
             ViewBag.Message = "Trucks, Trucks and even more Trucks!";
             IEnumerable<Truck> trucks = TruckService.GetAllTrucks();
-            IEnumerable<ContractorInfo> Contractors = ContractorService.GetAllContractors();
+            List<TruckDetailsViewModel> truckModels = new List<TruckDetailsViewModel>(); ;
+            foreach (Truck item in trucks)
+            {
+                ContractorInfo contractor = ContractorService.GetContractorByTruckGuid(item.TruckGuid);
+                var toAdd = new TruckDetailsViewModel
+                {
+                    Guid = item.TruckGuid,
+                    LicenseNumber = item.LicenseNumber,
+                    Lat = item.Location.Latitude,
+                    Long = item.Location.Longitude,
+                    MaxCapacity = item.MaxCapacity,
+                    //AvailableCapacity = item.AvailableCapacity, //uncomment once we have actual data
+                    owner = UserManager.Users.Where(u => u.ContractorInfo.ContractorInfoGuid == contractor.ContractorInfoGuid).FirstOrDefault()
+                };
+                truckModels.Add(toAdd);
+            }
             var model = new TruckIndexViewModel
             {
-                Trucks = trucks,
-                Contractor = Contractors
+                Trucks = truckModels
             };
             return View(model);
         }
 
         // GET: Truck/Details/guid
-        //[Authorize(Roles = "Contractor, Employee")]
         public ActionResult Details(string id)
         {
             if (!String.IsNullOrEmpty(id))
             {
                 var guid = new Guid(id);
                 Truck truck = TruckService.GetTruck(guid);
+                ContractorInfo contractor = ContractorService.GetContractorByTruckGuid(guid);
+                ApplicationUser owner = UserManager.Users.Where(u => u.ContractorInfo.ContractorInfoGuid == contractor.ContractorInfoGuid).FirstOrDefault();
                 var model = new TruckDetailsViewModel
                 {
-                    Guid = id,
+                    Guid = new Guid(id),
                     LicenseNumber = truck.LicenseNumber,
-                    // AvailableCapacity = truck.AvailableCapacity,
+                    // AvailableCapacity = truck.AvailableCapacity, // uncomment once there's data for this
                     MaxCapacity = truck.MaxCapacity,
                     Lat = truck.Location.Latitude,
-                    Long = truck.Location.Longitude
+                    Long = truck.Location.Longitude,
+                    owner = owner
                 };
                 return View(model);
             }
@@ -68,7 +81,6 @@ namespace PracticalWerewolf.Controllers
         }
 
         // GET: Truck/Edit/guid
-        //[Authorize(Roles = "Contractor")]
         public ActionResult Edit(string id)
         {
             if (!String.IsNullOrEmpty(id))
@@ -77,7 +89,7 @@ namespace PracticalWerewolf.Controllers
                 var truck = TruckService.GetTruck(guid);
                 var model = new TruckUpdateViewModel
                 {
-                    Guid = id,
+                    Guid = guid,
                     LicenseNumber = truck.LicenseNumber,
                     Volume = truck.MaxCapacity.Volume,
                     Mass = truck.MaxCapacity.Mass
@@ -92,12 +104,11 @@ namespace PracticalWerewolf.Controllers
         // POST: Truck/Update/guid
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Contractor")]
         public ActionResult Edit(String id, TruckUpdateViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var guid = new Guid(model.Guid);
+                var guid = model.Guid;
                 var oldTruck = TruckService.GetTruck(guid);
                 var NewCapacityModel = new TruckCapacityUnit
                 {
@@ -107,7 +118,7 @@ namespace PracticalWerewolf.Controllers
                 };
                 var newModel = new Truck
                 {
-                    TruckGuid = new Guid(model.Guid),
+                    TruckGuid = guid,
                     MaxCapacity = NewCapacityModel,
                     CurrentCapacity = oldTruck.CurrentCapacity,
                     Location = oldTruck.Location,
@@ -122,20 +133,21 @@ namespace PracticalWerewolf.Controllers
         }
 
         // GET: Truck/Create/
-        [Authorize(Roles = "Contractor")]
         public ActionResult Create()
         {
             return View();
         }
 
         // POST: Truck/Create/
-        [Authorize(Roles = "Contractor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(TruckCreateViewModel returnedModel)
         {
             if (ModelState.IsValid)
             {
+                var userName = System.Web.HttpContext.Current.User.Identity.Name;
+                var user = UserManager.FindByName(userName);
+                Guid TruckGuid = Guid.NewGuid();
                 var capacityUnit = new TruckCapacityUnit
                 {
                     TruckCapacityUnitGuid = Guid.NewGuid(),
@@ -144,18 +156,19 @@ namespace PracticalWerewolf.Controllers
                 };
                 var model = new Truck
                 {
-                    TruckGuid = Guid.NewGuid(),
+                    TruckGuid = TruckGuid,
                     LicenseNumber = returnedModel.LicenseNumber,
                     MaxCapacity = capacityUnit,
                     Location = LocationHelper.CreatePoint(returnedModel.Lat, returnedModel.Long)
                 };
                 TruckService.CreateTruck(model);
+                ContractorService.UpdateContractorTruck(model, user);
                 context.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", new { Message = "Could not create truck successfully." });
             }
         }
     }
