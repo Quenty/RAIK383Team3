@@ -3,6 +3,8 @@ using PracticalWerewolf.Models.Trucks;
 using PracticalWerewolf.Stores.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Web;
 
@@ -10,22 +12,18 @@ namespace PracticalWerewolf.Stores
 {
     public class TruckStore : EntityStore<Truck>, ITruckStore
     {
-        private readonly ApplicationDbContext context;
-
-        public TruckStore(ApplicationDbContext context) : base(context.Truck)
+        public TruckStore(IDbSetFactory context) : base(context)
         {
-            this.context = context;
         }
 
         public void Create(Truck truck)
         {
-            context.Truck.Add(truck);
+            base.Insert(truck);
         }
 
         public IEnumerable<Truck> GetAllTrucks()
         {
-            var trucks = context.Truck.ToList();
-            return trucks;
+            return base.GetAll().ToList();
         }
 
         public IEnumerable<Truck> Get(IEnumerable<Guid> guids)
@@ -35,8 +33,7 @@ namespace PracticalWerewolf.Stores
 
         public Truck Get(Guid guid)
         {
-            var truck = context.Truck.Find(guid);
-            return truck;
+            return base.Find(guid);
         }
 
         public Truck GetByCustomerInfoGuid(Guid customerInfo)
@@ -46,15 +43,9 @@ namespace PracticalWerewolf.Stores
 
         public void Update(Truck truck)
         {
-            var oldTruck = context.Truck.Find(truck.TruckGuid);
-            
-            if(oldTruck != null)
-            {
-                oldTruck.MaxCapacity = truck.MaxCapacity;
-                oldTruck.Location = truck.Location;
-                oldTruck.CurrentCapacity = truck.CurrentCapacity;
-            }
-
+            Truck oldTruck = Get(truck.TruckGuid);
+            base.Update(oldTruck);
+            oldTruck = truck;
         }
     }
 }

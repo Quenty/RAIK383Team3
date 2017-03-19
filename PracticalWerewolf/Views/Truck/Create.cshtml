@@ -1,4 +1,4 @@
-﻿@model PracticalWerewolf.Models.Trucks.Truck
+﻿@model PracticalWerewolf.ViewModels.TruckCreateViewModel
 
 @{
     ViewBag.Title = "Create";
@@ -24,23 +24,33 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.MaxCapacity.Mass, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Mass, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.MaxCapacity.Mass, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.MaxCapacity.Mass, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.Mass, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Mass, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.MaxCapacity.Volume, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Volume, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.MaxCapacity.Volume, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.MaxCapacity.Volume, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.Volume, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Volume, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.Location, htmlAttributes: new { @class = "control-label col-md-2" })
-            We're gonna need to figure this out spooon.
+            @Html.LabelFor(model => model.Lat, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Lat, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Lat, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Long, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Long, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Long, "", new { @class = "text-danger" })
+            </div>
         </div>
 
         <div class="form-group">

@@ -6,6 +6,7 @@
     <title>@ViewBag.Title - Practical Werewolf</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @RenderSection("styles", required: false)
 </head>
 <body>
     <nav class="navbar navbar-default navbar-static-top">
@@ -19,7 +20,7 @@
                 <a href="@Url.Action("Index", "Home")" class="navbar-brand" style="padding-top:10px; padding-bottom:10px;">
                     <img alt="Brand" src="/favicon.ico" height="30" width="30">
                 </a>
-                @Html.ActionLink("Practical Werewolf", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @*@Html.ActionLink("Practical Werewolf", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -32,6 +33,7 @@
         </div>
     </nav>
 
+    @RenderSection("FullScreenJumbotron", required: false)
     <div class="container body-content">
         @RenderBody()
         <hr />
