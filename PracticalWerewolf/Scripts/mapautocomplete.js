@@ -41,8 +41,8 @@ function fillInAddress() {
     if (place)
     {
         for (var component in componentForm) {
-            document.getElementById(component).value = '';
             document.getElementById(component).disabled = false;
+            document.getElementById(component).value = '';
         }
 
         // Get each component of the address from the place details
