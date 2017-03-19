@@ -55,8 +55,10 @@ namespace PracticalWerewolf.ViewModels
         [Range(0d, (double)decimal.MaxValue, ErrorMessage = "Amount must be greater than zero.")]
         public double Volume { get; set; }
         [Display(Name = "Longitude")]
+        [Range(-180d, 180d, ErrorMessage = "Longitude must be between -180 and 180.")]
         public double Long { get; set; }
         [Display(Name = "Latitude")]
+        [Range(-90d, 90d, ErrorMessage = "Latitude must be between -90 and 90.")]
         public double Lat { get; set; }
         public ApplicationUser owner { get; set; }
     }
