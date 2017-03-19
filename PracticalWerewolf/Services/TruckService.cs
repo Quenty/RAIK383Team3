@@ -12,11 +12,9 @@ namespace PracticalWerewolf.Services
     public class TruckService : ITruckService
     {
         private readonly ITruckStore TruckStore;
-        private readonly IUnitOfWork UnitOfWork;
 
-        public TruckService(ITruckStore TruckStore, IUnitOfWork UnitOfWork)
+        public TruckService(ITruckStore TruckStore)
         {
-            this.UnitOfWork = UnitOfWork;
             this.TruckStore = TruckStore;
         }
 
@@ -58,18 +56,7 @@ namespace PracticalWerewolf.Services
         }
         public void Update(Truck newTruck)
         {
-            var oldTruck = GetTruck(newTruck.TruckGuid);
-
-            var truck = new Truck
-            {
-                Location = oldTruck.Location,
-                TruckGuid = oldTruck.TruckGuid,
-                CurrentCapacity = oldTruck.CurrentCapacity,
-                MaxCapacity = oldTruck.MaxCapacity
-            };
-
-            TruckStore.Update(truck);
-            UnitOfWork.SaveChanges();
+            TruckStore.Update(newTruck);
         }
     }
 }
