@@ -33,6 +33,14 @@ function initAutocomplete() {
             document.getElementById(component).disabled = false;
         }
     }
+
+    var input = document.getElementById('autocomplete');
+    google.maps.event.addDomListener(input, 'keydown', function (e) {
+        if (e.keyCode == 13) {
+            e.preventDefault();
+        }
+    });
+
 }
 
 function fillInAddress() {
