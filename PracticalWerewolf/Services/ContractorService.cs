@@ -10,22 +10,24 @@ namespace PracticalWerewolf.Services
 {
     public class ContractorService : IContractorService
     {
-        private IContractorStore Store;
+        private readonly IContractorStore _contractorStore;
 
         public ContractorService(IContractorStore store)
         {
-            this.Store = store;
+            _contractorStore = store;
         }
 
         public IEnumerable<ContractorInfo> GetUnapprovedContractors()
         {
-            return Store.Find(c => c.ApprovalState == ContractorApprovalState.Pending);
+            return _contractorStore.Find(c => c.ApprovalState == ContractorApprovalState.Pending);
         }
 
-        public void SetIsApproved(Guid contractorInfoGuid, bool isApproved)
+        public void SetApproval(Guid contractorInfoGuid, ContractorApprovalState ApprovalState)
         {
+            ContractorInfo info = _contractorStore.Single(c => c.ContractorInfoGuid == contractorInfoGuid, c => c.HomeAddress);
+            info.ApprovalState = ApprovalState;
+            _contractorStore.Update(info);
             
-            throw new NotImplementedException();
         }
 
         public void SetIsAvailable(Guid contractorInfoGuid, bool isAvailable)
