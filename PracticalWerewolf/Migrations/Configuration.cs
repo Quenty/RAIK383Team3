@@ -35,15 +35,12 @@ namespace PracticalWerewolf.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
-            if (!context.Roles.Any())
-            {
-                context.Roles.AddOrUpdate(
-                        r => r.Name,
-                        new IdentityRole { Name = "Employee" },
-                        new IdentityRole { Name = "Customer" },
-                        new IdentityRole { Name = "Contractor" }
-                    );
-            }
+           context.Roles.AddOrUpdate(
+                  r => r.Name,
+                  new IdentityRole { Name = "Employee" },
+                  new IdentityRole { Name = "Customer" },
+                  new IdentityRole { Name = "Contractor" }
+            );
 
             UserInfo employeeUser = new UserInfo { UserInfoGuid = Guid.NewGuid(), FirstName = "Bruce", LastName = "Wayne" };
             UserInfo contractorUser = new UserInfo { UserInfoGuid = Guid.NewGuid(), FirstName = "Eample", LastName = "Two" };
