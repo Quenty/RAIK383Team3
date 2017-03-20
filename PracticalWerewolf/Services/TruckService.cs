@@ -67,7 +67,7 @@ namespace PracticalWerewolf.Services
             {
                 Location = oldTruck.Location,
                 TruckGuid = oldTruck.TruckGuid,
-                CurrentCapacity = oldTruck.CurrentCapacity,
+                UsedCapacity = oldTruck.UsedCapacity,
                 MaxCapacity = oldTruck.MaxCapacity
             };
 
