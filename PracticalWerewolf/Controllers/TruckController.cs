@@ -123,16 +123,19 @@ namespace PracticalWerewolf.Controllers
                     Volume = model.Volume,
                     Mass = model.Mass
                 };
+
                 var newModel = new Truck
                 {
                     TruckGuid = model.Guid,
                     MaxCapacity = NewCapacityModel,
-                    CurrentCapacity = oldTruck.CurrentCapacity,
+                    UsedCapacity = oldTruck.UsedCapacity,
                     Location = oldTruck.Location,
                     LicenseNumber = model.LicenseNumber
                 };
+
                 TruckService.Update(newModel);
                 UnitOfWork.SaveChanges();
+
                 return RedirectToAction("Index");
             }
             else

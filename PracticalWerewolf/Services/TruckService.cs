@@ -54,11 +54,9 @@ namespace PracticalWerewolf.Services
         {
             throw new NotImplementedException();
         }
-        public void Update(Truck newTruck)
+        public void Update(Truck truck)
         {
-            var oldTruck = TruckStore.Get(newTruck.TruckGuid);
-            oldTruck = newTruck;
-            TruckStore.Update(oldTruck);
+            TruckStore.Update(truck);
         }
     }
 }
