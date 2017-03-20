@@ -103,12 +103,12 @@ namespace PracticalWerewolf.Controllers
         [Authorize(Roles="Employee")]
         public ActionResult Approve(Guid guid, bool IsApproved)
         {
-            if (guid == null)
+            if (guid.Equals(Guid.Empty))
             {
                 return RedirectToAction("Unapproved", new { Message = ContractorMessageId.Error });
             }
-
-            ContractorService.SetApproval(guid, IsApproved ? ContractorApprovalState.Approved : ContractorApprovalState.Denied);
+                //Is this another instance where we want an IdentityResult?
+                ContractorService.SetApproval(guid, IsApproved ? ContractorApprovalState.Approved : ContractorApprovalState.Denied);
             UnitOfWork.SaveChanges();
 
             return RedirectToAction("Unapproved", new { Message = IsApproved ? ContractorMessageId.ApprovedSuccess : ContractorMessageId.DeniedSuccess });
