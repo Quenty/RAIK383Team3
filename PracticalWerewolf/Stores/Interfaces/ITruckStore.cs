@@ -26,6 +26,6 @@ namespace PracticalWerewolf.Stores.Interfaces
         void Create(Truck truck);
 
         //Update Truck
-        void Update(Truck truck);
+        void Update(Truck entity);
     }
 }

@@ -56,7 +56,9 @@ namespace PracticalWerewolf.Services
         }
         public void Update(Truck newTruck)
         {
-            TruckStore.Update(newTruck);
+            var oldTruck = TruckStore.Get(newTruck.TruckGuid);
+            oldTruck = newTruck;
+            TruckStore.Update(oldTruck);
         }
     }
 }

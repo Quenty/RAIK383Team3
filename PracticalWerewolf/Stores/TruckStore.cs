@@ -41,11 +41,10 @@ namespace PracticalWerewolf.Stores
             throw new NotImplementedException();
         }
 
-        public void Update(Truck truck)
+        void IEntityStore<Truck>.Update(Truck entity)
         {
-            Truck oldTruck = Get(truck.TruckGuid);
-            base.Update(oldTruck);
-            oldTruck = truck;
+            base.Update(entity);
         }
+
     }
 }

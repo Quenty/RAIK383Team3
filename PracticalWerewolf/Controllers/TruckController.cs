@@ -32,9 +32,14 @@ namespace PracticalWerewolf.Controllers
         // GET: Truck
         public ActionResult Index()
         {
+            String userName = System.Web.HttpContext.Current.User.Identity.Name;
+            ApplicationUser user = UserManager.FindByName(userName);
+            ApplicationUser fullUser = UserManager.Users.Where(u => u.Id == user.Id).FirstOrDefault();
+
             ViewBag.Message = "Trucks, Trucks and even more Trucks!";
             IEnumerable<Truck> trucks = TruckService.GetAllTrucks();
-            List<TruckDetailsViewModel> truckModels = new List<TruckDetailsViewModel>(); ;
+            List<TruckDetailsViewModel> truckModels = new List<TruckDetailsViewModel>();
+
             foreach (Truck item in trucks)
             {
                 ContractorInfo contractor = ContractorService.GetContractorByTruckGuid(item.TruckGuid);
@@ -52,7 +57,8 @@ namespace PracticalWerewolf.Controllers
             }
             var model = new TruckIndexViewModel
             {
-                Trucks = truckModels
+                Trucks = truckModels,
+                HasTruck = fullUser.ContractorInfo.Truck != null ? true : false
             };
             return View(model);
         }
@@ -110,8 +116,7 @@ namespace PracticalWerewolf.Controllers
         {
             if (ModelState.IsValid)
             {
-                var guid = model.Guid;
-                var oldTruck = TruckService.GetTruck(guid);
+                var oldTruck = TruckService.GetTruck(model.Guid);
                 var NewCapacityModel = new TruckCapacityUnit
                 {
                     TruckCapacityUnitGuid = Guid.NewGuid(),
@@ -120,7 +125,7 @@ namespace PracticalWerewolf.Controllers
                 };
                 var newModel = new Truck
                 {
-                    TruckGuid = guid,
+                    TruckGuid = model.Guid,
                     MaxCapacity = NewCapacityModel,
                     CurrentCapacity = oldTruck.CurrentCapacity,
                     Location = oldTruck.Location,

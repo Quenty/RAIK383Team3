@@ -6,9 +6,14 @@
 
 <h2>@ViewBag.Message</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+@{ if (!Model.HasTruck)
+    {
+        <p>
+            @Html.ActionLink("Create New", "Create")
+        </p>
+    }
+}
+
 <table class="table">
     <tr>
         <th>@Html.DisplayNameFor(model => model.Trucks.FirstOrDefault().owner.Email )</th>
@@ -20,15 +25,12 @@
 
 @foreach (var item in Model.Trucks) {
     <tr>
-        <td>@Html.DisplayFor(model => model.Trucks.FirstOrDefault().owner.Email)</td>
+        <td>@Html.DisplayFor(model => item.owner.Email )</td>
         <td>@Html.DisplayFor(m => item.LicenseNumber)</td>
         <td>@Html.DisplayFor(m => item.MaxCapacity.Volume )</td>
         <td>@Html.DisplayFor(m => item.MaxCapacity.Mass )</td>
         <td>@Html.ActionLink("Edit", "Edit", new { id = item.Guid }) |
-        @Html.ActionLink("Details", "Details", new { id = item.Guid }) </td>
-
-
-        
+        @Html.ActionLink("Details", "Details", new { id = item.Guid }) </td>        
     </tr>
 }
 
