@@ -71,7 +71,7 @@ namespace PracticalWerewolf.Controllers
                 var guid = new Guid(id);
                 Truck truck = TruckService.GetTruck(guid);
                 ContractorInfo contractor = ContractorService.GetContractorByTruckGuid(guid);
-                ApplicationUser owner = UserManager.Users.Single(u => u.ContractorInfo.ContractorInfoGuid == contractor.ContractorInfoGuid);
+                ApplicationUser owner = contractor == null ? null : UserManager.Users.Single(u => u.ContractorInfo.ContractorInfoGuid == contractor.ContractorInfoGuid);
                 var model = new TruckDetailsViewModel
                 {
                     Guid = new Guid(id),
