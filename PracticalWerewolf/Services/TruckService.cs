@@ -1,28 +1,27 @@
 ﻿using PracticalWerewolf.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using PracticalWerewolf.Models.Trucks;
 using System.Device.Location;
 using PracticalWerewolf.Stores.Interfaces;
 using PracticalWerewolf.Models;
+using PracticalWerewolf.Controllers.UnitOfWork;
 
 namespace PracticalWerewolf.Services
 {
     public class TruckService : ITruckService
     {
-        private ITruckStore TruckStore;
-        private ApplicationDbContext context;
+        private readonly ITruckStore TruckStore;
 
-        public TruckService(ITruckStore TruckStore, ApplicationDbContext DbContext)
+        public TruckService(ITruckStore TruckStore)
         {
-            this.context = DbContext;
             this.TruckStore = TruckStore;
         }
 
         public void CreateTruck(Truck truck)
         {
+            //TODO possibly return an IdentityResult
+            if (truck == null) throw new ArgumentNullException();
             try
             {
                 TruckStore.Create(truck);
@@ -57,21 +56,12 @@ namespace PracticalWerewolf.Services
         {
             throw new NotImplementedException();
         }
-
-        public void UpdateTruckMaxCapacity(Guid truckGuid, TruckCapacityUnit capacity)
+        public void Update(Truck newTruck)
         {
-            var oldTruck = GetTruck(truckGuid);
-
-            var truck = new Truck
-            {
-                Location = oldTruck.Location,
-                TruckGuid = oldTruck.TruckGuid,
-                CurrentCapacity = oldTruck.CurrentCapacity,
-                MaxCapacity = oldTruck.MaxCapacity
-            };
-
-            TruckStore.Update(truck);
-            context.SaveChanges();
+            if (newTruck == null) throw new ArgumentNullException();
+            var oldTruck = TruckStore.Get(newTruck.TruckGuid);
+            oldTruck = newTruck;
+            TruckStore.Update(oldTruck);
         }
     }
 }
