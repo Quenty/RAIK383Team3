@@ -146,26 +146,30 @@ namespace PracticalWerewolf.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(TruckCreateViewModel returnedModel)
         {
-            if (ModelState.IsValid && returnedModel.LicenseNumber != null && returnedModel.Mass >= 0 && returnedModel.Volume >= 0)
+            if (ModelState.IsValid)
             {
                 try
                 {
-                    var capacityUnit = new TruckCapacityUnit
+                    if(returnedModel.LicenseNumber != null && returnedModel.Mass >= 0 && returnedModel.Volume >= 0)
                     {
-                        TruckCapacityUnitGuid = Guid.NewGuid(),
-                        Mass = returnedModel.Mass,
-                        Volume = returnedModel.Volume
-                    };
-                    var model = new Truck
-                    {
-                        TruckGuid = Guid.NewGuid(),
-                        LicenseNumber = returnedModel.LicenseNumber,
-                        MaxCapacity = capacityUnit,
-                        Location = CreatePoint(returnedModel.Lat, returnedModel.Long)
-                    };
-                    TruckService.CreateTruck(model);
-                    context.SaveChanges();
-                    return RedirectToAction("Index");
+                        var capacityUnit = new TruckCapacityUnit
+                        {
+                            TruckCapacityUnitGuid = Guid.NewGuid(),
+                            Mass = returnedModel.Mass,
+                            Volume = returnedModel.Volume
+                        };
+                        var model = new Truck
+                        {
+                            TruckGuid = Guid.NewGuid(),
+                            LicenseNumber = returnedModel.LicenseNumber,
+                            MaxCapacity = capacityUnit,
+                            Location = CreatePoint(returnedModel.Lat, returnedModel.Long)
+                        };
+                        TruckService.CreateTruck(model);
+                        context.SaveChanges();
+                        return RedirectToAction("Index");
+
+                    }
                 }
                 catch
                 {
