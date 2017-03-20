@@ -11,6 +11,8 @@ using System.Linq;
 using System.Device.Location;
 using PracticalWerewolf.Models.Trucks;
 using System.Collections.Generic;
+using Microsoft.AspNet.Identity;
+using PracticalWerewolf.Models;
 
 namespace PracticalWerewolf.Tests.Services
 {
@@ -155,7 +157,9 @@ namespace PracticalWerewolf.Tests.Services
             var mockContext = new Mock<IDbSetFactory>();
             mockContext.Setup(x => x.CreateDbSet<ContractorInfo>()).Returns(dbSet);
             var store = new ContractorStore(mockContext.Object);
-            var contractorService = new ContractorService(store);
+            var userStore = new Mock<IUserStore<ApplicationUser>>();
+            var userManager = new Mock<ApplicationUserManager>(userStore.Object);
+            var contractorService = new ContractorService(store, userManager.Object);
 
             return contractorService;
         }

@@ -32,14 +32,15 @@ namespace PracticalWerewolf.Stores
             throw new NotImplementedException();
         }
 
-        public Truck Get(Guid guid)
-        {
-            return base.Find(guid);
-        }
-
         public Truck GetByCustomerInfoGuid(Guid customerInfo)
         {
-            throw new NotImplementedException();
+            return base.Find(customerInfo);
+        }
+
+        void IEntityStore<Truck>.Insert(Truck entity)
+        {
+            if (entity == null) throw new ArgumentNullException();
+            base.Insert(entity);
         }
 
         void IEntityStore<Truck>.Update(Truck entity)

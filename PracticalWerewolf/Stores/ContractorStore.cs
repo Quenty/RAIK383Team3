@@ -15,8 +15,8 @@ namespace PracticalWerewolf.Stores
     {
         public ContractorStore(IDbSetFactory context) : base(context)
         {
-            
         }
+
 
 
         ContractorInfo IEntityStore<ContractorInfo>.Single(System.Linq.Expressions.Expression<Func<ContractorInfo, bool>> where, params System.Linq.Expressions.Expression<Func<ContractorInfo, object>>[] includeProperties)

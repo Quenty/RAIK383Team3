@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System;
+using System.Data.Entity.Spatial;
 
 namespace PracticalWerewolf.Services.Interfaces
 {
@@ -17,16 +18,16 @@ namespace PracticalWerewolf.Services.Interfaces
         void CreateTruck(Truck truck);
 
         // Depends upon ITruckStore.Update
-        void UpdateTruckLocation(Guid truckGuid, GeoCoordinate location);
+        void UpdateTruckLocation(Guid truckGuid, DbGeography location);
 
         // Depends upon ITruckStore.Get
-        Truck GetTruck(Guid truckId);
+        Truck GetTruck(Guid truckGuid);
 
         // Depends upon ITruckStore.GetByCustomerInfoGuid
-        Truck GetTruckByCustomerInfoGuid(Guid truckId);
+        Truck GetTruckByCustomerInfoGuid(Guid truckGuid);
 
-        void Update(Truck newTruck);
+        void UpdateCapacity(Guid truckGuid, TruckCapacityUnit capacity);
 
-
+        void UpdateLicenseNumber(Guid truckGuid, string licenseNumber);
     }
 }

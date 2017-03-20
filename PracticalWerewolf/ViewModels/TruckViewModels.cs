@@ -25,11 +25,13 @@ namespace PracticalWerewolf.ViewModels
         public double? Lat { get; set; }
         [Display(Name = "Longitude")]
         public double? Long { get; set; }
+
         [Display(Name = "Maximum Capacity: ")]
         public TruckCapacityUnit MaxCapacity { get; set; }
         [Display(Name = "Available Capacity: ")]
         public TruckCapacityUnit AvailableCapacity { get; set; }
-        public ApplicationUser owner { get; set; }
+
+        public ApplicationUser Owner { get; set; } // TODO: Refactor to UserInfo, store instead of loading ApplicationUser
     }
 
     public class TruckUpdateViewModel
@@ -61,7 +63,7 @@ namespace PracticalWerewolf.ViewModels
         [Display(Name = "Latitude")]
         [Range(-90d, 90d, ErrorMessage = "Latitude must be between -90 and 90.")]
         public double Lat { get; set; }
-        public ApplicationUser owner { get; set; }
+        public ApplicationUser Owner { get; set; } // TODO: Refactor to UserInfo, store instead of loading ApplicationUser
     }
 
 

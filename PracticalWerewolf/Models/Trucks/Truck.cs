@@ -14,9 +14,11 @@ namespace PracticalWerewolf.Models.Trucks
     {
         [Key]
         public Guid TruckCapacityUnitGuid { get; set; }
+
         [Required]
         [Display(Name = "Weight (lb)")]
         public double Mass { get; set; }
+
         [Required]
         [Display(Name = "Volume (cubic ft)")]
         public double Volume { get; set; }
@@ -27,8 +29,12 @@ namespace PracticalWerewolf.Models.Trucks
         // A truck has a One-to-one relationship with contractor
         [Key]
         public Guid TruckGuid { get; set; }
+
+
         [Required]
-        public String LicenseNumber { get; set; }
+        [Display(Name = "License Plate Number")]
+        public virtual String LicenseNumber { get; set; }
+
                                                                 
         // Gets broken down into different props but stays in the truck table
         public DbGeography Location { get; set; } 
@@ -47,7 +53,9 @@ namespace PracticalWerewolf.Models.Trucks
 
         //TODO Calculate from orders associated with truck
         public TruckCapacityUnit UsedCapacity { get; set; }
+
         [Required]
-        public TruckCapacityUnit MaxCapacity { get; set; }
+        [Display(Name = "Maximum Capacity")]
+        public virtual TruckCapacityUnit MaxCapacity { get; set; }
     }
 }

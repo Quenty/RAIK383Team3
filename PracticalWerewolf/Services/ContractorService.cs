@@ -13,9 +13,11 @@ namespace PracticalWerewolf.Services
     public class ContractorService : IContractorService
     {
         private readonly IContractorStore _contractorStore;
+        private readonly ApplicationUserManager _userManager;
 
-        public ContractorService(IContractorStore store)
+        public ContractorService(IContractorStore store, ApplicationUserManager userManager)
         {
+            _userManager = userManager;
             _contractorStore = store;
         }
 
@@ -38,18 +40,17 @@ namespace PracticalWerewolf.Services
                 info.ApprovalState = ApprovalState;
                 _contractorStore.Update(info);
             }
-            
         }
 
         public void SetIsAvailable(Guid contractorInfoGuid, bool isAvailable)
         {
-            throw new NotImplementedException();
         }
 
         public void UpdateContractorTruck(Truck truck, ApplicationUser driver)
         {
-            var contractor = _contractorStore.Find(c => c.ContractorInfoGuid == driver.ContractorInfo.ContractorInfoGuid).FirstOrDefault();
-            _contractorStore.UpdateContractorTruck(contractor, truck);
+            driver.ContractorInfo.Truck = truck;
+            var result = _userManager.UpdateAsync(driver);
+            result.Wait(); // TODO: Make this async
         }
     }
 }

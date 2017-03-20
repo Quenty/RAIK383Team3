@@ -58,7 +58,7 @@ namespace PracticalWerewolf.Tests.Stores
             dbSet.AddRange(_trucks);
             var store = GetTruckStoreWithDbSet(dbSet);
 
-            var truck = store.Get(chosenGuid);
+            var truck = store.Single(c => c.TruckGuid == chosenGuid);
 
             Assert.IsNotNull(truck);
             Assert.AreEqual(_trucks.ElementAt(0), truck);
@@ -72,13 +72,13 @@ namespace PracticalWerewolf.Tests.Stores
             dbSet.AddRange(_trucks);
             var store = GetTruckStoreWithDbSet(dbSet);
 
-            var truck = store.Get(chosenGuid);
+            var truck = store.Single(c => c.TruckGuid == chosenGuid);
 
             Assert.IsNull(truck);
         }
 
-        [TestMethod]
-        public void Get_MultipleMatchingTrucks_ReturnTruck()
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void Get_MultipleMatchingTrucks_ThrowException()
         {
             var chosenGuid = _trucks.ElementAt(0).TruckGuid;
             var dbSet = new MockTruckDbSet();
@@ -86,10 +86,7 @@ namespace PracticalWerewolf.Tests.Stores
             dbSet.Add(new Truck() { TruckGuid = chosenGuid, Location = location, UsedCapacity = unit, MaxCapacity = unit, LicenseNumber = "James" });
             var store = GetTruckStoreWithDbSet(dbSet);
 
-            var truck = store.Get(chosenGuid);
-
-            Assert.IsNotNull(truck);
-            Assert.AreEqual(_trucks.ElementAt(0), truck);
+            var truck = store.Single(c => c.TruckGuid == chosenGuid);
         }
 
         [TestMethod]
@@ -104,13 +101,13 @@ namespace PracticalWerewolf.Tests.Stores
             var store = GetTruckStoreWithDbSet(dbSet);
 
             var newCapacity = new TruckCapacityUnit() { Mass = 24, Volume = 24, TruckCapacityUnitGuid = capacityGuid};
-            truck = store.Get(guid);
+            truck = store.Single(c => c.TruckGuid == guid);
             truck.MaxCapacity = newCapacity;
             truck.UsedCapacity = newCapacity;
             truck.LicenseNumber = "Matt";
             store.Update(truck);
 
-            var result = store.Get(guid);
+            var result = store.Single(c => c.TruckGuid == guid);
             Assert.AreEqual(guid, result.TruckGuid);
             Assert.AreEqual(newCapacity, result.MaxCapacity);
             Assert.AreEqual(newCapacity, result.UsedCapacity);
@@ -132,7 +129,7 @@ namespace PracticalWerewolf.Tests.Stores
             var newTruck = new Truck() { TruckGuid = Guid.NewGuid(), UsedCapacity = newCapacity, MaxCapacity = newCapacity,  LicenseNumber = "Not James"};
             store.Update(newTruck);
 
-            var result = store.Get(guid);
+            var result = store.Single(c => c.TruckGuid == guid);
             Assert.AreEqual(guid, result.TruckGuid);
             Assert.AreEqual(capacity, result.MaxCapacity);
             Assert.AreEqual(capacity, result.UsedCapacity);
@@ -160,9 +157,9 @@ namespace PracticalWerewolf.Tests.Stores
             var capacity = new TruckCapacityUnit() { Mass = 12, Volume = 12, TruckCapacityUnitGuid = Guid.NewGuid() };
             var capacityGuid = Guid.NewGuid();
             var truck = new Truck() { TruckGuid = guid, UsedCapacity = capacity, MaxCapacity = capacity, LicenseNumber =  "Cooper"};
-            store.Create(truck);
+            store.Insert(truck);
 
-            var result = store.Get(guid);
+            var result = store.Single(c => c.TruckGuid == guid);
             Assert.AreEqual(truck, result);
         }
 
@@ -173,7 +170,7 @@ namespace PracticalWerewolf.Tests.Stores
             var store = GetTruckStoreWithDbSet(dbSet);
 
             Truck truck = null;
-            store.Create(truck);
+            store.Insert(truck);
         }
 
 

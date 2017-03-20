@@ -404,26 +404,17 @@
     <Content Include="Views\Contractor\Unapproved.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\CivicAddressDb.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\CivicAddressDb.cshtml" />
-    <Content Include="Views\Contractor\Register.cshtml" />
-    <Content Include="Views\Contractor\Index.cshtml" />
-    <Content Include="Views\Contractor\Approve.cshtml" />
-    <Content Include="Views\Truck\Index.cshtml" />
-    <Content Include="Views\Truck\Details.cshtml" />
-    <Content Include="Views\Truck\Update.cshtml" />
-    <Content Include="Views\Truck\Create.cshtml" />
-    <Content Include="Views\Contractor\Register.cshtml" />
-    <Content Include="Views\Contractor\Index.cshtml" />
-    <Content Include="Views\Contractor\Approve.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\CivicAddressDb.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\CivicAddressDb.cshtml" />
     <Content Include="Views\Truck\Index.cshtml" />
     <Content Include="Views\Truck\Details.cshtml" />
     <Content Include="Views\Truck\Edit.cshtml" />
     <Content Include="Views\Truck\Create.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CivicAddressDb.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\CivicAddressDb.cshtml" />
     <Content Include="Views\Shared\_StatusMessage.cshtml" />
     <Content Include="Views\Contractor\_IndexPendingApproval.cshtml" />
     <Content Include="Views\Contractor\_IndexDeniedApproval.cshtml" />
     <Content Include="Views\Contractor\_IndexApproved.cshtml" />
+    <Content Include="Views\Truck\_TruckDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
