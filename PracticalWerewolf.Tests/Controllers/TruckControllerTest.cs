@@ -23,9 +23,9 @@ namespace PracticalWerewolf.Tests.Controllers
 
         private static IEnumerable<Truck> _trucks = new List<Truck>
         {
-            new Truck {TruckGuid = Guid.NewGuid(), CurrentCapacity = unit, MaxCapacity = unit, Location = location, LicenseNumber = "Hergedy1"},
-            new Truck {TruckGuid = Guid.NewGuid(), CurrentCapacity = unit, MaxCapacity = unit, Location = location, LicenseNumber = "Hergedy2"},
-            new Truck {TruckGuid = Guid.NewGuid(), CurrentCapacity = unit, MaxCapacity = unit, Location = location, LicenseNumber = "Hergedy3"}
+            new Truck {TruckGuid = Guid.NewGuid(), UsedCapacity = unit, MaxCapacity = unit, Location = location, LicenseNumber = "Hergedy1"},
+            new Truck {TruckGuid = Guid.NewGuid(), UsedCapacity = unit, MaxCapacity = unit, Location = location, LicenseNumber = "Hergedy2"},
+            new Truck {TruckGuid = Guid.NewGuid(), UsedCapacity = unit, MaxCapacity = unit, Location = location, LicenseNumber = "Hergedy3"}
         };
 
         [TestMethod]
@@ -73,7 +73,7 @@ namespace PracticalWerewolf.Tests.Controllers
             var truck = new Truck()
             {
                 TruckGuid = guid,
-                CurrentCapacity = capacity,
+                UsedCapacity = capacity,
                 MaxCapacity = capacity,
                 LicenseNumber = "James",
                 Location = location
@@ -133,7 +133,7 @@ namespace PracticalWerewolf.Tests.Controllers
             var truck = new Truck()
             {
                 TruckGuid = guid,
-                CurrentCapacity = capacity,
+                UsedCapacity = capacity,
                 MaxCapacity = capacity,
                 LicenseNumber = "Abbie",
                 Location = location
@@ -271,13 +271,15 @@ namespace PracticalWerewolf.Tests.Controllers
         }
 
         [TestMethod]
-        public void CreatePostback_NullTruckCapacity_HttpNotFound()
+        public void CreatePostback_InvalidTruckCapacity_HttpNotFound()
         {
             var guid = Guid.NewGuid();
             var truck = new TruckCreateViewModel()
             {
                 Guid = guid.ToString(),
-                LicenseNumber = "Jessee"
+                LicenseNumber = "Jessee",
+                Mass = -2,
+                Volume = -7
             };
             var truckService = new Mock<ITruckService>();
             var contractorService = new Mock<IContractorService>();

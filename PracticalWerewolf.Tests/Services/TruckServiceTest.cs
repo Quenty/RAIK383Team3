@@ -25,9 +25,9 @@ namespace PracticalWerewolf.Tests.Services
 
         private static IEnumerable<Truck> _trucks = new List<Truck>
         {
-            new Truck {TruckGuid = Guid.NewGuid(), CurrentCapacity = unit, MaxCapacity = unit, Location = location, LicenseNumber = "Hergedy1"},
-            new Truck {TruckGuid = Guid.NewGuid(), CurrentCapacity = unit, MaxCapacity = unit, Location = location, LicenseNumber = "Hergedy2"},
-            new Truck {TruckGuid = Guid.NewGuid(), CurrentCapacity = unit, MaxCapacity = unit, Location = location, LicenseNumber = "Hergedy3"}
+            new Truck {TruckGuid = Guid.NewGuid(), UsedCapacity = unit, MaxCapacity = unit, Location = location, LicenseNumber = "Hergedy1"},
+            new Truck {TruckGuid = Guid.NewGuid(), UsedCapacity = unit, MaxCapacity = unit, Location = location, LicenseNumber = "Hergedy2"},
+            new Truck {TruckGuid = Guid.NewGuid(), UsedCapacity = unit, MaxCapacity = unit, Location = location, LicenseNumber = "Hergedy3"}
         };
 
 
@@ -100,7 +100,7 @@ namespace PracticalWerewolf.Tests.Services
             var location = DbGeography.FromText(point);
             var capacity = new TruckCapacityUnit() { TruckCapacityUnitGuid = Guid.NewGuid(), Mass = 3.14, Volume = 7 };
             var newCapacity = new TruckCapacityUnit() { TruckCapacityUnitGuid = Guid.NewGuid(), Mass = 51, Volume = 7 };
-            var truck = new Truck() { TruckGuid = guid, CurrentCapacity = capacity, MaxCapacity = capacity, LicenseNumber = "James" };
+            var truck = new Truck() { TruckGuid = guid, UsedCapacity = capacity, MaxCapacity = capacity, LicenseNumber = "James", Location = location };
             dbSet.Add(truck);
             var truckService = GetTruckServiceWithDbSet(dbSet);
 
@@ -109,7 +109,7 @@ namespace PracticalWerewolf.Tests.Services
 
             var result = truckService.GetTruck(guid);
             Assert.AreEqual(guid, result.TruckGuid);
-            Assert.AreEqual(capacity, result.CurrentCapacity);
+            Assert.AreEqual(capacity, result.UsedCapacity);
             Assert.AreEqual(newCapacity, result.MaxCapacity);
             Assert.AreEqual("James", result.LicenseNumber);
             Assert.AreEqual(location, result.Location);
@@ -124,7 +124,7 @@ namespace PracticalWerewolf.Tests.Services
             var location = DbGeography.FromText(point);
             var capacity = new TruckCapacityUnit() { TruckCapacityUnitGuid = Guid.NewGuid(), Mass = 3.14, Volume = 7 };
             var newCapacity = new TruckCapacityUnit() { TruckCapacityUnitGuid = Guid.NewGuid(), Mass = 51, Volume = 7 };
-            dbSet.Add(new Truck() { TruckGuid = guid, CurrentCapacity = capacity, MaxCapacity = capacity,  LicenseNumber = "Abbie", Location = location });
+            dbSet.Add(new Truck() { TruckGuid = guid, UsedCapacity = capacity, MaxCapacity = capacity,  LicenseNumber = "Abbie", Location = location });
             var truckService = GetTruckServiceWithDbSet(dbSet);
 
             var newGuid = Guid.NewGuid();
@@ -133,7 +133,7 @@ namespace PracticalWerewolf.Tests.Services
 
             var truck = truckService.GetTruck(guid);
             Assert.AreEqual(guid, truck.TruckGuid);
-            Assert.AreEqual(capacity, truck.CurrentCapacity);
+            Assert.AreEqual(capacity, truck.UsedCapacity);
             Assert.AreEqual(capacity, truck.MaxCapacity);
             Assert.AreEqual("Abbie", truck.LicenseNumber);
             Assert.AreEqual(location, truck.Location);
@@ -148,7 +148,7 @@ namespace PracticalWerewolf.Tests.Services
             var point = String.Format("POINT({0} {1})", 3.14, 2.18);
             var location = DbGeography.FromText(point);
             var capacity = new TruckCapacityUnit() { TruckCapacityUnitGuid = Guid.NewGuid(), Mass = 3.14, Volume = 7 };
-            dbSet.Add(new Truck() { TruckGuid = guid, CurrentCapacity = capacity, MaxCapacity = capacity, LicenseNumber = "Matt" , Location = location});
+            dbSet.Add(new Truck() { TruckGuid = guid, UsedCapacity = capacity, MaxCapacity = capacity, LicenseNumber = "Matt" , Location = location});
             var truckService = GetTruckServiceWithDbSet(dbSet);
 
             Truck newTruck = null;
@@ -164,7 +164,7 @@ namespace PracticalWerewolf.Tests.Services
 
             var guid = Guid.NewGuid();
             var capacity = new TruckCapacityUnit() { TruckCapacityUnitGuid = Guid.NewGuid(), Mass = 3.14, Volume = 7 };
-            var truck = new Truck { TruckGuid = guid, MaxCapacity = capacity, CurrentCapacity = capacity, LicenseNumber = "Matt" };
+            var truck = new Truck { TruckGuid = guid, MaxCapacity = capacity, UsedCapacity = capacity, LicenseNumber = "Matt" };
             truckService.CreateTruck(truck);
 
             var result = truckService.GetTruck(guid);

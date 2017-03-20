@@ -114,9 +114,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
     <Compile Include="Services\TruckServiceTest.cs" />
+    <Compile Include="Services\ContractorServiceTest.cs" />
+    <Compile Include="Stores\DbContext\MockContractorDbSet.cs" />
     <Compile Include="Stores\DbContext\MockDbSet.cs" />
     <Compile Include="Stores\DbContext\MockTruckDbSet.cs" />
     <Compile Include="Stores\TruckStoreTest.cs" />
+    <Compile Include="Stores\ContractorStoreTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

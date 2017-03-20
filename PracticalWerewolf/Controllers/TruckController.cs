@@ -57,7 +57,7 @@ namespace PracticalWerewolf.Controllers
                     {
                         Guid = id,
                         LicenseNumber = truck.LicenseNumber,
-                        AvailableCapacity = truck.GetAvailableCapacity(),
+                        AvailableCapacity = truck.AvailableCapacity,
                         MaxCapacity = truck.MaxCapacity,
                         Lat = truck.Location.Latitude,
                         Long = truck.Location.Longitude
@@ -146,7 +146,7 @@ namespace PracticalWerewolf.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(TruckCreateViewModel returnedModel)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && returnedModel.LicenseNumber != null && returnedModel.Mass >= 0 && returnedModel.Volume >= 0)
             {
                 try
                 {
