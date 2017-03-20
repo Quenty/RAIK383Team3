@@ -45,14 +45,14 @@ namespace PracticalWerewolf.Models.Trucks
                 return new TruckCapacityUnit
                 {
                     TruckCapacityUnitGuid = Guid.NewGuid(),
-                    Mass = MaxCapacity.Mass - UsedCapacity.Mass,
-                    Volume = MaxCapacity.Volume - UsedCapacity.Volume
+                    Mass = MaxCapacity.Mass - CurrentCapacity.Mass,
+                    Volume = MaxCapacity.Volume - CurrentCapacity.Volume
                 };
             }
         }
 
         //TODO Calculate from orders associated with truck
-        public TruckCapacityUnit UsedCapacity { get; set; }
+        public TruckCapacityUnit CurrentCapacity { get; set; }
 
         [Required]
         [Display(Name = "Maximum Capacity")]
