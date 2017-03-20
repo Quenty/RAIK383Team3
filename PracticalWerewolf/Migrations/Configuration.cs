@@ -67,17 +67,21 @@ namespace PracticalWerewolf.Migrations
             );
 
             DbGeography location = DbGeography.FromText("POINT(15 15)");
-            Truck truck = new Truck { TruckGuid = Guid.NewGuid(),  Location = location, MaxCapacity = truckCapacityUnit, CurrentCapacity = truckCapacityUnit2 };
+            Truck truck = new Truck { TruckGuid = Guid.NewGuid(), LicenseNumber = "ABC123", Location = location, MaxCapacity = truckCapacityUnit, UsedCapacity = truckCapacityUnit2 };
             context.Truck.AddOrUpdate(
                 truck
                 );
 
-            ContractorInfo contractor = new ContractorInfo { ContractorInfoGuid = Guid.NewGuid(), IsApproved = true, IsAvailable = true, Truck = truck };
+
+
+            CivicAddressDb address = new CivicAddressDb { CivicAddressGuid = Guid.NewGuid(), StreetNumber = "640 N 14th St", Route = "Kauffman", City = "Lincoln", State = "NE", Country = "USA", RawInputAddress = "640 N 14h St. Lincoln NE 68508", ZipCode = "68508" };
+            ContractorInfo contractor = new ContractorInfo { ContractorInfoGuid = Guid.NewGuid(), ApprovalState = ContractorApprovalState.Approved, DriversLicenseId = "abc123", HomeAddress = address, IsAvailable = true, Truck = truck};
+
             context.ContractorInfo.AddOrUpdate(
                 contractor
-                );
-            CivicAddressDb address = new CivicAddressDb { CivicAddressGuid = Guid.NewGuid(), AddressLine1 = "640 N 14th St", Building = "Kauffman", City = "Lincoln", PostalCode = "68508", CountryRegion = "USA", StateProvince = "NE" };
-            OrderRequestInfo orderRequest = new OrderRequestInfo { OrderRequestInfoGuid = Guid.NewGuid(), Requester = customer, Size = truckCapacityUnit, RequestDate = DateTime.Now, DropOffAddress = address, PickUpAddress = address};
+            );
+
+            OrderRequestInfo orderRequest = new OrderRequestInfo { OrderRequestInfoGuid = Guid.NewGuid(), Requester = customer, Size = truckCapacityUnit, RequestDate = DateTime.Now, DropOffAddress = address, PickUpAddress = address };
             context.OrderRequestInfo.AddOrUpdate(
                 orderRequest
                 );

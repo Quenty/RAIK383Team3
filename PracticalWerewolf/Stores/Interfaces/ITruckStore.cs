@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace PracticalWerewolf.Stores.Interfaces
 {
-    public interface ITruckStore
+    public interface ITruckStore : IEntityStore<Truck>
     {
         //Get all Truck
-        List<Truck> Get();
+        IEnumerable<Truck> GetAllTrucks();
 
         //Get Truck by guid
         Truck Get(Guid guid);
@@ -22,21 +22,10 @@ namespace PracticalWerewolf.Stores.Interfaces
         IEnumerable<Truck> Get(IEnumerable<Guid> guids);
 
         //Add Truck
-        void Add(Truck truck);
-
-        //Batch Add Truck
-        void Add(IEnumerable<Truck> truckList);
+        void Create(Truck truck);
 
         //Update Truck
         void Update(Truck truck);
 
-        //Batch Update Truck
-        void Update(IEnumerable<Truck> truckList);
-
-        //Delete Truck
-        void Delete(Truck Truck);
-
-        //Batch DeleteTruck
-        void Delete(IEnumerable<Truck> truckList);
     }
 }

@@ -30,5 +30,6 @@ namespace PracticalWerewolf.Services.Interfaces
 
         // Depends upon ITruckStore.GetByCustomerInfoGuid
         Truck GetTruckByCustomerInfoGuid(Guid truckId);
+        
     }
 }

@@ -1,7 +1,6 @@
 ﻿using PracticalWerewolf.Models;
 using PracticalWerewolf.Models.UserInfos;
 using PracticalWerewolf.Stores.Interfaces;
-using PracticalWerewolf.Stores.Interfaces.Contexts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +8,13 @@ using System.Web;
 
 namespace PracticalWerewolf.Stores
 {
-    public class CustomerStore : ICustomerStore
+    public class CustomerStore : EntityStore<CustomerInfo>, ICustomerStore
     {
-        private IUserInfoDbContext context;
+        private readonly ApplicationDbContext context;
 
-        public CustomerStore(IUserInfoDbContext userInfoDbContext)
+        public CustomerStore(ApplicationDbContext context) : base(context.CustomerInfo)
         {
-            context = userInfoDbContext;
+            this.context = context;
         }
 
         public void Add(IEnumerable<CustomerInfo> customerInfoList)
