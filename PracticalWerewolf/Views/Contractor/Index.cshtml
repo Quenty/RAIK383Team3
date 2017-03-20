@@ -19,6 +19,15 @@ else
 {
     if (Model.ContractorInfo.ApprovalState == ContractorApprovalState.Pending)
     {
+        Html.RenderPartial("_IndexPendingApproval", Model);
+    }
+    else if (Model.ContractorInfo.ApprovalState == ContractorApprovalState.Denied)
+    {
+        Html.RenderPartial("_IndexDeniedApproval", Model);
+    }
+    else if (Model.ContractorInfo.ApprovalState == ContractorApprovalState.Approved)
+    {
+        Html.RenderPartial("_IndexApproved", Model);
         <div class="alert alert-info" role="alert"><span class="glyphicon glyphicon-ok-circle"></span> <strong>Approval pending!</strong> Your application pending approval by a manager. You'll receive an email.</div>
 
         <div class="jumbotron">

@@ -327,6 +327,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Images\igor-ovsyannykov-151127.jpg" />
+    <Content Include="Content\Images\lukas-budimaier-131294-small.jpg" />
     <Content Include="Content\Images\lukas-budimaier-131294.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -337,6 +338,8 @@
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\knockout-3.4.2.debug.js" />
+    <Content Include="Scripts\knockout-3.4.2.js" />
     <Content Include="Scripts\mapautocomplete.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -412,15 +415,18 @@
     <Content Include="Views\Contractor\Approve.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\CivicAddressDb.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\CivicAddressDb.cshtml" />
-    <Content Include="Views\Contractor\Register.cshtml" />
-    <Content Include="Views\Contractor\Index.cshtml" />
     <Content Include="Views\Truck\Index.cshtml" />
     <Content Include="Views\Truck\Details.cshtml" />
     <Content Include="Views\Truck\Edit.cshtml" />
     <Content Include="Views\Truck\Create.cshtml" />
+    <Content Include="Views\Shared\_StatusMessage.cshtml" />
+    <Content Include="Views\Contractor\_IndexPendingApproval.cshtml" />
+    <Content Include="Views\Contractor\_IndexDeniedApproval.cshtml" />
+    <Content Include="Views\Contractor\_IndexApproved.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Scripts\ViewModels\Contractor\" />
     <Folder Include="Views\Order\" />
   </ItemGroup>
   <ItemGroup>
