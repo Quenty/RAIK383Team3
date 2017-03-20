@@ -1,8 +1,6 @@
 ﻿using PracticalWerewolf.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using PracticalWerewolf.Models.Trucks;
 using System.Device.Location;
 using PracticalWerewolf.Stores.Interfaces;
@@ -14,11 +12,9 @@ namespace PracticalWerewolf.Services
     public class TruckService : ITruckService
     {
         private readonly ITruckStore TruckStore;
-        private readonly IUnitOfWork UnitOfWork;
 
-        public TruckService(ITruckStore TruckStore, IUnitOfWork UnitOfWork)
+        public TruckService(ITruckStore TruckStore)
         {
-            this.UnitOfWork = UnitOfWork;
             this.TruckStore = TruckStore;
         }
 
@@ -60,22 +56,12 @@ namespace PracticalWerewolf.Services
         {
             throw new NotImplementedException();
         }
-
-        public void UpdateTruck(Truck newTruck)
+        public void Update(Truck newTruck)
         {
-
-            var oldTruck = GetTruck(newTruck.TruckGuid);
-
-            var truck = new Truck
-            {
-                Location = oldTruck.Location,
-                TruckGuid = oldTruck.TruckGuid,
-                UsedCapacity = oldTruck.UsedCapacity,
-                MaxCapacity = oldTruck.MaxCapacity
-            };
-
-            TruckStore.Update(truck);
-            UnitOfWork.SaveChanges();
+            if (newTruck == null) throw new ArgumentNullException();
+            var oldTruck = TruckStore.Get(newTruck.TruckGuid);
+            oldTruck = newTruck;
+            TruckStore.Update(oldTruck);
         }
     }
 }

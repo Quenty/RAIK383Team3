@@ -36,8 +36,7 @@ namespace PracticalWerewolf.Tests.Services
         {
             var truckStore = new Mock<ITruckStore>();
             truckStore.Setup(x => x.GetAllTrucks()).Returns(new List<Truck>());
-            var unitOfWork = new Mock<IUnitOfWork>();
-            var truckService = new TruckService(truckStore.Object, unitOfWork.Object);
+            var truckService = new TruckService(truckStore.Object);
 
             var trucks = truckService.GetAllTrucks();
 
@@ -49,8 +48,7 @@ namespace PracticalWerewolf.Tests.Services
         {
             var truckStore = new Mock<ITruckStore>();
             truckStore.Setup(x => x.GetAllTrucks()).Returns(_trucks);
-            var unitOfWork = new Mock<IUnitOfWork>();
-            var truckService = new TruckService(truckStore.Object, unitOfWork.Object);
+            var truckService = new TruckService(truckStore.Object);
 
             var trucks = truckService.GetAllTrucks();
 
@@ -69,8 +67,7 @@ namespace PracticalWerewolf.Tests.Services
             
             var truckStore = new Mock<ITruckStore>();
             truckStore.Setup(x => x.Get(It.IsAny<Guid>())).Returns(_trucks.ElementAt(0));
-            var unitOfWork = new Mock<IUnitOfWork>();
-            var truckService = new TruckService(truckStore.Object, unitOfWork.Object);
+            var truckService = new TruckService(truckStore.Object);
 
             var truck = truckService.GetTruck(chosenGuid);
 
@@ -83,8 +80,7 @@ namespace PracticalWerewolf.Tests.Services
             var guid = Guid.NewGuid();
             var truckStore = new Mock<ITruckStore>();
             truckStore.Setup(x => x.Get(It.IsAny<Guid>())).Returns((Truck) null);
-            var unitOfWork = new Mock<IUnitOfWork>();
-            var truckService = new TruckService(truckStore.Object, unitOfWork.Object);
+            var truckService = new TruckService(truckStore.Object);
 
             var truck = truckService.GetTruck(guid);
 
@@ -105,7 +101,7 @@ namespace PracticalWerewolf.Tests.Services
             var truckService = GetTruckServiceWithDbSet(dbSet);
 
             truck.MaxCapacity = newCapacity;
-            truckService.UpdateTruck(truck);
+            truckService.Update(truck);
 
             var result = truckService.GetTruck(guid);
             Assert.AreEqual(guid, result.TruckGuid);
@@ -129,7 +125,7 @@ namespace PracticalWerewolf.Tests.Services
 
             var newGuid = Guid.NewGuid();
             var newTruck = new Truck() { TruckGuid = newGuid };
-            truckService.UpdateTruck(newTruck);
+            truckService.Update(newTruck);
 
             var truck = truckService.GetTruck(guid);
             Assert.AreEqual(guid, truck.TruckGuid);
@@ -152,7 +148,7 @@ namespace PracticalWerewolf.Tests.Services
             var truckService = GetTruckServiceWithDbSet(dbSet);
 
             Truck newTruck = null;
-            truckService.UpdateTruck(newTruck);
+            truckService.Update(newTruck);
         }
 
 
@@ -189,8 +185,7 @@ namespace PracticalWerewolf.Tests.Services
             var mockContext = new Mock<IDbSetFactory>();
             mockContext.Setup(x => x.CreateDbSet<Truck>()).Returns(dbSet);
             var store = new TruckStore(mockContext.Object);
-            var unitOfWork = new Mock<IUnitOfWork>();
-            var truckService = new TruckService(store, unitOfWork.Object);
+            var truckService = new TruckService(store);
 
             return truckService;
         }

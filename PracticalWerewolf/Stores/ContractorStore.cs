@@ -1,5 +1,6 @@
 ﻿using PracticalWerewolf.Application;
 using PracticalWerewolf.Models;
+using PracticalWerewolf.Models.Trucks;
 using PracticalWerewolf.Models.UserInfos;
 using PracticalWerewolf.Stores.Interfaces;
 using System;
@@ -26,6 +27,13 @@ namespace PracticalWerewolf.Stores
         void IEntityStore<ContractorInfo>.Update(ContractorInfo entity)
         {
             base.Update(entity);
+        }
+
+        public void UpdateContractorTruck(ContractorInfo contractor, Truck truck)
+        {
+            base.Update(contractor);
+            contractor.Truck = truck;
+            
         }
     }
 }

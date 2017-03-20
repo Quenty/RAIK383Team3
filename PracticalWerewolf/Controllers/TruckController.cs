@@ -3,73 +3,98 @@ using PracticalWerewolf.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using PracticalWerewolf.ViewModels;
-using PracticalWerewolf;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity;
 using PracticalWerewolf.Models;
+using PracticalWerewolf.Models.UserInfos;
+using PracticalWerewolf.Controllers.UnitOfWork;
 using System.Activities;
 using System.Data.Entity.Spatial;
 using PracticalWerewolf.Application;
 
 namespace PracticalWerewolf.Controllers
 {
+    [Authorize(Roles = "Employee, Contractor")]
     [RequireHttps]
     public class TruckController : Controller
     {
         ITruckService TruckService;
         IContractorService ContractorService;
-        ApplicationDbContext context;
+        IUnitOfWork UnitOfWork;
+        ApplicationUserManager UserManager;
 
-        public TruckController(ITruckService TruckService, IContractorService ContractorService, ApplicationDbContext context)
+        public TruckController(ITruckService TruckService, IContractorService ContractorService, IUnitOfWork UnitOfWork, ApplicationUserManager userManager)
         {
-            this.context = context;
+            this.UnitOfWork = UnitOfWork;
             this.TruckService = TruckService;
             this.ContractorService = ContractorService;
+            this.UserManager = userManager;
         }
 
         // GET: Truck
-        [Authorize(Roles = "Employee")]
         public ActionResult Index()
         {
+            String userName = System.Web.HttpContext.Current.User.Identity.Name;
+            ApplicationUser user = UserManager.FindByName(userName);
+            ApplicationUser fullUser = UserManager.Users.Where(u => u.Id == user.Id).FirstOrDefault();
+
             ViewBag.Message = "Trucks, Trucks and even more Trucks!";
             IEnumerable<Truck> trucks = TruckService.GetAllTrucks();
+            List<TruckDetailsViewModel> truckModels = new List<TruckDetailsViewModel>();
+
+            foreach (Truck item in trucks)
+            {
+                ContractorInfo contractor = ContractorService.GetContractorByTruckGuid(item.TruckGuid);
+                var toAdd = new TruckDetailsViewModel
+                {
+                    Guid = item.TruckGuid,
+                    LicenseNumber = item.LicenseNumber,
+                    Lat = item.Location.Latitude,
+                    Long = item.Location.Longitude,
+                    MaxCapacity = item.MaxCapacity,
+                    //AvailableCapacity = item.AvailableCapacity, //uncomment once we have actual data
+                    owner = UserManager.Users.Where(u => u.ContractorInfo.ContractorInfoGuid == contractor.ContractorInfoGuid).FirstOrDefault()
+                };
+                truckModels.Add(toAdd);
+            }
             var model = new TruckIndexViewModel
             {
-                Trucks = trucks
+                Trucks = truckModels,
+                HasTruck = fullUser.ContractorInfo.Truck != null ? true : false
             };
             return View(model);
         }
 
         // GET: Truck/Details/guid
-        [Authorize(Roles = "Contractor, Employee")]
         public ActionResult Details(string id)
         {
             if (!String.IsNullOrEmpty(id))
             {
                 var guid = new Guid(id);
                 Truck truck = TruckService.GetTruck(guid);
-                if(truck != null)
+                if (truck != null)
                 {
+                    ContractorInfo contractor = ContractorService.GetContractorByTruckGuid(guid);
+                    ApplicationUser owner = UserManager.Users.Where(u => u.ContractorInfo.ContractorInfoGuid == contractor.ContractorInfoGuid).FirstOrDefault();
                     var model = new TruckDetailsViewModel
                     {
-                        Guid = id,
+                        Guid = new Guid(id),
                         LicenseNumber = truck.LicenseNumber,
-                        AvailableCapacity = truck.AvailableCapacity,
+                        // AvailableCapacity = truck.AvailableCapacity, // uncomment once there's data for this
                         MaxCapacity = truck.MaxCapacity,
                         Lat = truck.Location.Latitude,
-                        Long = truck.Location.Longitude
+                        Long = truck.Location.Longitude,
+                        owner = owner
                     };
                     return View(model);
+
                 }
             }
             return HttpNotFound();
         }
 
         // GET: Truck/Edit/guid
-        [Authorize(Roles = "Contractor")]
         public ActionResult Edit(string id)
         {
             if (!String.IsNullOrEmpty(id))
@@ -81,7 +106,7 @@ namespace PracticalWerewolf.Controllers
                 {
                     var model = new TruckUpdateViewModel
                     {
-                        Guid = id,
+                        Guid = guid,
                         LicenseNumber = truck.LicenseNumber,
                         Volume = truck.MaxCapacity.Volume,
                         Mass = truck.MaxCapacity.Mass
@@ -97,95 +122,78 @@ namespace PracticalWerewolf.Controllers
         // POST: Truck/Update/guid
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Contractor")]
         public ActionResult Edit(String id, TruckUpdateViewModel model)
         {
-            try
+            if (ModelState.IsValid && model != null)
             {
-                if (ModelState.IsValid)
+                try
                 {
-                    var guid = new Guid(id);
-                    var newCapacity = new TruckCapacityUnit
+
+                    var oldTruck = TruckService.GetTruck(model.Guid);
+                    var NewCapacityModel = new TruckCapacityUnit
                     {
-                        TruckCapacityUnitGuid = new Guid(model.Guid),
+                        TruckCapacityUnitGuid = Guid.NewGuid(),
                         Volume = model.Volume,
                         Mass = model.Mass
                     };
                     var newModel = new Truck
                     {
-                        TruckGuid = new Guid(model.Guid),
-                        LicenseNumber = model.LicenseNumber,
-                        MaxCapacity = newCapacity
+                        TruckGuid = model.Guid,
+                        MaxCapacity = NewCapacityModel,
+                        UsedCapacity = oldTruck.UsedCapacity,
+                        Location = oldTruck.Location,
+                        LicenseNumber = model.LicenseNumber
                     };
-                    //Here's where the IdentityResultWouldBeNice
-                    TruckService.UpdateTruck(newModel);
-                    context.SaveChanges();
+                    TruckService.Update(newModel);
+                    UnitOfWork.SaveChanges();
                     return RedirectToAction("Index");
                 }
-                else
+                catch
                 {
-                    return View(model);
+                    //TODO log it
                 }
             }
-            catch
-            {
-                return View(model);
-            }
+            return View(model);
         }
 
         // GET: Truck/Create/
-        [Authorize(Roles = "Contractor")]
         public ActionResult Create()
         {
             return View();
         }
 
         // POST: Truck/Create/
-        [Authorize(Roles = "Contractor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(TruckCreateViewModel returnedModel)
         {
             if (ModelState.IsValid)
             {
-                try
+                var userName = System.Web.HttpContext.Current.User.Identity.Name;
+                var user = UserManager.FindByName(userName);
+                Guid TruckGuid = Guid.NewGuid();
+                var capacityUnit = new TruckCapacityUnit
                 {
-                    if(returnedModel.LicenseNumber != null && returnedModel.Mass >= 0 && returnedModel.Volume >= 0)
-                    {
-                        var capacityUnit = new TruckCapacityUnit
-                        {
-                            TruckCapacityUnitGuid = Guid.NewGuid(),
-                            Mass = returnedModel.Mass,
-                            Volume = returnedModel.Volume
-                        };
-                        var model = new Truck
-                        {
-                            TruckGuid = Guid.NewGuid(),
-                            LicenseNumber = returnedModel.LicenseNumber,
-                            MaxCapacity = capacityUnit,
-                            Location = CreatePoint(returnedModel.Lat, returnedModel.Long)
-                        };
-                        TruckService.CreateTruck(model);
-                        context.SaveChanges();
-                        return RedirectToAction("Index");
-
-                    }
-                }
-                catch
+                    TruckCapacityUnitGuid = Guid.NewGuid(),
+                    Mass = returnedModel.Mass,
+                    Volume = returnedModel.Volume
+                };
+                var model = new Truck
                 {
-                    //Log it
-                }
+                    TruckGuid = TruckGuid,
+                    LicenseNumber = returnedModel.LicenseNumber,
+                    MaxCapacity = capacityUnit,
+                    Location = LocationHelper.CreatePoint(returnedModel.Lat, returnedModel.Long)
+                };
+                TruckService.CreateTruck(model);
+                ContractorService.UpdateContractorTruck(model, user);
+                UnitOfWork.SaveChanges();
+                return RedirectToAction("Index");
             }
-            return HttpNotFound();
-
+            else
+            {
+                return RedirectToAction("Index", new { Message = "Could not create truck successfully." });
+            }
         }
-
-        private DbGeography CreatePoint(double lat, double lon, int srid = 4326)
-        {
-            string wkt = String.Format("POINT({0} {1})", lon, lat);
-
-            return DbGeography.PointFromText(wkt, srid);
-        }
-
     }
 }
