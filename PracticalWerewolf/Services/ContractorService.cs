@@ -34,8 +34,12 @@ namespace PracticalWerewolf.Services
         public void SetApproval(Guid contractorInfoGuid, ContractorApprovalState ApprovalState)
         {
             ContractorInfo info = _contractorStore.Single(c => c.ContractorInfoGuid == contractorInfoGuid, c => c.HomeAddress);
-            info.ApprovalState = ApprovalState;
-            _contractorStore.Update(info);
+
+            if(info != null)
+            {
+                info.ApprovalState = ApprovalState;
+                _contractorStore.Update(info);
+            }
         }
 
         public void SetIsAvailable(Guid contractorInfoGuid, bool isAvailable)

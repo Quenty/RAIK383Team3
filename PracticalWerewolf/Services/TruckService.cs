@@ -23,6 +23,7 @@ namespace PracticalWerewolf.Services
 
         public void CreateTruck(Truck truck)
         {
+            if (truck == null) throw new ArgumentNullException();
             TruckStore.Insert(truck);
         }
 
@@ -43,9 +44,13 @@ namespace PracticalWerewolf.Services
 
         public void UpdateCapacity(Guid truckGuid, TruckCapacityUnit capacity)
         {
+            if (capacity == null) throw new ArgumentNullException();
             var truck = GetTruck(truckGuid);
-            truck.MaxCapacity = capacity;
-            TruckStore.Update(truck);
+            if (truck != null)
+            {
+                truck.MaxCapacity = capacity;
+                TruckStore.Update(truck);
+            }
         }
 
         public void UpdateLicenseNumber(Guid truckGuid, string licenseNumber)

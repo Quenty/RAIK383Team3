@@ -72,7 +72,7 @@ namespace PracticalWerewolf.Tests.Stores
             dbSet.AddRange(_trucks);
             var store = GetTruckStoreWithDbSet(dbSet);
 
-            var truck = store.Find(c => c.TruckGuid == chosenGuid);
+            var truck = store.Single(c => c.TruckGuid == chosenGuid);
 
             Assert.IsNull(truck);
         }

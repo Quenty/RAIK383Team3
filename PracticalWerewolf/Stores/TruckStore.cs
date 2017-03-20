@@ -39,6 +39,7 @@ namespace PracticalWerewolf.Stores
 
         void IEntityStore<Truck>.Insert(Truck entity)
         {
+            if (entity == null) throw new ArgumentNullException();
             base.Insert(entity);
         }
 

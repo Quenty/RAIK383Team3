@@ -101,20 +101,26 @@ namespace PracticalWerewolf.Controllers
         {
             if (!String.IsNullOrEmpty(id))
             {
-
-                var guid = new Guid(id);
-                var truck = TruckService.GetTruck(guid);
-                var model = new TruckUpdateViewModel
+                try
                 {
-                    Guid = guid,
-                    LicenseNumber = truck.LicenseNumber,
-                    Volume = truck.MaxCapacity.Volume,
-                    Mass = truck.MaxCapacity.Mass
-                };
 
-                return View(model);
+                    var guid = new Guid(id);
+                    var truck = TruckService.GetTruck(guid);
+                    var model = new TruckUpdateViewModel
+                    {
+                        Guid = guid,
+                        LicenseNumber = truck.LicenseNumber,
+                        Volume = truck.MaxCapacity.Volume,
+                        Mass = truck.MaxCapacity.Mass
+                    };
+
+                    return View(model);
+                }
+                catch
+                {
+                    //TODO log it
+                }
             }
-
             return HttpNotFound();
         }
 
