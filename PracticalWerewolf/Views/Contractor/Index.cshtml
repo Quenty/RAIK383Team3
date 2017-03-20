@@ -1,15 +1,10 @@
 ﻿@using PracticalWerewolf.Models.UserInfos
 @model PracticalWerewolf.ViewModels.Contractor.ContractorIndexModel
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Contract";
 }
 
-@if (!String.IsNullOrEmpty(ViewBag.StatusMessage))
-{
-    <div class="alert alert-success" role="alert">
-        <p class="text-success"><span class="glyphicon glyphicon-gift"> </span> @ViewBag.StatusMessage</p>
-    </div>
-}
+@Html.Partial("_StatusMessage")
 
 
 @if (@Model.ContractorInfo == null)
@@ -24,39 +19,18 @@ else
 {
     if (Model.ContractorInfo.ApprovalState == ContractorApprovalState.Pending)
     {
-        <div class="alert alert-info" role="alert"><span class="glyphicon glyphicon-ok-circle"></span> <strong>Approval pending!</strong> Your application pending approval by a manager. You'll receive an email.</div>
-
-        <div class="jumbotron">
-            <h1>Contract pending</h1>
-            <p class="lead">While your contract is pending see how you can prepare for the job! </p>
-            <p><a href="#" class="btn btn-primary btn-lg">Read more &raquo;</a></p>
-        </div>
-
-        <div class="container">
-            <!-- Example row of columns -->
-            <div class="row">
-                <div class="col-md-4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
-                </div>
-                <div class="col-md-4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
-                </div>
-                <div class="col-md-4">
-                    <h2>Heading</h2>
-                    <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-                    <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
-                </div>
-            </div>
-
-            <hr>
-        </div>
+        Html.RenderPartial("_IndexPendingApproval", Model);
+    }
+    else if (Model.ContractorInfo.ApprovalState == ContractorApprovalState.Denied)
+    {
+        Html.RenderPartial("_IndexDeniedApproval", Model);
+    }
+    else if (Model.ContractorInfo.ApprovalState == ContractorApprovalState.Approved)
+    {
+        Html.RenderPartial("_IndexApproved", Model);
     }
     else
     {
-
+        <p>Internal server error. Unknown contractor state.</p>
     }
 }

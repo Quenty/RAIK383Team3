@@ -1,0 +1,6 @@
+﻿@if (!String.IsNullOrEmpty(ViewBag.StatusMessage))
+{
+    <div class="alert alert-success" role="alert">
+        <p class="text-success"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"> </span> @ViewBag.StatusMessage</p>
+    </div>
+}

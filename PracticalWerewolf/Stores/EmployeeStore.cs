@@ -10,11 +10,10 @@ namespace PracticalWerewolf.Stores
 {
     public class EmployeeStore : EntityStore<EmployeeInfo>, IEmployeeStore
     {
-        private readonly ApplicationDbContext context;
 
-        public EmployeeStore(ApplicationDbContext context) : base(context.EmployeeInfo)
+        public EmployeeStore(IDbSetFactory context) : base(context)
         {
-            this.context = context;
+            
         }
 
         public void Add(IEnumerable<EmployeeInfo> employeeInfoList)

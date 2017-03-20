@@ -4,13 +4,11 @@
     ViewBag.Title = "Apply as a contractor";
 }
 
-<h2>Apply</h2>
+<h2>Apply <small>Apply as a contractor</small></h2>
 
 @using (Html.BeginForm("Register", "Contractor", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
-    <h4>Apply as a contractor</h4>
-    <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <div class="form-group">
         @Html.LabelFor(model => model.DriversLicenseId, htmlAttributes: new { @class = "control-label col-md-2", placeholder = "Drivers license" })

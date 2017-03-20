@@ -7,17 +7,18 @@ using PracticalWerewolf.Models.Trucks;
 using System.Device.Location;
 using PracticalWerewolf.Stores.Interfaces;
 using PracticalWerewolf.Models;
+using PracticalWerewolf.Controllers.UnitOfWork;
 
 namespace PracticalWerewolf.Services
 {
     public class TruckService : ITruckService
     {
-        private ITruckStore TruckStore;
-        private ApplicationDbContext context;
+        private readonly ITruckStore TruckStore;
+        private readonly IUnitOfWork UnitOfWork;
 
-        public TruckService(ITruckStore TruckStore, ApplicationDbContext DbContext)
+        public TruckService(ITruckStore TruckStore, IUnitOfWork UnitOfWork)
         {
-            this.context = DbContext;
+            this.UnitOfWork = UnitOfWork;
             this.TruckStore = TruckStore;
         }
 
@@ -71,7 +72,7 @@ namespace PracticalWerewolf.Services
             };
 
             TruckStore.Update(truck);
-            context.SaveChanges();
+            UnitOfWork.SaveChanges();
         }
     }
 }
