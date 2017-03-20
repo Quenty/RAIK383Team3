@@ -72,6 +72,7 @@ namespace PracticalWerewolf.Stores
 
         public void Update(T entity)
         {
+            if (entity == null) throw new ArgumentNullException();
             _dbSetFactory.ChangeObjectState(entity, EntityState.Modified);
         }
 

@@ -5,6 +5,8 @@ using System.Linq;
 using System.Web;
 using PracticalWerewolf.Models.UserInfos;
 using PracticalWerewolf.Stores.Interfaces;
+using PracticalWerewolf.Models;
+using PracticalWerewolf.Models.Trucks;
 
 namespace PracticalWerewolf.Services
 {
@@ -17,6 +19,11 @@ namespace PracticalWerewolf.Services
             _contractorStore = store;
         }
 
+        public ContractorInfo GetContractorByTruckGuid(Guid guid)
+        {
+            return _contractorStore.Find(c => c.Truck.TruckGuid == guid).FirstOrDefault();
+        }
+
         public IEnumerable<ContractorInfo> GetUnapprovedContractors()
         {
             return _contractorStore.Find(c => c.ApprovalState == ContractorApprovalState.Pending);
@@ -25,14 +32,24 @@ namespace PracticalWerewolf.Services
         public void SetApproval(Guid contractorInfoGuid, ContractorApprovalState ApprovalState)
         {
             ContractorInfo info = _contractorStore.Single(c => c.ContractorInfoGuid == contractorInfoGuid, c => c.HomeAddress);
-            info.ApprovalState = ApprovalState;
-            _contractorStore.Update(info);
+
+            if(info != null)
+            {
+                info.ApprovalState = ApprovalState;
+                _contractorStore.Update(info);
+            }
             
         }
 
         public void SetIsAvailable(Guid contractorInfoGuid, bool isAvailable)
         {
             throw new NotImplementedException();
+        }
+
+        public void UpdateContractorTruck(Truck truck, ApplicationUser driver)
+        {
+            var contractor = _contractorStore.Find(c => c.ContractorInfoGuid == driver.ContractorInfo.ContractorInfoGuid).FirstOrDefault();
+            _contractorStore.UpdateContractorTruck(contractor, truck);
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PracticalWerewolf.Models.Trucks;
 
 namespace PracticalWerewolf.Services.Interfaces
 {
@@ -18,5 +19,9 @@ namespace PracticalWerewolf.Services.Interfaces
         void SetApproval(Guid contractorInfoGuid, ContractorApprovalState isApproved);
 
         IEnumerable<ContractorInfo> GetUnapprovedContractors();
+
+        ContractorInfo GetContractorByTruckGuid(Guid guid);
+
+        void UpdateContractorTruck(Truck truck, ApplicationUser user);
     }
 }
