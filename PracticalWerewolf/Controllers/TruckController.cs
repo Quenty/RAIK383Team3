@@ -125,23 +125,30 @@ namespace PracticalWerewolf.Controllers
         {
             if (ModelState.IsValid)
             {
-                var oldTruck = TruckService.GetTruck(model.Guid);
-                var NewCapacityModel = new TruckCapacityUnit
+                try
                 {
-                    TruckCapacityUnitGuid = Guid.NewGuid(),
-                    Volume = model.Volume,
-                    Mass = model.Mass
-                };
+                    var oldTruck = TruckService.GetTruck(model.Guid);
+                    var NewCapacityModel = new TruckCapacityUnit
+                    {
+                        TruckCapacityUnitGuid = Guid.NewGuid(),
+                        Volume = model.Volume,
+                        Mass = model.Mass
+                    };
 
-                TruckService.UpdateCapacity(model.Guid, NewCapacityModel);
-                TruckService.UpdateLicenseNumber(model.Guid, model.LicenseNumber);
-                
-                UnitOfWork.SaveChanges();
+                    TruckService.UpdateCapacity(model.Guid, NewCapacityModel);
+                    TruckService.UpdateLicenseNumber(model.Guid, model.LicenseNumber);
 
-                return RedirectToAction("Index");
+                    UnitOfWork.SaveChanges();
+
+                    return RedirectToAction("Index");
+
+                }
+                catch
+                {
+                    //TODO log it
+                }
             }
-            else
-                return View(model);
+            return View(model);
         }
 
         // GET: Truck/Create/

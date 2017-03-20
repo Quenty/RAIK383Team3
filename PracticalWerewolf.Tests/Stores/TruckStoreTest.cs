@@ -77,8 +77,8 @@ namespace PracticalWerewolf.Tests.Stores
             Assert.IsNull(truck);
         }
 
-        [TestMethod]
-        public void Get_MultipleMatchingTrucks_ReturnTruck()
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void Get_MultipleMatchingTrucks_ThrowException()
         {
             var chosenGuid = _trucks.ElementAt(0).TruckGuid;
             var dbSet = new MockTruckDbSet();
@@ -87,9 +87,6 @@ namespace PracticalWerewolf.Tests.Stores
             var store = GetTruckStoreWithDbSet(dbSet);
 
             var truck = store.Single(c => c.TruckGuid == chosenGuid);
-
-            Assert.IsNotNull(truck);
-            Assert.AreEqual(_trucks.ElementAt(0), truck);
         }
 
         [TestMethod]

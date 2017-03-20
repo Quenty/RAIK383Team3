@@ -64,10 +64,10 @@ namespace PracticalWerewolf.Tests.Services
         public void GetTruck_ExistingTruck_FindsTruck()
         {
             var chosenGuid = _trucks.ElementAt(0).TruckGuid;
-            
-            var truckStore = new Mock<ITruckStore>();
-            truckStore.Setup(x => x.Get(It.IsAny<Guid>())).Returns(_trucks.ElementAt(0));
-            var truckService = new TruckService(truckStore.Object);
+
+            var dbSet = new MockTruckDbSet();
+            dbSet.Add(_trucks.ElementAt(0));
+            var truckService = GetTruckServiceWithDbSet(dbSet);
 
             var truck = truckService.GetTruck(chosenGuid);
 
@@ -78,9 +78,9 @@ namespace PracticalWerewolf.Tests.Services
         public void GetTruck_NoTruckWithThatGuid_ReturnNull()
         {
             var guid = Guid.NewGuid();
-            var truckStore = new Mock<ITruckStore>();
-            truckStore.Setup(x => x.Get(It.IsAny<Guid>())).Returns((Truck) null);
-            var truckService = new TruckService(truckStore.Object);
+            var dbSet = new MockTruckDbSet();
+            dbSet.Add(_trucks.ElementAt(0));
+            var truckService = GetTruckServiceWithDbSet(dbSet);
 
             var truck = truckService.GetTruck(guid);
 
@@ -99,9 +99,8 @@ namespace PracticalWerewolf.Tests.Services
             var truck = new Truck() { TruckGuid = guid, UsedCapacity = capacity, MaxCapacity = capacity, LicenseNumber = "James", Location = location };
             dbSet.Add(truck);
             var truckService = GetTruckServiceWithDbSet(dbSet);
-
-            truck.MaxCapacity = newCapacity;
-            truckService.Update(truck);
+            
+            truckService.UpdateCapacity(guid, newCapacity);
 
             var result = truckService.GetTruck(guid);
             Assert.AreEqual(guid, result.TruckGuid);
@@ -125,7 +124,7 @@ namespace PracticalWerewolf.Tests.Services
 
             var newGuid = Guid.NewGuid();
             var newTruck = new Truck() { TruckGuid = newGuid };
-            truckService.Update(newTruck);
+            truckService.UpdateCapacity(newGuid, newCapacity);
 
             var truck = truckService.GetTruck(guid);
             Assert.AreEqual(guid, truck.TruckGuid);
@@ -147,8 +146,8 @@ namespace PracticalWerewolf.Tests.Services
             dbSet.Add(new Truck() { TruckGuid = guid, UsedCapacity = capacity, MaxCapacity = capacity, LicenseNumber = "Matt" , Location = location});
             var truckService = GetTruckServiceWithDbSet(dbSet);
 
-            Truck newTruck = null;
-            truckService.Update(newTruck);
+            TruckCapacityUnit newCapacity = null;
+            truckService.UpdateCapacity(guid, newCapacity);
         }
 
 
