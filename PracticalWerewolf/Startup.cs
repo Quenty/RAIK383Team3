@@ -15,3 +15,4 @@ namespace PracticalWerewolf
             ConfigureAuth(app);
         }
     }
+}
