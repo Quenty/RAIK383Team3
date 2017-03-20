@@ -56,6 +56,6 @@ namespace PracticalWerewolf.Models.Trucks
 
         [Required]
         [Display(Name = "Maximum Capacity")]
-        public TruckCapacityUnit MaxCapacity { get; set; }
+        public virtual TruckCapacityUnit MaxCapacity { get; set; }
     }
 }

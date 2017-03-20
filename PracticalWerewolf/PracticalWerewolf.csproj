@@ -412,6 +412,7 @@
     <Content Include="Views\Contractor\_IndexPendingApproval.cshtml" />
     <Content Include="Views\Contractor\_IndexDeniedApproval.cshtml" />
     <Content Include="Views\Contractor\_IndexApproved.cshtml" />
+    <Content Include="Views\Truck\_TruckDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -29,20 +29,20 @@ namespace PracticalWerewolf.Controllers
             this.UserManager = userManager;
         }
 
-        // GET: Truck
+        // TODO: Only show active trucks to employees
         public ActionResult Index()
         {
             String userName = System.Web.HttpContext.Current.User.Identity.Name;
             ApplicationUser user = UserManager.FindByName(userName);
             ApplicationUser fullUser = UserManager.Users.Where(u => u.Id == user.Id).FirstOrDefault();
 
-            ViewBag.Message = "Trucks, Trucks and even more Trucks!";
             IEnumerable<Truck> trucks = TruckService.GetAllTrucks();
             List<TruckDetailsViewModel> truckModels = new List<TruckDetailsViewModel>();
 
             foreach (Truck item in trucks)
             {
                 ContractorInfo contractor = ContractorService.GetContractorByTruckGuid(item.TruckGuid);
+                var owner = contractor == null ? null : UserManager.Users.Single(u => u.ContractorInfo.ContractorInfoGuid == contractor.ContractorInfoGuid);
                 var toAdd = new TruckDetailsViewModel
                 {
                     Guid = item.TruckGuid,
@@ -51,7 +51,7 @@ namespace PracticalWerewolf.Controllers
                     Long = item.Location.Longitude,
                     MaxCapacity = item.MaxCapacity,
                     //AvailableCapacity = item.AvailableCapacity, //TODO: uncomment once we have actual data
-                    owner = UserManager.Users.Where(u => u.ContractorInfo.ContractorInfoGuid == contractor.ContractorInfoGuid).FirstOrDefault()
+                    Owner = owner
                 };
                 truckModels.Add(toAdd);
             }
@@ -71,16 +71,16 @@ namespace PracticalWerewolf.Controllers
                 var guid = new Guid(id);
                 Truck truck = TruckService.GetTruck(guid);
                 ContractorInfo contractor = ContractorService.GetContractorByTruckGuid(guid);
-                ApplicationUser owner = UserManager.Users.Where(u => u.ContractorInfo.ContractorInfoGuid == contractor.ContractorInfoGuid).FirstOrDefault();
+                ApplicationUser owner = UserManager.Users.Single(u => u.ContractorInfo.ContractorInfoGuid == contractor.ContractorInfoGuid);
                 var model = new TruckDetailsViewModel
                 {
                     Guid = new Guid(id),
                     LicenseNumber = truck.LicenseNumber,
-                    // AvailableCapacity = truck.AvailableCapacity, // uncomment once there's data for this
+                    // AvailableCapacity = truck.AvailableCapacity, // TODO: uncomment once there's data for this
                     MaxCapacity = truck.MaxCapacity,
                     Lat = truck.Location.Latitude,
                     Long = truck.Location.Longitude,
-                    owner = owner
+                    Owner = owner
                 };
                 return View(model);
             }
