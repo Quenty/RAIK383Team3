@@ -93,7 +93,9 @@ namespace PracticalWerewolf.Controllers
                 return HttpNotFound(); // TODO: Use StatusMessage template and an Error enum
             }
             else
+            {
                 return HttpNotFound(); // TODO: Use StatusMessage template and an Error enum
+            }
         }
 
         // GET: Truck/Edit/guid
