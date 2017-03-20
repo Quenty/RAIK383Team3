@@ -6,6 +6,7 @@ using System.Device.Location;
 using PracticalWerewolf.Stores.Interfaces;
 using PracticalWerewolf.Models;
 using PracticalWerewolf.Controllers.UnitOfWork;
+using System.Data.Entity.Spatial;
 
 namespace PracticalWerewolf.Services
 {
@@ -18,16 +19,11 @@ namespace PracticalWerewolf.Services
             this.TruckStore = TruckStore;
         }
 
+        
+
         public void CreateTruck(Truck truck)
         {
-            try
-            {
-                TruckStore.Create(truck);
-            }
-            catch
-            {
-                throw new Exception();
-            }
+            TruckStore.Insert(truck);
         }
 
         public IEnumerable<Truck> GetAllTrucks()
@@ -35,9 +31,9 @@ namespace PracticalWerewolf.Services
             return TruckStore.GetAllTrucks();
         }
 
-        public Truck GetTruck(Guid truckId)
+        public Truck GetTruck(Guid truckGuid)
         {
-            return TruckStore.Get(truckId);
+            return TruckStore.Single(truck => truck.TruckGuid == truckGuid, truck => truck.MaxCapacity);
         }
 
         public Truck GetTruckByCustomerInfoGuid(Guid truckId)
@@ -45,20 +41,25 @@ namespace PracticalWerewolf.Services
             throw new NotImplementedException();
         }
 
-        public void UpdateTruckCurrentCapacity(Guid truckGuid, TruckCapacityUnit capacity)
+        public void UpdateCapacity(Guid truckGuid, TruckCapacityUnit capacity)
         {
-            throw new NotImplementedException();
+            var truck = GetTruck(truckGuid);
+            truck.MaxCapacity = capacity;
+            TruckStore.Update(truck);
         }
 
-        public void UpdateTruckLocation(Guid truckGuid, GeoCoordinate location)
+        public void UpdateLicenseNumber(Guid truckGuid, string licenseNumber)
         {
-            throw new NotImplementedException();
+            var truck = GetTruck(truckGuid);
+            truck.LicenseNumber = licenseNumber;
+            TruckStore.Update(truck);
         }
-        public void Update(Truck newTruck)
+
+        public void UpdateTruckLocation(Guid truckGuid, DbGeography location)
         {
-            var oldTruck = TruckStore.Get(newTruck.TruckGuid);
-            oldTruck = newTruck;
-            TruckStore.Update(oldTruck);
+            var truck = GetTruck(truckGuid);
+            truck.Location = location;
+            TruckStore.Update(truck);
         }
     }
 }

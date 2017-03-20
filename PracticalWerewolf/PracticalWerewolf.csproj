@@ -271,6 +271,10 @@
     <Compile Include="Migrations\201703161844073_Trucks-Are-Fun.Designer.cs">
       <DependentUpon>201703161844073_Trucks-Are-Fun.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703192234137_UpdateTruckCapacityUnitRequirements.cs" />
+    <Compile Include="Migrations\201703192234137_UpdateTruckCapacityUnitRequirements.Designer.cs">
+      <DependentUpon>201703192234137_UpdateTruckCapacityUnitRequirements.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CivicAddressDb.cs" />
     <Compile Include="Services\ContractorService.cs" />
@@ -324,6 +328,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Images\igor-ovsyannykov-151127.jpg" />
+    <Content Include="Content\Images\lukas-budimaier-131294-small.jpg" />
     <Content Include="Content\Images\lukas-budimaier-131294.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -407,6 +412,7 @@
     <Content Include="Views\Contractor\_IndexPendingApproval.cshtml" />
     <Content Include="Views\Contractor\_IndexDeniedApproval.cshtml" />
     <Content Include="Views\Contractor\_IndexApproved.cshtml" />
+    <Content Include="Views\Truck\_TruckDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -466,6 +472,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703161844073_Trucks-Are-Fun.resx">
       <DependentUpon>201703161844073_Trucks-Are-Fun.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703192234137_UpdateTruckCapacityUnitRequirements.resx">
+      <DependentUpon>201703192234137_UpdateTruckCapacityUnitRequirements.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1,0 +1,11 @@
+﻿@model PracticalWerewolf.ViewModels.TruckDetailsViewModel
+<tr>
+    <td>@Html.DisplayFor(m => m.Owner.Email)</td>
+    <td>@Html.DisplayFor(m => m.LicenseNumber)</td>
+    <td>@Html.DisplayFor(m => m.MaxCapacity.Volume)</td>
+    <td>@Html.DisplayFor(m => m.MaxCapacity.Mass)</td>
+    <td class="btn-group">
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Guid }, new { @class = "btn btn-default btn-xs" })
+        @Html.ActionLink("Details", "Details", new { id = Model.Guid }, new { @class = "btn btn-default btn-xs" })
+    </td>
+</tr>
