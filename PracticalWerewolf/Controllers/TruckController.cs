@@ -50,7 +50,7 @@ namespace PracticalWerewolf.Controllers
                     Lat = item.Location.Latitude,
                     Long = item.Location.Longitude,
                     MaxCapacity = item.MaxCapacity,
-                    //AvailableCapacity = item.AvailableCapacity, //uncomment once we have actual data
+                    //AvailableCapacity = item.AvailableCapacity, //TODO: uncomment once we have actual data
                     owner = UserManager.Users.Where(u => u.ContractorInfo.ContractorInfoGuid == contractor.ContractorInfoGuid).FirstOrDefault()
                 };
                 truckModels.Add(toAdd);
@@ -124,16 +124,9 @@ namespace PracticalWerewolf.Controllers
                     Mass = model.Mass
                 };
 
-                var newModel = new Truck
-                {
-                    TruckGuid = model.Guid,
-                    MaxCapacity = NewCapacityModel,
-                    UsedCapacity = oldTruck.UsedCapacity,
-                    Location = oldTruck.Location,
-                    LicenseNumber = model.LicenseNumber
-                };
-
-                TruckService.Update(newModel);
+                TruckService.UpdateCapacity(model.Guid, NewCapacityModel);
+                TruckService.UpdateLicenseNumber(model.Guid, model.LicenseNumber);
+                
                 UnitOfWork.SaveChanges();
 
                 return RedirectToAction("Index");

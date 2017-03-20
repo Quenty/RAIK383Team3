@@ -15,8 +15,8 @@ namespace PracticalWerewolf.Stores
     {
         public ContractorStore(IDbSetFactory context) : base(context)
         {
-            
         }
+
 
 
         ContractorInfo IEntityStore<ContractorInfo>.Single(System.Linq.Expressions.Expression<Func<ContractorInfo, bool>> where, params System.Linq.Expressions.Expression<Func<ContractorInfo, object>>[] includeProperties)
@@ -29,11 +29,10 @@ namespace PracticalWerewolf.Stores
             base.Update(entity);
         }
 
-        public void UpdateContractorTruck(ContractorInfo contractor, Truck truck)
+
+        ContractorInfo IEntityStore<ContractorInfo>.Find(object id)
         {
-            base.Update(contractor);
-            contractor.Truck = truck;
-            
+            return base.Find(id);
         }
     }
 }

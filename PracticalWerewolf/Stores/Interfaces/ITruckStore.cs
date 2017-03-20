@@ -14,18 +14,9 @@ namespace PracticalWerewolf.Stores.Interfaces
         //Get all Truck
         IEnumerable<Truck> GetAllTrucks();
 
-        //Get Truck by guid
-        Truck Get(Guid guid);
-
         Truck GetByCustomerInfoGuid(Guid customerInfo);
 
         //Batch Get Trucks by guid
         IEnumerable<Truck> Get(IEnumerable<Guid> guids);
-
-        //Add Truck
-        void Create(Truck truck);
-
-        //Update Truck
-        void Update(Truck entity);
     }
 }
