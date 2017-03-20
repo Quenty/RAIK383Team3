@@ -33,6 +33,14 @@ function initAutocomplete() {
             document.getElementById(component).disabled = false;
         }
     }
+
+    var input = document.getElementById('autocomplete');
+    google.maps.event.addDomListener(input, 'keydown', function (e) {
+        if (e.keyCode == 13) {
+            e.preventDefault();
+        }
+    });
+
 }
 
 function fillInAddress() {
@@ -41,8 +49,8 @@ function fillInAddress() {
     if (place)
     {
         for (var component in componentForm) {
-            document.getElementById(component).value = '';
             document.getElementById(component).disabled = false;
+            document.getElementById(component).value = '';
         }
 
         // Get each component of the address from the place details

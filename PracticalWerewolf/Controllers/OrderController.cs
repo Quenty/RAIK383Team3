@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace PracticalWerewolf.Controllers
 {
+    [RequireHttps]
     public class OrderController : Controller
     {
         IOrderRequestService OrderRequestService;

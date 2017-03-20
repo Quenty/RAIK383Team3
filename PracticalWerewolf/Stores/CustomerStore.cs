@@ -10,11 +10,9 @@ namespace PracticalWerewolf.Stores
 {
     public class CustomerStore : EntityStore<CustomerInfo>, ICustomerStore
     {
-        private readonly ApplicationDbContext context;
-
-        public CustomerStore(ApplicationDbContext context) : base(context.CustomerInfo)
+        public CustomerStore(IDbSetFactory context) : base(context)
         {
-            this.context = context;
+            
         }
 
         public void Add(IEnumerable<CustomerInfo> customerInfoList)

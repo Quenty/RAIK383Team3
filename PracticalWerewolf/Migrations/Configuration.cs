@@ -11,15 +11,17 @@ namespace PracticalWerewolf.Migrations
     using System.Device.Location;
     using System.Data.Entity.Spatial;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<PracticalWerewolf.Models.ApplicationDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<PracticalWerewolf.Application.ApplicationDbContext>
     {
         public Configuration()
         {
+            SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
+
             AutomaticMigrationsEnabled = false;
-            ContextKey = "PracticalWerewolf.Models.ApplicationDbContext";
+            ContextKey = "PracticalWerewolf.Application.ApplicationDbContext";
         }
 
-        protected override void Seed(PracticalWerewolf.Models.ApplicationDbContext context)
+        protected override void Seed(PracticalWerewolf.Application.ApplicationDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 
@@ -33,7 +35,6 @@ namespace PracticalWerewolf.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
-
             if (!context.Roles.Any())
             {
                 context.Roles.AddOrUpdate(
@@ -95,6 +96,7 @@ namespace PracticalWerewolf.Migrations
             context.Order.AddOrUpdate(
                 order
                 );
+
         }
     }
 }

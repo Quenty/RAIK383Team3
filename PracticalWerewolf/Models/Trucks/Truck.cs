@@ -14,8 +14,10 @@ namespace PracticalWerewolf.Models.Trucks
         [Key]
         public Guid TruckCapacityUnitGuid { get; set; }
         [Required]
+        [Display(Name = "Weight (lb)")]
         public double Mass { get; set; }
         [Required]
+        [Display(Name = "Volume (cubic ft)")]
         public double Volume { get; set; }
     }
 

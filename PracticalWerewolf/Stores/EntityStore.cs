@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PracticalWerewolf.Stores.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -7,13 +8,16 @@ using System.Web;
 
 namespace PracticalWerewolf.Stores
 {
-    public abstract class EntityStore<T> where T : class
+    // https://github.com/icotting/SETwitter/blob/9bf60ffe26cacee4b44b4a9eae48156bf2145949/ASP.NET/Twitter_Shared/Data/EntityRepository.cs
+    public abstract class EntityStore<T> : IEntityStore<T> where T : class
     {
         private readonly DbSet<T> _dbSet;
+        private readonly IDbSetFactory _dbSetFactory;
 
-        public EntityStore(DbSet<T> dbSet)
+        public EntityStore(IDbSetFactory dbSetFactory)
         {
-            _dbSet = dbSet;
+            _dbSet = dbSetFactory.CreateDbSet<T>();
+            _dbSetFactory = dbSetFactory;
         }
 
         #region IRepository<T> Members
@@ -56,9 +60,26 @@ namespace PracticalWerewolf.Stores
             return query.FirstOrDefault(where);
         }
 
+        public void Delete(T entity)
+        {
+            _dbSetFactory.ChangeObjectState(entity, EntityState.Deleted);
+        }
+
         public void Insert(T entity)
         {
             _dbSet.Add(entity);
+        }
+
+        public void Update(T entity)
+        {
+            if (entity == null) throw new ArgumentNullException();
+            _dbSetFactory.ChangeObjectState(entity, EntityState.Modified);
+        }
+
+        public T Refresh(T entity)
+        {
+            _dbSetFactory.RefreshEntity(ref entity);
+            return entity;
         }
 
         #endregion
