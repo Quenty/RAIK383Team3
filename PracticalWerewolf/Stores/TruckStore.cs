@@ -33,7 +33,7 @@ namespace PracticalWerewolf.Stores
 
         public Truck GetByCustomerInfoGuid(Guid customerInfo)
         {
-            return base.Find(guid);
+            return base.Find(customerInfo);
         }
 
         void IEntityStore<Truck>.Insert(Truck entity)
