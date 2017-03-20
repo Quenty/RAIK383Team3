@@ -40,7 +40,6 @@ namespace PracticalWerewolf.Services
 
         public void SetIsAvailable(Guid contractorInfoGuid, bool isAvailable)
         {
-            throw new NotImplementedException();
         }
 
         public void UpdateContractorTruck(Truck truck, ApplicationUser driver)

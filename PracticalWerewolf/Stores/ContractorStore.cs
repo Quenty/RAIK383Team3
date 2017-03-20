@@ -29,10 +29,20 @@ namespace PracticalWerewolf.Stores
             base.Update(entity);
         }
 
-
-        ContractorInfo IEntityStore<ContractorInfo>.Find(object id)
+        public ContractorStore(IDbSetFactory context) : base(context)
         {
-            return base.Find(id);
+            
+        }
+
+
+        ContractorInfo IEntityStore<ContractorInfo>.Single(System.Linq.Expressions.Expression<Func<ContractorInfo, bool>> where, params System.Linq.Expressions.Expression<Func<ContractorInfo, object>>[] includeProperties)
+        {
+            return base.Single(where, includeProperties);
+        }
+
+        void IEntityStore<ContractorInfo>.Update(ContractorInfo entity)
+        {
+            base.Update(entity);
         }
     }
 }
