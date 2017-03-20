@@ -9,6 +9,7 @@ using PracticalWerewolf.ViewModels;
 using PracticalWerewolf;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity;
+using PracticalWerewolf.Controllers.UnitOfWork;
 
 namespace PracticalWerewolf.Controllers
 {
@@ -17,11 +18,13 @@ namespace PracticalWerewolf.Controllers
     {
         ITruckService TruckService;
         IContractorService ContractorService;
+        IUnitOfWork UnitOfWork;
 
-        public TruckController(ITruckService TruckService, IContractorService ContractorService)
+        public TruckController(ITruckService TruckService, IContractorService ContractorService, IUnitOfWork UnitOfWork)
         {
             this.TruckService = TruckService;
             this.ContractorService = ContractorService;
+            this.UnitOfWork = UnitOfWork;
         }
 
         // GET: Truck
