@@ -9,22 +9,21 @@ using System.Web.Mvc;
 using PracticalWerewolf.ViewModels;
 using System.Linq;
 using System.Data.Entity.Spatial;
-using PracticalWerewolf.Models;
-using PracticalWerewolf.Application;
 using PracticalWerewolf.Controllers.UnitOfWork;
-using System.Web;
-using System.Security.Principal;
-using System.Security.Claims;
 using Microsoft.AspNet.Identity;
+using PracticalWerewolf.Application;
+using PracticalWerewolf.Tests.Stores.DbContext;
+using PracticalWerewolf.Models;
+using PracticalWerewolf.Models.UserInfos;
+using System.Threading.Tasks;
 
 namespace PracticalWerewolf.Tests.Controllers
 {
     [TestClass]
-    public class TruckControllerTest
+    public class TruckControllerTest : ControllerTest
     {
         private static TruckCapacityUnit unit = new TruckCapacityUnit { TruckCapacityUnitGuid = Guid.NewGuid() };
-        private static string point = String.Format("POINT({0} {1})", 3.14, 2.18);
-        private static DbGeography location = DbGeography.FromText(point);
+        private static DbGeography location = LocationHelper.CreatePoint(3.14, 2.18);
 
         private static IEnumerable<Truck> _trucks = new List<Truck>
         {
@@ -34,51 +33,141 @@ namespace PracticalWerewolf.Tests.Controllers
         };
 
         //TODO: Fix these
-        /*
+
         [TestMethod]
         public void Index_NoTrucks_TestViewModel()
         {
+            var email = "Example@example.com";
+            var guid = Guid.NewGuid();
+            var user = new ApplicationUser() { Id = guid.ToString(), ContractorInfo = new ContractorInfo(), UserName = email };
+            var userDbSet = new MockUserDbSet();
+            userDbSet.Add(user);
+
             var truckService = new Mock<ITruckService>();
             var contractorService = new Mock<IContractorService>();
             truckService.Setup(x => x.GetAllTrucks()).Returns(new List<Truck>());
             var unitOfWork = new Mock<IUnitOfWork>();
-            var userManager = GetMockApplicationUserManager();
-            userManager.Setup(x => x.FindByName(It.IsAny<string>())).Returns()
-            var controller = new TruckController(truckService.Object, contractorService.Object, unitOfWork.Object, userManager.Object);
+            var userManager = GetApplicationUserManager(userDbSet);
+
+            var controller = new TruckController(truckService.Object, contractorService.Object, unitOfWork.Object, userManager);
+            var principal = GetMockUser(email);
+            var context = GetMockControllerContext(principal);
+            controller.ControllerContext = context;
 
             var result = controller.Index() as ViewResult;
             var model = result.Model as TruckIndexViewModel;
 
             Assert.IsNotNull(model);
             Assert.AreEqual(0, model.Trucks.Count());
+            Assert.AreEqual(false, model.HasTruck);
         }
 
         [TestMethod]
         public void Index_ThreeTrucks_TestViewModel()
         {
+            var email = "Example@example.com";
+            var guid = Guid.NewGuid();
+            var user = new ApplicationUser() { Id = guid.ToString(), ContractorInfo = new ContractorInfo() { Truck = new Truck()}, UserName = email };
+            var userDbSet = new MockUserDbSet();
+            userDbSet.Add(user);
+
             var truckService = new Mock<ITruckService>();
             var contractorService = new Mock<IContractorService>();
             truckService.Setup(x => x.GetAllTrucks()).Returns(_trucks);
-            var context = new Mock<ApplicationDbContext>();
-            var controller = new TruckController(truckService.Object, contractorService.Object, context.Object);
+            var unitOfWork = new Mock<IUnitOfWork>();
+            var userManager = GetApplicationUserManager(userDbSet);
+            var controller = new TruckController(truckService.Object, contractorService.Object, unitOfWork.Object, userManager);
+            var principal = GetMockUser(email);
+            var context = GetMockControllerContext(principal);
+            controller.ControllerContext = context;
 
             var result = controller.Index() as ViewResult;
             var model = result.Model as TruckIndexViewModel;
 
             Assert.IsNotNull(model);
             Assert.AreEqual(3, model.Trucks.Count());
-            Assert.IsTrue(model.Trucks.Contains(_trucks.ElementAt(0)));
-            Assert.IsTrue(model.Trucks.Contains(_trucks.ElementAt(1)));
-            Assert.IsTrue(model.Trucks.Contains(_trucks.ElementAt(2)));
-        }
-        */
+            foreach(var truck in _trucks)
+            {
+                var truckModel = model.Trucks.Single(x => x.Guid.Equals(truck.TruckGuid));
+                Assert.IsNotNull(truckModel);
+                Assert.AreEqual(truck.LicenseNumber, truckModel.LicenseNumber);
+                Assert.AreEqual(truck.MaxCapacity, truckModel.MaxCapacity);
+                Assert.AreEqual(truck.Location.Latitude, truckModel.Lat);
+                Assert.AreEqual(truck.Location.Longitude, truckModel.Long);
+            }
 
+            Assert.AreEqual(true, model.HasTruck);
+        }
+
+        [TestMethod]
+        public void Index_EmployeeNoTrucks_NoTrucks()
+        {
+            var email = "Example@example.com";
+            var guid = Guid.NewGuid();
+            var user = new ApplicationUser() { Id = guid.ToString(), EmployeeInfo = new EmployeeInfo(), UserName = email };
+            var userDbSet = new MockUserDbSet();
+            userDbSet.Add(user);
+
+            var truckService = new Mock<ITruckService>();
+            var contractorService = new Mock<IContractorService>();
+            truckService.Setup(x => x.GetAllTrucks()).Returns(new List<Truck>());
+            var unitOfWork = new Mock<IUnitOfWork>();
+            var userManager = GetApplicationUserManager(userDbSet);
+
+            var controller = new TruckController(truckService.Object, contractorService.Object, unitOfWork.Object, userManager);
+            var principal = GetMockUser(email);
+            var context = GetMockControllerContext(principal);
+            controller.ControllerContext = context;
+
+            var result = controller.Index() as ViewResult;
+            var model = result.Model as TruckIndexViewModel;
+
+            Assert.IsNotNull(model);
+            Assert.AreEqual(0, model.Trucks.Count());
+            Assert.AreEqual(false, model.HasTruck);
+        }
+
+        [TestMethod]
+        public void Index_EmployeeThreeTrucks_ThreeTrucks()
+        {
+            var email = "Example@example.com";
+            var guid = Guid.NewGuid();
+            var user = new ApplicationUser() { Id = guid.ToString(), EmployeeInfo = new EmployeeInfo(), UserName = email };
+            var userDbSet = new MockUserDbSet();
+            userDbSet.Add(user);
+
+            var truckService = new Mock<ITruckService>();
+            var contractorService = new Mock<IContractorService>();
+            truckService.Setup(x => x.GetAllTrucks()).Returns(_trucks);
+            var unitOfWork = new Mock<IUnitOfWork>();
+            var userManager = GetApplicationUserManager(userDbSet);
+            var controller = new TruckController(truckService.Object, contractorService.Object, unitOfWork.Object, userManager);
+            var principal = GetMockUser(email);
+            var context = GetMockControllerContext(principal);
+            controller.ControllerContext = context;
+
+            var result = controller.Index() as ViewResult;
+            var model = result.Model as TruckIndexViewModel;
+
+            Assert.IsNotNull(model);
+            Assert.AreEqual(3, model.Trucks.Count());
+            foreach (var truck in _trucks)
+            {
+                var truckModel = model.Trucks.Single(x => x.Guid.Equals(truck.TruckGuid));
+                Assert.IsNotNull(truckModel);
+                Assert.AreEqual(truck.LicenseNumber, truckModel.LicenseNumber);
+                Assert.AreEqual(truck.MaxCapacity, truckModel.MaxCapacity);
+                Assert.AreEqual(truck.Location.Latitude, truckModel.Lat);
+                Assert.AreEqual(truck.Location.Longitude, truckModel.Long);
+            }
+
+            Assert.AreEqual(false, model.HasTruck);
+        }
 
         [TestMethod]
         public void Details_OneTruckValidId_ExpectedOutput()
         {
-            var point = String.Format("POINT({0} {1})", 3.14, 2.18);
-            var location = DbGeography.FromText(point);
+            var location = LocationHelper.CreatePoint(3.14, 2.18);
             var capacity = new TruckCapacityUnit() { Mass = 12, Volume = 12, TruckCapacityUnitGuid = Guid.NewGuid() };
             var guid = Guid.NewGuid();
             var truck = new Truck()
@@ -102,8 +191,8 @@ namespace PracticalWerewolf.Tests.Controllers
             Assert.IsNotNull(model);
             Assert.AreEqual(model.Guid, guid);
             Assert.AreEqual(model.MaxCapacity, capacity);
-            Assert.AreEqual(model.Lat, 2.18);
-            Assert.AreEqual(model.Long, 3.14);
+            Assert.AreEqual(model.Lat, 3.14);
+            Assert.AreEqual(model.Long, 2.18);
             Assert.AreEqual("James", model.LicenseNumber);
             //Assert.IsNotNull(model.AvailableCapacity);
         }
@@ -140,8 +229,7 @@ namespace PracticalWerewolf.Tests.Controllers
         [TestMethod]
         public void Edit_OneTruck_ValidOutput()
         {
-            var point = String.Format("POINT({0} {1})", 3.14, 2.18);
-            var location = DbGeography.FromText(point);
+            var location = LocationHelper.CreatePoint(3.14, 2.18);
             var capacity = new TruckCapacityUnit() { Mass = 12, Volume = 12, TruckCapacityUnitGuid = Guid.NewGuid() };
             var guid = Guid.NewGuid();
             var truck = new Truck()
@@ -249,13 +337,10 @@ namespace PracticalWerewolf.Tests.Controllers
             Assert.IsNotNull(result);
         }
 
-        //TODO: Fix this
-        /*
         [TestMethod]
         public void CreatePostback_ValidTruck_TestItWorks()
         {
-            var point = String.Format("POINT({0} {1})", 3.14, 2.18);
-            var location = DbGeography.FromText(point);
+            var location = LocationHelper.CreatePoint(3.14, 2.18);
             var capacity = new TruckCapacityUnit() { Mass = 12, Volume = 12, TruckCapacityUnitGuid = Guid.NewGuid() };
             var guid = Guid.NewGuid();
 
@@ -273,6 +358,10 @@ namespace PracticalWerewolf.Tests.Controllers
             var unitOfWork = new Mock<IUnitOfWork>();
             var userManager = GetMockApplicationUserManager();
             var controller = new TruckController(truckService.Object, contractorService.Object, unitOfWork.Object, userManager.Object);
+            var email = "Example@example.com";
+            var principal = GetMockUser(email);
+            var context = GetMockControllerContext(principal);
+            controller.ControllerContext = context;
 
             var result = controller.Create(createModel) as RedirectToRouteResult;
 
@@ -289,10 +378,15 @@ namespace PracticalWerewolf.Tests.Controllers
             var unitOfWork = new Mock<IUnitOfWork>();
             var userManager = GetMockApplicationUserManager();
             var controller = new TruckController(truckService.Object, contractorService.Object, unitOfWork.Object, userManager.Object);
+            var email = "Example@example.com";
+            var principal = GetMockUser(email);
+            var context = GetMockControllerContext(principal);
+            controller.ControllerContext = context;
 
-            var result = controller.Create(truck);
+            var result = controller.Create(truck) as RedirectToRouteResult;
 
-            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Index", result.RouteValues["action"]); ;
         }
 
         [TestMethod]
@@ -311,10 +405,15 @@ namespace PracticalWerewolf.Tests.Controllers
             var unitOfWork = new Mock<IUnitOfWork>();
             var userManager = GetMockApplicationUserManager();
             var controller = new TruckController(truckService.Object, contractorService.Object, unitOfWork.Object, userManager.Object);
+            var email = "Example@example.com";
+            var principal = GetMockUser(email);
+            var context = GetMockControllerContext(principal);
+            controller.ControllerContext = context;
 
-            var result = controller.Create(truck);
+            var result = controller.Create(truck) as RedirectToRouteResult;
 
-            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Index", result.RouteValues["action"]);
         }
 
         [TestMethod]
@@ -334,51 +433,15 @@ namespace PracticalWerewolf.Tests.Controllers
             var unitOfWork = new Mock<IUnitOfWork>();
             var userManager = GetMockApplicationUserManager();
             var controller = new TruckController(truckService.Object, contractorService.Object, unitOfWork.Object, userManager.Object);
+            var email = "Example@example.com";
+            var principal = GetMockUser(email);
+            var context = GetMockControllerContext(principal);
+            controller.ControllerContext = context;
 
-            var result = controller.Create(truck);
+            var result = controller.Create(truck) as RedirectToRouteResult;
 
-            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Index", result.RouteValues["action"]);
         }
-
-    */
-
-        public static Mock<ApplicationUserManager> GetMockApplicationUserManager()
-        {
-            var userStore = new Mock<IUserStore<ApplicationUser>>();
-            return new Mock<ApplicationUserManager>(userStore.Object);
-        }
-
-        public static GenericPrincipal GetMockUser(string id)
-        {
-            var identity = new GenericIdentity("");
-            List<Claim> claims = new List<Claim>(){
-                    new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name", id),
-                    new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier", id)
-            };
-            identity.AddClaims(claims);
-            var principal = new GenericPrincipal(identity, new string[0]);
-
-            return principal;
-        }
-
-        public static IPrincipal GetMockUserNullId()
-        {
-            var identity = new Mock<IIdentity>();
-            var user = new Mock<IPrincipal>();
-            user.Setup(x => x.Identity).Returns(identity.Object);
-
-            return user.Object;
-        }
-
-        public static ControllerContext GetMockControllerContext(IPrincipal principal)
-        {
-            var httpContext = new Mock<HttpContextBase>();
-            httpContext.Setup(x => x.User).Returns(principal);
-            var context = new Mock<ControllerContext>();
-            context.Setup(x => x.HttpContext).Returns(httpContext.Object);
-
-            return context.Object;
-        }
-
     }
 }

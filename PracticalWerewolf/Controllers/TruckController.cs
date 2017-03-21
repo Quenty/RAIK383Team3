@@ -35,9 +35,8 @@ namespace PracticalWerewolf.Controllers
         // TODO: Only show active trucks to employees
         public ActionResult Index()
         {
-            String userName = System.Web.HttpContext.Current.User.Identity.Name;
+            String userName = User.Identity.Name;
             ApplicationUser user = UserManager.FindByName(userName);
-            ApplicationUser fullUser = UserManager.Users.Where(u => u.Id == user.Id).FirstOrDefault();
 
             IEnumerable<Truck> trucks = TruckService.GetAllTrucks();
             List<TruckDetailsViewModel> truckModels = new List<TruckDetailsViewModel>();
@@ -58,10 +57,18 @@ namespace PracticalWerewolf.Controllers
                 };
                 truckModels.Add(toAdd);
             }
+
+            bool hasTruck = false;
+            if(user.ContractorInfo != null && user.ContractorInfo.Truck != null)
+            {
+                hasTruck = true;
+            }
+
             var model = new TruckIndexViewModel
             {
                 Trucks = truckModels,
-                HasTruck = fullUser.ContractorInfo.Truck != null ? true : false
+                //Do we even need this?
+                HasTruck = hasTruck
             };
             return View(model);
         }
@@ -172,31 +179,36 @@ namespace PracticalWerewolf.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userName = System.Web.HttpContext.Current.User.Identity.Name;
-                var user = UserManager.FindByName(userName);
-                Guid TruckGuid = Guid.NewGuid();
-                var capacityUnit = new TruckCapacityUnit
+                try
                 {
-                    TruckCapacityUnitGuid = Guid.NewGuid(),
-                    Mass = returnedModel.Mass,
-                    Volume = returnedModel.Volume
-                };
-                var model = new Truck
+                    var userName = User.Identity.Name;
+                    var user = UserManager.FindByName(userName);
+                    Guid TruckGuid = Guid.NewGuid();
+                    var capacityUnit = new TruckCapacityUnit
+                    {
+                        TruckCapacityUnitGuid = Guid.NewGuid(),
+                        Mass = returnedModel.Mass,
+                        Volume = returnedModel.Volume
+                    };
+                    var model = new Truck
+                    {
+                        TruckGuid = TruckGuid,
+                        LicenseNumber = returnedModel.LicenseNumber,
+                        MaxCapacity = capacityUnit,
+                        Location = LocationHelper.CreatePoint(returnedModel.Lat, returnedModel.Long)
+                    };
+                    TruckService.CreateTruck(model);
+                    ContractorService.UpdateContractorTruck(model, user);
+                    UnitOfWork.SaveChanges();
+                    return RedirectToAction("Index");
+
+                }
+                catch
                 {
-                    TruckGuid = TruckGuid,
-                    LicenseNumber = returnedModel.LicenseNumber,
-                    MaxCapacity = capacityUnit,
-                    Location = LocationHelper.CreatePoint(returnedModel.Lat, returnedModel.Long)
-                };
-                TruckService.CreateTruck(model);
-                ContractorService.UpdateContractorTruck(model, user);
-                UnitOfWork.SaveChanges();
-                return RedirectToAction("Index");
+                    //TODO: Log it
+                }
             }
-            else
-            {
-                return RedirectToAction("Index", new { Message = "Could not create truck successfully." });
-            }
+            return RedirectToAction("Index", new { Message = "Could not create truck successfully." });
         }
     }
 }
