@@ -32,8 +32,6 @@ namespace PracticalWerewolf.Tests.Controllers
             new Truck {TruckGuid = Guid.NewGuid(), UsedCapacity = unit, MaxCapacity = unit, Location = location, LicenseNumber = "Hergedy3"}
         };
 
-        //TODO: Fix these
-
         [TestMethod]
         public void Index_NoTrucks_TestViewModel()
         {
