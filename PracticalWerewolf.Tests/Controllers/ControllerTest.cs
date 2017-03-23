@@ -48,6 +48,7 @@ namespace PracticalWerewolf.Tests.Controllers
             return new ApplicationUserManager(userStore.Object);
         }
 
+        //This is the only way I could get mocking the user to work (getting the name, id, email, etc)
         public static GenericPrincipal GetMockUser(string id)
         {
             var identity = new GenericIdentity(id);

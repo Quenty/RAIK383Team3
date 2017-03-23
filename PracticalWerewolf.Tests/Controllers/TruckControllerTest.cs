@@ -57,7 +57,6 @@ namespace PracticalWerewolf.Tests.Controllers
 
             Assert.IsNotNull(model);
             Assert.AreEqual(0, model.Trucks.Count());
-            Assert.AreEqual(false, model.HasTruck);
         }
 
         [TestMethod]
@@ -93,8 +92,6 @@ namespace PracticalWerewolf.Tests.Controllers
                 Assert.AreEqual(truck.Location.Latitude, truckModel.Lat);
                 Assert.AreEqual(truck.Location.Longitude, truckModel.Long);
             }
-
-            Assert.AreEqual(true, model.HasTruck);
         }
 
         [TestMethod]
@@ -122,7 +119,6 @@ namespace PracticalWerewolf.Tests.Controllers
 
             Assert.IsNotNull(model);
             Assert.AreEqual(0, model.Trucks.Count());
-            Assert.AreEqual(false, model.HasTruck);
         }
 
         [TestMethod]
@@ -158,8 +154,6 @@ namespace PracticalWerewolf.Tests.Controllers
                 Assert.AreEqual(truck.Location.Latitude, truckModel.Lat);
                 Assert.AreEqual(truck.Location.Longitude, truckModel.Long);
             }
-
-            Assert.AreEqual(false, model.HasTruck);
         }
 
         [TestMethod]

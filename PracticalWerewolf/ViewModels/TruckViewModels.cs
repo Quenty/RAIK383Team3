@@ -13,7 +13,6 @@ namespace PracticalWerewolf.ViewModels
    public class TruckIndexViewModel
     {
         public IEnumerable<TruckDetailsViewModel> Trucks { get; set; }
-        public Boolean HasTruck { get; set; }
     }
 
     public class TruckDetailsViewModel

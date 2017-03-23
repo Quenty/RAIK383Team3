@@ -12,6 +12,7 @@ using PracticalWerewolf.Controllers.UnitOfWork;
 using System.Activities;
 using System.Data.Entity.Spatial;
 using PracticalWerewolf.Application;
+using log4net;
 
 namespace PracticalWerewolf.Controllers
 {
@@ -19,6 +20,8 @@ namespace PracticalWerewolf.Controllers
     [RequireHttps]
     public class TruckController : Controller
     {
+
+        private static readonly ILog logger = LogManager.GetLogger(typeof(TruckController));
         ITruckService TruckService;
         IContractorService ContractorService;
         IUnitOfWork UnitOfWork;
@@ -33,6 +36,8 @@ namespace PracticalWerewolf.Controllers
         }
 
         // TODO: Only show active trucks to employees
+        [OverrideAuthorization]
+        [Authorize(Roles = "Employee")]
         public ActionResult Index()
         {
             String userName = User.Identity.Name;
@@ -58,17 +63,9 @@ namespace PracticalWerewolf.Controllers
                 truckModels.Add(toAdd);
             }
 
-            bool hasTruck = false;
-            if(user.ContractorInfo != null && user.ContractorInfo.Truck != null)
-            {
-                hasTruck = true;
-            }
-
             var model = new TruckIndexViewModel
             {
                 Trucks = truckModels,
-                //Do we even need this?
-                HasTruck = hasTruck
             };
             return View(model);
         }
@@ -127,7 +124,7 @@ namespace PracticalWerewolf.Controllers
                 }
                 catch
                 {
-                    //TODO log it
+                    logger.Error("Edit() - error getting truck or creating ViewModel");
                 }
             }
             return HttpNotFound();
@@ -160,7 +157,7 @@ namespace PracticalWerewolf.Controllers
                 }
                 catch
                 {
-                    //TODO log it
+                    logger.Error("Edit(id, ViewModel) - Error getting Truck, creating new TruckCapacityUnit, in TruckService.UpdateCapacity(), or TruckService.UpdateLicenseNumber()");
                 }
             }
             return View(model);
@@ -183,7 +180,6 @@ namespace PracticalWerewolf.Controllers
                 {
                     var userName = User.Identity.Name;
                     var user = UserManager.FindByName(userName);
-                    Guid TruckGuid = Guid.NewGuid();
                     var capacityUnit = new TruckCapacityUnit
                     {
                         TruckCapacityUnitGuid = Guid.NewGuid(),
@@ -192,7 +188,7 @@ namespace PracticalWerewolf.Controllers
                     };
                     var model = new Truck
                     {
-                        TruckGuid = TruckGuid,
+                        TruckGuid = Guid.NewGuid(),
                         LicenseNumber = returnedModel.LicenseNumber,
                         MaxCapacity = capacityUnit,
                         Location = LocationHelper.CreatePoint(returnedModel.Lat, returnedModel.Long)
@@ -205,7 +201,7 @@ namespace PracticalWerewolf.Controllers
                 }
                 catch
                 {
-                    //TODO: Log it
+                    logger.Error("Create(ViewModel) - Error getting user, creating TruckCapacityUnit, creating Truck, or ContractorService.UpdateContractorTruck()");
                 }
             }
             return RedirectToAction("Index", new { Message = "Could not create truck successfully." });
