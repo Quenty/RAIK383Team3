@@ -7,11 +7,13 @@ using PracticalWerewolf.Stores.Interfaces;
 using PracticalWerewolf.Models;
 using PracticalWerewolf.Controllers.UnitOfWork;
 using System.Data.Entity.Spatial;
+using log4net;
 
 namespace PracticalWerewolf.Services
 {
     public class TruckService : ITruckService
     {
+        private readonly ILog logger = LogManager.GetLogger(typeof(TruckService));
         private readonly ITruckStore TruckStore;
 
         public TruckService(ITruckStore TruckStore)
@@ -23,7 +25,11 @@ namespace PracticalWerewolf.Services
 
         public void CreateTruck(Truck truck)
         {
-            if (truck == null) throw new ArgumentNullException();
+            if (truck == null)
+            {
+                logger.Error("CreateTruck() - null Truck passed in");
+                throw new ArgumentNullException();
+            }
             TruckStore.Insert(truck);
         }
 
@@ -44,7 +50,11 @@ namespace PracticalWerewolf.Services
 
         public void UpdateCapacity(Guid truckGuid, TruckCapacityUnit capacity)
         {
-            if (capacity == null) throw new ArgumentNullException();
+            if (capacity == null)
+            {
+                logger.Error("UpdateCapacity() - null TruckCapacityUnit passed in");
+                throw new ArgumentNullException();
+            }
             var truck = GetTruck(truckGuid);
             if (truck != null)
             {
