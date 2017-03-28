@@ -12,6 +12,7 @@ using PracticalWerewolf.Controllers.UnitOfWork;
 using System.Activities;
 using System.Data.Entity.Spatial;
 using PracticalWerewolf.Application;
+using log4net;
 
 namespace PracticalWerewolf.Controllers
 {
@@ -19,6 +20,8 @@ namespace PracticalWerewolf.Controllers
     [RequireHttps]
     public class TruckController : Controller
     {
+
+        private static readonly ILog logger = LogManager.GetLogger(typeof(TruckController));
         ITruckService TruckService;
         IContractorService ContractorService;
         IUnitOfWork UnitOfWork;
@@ -33,11 +36,12 @@ namespace PracticalWerewolf.Controllers
         }
 
         // TODO: Only show active trucks to employees
+        [OverrideAuthorization]
+        [Authorize(Roles = "Employee")]
         public ActionResult Index()
         {
-            String userName = System.Web.HttpContext.Current.User.Identity.Name;
+            String userName = User.Identity.Name;
             ApplicationUser user = UserManager.FindByName(userName);
-            ApplicationUser fullUser = UserManager.Users.Where(u => u.Id == user.Id).FirstOrDefault();
 
             IEnumerable<Truck> trucks = TruckService.GetAllTrucks();
             List<TruckDetailsViewModel> truckModels = new List<TruckDetailsViewModel>();
@@ -58,10 +62,10 @@ namespace PracticalWerewolf.Controllers
                 };
                 truckModels.Add(toAdd);
             }
+
             var model = new TruckIndexViewModel
             {
                 Trucks = truckModels,
-                HasTruck = fullUser.ContractorInfo.Truck != null ? true : false
             };
             return View(model);
         }
@@ -120,7 +124,7 @@ namespace PracticalWerewolf.Controllers
                 }
                 catch
                 {
-                    //TODO log it
+                    logger.Error("Edit() - error getting truck or creating ViewModel");
                 }
             }
             return HttpNotFound();
@@ -153,7 +157,7 @@ namespace PracticalWerewolf.Controllers
                 }
                 catch
                 {
-                    //TODO log it
+                    logger.Error("Edit(id, ViewModel) - Error getting Truck, creating new TruckCapacityUnit, in TruckService.UpdateCapacity(), or TruckService.UpdateLicenseNumber()");
                 }
             }
             return View(model);
@@ -172,31 +176,35 @@ namespace PracticalWerewolf.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userName = System.Web.HttpContext.Current.User.Identity.Name;
-                var user = UserManager.FindByName(userName);
-                Guid TruckGuid = Guid.NewGuid();
-                var capacityUnit = new TruckCapacityUnit
+                try
                 {
-                    TruckCapacityUnitGuid = Guid.NewGuid(),
-                    Mass = returnedModel.Mass,
-                    Volume = returnedModel.Volume
-                };
-                var model = new Truck
+                    var userName = User.Identity.Name;
+                    var user = UserManager.FindByName(userName);
+                    var capacityUnit = new TruckCapacityUnit
+                    {
+                        TruckCapacityUnitGuid = Guid.NewGuid(),
+                        Mass = returnedModel.Mass,
+                        Volume = returnedModel.Volume
+                    };
+                    var model = new Truck
+                    {
+                        TruckGuid = Guid.NewGuid(),
+                        LicenseNumber = returnedModel.LicenseNumber,
+                        MaxCapacity = capacityUnit,
+                        Location = LocationHelper.CreatePoint(returnedModel.Lat, returnedModel.Long)
+                    };
+                    TruckService.CreateTruck(model);
+                    ContractorService.UpdateContractorTruck(model, user);
+                    UnitOfWork.SaveChanges();
+                    return RedirectToAction("Index");
+
+                }
+                catch
                 {
-                    TruckGuid = TruckGuid,
-                    LicenseNumber = returnedModel.LicenseNumber,
-                    MaxCapacity = capacityUnit,
-                    Location = LocationHelper.CreatePoint(returnedModel.Lat, returnedModel.Long)
-                };
-                TruckService.CreateTruck(model);
-                ContractorService.UpdateContractorTruck(model, user);
-                UnitOfWork.SaveChanges();
-                return RedirectToAction("Index");
+                    logger.Error("Create(ViewModel) - Error getting user, creating TruckCapacityUnit, creating Truck, or ContractorService.UpdateContractorTruck()");
+                }
             }
-            else
-            {
-                return RedirectToAction("Index", new { Message = "Could not create truck successfully." });
-            }
+            return RedirectToAction("Index", new { Message = "Could not create truck successfully." });
         }
     }
 }
