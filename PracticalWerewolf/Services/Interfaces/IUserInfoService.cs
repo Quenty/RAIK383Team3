@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PracticalWerewolf.Services.Interfaces
 {
-    interface IUserInfoService
+    public interface IUserInfoService
     {
         // Depends upon ApplicationUserManager
         IEnumerable<UserInfo> GetAllUsers();
