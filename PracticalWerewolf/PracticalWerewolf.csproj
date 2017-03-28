@@ -279,6 +279,10 @@
     <Compile Include="Migrations\201703282057134_Update-Relationship.Designer.cs">
       <DependentUpon>201703282057134_Update-Relationship.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703282154425_Update_Relationships-2.cs" />
+    <Compile Include="Migrations\201703282154425_Update_Relationships-2.Designer.cs">
+      <DependentUpon>201703282154425_Update_Relationships-2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CivicAddressDb.cs" />
     <Compile Include="Services\ContractorService.cs" />
@@ -484,6 +488,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703282057134_Update-Relationship.resx">
       <DependentUpon>201703282057134_Update-Relationship.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703282154425_Update_Relationships-2.resx">
+      <DependentUpon>201703282154425_Update_Relationships-2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
