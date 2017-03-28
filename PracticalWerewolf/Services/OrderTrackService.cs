@@ -6,11 +6,18 @@ using System.Web;
 using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.Models.Trucks;
 using PracticalWerewolf.Models.UserInfos;
+using PracticalWerewolf.Stores.Interfaces;
 
 namespace PracticalWerewolf.Services
 {
     public class OrderTrackService : IOrderTrackService
     {
+        public IOrderStore OrderStore { get; set; }
+        public OrderTrackService(IOrderStore store)
+        {
+            OrderStore = store;
+        }
+
         public IEnumerable<Order> GetContractorOrders(Guid contractorInfoGuid)
         {
             throw new NotImplementedException();
@@ -18,6 +25,7 @@ namespace PracticalWerewolf.Services
 
         public void RejectOrder(Guid orderGuid)
         {
+            var order = OrderStore.Find(orderGuid);
             throw new NotImplementedException();
         }
 
