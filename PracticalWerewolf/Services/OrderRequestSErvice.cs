@@ -19,7 +19,7 @@ namespace PracticalWerewolf.Services
             throw new NotImplementedException();
         }
 
-        public void UpdateRequest(Guid IOrderRequest)
+        public void CreateOrderRequestInfo(OrderRequestInfo requestInfo)
         {
             throw new NotImplementedException();
         }

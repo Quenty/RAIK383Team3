@@ -1,4 +1,9 @@
-﻿using PracticalWerewolf.Services.Interfaces;
+﻿using Microsoft.AspNet.Identity;
+using PracticalWerewolf.Controllers.UnitOfWork;
+using PracticalWerewolf.Models.Orders;
+using PracticalWerewolf.Models.UserInfos;
+using PracticalWerewolf.Services.Interfaces;
+using PracticalWerewolf.ViewModels.Orders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +15,20 @@ namespace PracticalWerewolf.Controllers
     [RequireHttps]
     public class OrderController : Controller
     {
-        IOrderRequestService OrderRequestService;
-        IOrderTrackService OrderTrackService;
+        private readonly IOrderRequestService OrderRequestService;
+        private readonly IOrderTrackService OrderTrackService;
+        private readonly IUserInfoService UserInfoService;
+        private readonly IUnitOfWork UnitOfWork;
+        private readonly ApplicationUserManager UserManager;
 
-        public OrderController(IOrderRequestService OrderRequestService, IOrderTrackService OrderTrackService)
+        public OrderController(IOrderRequestService OrderRequestService, IOrderTrackService OrderTrackService, 
+            IUserInfoService UserInfoService, IUnitOfWork UnitOfWork, ApplicationUserManager UserManager)
         {
             this.OrderRequestService = OrderRequestService;
             this.OrderTrackService = OrderTrackService;
+            this.UserInfoService = UserInfoService;
+            this.UnitOfWork = UnitOfWork;
+            this.UserManager = UserManager;
         }
 
         // GET: Order/Index
@@ -30,7 +42,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         // GET: Order/Index/guid
-        [Authorize(Roles = ("Customers"))]
+        [Authorize(Roles = ("Customer"))]
         public ActionResult Index(string guid)
         {
             // Customer will see a list of past and present orders associated to them
@@ -57,31 +69,35 @@ namespace PracticalWerewolf.Controllers
         }
 
         // GET: Order/Create
-        [Authorize (Roles = "Customer, Employees")]
         public ActionResult Create()
         {
-            // Takes user to a form to create a new order
-            // Shouldn't depend upon anything
             return View();
         }
 
-        // POST: Order/Create
+    
         [HttpPost]
-        [Authorize(Roles = "Customer, Employees")]
-        public ActionResult Create(FormCollection collection)
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = ("Customer"))]
+        public ActionResult Create(CreateOrderRequestViewModel model)
         {
-            // Takes the info from customer or employee and updates the database
-            // Depends upon IOrderService.Create
-            try
+            if (!ModelState.IsValid)
             {
-                // TODO: Add insert logic here
+                return View(model);
+            }
+            
+            CustomerInfo Requester = UserInfoService.GetUserContractorInfo(User.Identity.GetUserId());
 
-                return RedirectToAction("Index");
-            }
-            catch
+            OrderRequestService.CreateOrderRequestInfo(new OrderRequestInfo
             {
-                return View();
-            }
+                OrderRequestInfoGuid = Guid.NewGuid(),
+                DropOffAddress = model.DropOffAddress,
+                PickUpAddress = model.PickUpAddress,
+                RequestDate = DateTime.Now,
+                Requester = Requester
+            })
+            UnitOfWork.SaveChanges();
+
+            return RedirectToAction("Index");
         }
 
         // GET: Order/Edit/guid

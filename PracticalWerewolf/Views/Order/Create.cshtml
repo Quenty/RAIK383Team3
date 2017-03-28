@@ -1,0 +1,22 @@
+﻿@model PracticalWerewolf.ViewModels.Orders.CreateOrderRequestViewModel
+
+@{
+    ViewBag.Title = "Place a new order";
+}
+
+<h2>Create <small>Place a new order</small></h2>
+
+@using (Html.BeginForm("Create", "Order", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @Html.EditorFor(m => m.DropOffAddress)
+    @Html.EditorFor(m => m.PickUpAddress)
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-default" value="Place" />
+        </div>
+    </div>
+}

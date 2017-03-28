@@ -27,9 +27,9 @@ namespace PracticalWerewolf.Controllers
             Error
         }
 
-        private ApplicationUserManager UserManager { get; set; }
-        private IContractorService ContractorService { get; set; }
-        private IUnitOfWork UnitOfWork { get; set; }
+        private readonly ApplicationUserManager UserManager;
+        private readonly IContractorService ContractorService;
+        private readonly IUnitOfWork UnitOfWork;
 
         public ContractorController(ApplicationUserManager UserManager, IContractorService ContractorService, IUnitOfWork UnitOfWork)
         {
@@ -106,8 +106,9 @@ namespace PracticalWerewolf.Controllers
             {
                 return RedirectToAction("Unapproved", new { Message = ContractorMessageId.Error });
             }
-                //Is this another instance where we want an IdentityResult?
-                ContractorService.SetApproval(guid, IsApproved ? ContractorApprovalState.Approved : ContractorApprovalState.Denied);
+
+            // Is this another instance where we want an IdentityResult?
+            ContractorService.SetApproval(guid, IsApproved ? ContractorApprovalState.Approved : ContractorApprovalState.Denied);
             UnitOfWork.SaveChanges();
 
             return RedirectToAction("Unapproved", new { Message = IsApproved ? ContractorMessageId.ApprovedSuccess : ContractorMessageId.DeniedSuccess });

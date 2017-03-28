@@ -11,9 +11,6 @@ namespace PracticalWerewolf.ViewModels.Orders
     public class CreateOrderRequestViewModel
     {
         [Required]
-        public Guid CustomomerInfoGuid { get; set; }
-
-        [Required]
         public CivicAddressDb PickUpAddress { get; set; }
 
         [Required]
