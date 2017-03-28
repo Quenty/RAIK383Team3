@@ -85,16 +85,18 @@ namespace PracticalWerewolf.Controllers
                 return View(model);
             }
             
-            CustomerInfo Requester = UserInfoService.GetUserContractorInfo(User.Identity.GetUserId());
+            CustomerInfo Requester = UserInfoService.GetUserCustomerInfo(User.Identity.GetUserId());
 
             OrderRequestService.CreateOrderRequestInfo(new OrderRequestInfo
             {
                 OrderRequestInfoGuid = Guid.NewGuid(),
                 DropOffAddress = model.DropOffAddress,
                 PickUpAddress = model.PickUpAddress,
+                Size = model.Size,
                 RequestDate = DateTime.Now,
                 Requester = Requester
-            })
+            });
+
             UnitOfWork.SaveChanges();
 
             return RedirectToAction("Index");

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Device.Location;
 
 namespace PracticalWerewolf.Models.Orders
@@ -9,10 +10,13 @@ namespace PracticalWerewolf.Models.Orders
         [Key]
         public Guid OrderGuid { get; set; }
 
-        // One-to-one relationship, keeps track of who placed the order and where it goes
-        OrderRequestInfo RequestInfo { get; set; }
 
-        // One-to-one relationship, keeps track of where the order is
-        OrderTrackInfo TrackInfo { get; set; }
+        // zero-or-one-to-one relationship, keeps track of who placed the order and where it goes
+        [Required]
+        public virtual OrderRequestInfo RequestInfo { get; set; }
+
+        // zero-or-one-to-one relationship, keeps track of where the order is
+        [Required]
+        public virtual OrderTrackInfo TrackInfo { get; set; }
     }
 }

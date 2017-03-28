@@ -12,6 +12,8 @@ namespace PracticalWerewolf.Services.Interfaces
         // Depends upon ApplicationUserManager
         IEnumerable<UserInfo> GetAllUsers();
         ContractorInfo GetContractorInfo(Guid guid);
-        CustomerInfo GetUserContractorInfo(string id);
+
+        CustomerInfo GetUserCustomerInfo(string id);
+        ContractorInfo GetUserContractorInfo(string id);
     }
 }
