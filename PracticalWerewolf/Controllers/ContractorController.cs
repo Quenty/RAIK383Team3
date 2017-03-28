@@ -73,10 +73,9 @@ namespace PracticalWerewolf.Controllers
         }
 
 
-        public async Task<ActionResult> Register()
+        public ActionResult Register()
         {
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            if (user.ContractorInfo != null)
+            if (User.IsInRole("Contractor"))
             {
                 return RedirectToAction("Index", new { Message = ContractorMessageId.AlreadyRegisteredError });
             }
@@ -153,7 +152,6 @@ namespace PracticalWerewolf.Controllers
             {
                 return RedirectToAction("Index", new { Message = ContractorMessageId.Error });
             }
-            
         }
     }
 }
