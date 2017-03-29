@@ -11,11 +11,13 @@ using PracticalWerewolf.Application;
 using Ninject;
 using System.Net.Mail;
 using System.Net;
+using log4net;
 
 namespace PracticalWerewolf
 {
     public class EmailService : IIdentityMessageService
     {
+        private static readonly ILog logger = LogManager.GetLogger(typeof(EmailService));
 
         public async Task SendAsync(IdentityMessage message)
         {
@@ -35,7 +37,8 @@ namespace PracticalWerewolf
             catch (Exception e)
             {
                 var ex = e.InnerException;
-                //TODO: log it
+                var errorMessage = "SendAsync() - Inner Exception: " + ex.Message + "\n" + "Stack Track: " + ex.StackTrace;
+                logger.Error(errorMessage);
             }
         }
     }
