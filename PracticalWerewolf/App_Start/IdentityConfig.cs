@@ -9,15 +9,37 @@ using Microsoft.Owin.Security;
 using PracticalWerewolf.Models;
 using PracticalWerewolf.Application;
 using Ninject;
+using System.Net.Mail;
+using System.Net;
+using log4net;
 
 namespace PracticalWerewolf
 {
     public class EmailService : IIdentityMessageService
     {
-        public Task SendAsync(IdentityMessage message)
+        private static readonly ILog logger = LogManager.GetLogger(typeof(EmailService));
+
+        public async Task SendAsync(IdentityMessage message)
         {
-            // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+            var email = new MailMessage();
+            email.To.Add(new MailAddress(message.Destination));
+            email.Subject = message.Subject;
+            email.Body = message.Body;
+
+            try
+            {
+                using (var smtp = new SmtpClient())
+                {
+                    await smtp.SendMailAsync(email);
+                }
+
+            }
+            catch (Exception e)
+            {
+                var ex = e.InnerException;
+                var errorMessage = "SendAsync() - Inner Exception: " + ex.Message + "\n" + "Stack Track: " + ex.StackTrace;
+                logger.Error(errorMessage);
+            }
         }
     }
 
