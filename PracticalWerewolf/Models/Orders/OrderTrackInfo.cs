@@ -19,7 +19,7 @@ namespace PracticalWerewolf.Models.Orders
 
         // One-to-many relationship
         public virtual Truck CurrentTruck { get; set; }
-        // Many-to-one relationship, A truck driver can only have many orders at a time
+        // Many-to-one relationship, A truck driver can have many orders at a time
         public virtual ContractorInfo Assignee { get; set; }               
     }
 }

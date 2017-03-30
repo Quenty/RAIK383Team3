@@ -50,5 +50,6 @@ namespace PracticalWerewolf.Stores.Interfaces
 
         //Batch DeleteContactorInfo
         void Delete(IEnumerable<Order> orderList);
+        
     }
 }
