@@ -106,7 +106,7 @@ namespace PracticalWerewolf.Tests.Controllers
             controller.ControllerContext = context;
 
 
-            var result = controller.Register().Result as RedirectToRouteResult;
+            var result = controller.Register() as RedirectToRouteResult;
 
             Assert.IsNotNull(result);
             Assert.AreEqual("Index", result.RouteValues["action"]);
@@ -127,7 +127,7 @@ namespace PracticalWerewolf.Tests.Controllers
             var controller = new ContractorController(userManager.Object, contractorService.Object, unitOfWork.Object);
             controller.ControllerContext = context;
 
-            var result = controller.Register().Result as ViewResult;
+            var result = controller.Register() as ViewResult;
 
             Assert.IsNotNull(result);
         }
