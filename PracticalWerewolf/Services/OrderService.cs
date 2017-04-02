@@ -4,49 +4,47 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using PracticalWerewolf.Models.Orders;
+using PracticalWerewolf.Stores.Interfaces;
+using PracticalWerewolf.Models.UserInfos;
 
 namespace PracticalWerewolf.Services
 {
     public class OrderService : IOrderService
     {
-        public void CancelOrder(Guid orderGuid)
-        {
-            throw new NotImplementedException();
-        }
+        private readonly IOrderStore OrderStore;
 
-        public void CreateOrder(OrderRequestInfo order)
+        public OrderService(IOrderStore OrderStore)
         {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Order> GetByUserGuids(Guid userId)
-        {
-            throw new NotImplementedException();
+            this.OrderStore = OrderStore;
         }
 
         public Order GetOrder(Guid orderGuid)
         {
-            throw new NotImplementedException();
+            Order order = OrderStore.Single(o => o.OrderGuid == orderGuid);
+            if (order == null)
+            {
+                throw new ArgumentException("Order does not exist in database");
+            }
+            return order;
         }
 
-        public IEnumerable<Order> GetOrders()
+        public void CancelOrder(Guid orderGuid)
         {
-            throw new NotImplementedException();
+            Order order = GetOrder(orderGuid);
+
+            OrderTrackInfo orderTrackInfo = order.TrackInfo ?? new OrderTrackInfo();
+            orderTrackInfo.OrderStatus = OrderStatus.Cancelled;
+            OrderStore.Update(order);
         }
 
-        public IEnumerable<Order> GetOrders(OrderStatus orderStatus)
+        public void AssignOrder(Guid orderGuid, ContractorInfo contractor)
         {
-            throw new NotImplementedException();
+            Order order = GetOrder(orderGuid);
+            OrderTrackInfo orderTrackInfo = order.TrackInfo ?? new OrderTrackInfo();
+            orderTrackInfo.OrderStatus = OrderStatus.InProgress;
+            orderTrackInfo.Assignee = contractor;
+            OrderStore.Update(order);
         }
 
-        public IEnumerable<Order> GetOrdersByCustomerInfo(Guid customerInfoGuid)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Order> GetQueuedOrders(OrderStatus orderStatus)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
