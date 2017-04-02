@@ -198,7 +198,26 @@ namespace PracticalWerewolf.Controllers
             }
         }
 
+        public async Task<ActionResult> Delivered()
+        {
+            var userId = User.Identity.GetUserId();
+            if (userId != null)
+            {
+                var user = await UserManager.FindByIdAsync(userId);
 
+                var contractor = user.ContractorInfo;
+                var model = new DeliveredOrderViewModel()
+                {
+                    Orders = OrderService.GetDeliveredOrders(contractor)
+                };
+
+                return PartialView(model);
+            }
+            else
+            {
+                return View();
+            }
+        }
 
     }
 }

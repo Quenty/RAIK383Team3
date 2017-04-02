@@ -34,6 +34,12 @@ namespace PracticalWerewolf.Services
             throw new NotImplementedException();
         }
 
+        public IEnumerable<Order> GetDeliveredOrders(ContractorInfo contractor)
+        {
+            var allOrders = _orderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid);
+            return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.Complete).ToList();
+        }
+
         public IEnumerable<Order> GetInprogressOrders(ContractorInfo contractor)
         {
             var allOrders = _orderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid);

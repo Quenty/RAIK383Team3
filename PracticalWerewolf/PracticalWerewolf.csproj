@@ -418,6 +418,7 @@
     <Content Include="Views\Truck\_TruckDetails.cshtml" />
     <Content Include="Views\Contractor\Pending.cshtml" />
     <Content Include="Views\Contractor\Current.cshtml" />
+    <Content Include="Views\Contractor\Delivered.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

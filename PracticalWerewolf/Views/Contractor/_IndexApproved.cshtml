@@ -23,7 +23,8 @@
                    href="@Url.Action("Current")">
                     <span class="badge"></span>Orders in your truck
                 </a>
-                <a class="list-group-item" href="#">Delivered orders</a>
+                <a class="list-group-item" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#Main"
+                   href="@Url.Action("Delivered")">Delivered orders</a>
                 <a class="list-group-item" href="#">Current status <span class="label label-default pull-right">Available</span></a>
             </div>
         </div>

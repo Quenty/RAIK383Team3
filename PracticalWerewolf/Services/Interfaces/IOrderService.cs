@@ -34,5 +34,6 @@ namespace PracticalWerewolf.Services.Interfaces
         // Depends upon IOrderRequestService.UpdateOrderStatus
         void CancelOrder(Guid orderGuid);
         IEnumerable<Order> GetInprogressOrders(ContractorInfo contractor);
+        IEnumerable<Order> GetDeliveredOrders(ContractorInfo contractor);
     }
 }

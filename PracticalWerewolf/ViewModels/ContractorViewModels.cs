@@ -62,4 +62,9 @@ namespace PracticalWerewolf.ViewModels.Contractor
         public IEnumerable<Order> Orders { get; set; }
     }
 
+    public class DeliveredOrderViewModel
+    {
+        [Display(Name = "Delivered Orders")]
+        public IEnumerable<Order> Orders { get; set; }
+    }
 }
