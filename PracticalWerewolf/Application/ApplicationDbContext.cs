@@ -22,6 +22,7 @@ namespace PracticalWerewolf.Application
         {
         }
 
+
         public DbSet<CustomerInfo> CustomerInfo { get; set; }
         public DbSet<UserInfo> UserInfo { get; set; }
         public DbSet<EmployeeInfo> EmployeeInfo { get; set; }

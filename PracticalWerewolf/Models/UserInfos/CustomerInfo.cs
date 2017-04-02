@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PracticalWerewolf.Models.Orders;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace PracticalWerewolf.Models.UserInfos
         // Customers do not own orders, instead orders know who owns them
         [Key]
         public Guid CustomerInfoGuid { get; set; }
-                                                            
+
+        public virtual ICollection<OrderRequestInfo> OrderRequests { get; set; }
     }
 }

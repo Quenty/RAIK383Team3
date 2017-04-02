@@ -1,4 +1,5 @@
-﻿using PracticalWerewolf.Models.Trucks;
+﻿using PracticalWerewolf.Models.Orders;
+using PracticalWerewolf.Models.Trucks;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -39,5 +40,7 @@ namespace PracticalWerewolf.Models.UserInfos
 
         [Required]
         public bool IsAvailable { get; set; }
+
+        public virtual ICollection<OrderTrackInfo> AssignedOrders { get; set; }
     }
 }

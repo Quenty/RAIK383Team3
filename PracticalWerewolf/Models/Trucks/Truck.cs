@@ -1,4 +1,5 @@
-﻿using PracticalWerewolf.Models.UserInfos;
+﻿using PracticalWerewolf.Models.Orders;
+using PracticalWerewolf.Models.UserInfos;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -56,6 +57,8 @@ namespace PracticalWerewolf.Models.Trucks
         [Required]
         [Display(Name = "Maximum Capacity")]
         public virtual TruckCapacityUnit MaxCapacity { get; set; }
+
+        public virtual ICollection<OrderTrackInfo> CurrentOrders { get; set; }
     }
 
 }
