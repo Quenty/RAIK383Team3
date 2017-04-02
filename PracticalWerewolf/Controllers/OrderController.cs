@@ -21,6 +21,11 @@ namespace PracticalWerewolf.Controllers
         private readonly IUnitOfWork UnitOfWork;
         private readonly ApplicationUserManager UserManager;
 
+        public enum OrderMessageId
+        {
+            OrderCreatedSuccess
+        }
+
         public OrderController(IOrderRequestService OrderRequestService, IOrderTrackService OrderTrackService, 
             IUserInfoService UserInfoService, IUnitOfWork UnitOfWork, ApplicationUserManager UserManager)
         {
@@ -31,34 +36,13 @@ namespace PracticalWerewolf.Controllers
             this.UserManager = UserManager;
         }
 
-        // GET: Order/Index
-        [Authorize (Roles= "Employees")]
-        public ActionResult Index()
+        public ActionResult Index(OrderMessageId? messageId)
         {
-            // Users will see a list of all orders
-
-            // Depends upon IOrderRequestService.GetCustomerOrders
+            ViewBag.StatusMessage = messageId == OrderMessageId.OrderCreatedSuccess ? "OrderCreatedSuccess" : "";
             return View();
         }
 
-        // GET: Order/Index/guid
-        [Authorize(Roles = ("Customer"))]
-        public ActionResult Index(string guid)
-        {
-            // Customer will see a list of past and present orders associated to them
-            // Depends upon IOrderRequestService.GetCustomerOrders
-            return View();
-        }
-
-        // GET: Order/ContractedIndex/guid
-        [Authorize(Roles = ("Contractors"))]
-        public ActionResult ContractedIndex(string guid)
-        {
-            // Contractor will see a list of past and present orders associated to them
-            // Depends upon IOrderTrackService.GetContractorOrders
-            return View();
-        }
-
+      
         // GET: Order/Details/guid
         [Authorize (Roles = "Employees, Contractors, Customers")]
         public ActionResult Details(string guid)
@@ -135,7 +119,7 @@ namespace PracticalWerewolf.Controllers
         public ActionResult Cancel(string guid)
         {
             // Gives customer and employee the option to cancel an order
-            // Depends upon IOrderRequestService.GetOrdersByCustomerInfo
+            // Depends upon IOrderService.CancelOrder(OrderGuid)
             return View();
         }
 
