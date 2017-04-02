@@ -3,27 +3,22 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PracticalWerewolf.Models;
 using Microsoft.AspNet.Identity;
-using System.Security.Principal;
 using PracticalWerewolf.Models.UserInfos;
 using System.Device.Location;
 using PracticalWerewolf.Models.Trucks;
-using System.Threading.Tasks;
 using PracticalWerewolf.Services.Interfaces;
 using PracticalWerewolf.Controllers;
 using System.Web.Mvc;
 using PracticalWerewolf.ViewModels.Contractor;
-using System.Web;
-using System.Security.Claims;
 using System.Collections.Generic;
 using static PracticalWerewolf.Controllers.ContractorController;
 using System.Linq;
 using PracticalWerewolf.Controllers.UnitOfWork;
-using PracticalWerewolf.Application;
 
 namespace PracticalWerewolf.Tests.Controllers
 {
     [TestClass]
-    public class ContractorControllerTest
+    public class ContractorControllerTest : ControllerTest
     {
         [TestMethod]
         public void Index_ExistingUser_ViewWithViewModel()
@@ -335,45 +330,5 @@ namespace PracticalWerewolf.Tests.Controllers
             Assert.AreEqual(ContractorMessageId.Error, result.RouteValues["message"]);
         }
 
-
-
-
-        public static Mock<ApplicationUserManager> GetMockApplicationUserManager()
-        {
-            var userStore = new Mock<IUserStore<ApplicationUser>>();
-            return new Mock<ApplicationUserManager>(userStore.Object);
-        }
-
-        public static GenericPrincipal GetMockUser(string id)
-        {
-            var identity = new GenericIdentity("");
-            List<Claim> claims = new List<Claim>(){
-                    new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name", id),
-                    new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier", id)
-            };
-            identity.AddClaims(claims);
-            var principal = new GenericPrincipal(identity, new string[0]);
-
-            return principal;
-        }
-
-        public static IPrincipal GetMockUserNullId()
-        {
-            var identity = new Mock<IIdentity>();
-            var user = new Mock<IPrincipal>();
-            user.Setup(x => x.Identity).Returns(identity.Object);
-
-            return user.Object;
-        }
-
-        public static ControllerContext GetMockControllerContext(IPrincipal principal)
-        {
-            var httpContext = new Mock<HttpContextBase>();
-            httpContext.Setup(x => x.User).Returns(principal);
-            var context = new Mock<ControllerContext>();
-            context.Setup(x => x.HttpContext).Returns(httpContext.Object);
-
-            return context.Object;
-        }
     }
 }

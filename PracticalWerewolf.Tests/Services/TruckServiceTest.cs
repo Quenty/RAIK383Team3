@@ -6,13 +6,11 @@ using PracticalWerewolf.Stores.Interfaces;
 using Moq;
 using PracticalWerewolf.Services;
 using System.Linq;
-using PracticalWerewolf.Models;
 using PracticalWerewolf.Tests.Stores.DbContext;
 using PracticalWerewolf.Stores;
 using System.Data.Entity.Spatial;
-using PracticalWerewolf.Controllers.UnitOfWork;
-using PracticalWerewolf.Application;
 using System.Data.Entity;
+using PracticalWerewolf.Controllers;
 
 namespace PracticalWerewolf.Tests.Services
 {
@@ -20,8 +18,7 @@ namespace PracticalWerewolf.Tests.Services
     public class TruckServiceTest
     {
         private static TruckCapacityUnit unit = new TruckCapacityUnit { TruckCapacityUnitGuid = Guid.NewGuid()};
-        private static string point = String.Format("POINT({0} {1})", 3.14, 2.18);
-        private static DbGeography location = DbGeography.FromText(point);
+        private static DbGeography location = LocationHelper.CreatePoint(3.14, 2.18);
 
         private static IEnumerable<Truck> _trucks = new List<Truck>
         {

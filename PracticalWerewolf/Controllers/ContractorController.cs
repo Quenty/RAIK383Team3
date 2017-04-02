@@ -129,7 +129,6 @@ namespace PracticalWerewolf.Controllers
                 return RedirectToAction("Index", new { Message = ContractorMessageId.AlreadyRegisteredError });
             }
 
-
             CivicAddressDb Address = model.Address;
             Address.CivicAddressGuid = Guid.NewGuid();
 
