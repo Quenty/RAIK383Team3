@@ -115,7 +115,11 @@ namespace PracticalWerewolf.Migrations
             {
                 var userStore = new UserStore<ApplicationUser>(context);
                 var userManager = new UserManager<ApplicationUser>(userStore);
-                var userToInsert = new ApplicationUser { UserName = "nope@nope.com" };
+                var userToInsert = new ApplicationUser {
+                    UserName = "nope@nope.com",
+                    Email = "nope@nope.com",
+                    EmployeeInfo = new EmployeeInfo(),
+                };
                 userManager.Create(userToInsert, "p@ssword!");
             }
         }
