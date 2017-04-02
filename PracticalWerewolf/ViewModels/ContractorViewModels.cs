@@ -1,4 +1,4 @@
-﻿using PracticalWerewolf.Controllers.Validation;
+using PracticalWerewolf.Controllers.Validation;
 using PracticalWerewolf.Models.UserInfos;
 using System;
 using System.Collections.Generic;

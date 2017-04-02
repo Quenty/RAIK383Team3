@@ -10,7 +10,6 @@ using System.Web;
 
 namespace PracticalWerewolf.Models.Trucks
 {
-
     public class TruckCapacityUnit
     {
         [Key]
@@ -61,4 +60,5 @@ namespace PracticalWerewolf.Models.Trucks
 
         public virtual ICollection<OrderTrackInfo> CurrentOrders { get; set; }
     }
+
 }

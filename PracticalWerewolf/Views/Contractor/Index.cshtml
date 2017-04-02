@@ -1,11 +1,10 @@
-﻿@using PracticalWerewolf.Models.UserInfos
+@using PracticalWerewolf.Models.UserInfos
 @model PracticalWerewolf.ViewModels.Contractor.ContractorIndexModel
 @{
     ViewBag.Title = "Contract";
 }
 
 @Html.Partial("_StatusMessage")
-
 
 @if (@Model.ContractorInfo == null)
 {
