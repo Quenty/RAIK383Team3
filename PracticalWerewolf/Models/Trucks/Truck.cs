@@ -10,7 +10,6 @@ using System.Web;
 
 namespace PracticalWerewolf.Models.Trucks
 {
-
     public class TruckCapacityUnit
     {
         [Key]
@@ -59,6 +58,7 @@ namespace PracticalWerewolf.Models.Trucks
         [Display(Name = "Maximum Capacity")]
         public virtual TruckCapacityUnit MaxCapacity { get; set; }
 
-        public virtual IEnumerable<OrderTrackInfo> CurrentOrders { get; set; }
+        public virtual ICollection<OrderTrackInfo> CurrentOrders { get; set; }
     }
+
 }

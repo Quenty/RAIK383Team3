@@ -9,12 +9,7 @@ namespace PracticalWerewolf.Models.Orders
     {
         [Key]
         public Guid OrderGuid { get; set; }
-
-
-        // zero-or-one-to-one relationship, keeps track of who placed the order and where it goes
         public virtual OrderRequestInfo RequestInfo { get; set; }
-
-        // zero-or-one-to-one relationship, keeps track of where the order is
         public virtual OrderTrackInfo TrackInfo { get; set; }
     }
 }
