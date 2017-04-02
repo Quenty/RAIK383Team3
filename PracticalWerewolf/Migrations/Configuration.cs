@@ -10,6 +10,8 @@ namespace PracticalWerewolf.Migrations
     using Models.Trucks;
     using System.Device.Location;
     using System.Data.Entity.Spatial;
+    using Models;
+    using Microsoft.AspNet.Identity;
 
     internal sealed class Configuration : DbMigrationsConfiguration<PracticalWerewolf.Application.ApplicationDbContext>
     {
@@ -108,6 +110,14 @@ namespace PracticalWerewolf.Migrations
             context.Order.AddOrUpdate(
                 order
                 );
+
+            if (!(context.Users.Any(u => u.UserName == "nope@nope.com")))
+            {
+                var userStore = new UserStore<ApplicationUser>(context);
+                var userManager = new UserManager<ApplicationUser>(userStore);
+                var userToInsert = new ApplicationUser { UserName = "nope@nope.com" };
+                userManager.Create(userToInsert, "p@ssword!");
+            }
         }
     }
 }
