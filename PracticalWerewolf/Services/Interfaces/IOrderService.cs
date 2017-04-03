@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PracticalWerewolf.Models.UserInfos;
 
 namespace PracticalWerewolf.Services.Interfaces
 {
-    interface IOrderService
+    public interface IOrderService
     {
         // Depends upon IOrderStore.Create
         void CreateOrder(OrderRequestInfo order);
@@ -25,12 +26,14 @@ namespace PracticalWerewolf.Services.Interfaces
         IEnumerable<Order> GetByUserGuids(Guid userId);
 
         // Depends upon this.GetOrders
-        IEnumerable<Order> GetQueuedOrders(OrderStatus orderStatus);
+        IEnumerable<Order> GetQueuedOrders(ContractorInfo contractor);
 
         // Depends upon IOrderStore.Get
         IEnumerable<Order> GetOrders();
 
         // Depends upon IOrderRequestService.UpdateOrderStatus
         void CancelOrder(Guid orderGuid);
+        IEnumerable<Order> GetInprogressOrders(ContractorInfo contractor);
+        IEnumerable<Order> GetDeliveredOrders(ContractorInfo contractor);
     }
 }

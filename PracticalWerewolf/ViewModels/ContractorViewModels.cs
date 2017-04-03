@@ -1,4 +1,5 @@
 using PracticalWerewolf.Controllers.Validation;
+using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.Models.UserInfos;
 using System;
 using System.Collections.Generic;
@@ -46,5 +47,24 @@ namespace PracticalWerewolf.ViewModels.Contractor
     public class ContractorIndexModel
     {
         public ContractorInfo ContractorInfo { get; set; }
+    }
+
+   
+    public class PendingOrderViewModel
+    {
+        [Display(Name = "Pending Orders")]
+        public IEnumerable<Order> Orders { get; set; }
+    }
+
+    public class CurrentOrderViewModel
+    {
+        [Display(Name = "Current Orders")]
+        public IEnumerable<Order> Orders { get; set; }
+    }
+
+    public class DeliveredOrderViewModel
+    {
+        [Display(Name = "Delivered Orders")]
+        public IEnumerable<Order> Orders { get; set; }
     }
 }
