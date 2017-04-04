@@ -18,17 +18,6 @@ namespace PracticalWerewolf.Services
             this.OrderStore = OrderStore;
         }
 
-        public IEnumerable<Order> GetDeliveredOrders(ContractorInfo contractor)
-        {
-            var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid);
-            return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.Complete).ToList();
-        }
-
-        public IEnumerable<Order> GetInprogressOrders(ContractorInfo contractor)
-        {
-            var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid);
-            return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.InProgress).ToList();
-        }
 
         public Order GetOrder(Guid orderGuid)
         {
@@ -56,6 +45,30 @@ namespace PracticalWerewolf.Services
             orderTrackInfo.OrderStatus = OrderStatus.InProgress;
             orderTrackInfo.Assignee = contractor;
             OrderStore.Update(order);
+        }
+
+        public void AssignOrders()
+        {
+            var Orders = GetUnassignedOrders();
+
+        }
+
+        public IEnumerable<Order> GetUnassignedOrders()
+        {
+            return OrderStore.Find(o => o.TrackInfo.OrderStatus == OrderStatus.Queued)
+                .Where(o => o.TrackInfo.Assignee == null);
+        }
+
+        public IEnumerable<Order> GetDeliveredOrders(ContractorInfo contractor)
+        {
+            var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid);
+            return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.Complete).ToList();
+        }
+
+        public IEnumerable<Order> GetInprogressOrders(ContractorInfo contractor)
+        {
+            var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid);
+            return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.InProgress).ToList();
         }
 
 
