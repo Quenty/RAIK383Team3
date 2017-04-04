@@ -155,6 +155,7 @@ namespace PracticalWerewolf.Controllers
             
         }
 
+        [Authorize(Roles = "Contractor")]
         public async Task<ActionResult> Pending()
         {
             var userId = User.Identity.GetUserId();
@@ -176,6 +177,7 @@ namespace PracticalWerewolf.Controllers
             }
         }
 
+        [Authorize(Roles = "Contractor")]
         public async Task<ActionResult> Current()
         {
             var userId = User.Identity.GetUserId();
@@ -197,6 +199,7 @@ namespace PracticalWerewolf.Controllers
             }
         }
 
+        [Authorize(Roles = "Contractor")]
         public async Task<ActionResult> Delivered()
         {
             var userId = User.Identity.GetUserId();

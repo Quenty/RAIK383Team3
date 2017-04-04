@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using static PracticalWerewolf.Controllers.ContractorController;
 using System.Linq;
 using PracticalWerewolf.Controllers.UnitOfWork;
+using PracticalWerewolf.Models.Orders;
 
 namespace PracticalWerewolf.Tests.Controllers
 {
@@ -305,14 +306,14 @@ namespace PracticalWerewolf.Tests.Controllers
             var mockUser = GetMockUser(email);
             var mockContext = GetMockControllerContext(mockUser);
 
-            var context = GetMockApplicationUserManager();
-            context.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(contractor);
-            context.Setup(x => x.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Failed());
+            var userManager = GetMockApplicationUserManager();
+            userManager.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(contractor);
+            userManager.Setup(x => x.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Failed());
 
             var contractorService = new Mock<IContractorService>();
             var orderService = new Mock<IOrderService>();
             var unitOfWork = new Mock<IUnitOfWork>();
-            var controller = new ContractorController(context.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
             controller.ControllerContext = mockContext;
 
             var contractorRegisterModel = new ContractorRegisterModel()
@@ -329,6 +330,242 @@ namespace PracticalWerewolf.Tests.Controllers
             Assert.AreEqual("Index", result.RouteValues["action"]);
             Assert.AreEqual(ContractorMessageId.Error, result.RouteValues["message"]);
         }
+        
+        [TestMethod]
+        public void Pending_ValidUser_ReturnsPartialView()
+        {
+            var email = "Example@example.com";
+            var contractor = new ApplicationUser() { UserName = email , ContractorInfo = new ContractorInfo() };
+            var mockUser = GetMockUser(email);
+            var mockContext = GetMockControllerContext(mockUser);
+            var userManager = GetMockApplicationUserManager();
+            userManager.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(contractor);
 
+            var contractorService = new Mock<IContractorService>();
+            var orderService = new Mock<IOrderService>();
+            orderService.Setup(x => x.GetQueuedOrders(It.IsAny<ContractorInfo>())).Returns(new List<Order>());
+            var unitOfWork = new Mock<IUnitOfWork>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
+            controller.ControllerContext = mockContext;
+
+
+            var result = controller.Pending().Result as PartialViewResult;
+            var viewModel = result.Model as PendingOrderViewModel;
+
+
+            Assert.IsNotNull(viewModel);
+            Assert.AreEqual(0, viewModel.Orders.Count());
+        }
+
+        [TestMethod]
+        public void Pending_ValidUser_ReturnsPartialViewWithOrders()
+        {
+            var email = "Example@example.com";
+            var contractor = new ApplicationUser() { UserName = email, ContractorInfo = new ContractorInfo() };
+            var mockUser = GetMockUser(email);
+            var mockContext = GetMockControllerContext(mockUser);
+            var userManager = GetMockApplicationUserManager();
+            userManager.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(contractor);
+
+            var orders = new List<Order>()
+            {
+                new Order(),
+                new Order(),
+                new Order()
+            };
+
+            var contractorService = new Mock<IContractorService>();
+            var orderService = new Mock<IOrderService>();
+            orderService.Setup(x => x.GetQueuedOrders(It.IsAny<ContractorInfo>())).Returns(orders);
+            var unitOfWork = new Mock<IUnitOfWork>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
+            controller.ControllerContext = mockContext;
+
+
+            var result = controller.Pending().Result as PartialViewResult;
+            var viewModel = result.Model as PendingOrderViewModel;
+
+
+            Assert.IsNotNull(viewModel);
+            Assert.AreEqual(orders, viewModel.Orders);
+        }
+
+        [TestMethod]
+        public void Pending_InvalidUser_ReturnsView()
+        {
+            var mockUser = GetMockUserNullId();
+            var mockContext = GetMockControllerContext(mockUser);
+            var userManager = GetMockApplicationUserManager();
+
+            var contractorService = new Mock<IContractorService>();
+            var orderService = new Mock<IOrderService>();
+            var unitOfWork = new Mock<IUnitOfWork>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
+            controller.ControllerContext = mockContext;
+
+
+            var result = controller.Pending().Result as ViewResult;
+
+
+            Assert.IsNull(result.Model);
+        }
+
+        [TestMethod]
+        public void Current_ValidUser_ReturnsPartialView()
+        {
+            var email = "Example@example.com";
+            var contractor = new ApplicationUser() { UserName = email, ContractorInfo = new ContractorInfo() };
+            var mockUser = GetMockUser(email);
+            var mockContext = GetMockControllerContext(mockUser);
+            var userManager = GetMockApplicationUserManager();
+            userManager.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(contractor);
+
+            var contractorService = new Mock<IContractorService>();
+            var orderService = new Mock<IOrderService>();
+            orderService.Setup(x => x.GetInprogressOrders(It.IsAny<ContractorInfo>())).Returns(new List<Order>());
+            var unitOfWork = new Mock<IUnitOfWork>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
+            controller.ControllerContext = mockContext;
+
+
+            var result = controller.Current().Result as PartialViewResult;
+            var viewModel = result.Model as CurrentOrderViewModel;
+
+
+            Assert.IsNotNull(viewModel);
+            Assert.AreEqual(0, viewModel.Orders.Count());
+        }
+
+        [TestMethod]
+        public void Current_ValidUser_ReturnsPartialViewWithOrders()
+        {
+            var email = "Example@example.com";
+            var contractor = new ApplicationUser() { UserName = email, ContractorInfo = new ContractorInfo() };
+            var mockUser = GetMockUser(email);
+            var mockContext = GetMockControllerContext(mockUser);
+            var userManager = GetMockApplicationUserManager();
+            userManager.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(contractor);
+
+            var orders = new List<Order>()
+            {
+                new Order(),
+                new Order(),
+                new Order()
+            };
+
+            var contractorService = new Mock<IContractorService>();
+            var orderService = new Mock<IOrderService>();
+            orderService.Setup(x => x.GetInprogressOrders(It.IsAny<ContractorInfo>())).Returns(orders);
+            var unitOfWork = new Mock<IUnitOfWork>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
+            controller.ControllerContext = mockContext;
+
+
+            var result = controller.Current().Result as PartialViewResult;
+            var viewModel = result.Model as CurrentOrderViewModel;
+
+
+            Assert.IsNotNull(viewModel);
+            Assert.AreEqual(orders, viewModel.Orders);
+        }
+
+        [TestMethod]
+        public void Current_InvalidUser_ReturnsView()
+        {
+            var mockUser = GetMockUserNullId();
+            var mockContext = GetMockControllerContext(mockUser);
+            var userManager = GetMockApplicationUserManager();
+
+            var contractorService = new Mock<IContractorService>();
+            var orderService = new Mock<IOrderService>();
+            var unitOfWork = new Mock<IUnitOfWork>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
+            controller.ControllerContext = mockContext;
+
+
+            var result = controller.Current().Result as ViewResult;
+
+
+            Assert.IsNull(result.Model);
+        }
+
+        [TestMethod]
+        public void Delivered_ValidUser_ReturnsPartialView()
+        {
+            var email = "Example@example.com";
+            var contractor = new ApplicationUser() { UserName = email, ContractorInfo = new ContractorInfo() };
+            var mockUser = GetMockUser(email);
+            var mockContext = GetMockControllerContext(mockUser);
+            var userManager = GetMockApplicationUserManager();
+            userManager.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(contractor);
+
+            var contractorService = new Mock<IContractorService>();
+            var orderService = new Mock<IOrderService>();
+            orderService.Setup(x => x.GetDeliveredOrders(It.IsAny<ContractorInfo>())).Returns(new List<Order>());
+            var unitOfWork = new Mock<IUnitOfWork>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
+            controller.ControllerContext = mockContext;
+
+
+            var result = controller.Delivered().Result as PartialViewResult;
+            var viewModel = result.Model as DeliveredOrderViewModel;
+
+
+            Assert.IsNotNull(viewModel);
+            Assert.AreEqual(0, viewModel.Orders.Count());
+        }
+
+        [TestMethod]
+        public void Delivered_ValidUser_ReturnsPartialViewWithOrders()
+        {
+            var email = "Example@example.com";
+            var contractor = new ApplicationUser() { UserName = email, ContractorInfo = new ContractorInfo() };
+            var mockUser = GetMockUser(email);
+            var mockContext = GetMockControllerContext(mockUser);
+            var userManager = GetMockApplicationUserManager();
+            userManager.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(contractor);
+
+            var orders = new List<Order>()
+            {
+                new Order(),
+                new Order(),
+                new Order()
+            };
+
+            var contractorService = new Mock<IContractorService>();
+            var orderService = new Mock<IOrderService>();
+            orderService.Setup(x => x.GetDeliveredOrders(It.IsAny<ContractorInfo>())).Returns(orders);
+            var unitOfWork = new Mock<IUnitOfWork>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
+            controller.ControllerContext = mockContext;
+
+
+            var result = controller.Delivered().Result as PartialViewResult;
+            var viewModel = result.Model as DeliveredOrderViewModel;
+
+
+            Assert.IsNotNull(viewModel);
+            Assert.AreEqual(orders, viewModel.Orders);
+        }
+
+        [TestMethod]
+        public void Delivered_InvalidUser_ReturnsView()
+        {
+            var mockUser = GetMockUserNullId();
+            var mockContext = GetMockControllerContext(mockUser);
+            var userManager = GetMockApplicationUserManager();
+
+            var contractorService = new Mock<IContractorService>();
+            var orderService = new Mock<IOrderService>();
+            var unitOfWork = new Mock<IUnitOfWork>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
+            controller.ControllerContext = mockContext;
+
+
+            var result = controller.Delivered().Result as ViewResult;
+
+
+            Assert.IsNull(result.Model);
+        }
     }
 }
