@@ -31,7 +31,14 @@ namespace PracticalWerewolf.Stores
         {
             base.Update(contractor);
             contractor.Truck = truck;
+        }
 
+        public IQueryable<ContractorInfo> getAvailableContractorsQuery()
+        {
+            return Find(c => c.ApprovalState == ContractorApprovalState.Approved).AsQueryable()
+                .Where(c => c.IsAvailable)
+                .Where(c => c.Truck.AvailableCapacity.Volume > 0)
+                .Where(c => c.Truck.AvailableCapacity.Mass > 0);
         }
     }
 }

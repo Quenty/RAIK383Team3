@@ -12,10 +12,12 @@ namespace PracticalWerewolf.Services
     public class OrderService : IOrderService
     {
         private readonly IOrderStore OrderStore;
+        private readonly IContractorStore ContractorStore;
 
-        public OrderService(IOrderStore OrderStore)
+        public OrderService(IOrderStore OrderStore, IContractorStore ContractorStore)
         {
             this.OrderStore = OrderStore;
+            this.ContractorStore = ContractorStore;
         }
 
 
@@ -51,6 +53,10 @@ namespace PracticalWerewolf.Services
         {
             var Orders = GetUnassignedOrders();
 
+            foreach (Order order in Orders)
+            {
+                AssignOrder(order, )
+            }
         }
 
         public IEnumerable<Order> GetUnassignedOrders()

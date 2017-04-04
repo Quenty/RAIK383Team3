@@ -19,6 +19,7 @@ namespace PracticalWerewolf.Controllers
         private readonly IOrderTrackService OrderTrackService;
         private readonly IUserInfoService UserInfoService;
         private readonly IUnitOfWork UnitOfWork;
+        private readonly IOrderService OrderService;
         private readonly ApplicationUserManager UserManager;
 
         public enum OrderMessageId
@@ -28,13 +29,14 @@ namespace PracticalWerewolf.Controllers
         }
 
         public OrderController(IOrderRequestService OrderRequestService, IOrderTrackService OrderTrackService, 
-            IUserInfoService UserInfoService, IUnitOfWork UnitOfWork, ApplicationUserManager UserManager)
+            IUserInfoService UserInfoService, IUnitOfWork UnitOfWork, ApplicationUserManager UserManager, IOrderService OrderService)
         {
             this.OrderRequestService = OrderRequestService;
             this.OrderTrackService = OrderTrackService;
             this.UserInfoService = UserInfoService;
             this.UnitOfWork = UnitOfWork;
             this.UserManager = UserManager;
+            this.OrderService = OrderService;
         }
 
         public ActionResult Index(OrderMessageId? message)
@@ -92,6 +94,8 @@ namespace PracticalWerewolf.Controllers
                 RequestDate = DateTime.Now,
                 Requester = Requester
             });
+
+            OrderService.AssignOrders(ContractorQuery);
 
             UnitOfWork.SaveChanges();
 
