@@ -11,6 +11,5 @@ namespace PracticalWerewolf.Stores.Interfaces
 {
     public interface IOrderStore : IEntityStore<Order>
     {
-
     }
 }
