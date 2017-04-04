@@ -23,7 +23,8 @@ namespace PracticalWerewolf.Controllers
 
         public enum OrderMessageId
         {
-            OrderCreatedSuccess
+            OrderCreatedSuccess,
+            OrderCreatedError
         }
 
         public OrderController(IOrderRequestService OrderRequestService, IOrderTrackService OrderTrackService, 
@@ -36,9 +37,12 @@ namespace PracticalWerewolf.Controllers
             this.UserManager = UserManager;
         }
 
-        public ActionResult Index(OrderMessageId? messageId)
+        public ActionResult Index(OrderMessageId? message)
         {
-            ViewBag.StatusMessage = messageId == OrderMessageId.OrderCreatedSuccess ? "OrderCreatedSuccess" : "";
+            ViewBag.StatusMessage = message == OrderMessageId.OrderCreatedSuccess ? "Order placed successfully." 
+                : message == OrderMessageId.OrderCreatedError ? "Internal error. Try placing your order again"
+                : "";
+
             return View();
         }
 
@@ -70,6 +74,14 @@ namespace PracticalWerewolf.Controllers
             }
             
             CustomerInfo Requester = UserInfoService.GetUserCustomerInfo(User.Identity.GetUserId());
+            if (Requester == null)
+            {
+                return RedirectToAction("Index", new { message = OrderMessageId.OrderCreatedError });
+            }
+
+            model.DropOffAddress.CivicAddressGuid = Guid.NewGuid();
+            model.PickUpAddress.CivicAddressGuid = Guid.NewGuid();
+            model.Size.TruckCapacityUnitGuid = Guid.NewGuid();
 
             OrderRequestService.CreateOrderRequestInfo(new OrderRequestInfo
             {
@@ -83,7 +95,7 @@ namespace PracticalWerewolf.Controllers
 
             UnitOfWork.SaveChanges();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { message = OrderMessageId.OrderCreatedSuccess });
         }
 
         // GET: Order/Edit/guid
