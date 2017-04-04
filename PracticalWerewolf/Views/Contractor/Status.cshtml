@@ -1,0 +1,48 @@
+﻿@model PracticalWerewolf.ViewModels.TruckDetailsViewModel
+
+
+<div class="col-md-9">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @Html.DisplayName("Your Truck")
+        </div>
+        <div class="panel-body">
+                <dl >
+                    @Html.HiddenFor(Model => Model.Lat)
+                    @Html.HiddenFor(Model => Model.Long)
+                    <dt>
+                        @Html.DisplayNameFor(model => model.LicenseNumber)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.LicenseNumber)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.MaxCapacity.Mass )
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.MaxCapacity.Mass )
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.MaxCapacity.Volume)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.MaxCapacity.Volume)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayName("Choose Your Location")
+                    </dt>
+                    <dd>
+                        <div class="col-md-10" id="map" height 400px; width 80%;></div>
+                    </dd>
+
+                </dl>
+        </div>
+    </div>
+</div>
+

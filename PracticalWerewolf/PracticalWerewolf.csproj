@@ -354,6 +354,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\GoogleMapAPI.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\knockout-3.4.2.debug.js" />
@@ -435,6 +436,7 @@
     <Content Include="Views\Contractor\Pending.cshtml" />
     <Content Include="Views\Contractor\Current.cshtml" />
     <Content Include="Views\Contractor\Delivered.cshtml" />
+    <Content Include="Views\Contractor\Status.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -2,6 +2,7 @@
 using PracticalWerewolf.Controllers.UnitOfWork;
 using PracticalWerewolf.Models.UserInfos;
 using PracticalWerewolf.Services.Interfaces;
+using PracticalWerewolf.ViewModels;
 using PracticalWerewolf.ViewModels.Contractor;
 using System;
 using System.Device.Location;
@@ -218,5 +219,35 @@ namespace PracticalWerewolf.Controllers
             }
         }
 
+        public async Task<ActionResult> Status()
+        {
+            var userId = User.Identity.GetUserId();
+            if (userId != null)
+            {
+                var user = await UserManager.FindByIdAsync(userId);
+
+                var truck = user.ContractorInfo.Truck;
+
+                if (truck != null)
+                {
+                    var model = new TruckDetailsViewModel
+                    {
+                        Guid = truck.TruckGuid,
+                        LicenseNumber = truck.LicenseNumber,
+                        // AvailableCapacity = truck.AvailableCapacity, // TODO: uncomment once there's data for this
+                        MaxCapacity = truck.MaxCapacity,
+                        Lat = truck.Location.Latitude,
+                        Long = truck.Location.Longitude
+                    };
+                    return PartialView(model);
+                }
+
+                return HttpNotFound(); // TODO: Use StatusMessage template and an Error enum
+            }
+            else
+            {
+                return HttpNotFound(); // TODO: Use StatusMessage template and an Error enum
+            }
+        }
     }
 }
