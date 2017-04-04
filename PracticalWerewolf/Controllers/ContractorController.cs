@@ -2,10 +2,8 @@
 using PracticalWerewolf.Controllers.UnitOfWork;
 using PracticalWerewolf.Models.UserInfos;
 using PracticalWerewolf.Services.Interfaces;
-using PracticalWerewolf.Stores.Interfaces;
 using PracticalWerewolf.ViewModels.Contractor;
 using System;
-using System.Collections.Generic;
 using System.Device.Location;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,13 +27,15 @@ namespace PracticalWerewolf.Controllers
 
         private ApplicationUserManager UserManager { get; set; }
         private IContractorService ContractorService { get; set; }
+        private IOrderService OrderService { get; set; }
         private IUnitOfWork UnitOfWork { get; set; }
 
-        public ContractorController(ApplicationUserManager UserManager, IContractorService ContractorService, IUnitOfWork UnitOfWork)
+        public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService, IUnitOfWork UnitOfWork)
         {
             this.UnitOfWork = UnitOfWork;
             this.UserManager = UserManager;
             this.ContractorService = ContractorService;
+            this.OrderService = OrderService;
         }
 
         private void GenerateErrorMessage(ContractorMessageId? message)
@@ -129,7 +129,6 @@ namespace PracticalWerewolf.Controllers
                 return RedirectToAction("Index", new { Message = ContractorMessageId.AlreadyRegisteredError });
             }
 
-
             CivicAddressDb Address = model.Address;
             Address.CivicAddressGuid = Guid.NewGuid();
 
@@ -155,5 +154,69 @@ namespace PracticalWerewolf.Controllers
             }
             
         }
+
+        public async Task<ActionResult> Pending()
+        {
+            var userId = User.Identity.GetUserId();
+            if (userId != null)
+            {
+                var user = await UserManager.FindByIdAsync(userId);
+
+                var contractor = user.ContractorInfo;
+                var model = new PendingOrderViewModel()
+                {
+                    Orders = OrderService.GetQueuedOrders(contractor)
+                };
+
+                return PartialView(model);
+            }
+            else
+            {
+                return View();
+            }
+        }
+
+        public async Task<ActionResult> Current()
+        {
+            var userId = User.Identity.GetUserId();
+            if (userId != null)
+            {
+                var user = await UserManager.FindByIdAsync(userId);
+
+                var contractor = user.ContractorInfo;
+                var model = new CurrentOrderViewModel()
+                {
+                    Orders = OrderService.GetInprogressOrders(contractor)
+                };
+
+                return PartialView(model);
+            }
+            else
+            {
+                return View();
+            }
+        }
+
+        public async Task<ActionResult> Delivered()
+        {
+            var userId = User.Identity.GetUserId();
+            if (userId != null)
+            {
+                var user = await UserManager.FindByIdAsync(userId);
+
+                var contractor = user.ContractorInfo;
+                var model = new DeliveredOrderViewModel()
+                {
+                    Orders = OrderService.GetDeliveredOrders(contractor)
+                };
+
+                return PartialView(model);
+            }
+            else
+            {
+                return View();
+            }
+        }
+
     }
 }

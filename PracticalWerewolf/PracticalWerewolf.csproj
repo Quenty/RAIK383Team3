@@ -279,6 +279,18 @@
     <Compile Include="Migrations\201703192234137_UpdateTruckCapacityUnitRequirements.Designer.cs">
       <DependentUpon>201703192234137_UpdateTruckCapacityUnitRequirements.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703282057134_Update-Relationship.cs" />
+    <Compile Include="Migrations\201703282057134_Update-Relationship.Designer.cs">
+      <DependentUpon>201703282057134_Update-Relationship.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703282154425_Update_Relationships-2.cs" />
+    <Compile Include="Migrations\201703282154425_Update_Relationships-2.Designer.cs">
+      <DependentUpon>201703282154425_Update_Relationships-2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704022316375_Update-Relationships-3.cs" />
+    <Compile Include="Migrations\201704022316375_Update-Relationships-3.Designer.cs">
+      <DependentUpon>201704022316375_Update-Relationships-3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CivicAddressDb.cs" />
     <Compile Include="Services\ContractorService.cs" />
@@ -338,6 +350,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\ContractorPartials.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -419,6 +432,9 @@
     <Content Include="Views\Contractor\_IndexDeniedApproval.cshtml" />
     <Content Include="Views\Contractor\_IndexApproved.cshtml" />
     <Content Include="Views\Truck\_TruckDetails.cshtml" />
+    <Content Include="Views\Contractor\Pending.cshtml" />
+    <Content Include="Views\Contractor\Current.cshtml" />
+    <Content Include="Views\Contractor\Delivered.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -436,9 +452,11 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201701292303341_InitialCreate.resx">
       <DependentUpon>201701292303341_InitialCreate.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702212009454_BasicDataClasses.resx">
       <DependentUpon>201702212009454_BasicDataClasses.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702212013150_BasicDataClassesFixed.resx">
       <DependentUpon>201702212013150_BasicDataClassesFixed.cs</DependentUpon>
@@ -481,6 +499,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703192234137_UpdateTruckCapacityUnitRequirements.resx">
       <DependentUpon>201703192234137_UpdateTruckCapacityUnitRequirements.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703282057134_Update-Relationship.resx">
+      <DependentUpon>201703282057134_Update-Relationship.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703282154425_Update_Relationships-2.resx">
+      <DependentUpon>201703282154425_Update_Relationships-2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704022316375_Update-Relationships-3.resx">
+      <DependentUpon>201704022316375_Update-Relationships-3.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
