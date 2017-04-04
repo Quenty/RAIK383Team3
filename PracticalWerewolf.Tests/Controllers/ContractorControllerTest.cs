@@ -38,10 +38,11 @@ namespace PracticalWerewolf.Tests.Controllers
             userManager.Setup(x => x.FindByIdAsync(It.IsAny<String>())).ReturnsAsync(contractor);
 
             var contractorService = new Mock<IContractorService>();
+            var orderService = new Mock<IOrderService>();
             var principal = GetMockUser(email);
             var context = GetMockControllerContext(principal);
             var unitOfWork = new Mock<IUnitOfWork>();
-            var controller = new ContractorController(userManager.Object, contractorService.Object, unitOfWork.Object);
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
             controller.ControllerContext = context;
 
 
@@ -60,10 +61,11 @@ namespace PracticalWerewolf.Tests.Controllers
             var userManager = GetMockApplicationUserManager();
 
             var contractorService = new Mock<IContractorService>();
+            var orderService = new Mock<IOrderService>();
             var user = GetMockUserNullId();
             var context = GetMockControllerContext(user);
             var unitOfWork = new Mock<IUnitOfWork>();
-            var controller = new ContractorController(userManager.Object, contractorService.Object, unitOfWork.Object);
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
             controller.ControllerContext = context;
 
 
@@ -94,10 +96,11 @@ namespace PracticalWerewolf.Tests.Controllers
             userManager.Setup(x => x.FindByIdAsync(It.IsAny<String>())).ReturnsAsync(contractor);
 
             var contractorService = new Mock<IContractorService>();
+            var orderService = new Mock<IOrderService>();
             var principal = GetMockUser(email);
             var context = GetMockControllerContext(principal);
             var unitOfWork = new Mock<IUnitOfWork>();
-            var controller = new ContractorController(userManager.Object, contractorService.Object, unitOfWork.Object);
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
             controller.ControllerContext = context;
 
 
@@ -116,10 +119,11 @@ namespace PracticalWerewolf.Tests.Controllers
             userManager.Setup(x => x.FindByIdAsync(It.IsAny<String>())).ReturnsAsync(contractor);
 
             var contractorService = new Mock<IContractorService>();
+            var orderService = new Mock<IOrderService>();
             var principal = GetMockUser(email);
             var context = GetMockControllerContext(principal);
             var unitOfWork = new Mock<IUnitOfWork>();
-            var controller = new ContractorController(userManager.Object, contractorService.Object, unitOfWork.Object);
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
             controller.ControllerContext = context;
 
             var result = controller.Register() as ViewResult;
@@ -166,10 +170,11 @@ namespace PracticalWerewolf.Tests.Controllers
             var contractorList = new List<ContractorInfo>() { contractorInfo1, contractorInfo2, contractorInfo3 };
 
             var contractorService = new Mock<IContractorService>();
+            var orderService = new Mock<IOrderService>();
             contractorService.Setup(x => x.GetUnapprovedContractors()).Returns(contractorList);
             var userManager = GetMockApplicationUserManager();
             var unitOfWork = new Mock<IUnitOfWork>();
-            var controller = new ContractorController(userManager.Object, contractorService.Object, unitOfWork.Object);
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
 
 
             var result = controller.Unapproved(null) as ViewResult;
@@ -191,10 +196,11 @@ namespace PracticalWerewolf.Tests.Controllers
             var contractorList = new List<ContractorInfo>();
 
             var contractorService = new Mock<IContractorService>();
+            var orderService = new Mock<IOrderService>();
             contractorService.Setup(x => x.GetUnapprovedContractors()).Returns(contractorList);
             var userManager = GetMockApplicationUserManager();
             var unitOfWork = new Mock<IUnitOfWork>();
-            var controller = new ContractorController(userManager.Object, contractorService.Object, unitOfWork.Object);
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
 
 
             var result = controller.Unapproved(null) as ViewResult;
@@ -212,8 +218,9 @@ namespace PracticalWerewolf.Tests.Controllers
         {
             var context = GetMockApplicationUserManager();
             var contractorService = new Mock<IContractorService>();
+            var orderService = new Mock<IOrderService>();
             var unitOfWork = new Mock<IUnitOfWork>();
-            var contractorController = new ContractorController(context.Object, contractorService.Object, unitOfWork.Object);
+            var contractorController = new ContractorController(context.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
             
             var result = contractorController.Approve(Guid.NewGuid(), true) as RedirectToRouteResult;
 
@@ -243,8 +250,9 @@ namespace PracticalWerewolf.Tests.Controllers
             var context = GetMockApplicationUserManager();
             context.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(contractor);
             var contractorService = new Mock<IContractorService>();
+            var orderService = new Mock<IOrderService>();
             var unitOfWork = new Mock<IUnitOfWork>();
-            var controller = new ContractorController(context.Object, contractorService.Object, unitOfWork.Object);
+            var controller = new ContractorController(context.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
             controller.ControllerContext = mockContext;
 
             var result = controller.Register(new ContractorRegisterModel()).Result as RedirectToRouteResult;
@@ -269,7 +277,8 @@ namespace PracticalWerewolf.Tests.Controllers
 
             var contractorService = new Mock<IContractorService>();
             var unitOfWork = new Mock<IUnitOfWork>();
-            var controller = new ContractorController(context.Object, contractorService.Object, unitOfWork.Object);
+            var orderService = new Mock<IOrderService>();
+            var controller = new ContractorController(context.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
             controller.ControllerContext = mockContext;
 
             var contractorRegisterModel = new ContractorRegisterModel()
@@ -301,8 +310,9 @@ namespace PracticalWerewolf.Tests.Controllers
             context.Setup(x => x.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Failed());
 
             var contractorService = new Mock<IContractorService>();
+            var orderService = new Mock<IOrderService>();
             var unitOfWork = new Mock<IUnitOfWork>();
-            var controller = new ContractorController(context.Object, contractorService.Object, unitOfWork.Object);
+            var controller = new ContractorController(context.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
             controller.ControllerContext = mockContext;
 
             var contractorRegisterModel = new ContractorRegisterModel()

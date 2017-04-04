@@ -18,6 +18,18 @@ namespace PracticalWerewolf.Services
             this.OrderStore = OrderStore;
         }
 
+        public IEnumerable<Order> GetDeliveredOrders(ContractorInfo contractor)
+        {
+            var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid);
+            return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.Complete).ToList();
+        }
+
+        public IEnumerable<Order> GetInprogressOrders(ContractorInfo contractor)
+        {
+            var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid);
+            return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.InProgress).ToList();
+        }
+
         public Order GetOrder(Guid orderGuid)
         {
             Order order = OrderStore.Single(o => o.OrderGuid == orderGuid);
@@ -46,5 +58,11 @@ namespace PracticalWerewolf.Services
             OrderStore.Update(order);
         }
 
+
+        public IEnumerable<Order> GetQueuedOrders(ContractorInfo contractor)
+        {
+            var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid);
+            return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.Queued).ToList();
+        }
     }
 }

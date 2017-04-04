@@ -351,6 +351,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\ContractorPartials.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -433,6 +434,9 @@
     <Content Include="Views\Order\Create.cshtml" />
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\TruckCapacityUnit.cshtml" />
+    <Content Include="Views\Contractor\Pending.cshtml" />
+    <Content Include="Views\Contractor\Current.cshtml" />
+    <Content Include="Views\Contractor\Delivered.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -449,9 +453,11 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201701292303341_InitialCreate.resx">
       <DependentUpon>201701292303341_InitialCreate.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702212009454_BasicDataClasses.resx">
       <DependentUpon>201702212009454_BasicDataClasses.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702212013150_BasicDataClassesFixed.resx">
       <DependentUpon>201702212013150_BasicDataClassesFixed.cs</DependentUpon>

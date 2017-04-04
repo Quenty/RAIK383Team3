@@ -6,6 +6,7 @@ using PracticalWerewolf.Models.UserInfos;
 using PracticalWerewolf.Stores.Interfaces;
 using PracticalWerewolf.Models;
 using PracticalWerewolf.Models.Trucks;
+using PracticalWerewolf.Models.Orders;
 
 namespace PracticalWerewolf.Services
 {
