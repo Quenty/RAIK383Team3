@@ -47,4 +47,9 @@ namespace PracticalWerewolf.ViewModels.Contractor
     {
         public ContractorInfo ContractorInfo { get; set; }
     }
+
+    public class ContractorStatusModel
+    {
+        public Boolean ContractorStatus { get; set; }
+    }
 }

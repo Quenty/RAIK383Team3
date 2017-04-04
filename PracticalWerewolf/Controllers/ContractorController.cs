@@ -10,6 +10,7 @@ using System.Device.Location;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Data.Entity.Validation;
 using System.Web.Mvc;
 
 namespace PracticalWerewolf.Controllers
@@ -153,6 +154,116 @@ namespace PracticalWerewolf.Controllers
                 return RedirectToAction("Index", new { Message = ContractorMessageId.Error });
             }
             
+        }
+
+
+
+        //[HttpPost]
+        //[AllowAnonymous]
+        //public async Task<ActionResult> ChangeStatus(ContractorMessageId? message)
+        //{
+        //    GenerateErrorMessage(message);
+
+        //    var userId = User.Identity.GetUserId();
+        //    if (userId != null)
+        //    {
+        //        var user = await UserManager.FindByIdAsync(userId);
+
+        //        var model = new ContractorIndexModel
+        //        {
+        //            ContractorInfo = user.ContractorInfo,
+        //        };
+
+        //        return View(model);
+        //    }
+        //    else
+        //    {
+        //        return View(new ContractorIndexModel());
+        //    }
+        //}
+        //[HttpPost]
+        //public async Task<ActionResult> ChangeStatus(ContractorMessageId? message)
+        //{
+        //    GenerateErrorMessage(message);
+
+        //    var userId = User.Identity.GetUserId();
+        //    if (userId != null)
+        //    {
+        //        var user = await UserManager.FindByIdAsync(userId);
+
+        //        var model = new ContractorIndexModel
+        //        {
+        //            ContractorInfo = user.ContractorInfo,
+        //        };
+
+        //        return View(model);
+        //    }
+        //    else
+        //    {
+        //        return View(new ContractorIndexModel());
+        //    }
+        //}
+        [HttpPost]
+        public async Task<ActionResult> ChangeStatus(ContractorStatusModel model)
+        {
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            var userStatus = user.ContractorInfo.IsAvailable;
+            if (user.ContractorInfo == null)
+            {
+                return RedirectToAction("Error", new { Message = ContractorMessageId.Error });
+            }
+            user.ContractorInfo.IsAvailable = model.ContractorStatus;
+            try
+            {
+                // Your code...
+                // Could also be before try if you know the exception occurs in SaveChanges
+                var result = await UserManager.UpdateAsync(user);
+            }
+            catch (DbEntityValidationException e)
+            {
+                foreach (var eve in e.EntityValidationErrors)
+                {
+                    System.Diagnostics.Debug.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                    foreach (var ve in eve.ValidationErrors)
+                    {
+                        System.Diagnostics.Debug.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                            ve.PropertyName, ve.ErrorMessage);
+                    }
+                }
+                throw;
+            }
+            //if (result.Succeeded)
+            {
+                //return View(model);
+                return RedirectToAction("Index", new { Message = ContractorMessageId.RegisterSuccess });
+            }
+            //else
+            {
+                return RedirectToAction("Error", new { Message = ContractorMessageId.Error });
+            }
+        }
+
+        public async Task<ActionResult> ChangeStatus(ContractorMessageId? message)
+        {
+            GenerateErrorMessage(message);
+
+            var userId = User.Identity.GetUserId();
+            if (userId != null)
+            {
+                var user = await UserManager.FindByIdAsync(userId);
+
+                var model = new ContractorIndexModel
+                {
+                    ContractorInfo = user.ContractorInfo,
+                };
+
+                return View(model);
+            }
+            else
+            {
+                return View(new ContractorIndexModel());
+            }
         }
     }
 }

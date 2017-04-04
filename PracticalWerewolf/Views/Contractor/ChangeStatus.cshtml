@@ -1,0 +1,77 @@
+﻿@model PracticalWerewolf.ViewModels.Contractor.ContractorIndexModel
+
+<div class="alert alert-success" role="alert">
+    <span class="glyphicon glyphicon-ok-circle"></span>
+    <strong>Application approved!</strong> Your application has been approved by a manager!
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="list-group">
+            <a class="list-group-item" href="#"><span class="badge">7</span>Pending orders</a>
+            <a class="list-group-item active" href="#"><span class="badge">7</span>Orders in your truck</a>
+            <a class="list-group-item" href="#">Delivered orders</a>
+            <a class="list-group-item" href="@Url.Action("ChangeStatus", "Contractor", new { model =  Model})">
+                Current status <span class="label label-default pull-right">
+                    @if (Model.ContractorInfo.IsAvailable)
+                    {
+                        @Html.Raw("Available")
+                    }
+                    else
+                    {
+                        @Html.Raw("Not Available")
+                    }
+                </span>
+            </a>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.ContractorInfo.IsAvailable, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+
+                @using (Html.BeginForm("ChangeStatus", "Contractor", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+
+                    @Html.EditorFor(model => model.ContractorInfo.IsAvailable, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ContractorInfo, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Update Status" class="btn btn-default" />
+                        </div>
+                    </div>
+                }
+                @Model.ContractorInfo.IsAvailable
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Current Status:
+            </div>
+            <div class="panel-body">
+                @if (Model.ContractorInfo.IsAvailable)
+                {
+                    @Html.Raw("Available")
+                }
+                else
+                {
+                    @Html.Raw("Not Available")
+                }
+            </div>
+            @using (Html.BeginForm("ChangeStatus", "Contractor", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+
+                @Html.EditorFor(model => model.ContractorInfo.IsAvailable, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ContractorInfo, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Update Status" class="btn btn-default" />
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
