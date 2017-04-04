@@ -27,6 +27,10 @@ else
     else if (Model.ContractorInfo.ApprovalState == ContractorApprovalState.Approved)
     {
         Html.RenderPartial("_IndexApproved", Model);
+        @section Scripts {
+            <script src="~/Scripts/ContractorPartials.js"></script>
+            @Scripts.Render("~/bundles/jquery")
+        }
     }
     else
     {
