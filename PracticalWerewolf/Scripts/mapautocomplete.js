@@ -5,76 +5,93 @@
 // parameter when you first load the API. For example:
 // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
 
+function AddressAutocompleter(element) {
+    var self = this;
 
-
-var placeSearch, autocomplete;
-var componentForm = {
-    street_number: 'short_name',
-    route: 'long_name',
-    locality: 'long_name',
-    administrative_area_level_1: 'short_name',
-    country: 'long_name',
-    postal_code: 'short_name'
-};
-
-function initAutocomplete() {
-    // Create the autocomplete object, restricting the search to geographical
-    // location types.
-    autocomplete = new google.maps.places.Autocomplete(
-        (document.getElementById('autocomplete')),
-        {types: ['geocode']});
-
-    // When the user selects an address from the dropdown, populate the address
-    // fields in the form.
-    autocomplete.addListener('place_changed', fillInAddress);
-    for (var component in componentForm) {
-        if (document.getElementById(component).value)
-        {
-            document.getElementById(component).disabled = false;
-        }
+    console.log("Made address auto competer");
+    this.element = element
+    this.inputElement = element.getElementsByClassName("map-autocomplete-input")[0]
+    if (this.inputElement == null)
+    {
+        console.error("No input object found!");
     }
 
-    var input = document.getElementById('autocomplete');
-    google.maps.event.addDomListener(input, 'keydown', function (e) {
+    this.autocomplete = new google.maps.places.Autocomplete(this.inputElement, { types: ['geocode'] });
+
+    this.autocomplete.addListener('place_changed', function() {
+        self.fillInAddress()
+    });
+    this.enableFields();
+
+    google.maps.event.addDomListener(this.inputElement, 'keydown', function (e) {
         if (e.keyCode == 13) {
-            e.preventDefault();
+            e.preventDefault(); // Prevent submitting form on selecting address
         }
     });
-
 }
 
-function fillInAddress() {
-    // Get the place details from the autocomplete object.
-    var place = autocomplete.getPlace();
-    if (place)
-    {
-        for (var component in componentForm) {
-            document.getElementById(component).disabled = false;
-            document.getElementById(component).value = '';
+AddressAutocompleter.prototype.getFields = function() {
+    return this.element.getElementsByClassName("map-autocomplete-field");
+}
+
+AddressAutocompleter.prototype.disableFields = function() {
+    var fields = this.getFields();
+    for (var i = 0; i < fields.length; i++) {
+        var element = fields[i];
+        element.disabled = true;
+    }
+}
+
+AddressAutocompleter.prototype.enableFields = function() {
+    var fields = this.getFields();
+    for (var i = 0; i < fields.length; i++) {
+        var element = fields[i];
+        element.disabled = false;
+    }
+}
+
+
+AddressAutocompleter.prototype.fillInAddress = function () {
+    var place = this.autocomplete.getPlace();
+    if (place) {
+        var types = {}
+        var fields = this.getFields();
+        for (var i = 0; i < fields.length; i++) {
+            var element = fields[i];
+
+            var componentData = element.getAttribute("data-map-autocomplete-field");
+            var componentDataType = element.getAttribute("data-map-autocomplete-datatype") || "short_name";
+
+            types[componentData] = {
+                data: componentData,
+                dataType: componentDataType,
+                element: element
+            };
+
+            element.disabled = false;
         }
 
-        // Get each component of the address from the place details
-        // and fill the corresponding field on the form.
         for (var i = 0; i < place.address_components.length; i++) {
-            var addressType = place.address_components[i].types[0];
-            if (componentForm[addressType]) {
-                var val = place.address_components[i][componentForm[addressType]];
-                document.getElementById(addressType).value = val;
+            var addressComponent = place.address_components[i];
+            var addressType = addressComponent.types[0];
+
+            if (types[addressType]) {
+                var type = types[addressType]
+                var element = type.element
+                element.value = addressComponent[type.dataType];
             }
         }
     }
     else
     {
         console.write("No place loaded from autocomplete! Ran out of tokens?")
-        for (var component in componentForm) {
-            document.getElementById(component).disabled = false;
-        }
+        this.disableFields();
     }
 }
 
 // Bias the autocomplete object to the user's geographical location,
 // as supplied by the browser's 'navigator.geolocation' object.
-function geolocate() {
+AddressAutocompleter.prototype.geolocate = function() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
             var geolocation = {
@@ -87,5 +104,15 @@ function geolocate() {
             });
             autocomplete.setBounds(circle.getBounds());
         });
+    }
+}
+
+function initAutocompleteCallback() {
+    // Called by Google's library after it is initialized
+    var components = document.getElementsByClassName("map-autocomplete-element");
+    console.log(components);
+    for (var i = 0; i < components.length; i++)
+    {
+        new AddressAutocompleter(components[i]);
     }
 }
