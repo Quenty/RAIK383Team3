@@ -26,10 +26,11 @@ namespace PracticalWerewolf.Controllers
             Error
         }
 
-        private ApplicationUserManager UserManager { get; set; }
-        private IContractorService ContractorService { get; set; }
-        private IOrderService OrderService { get; set; }
-        private IUnitOfWork UnitOfWork { get; set; }
+        private readonly ApplicationUserManager UserManager;
+        private readonly IContractorService ContractorService;
+        private readonly IUnitOfWork UnitOfWork;
+        private readonly IOrderService OrderService;
+
 
         public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService, IUnitOfWork UnitOfWork)
         {
@@ -66,18 +67,19 @@ namespace PracticalWerewolf.Controllers
                 };
 
                 return View(model);
+
             }
             else
             {
                 return View(new ContractorIndexModel());
             }
+
         }
 
 
-        public async Task<ActionResult> Register()
+        public ActionResult Register()
         {
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            if (user.ContractorInfo != null)
+            if (User.IsInRole("Contractor"))
             {
                 return RedirectToAction("Index", new { Message = ContractorMessageId.AlreadyRegisteredError });
             }
@@ -101,15 +103,16 @@ namespace PracticalWerewolf.Controllers
             return View(model);
         }
 
-        [Authorize(Roles="Employee")]
+        [Authorize(Roles = "Employee")]
         public ActionResult Approve(Guid guid, bool IsApproved)
         {
             if (guid.Equals(Guid.Empty))
             {
                 return RedirectToAction("Unapproved", new { Message = ContractorMessageId.Error });
             }
-                //Is this another instance where we want an IdentityResult?
-                ContractorService.SetApproval(guid, IsApproved ? ContractorApprovalState.Approved : ContractorApprovalState.Denied);
+
+            // Is this another instance where we want an IdentityResult?
+            ContractorService.SetApproval(guid, IsApproved ? ContractorApprovalState.Approved : ContractorApprovalState.Denied);
             UnitOfWork.SaveChanges();
 
             return RedirectToAction("Unapproved", new { Message = IsApproved ? ContractorMessageId.ApprovedSuccess : ContractorMessageId.DeniedSuccess });
@@ -153,7 +156,7 @@ namespace PracticalWerewolf.Controllers
             {
                 return RedirectToAction("Index", new { Message = ContractorMessageId.Error });
             }
-            
+
         }
 
         public async Task<ActionResult> Pending()
@@ -249,5 +252,6 @@ namespace PracticalWerewolf.Controllers
                 return HttpNotFound(); // TODO: Use StatusMessage template and an Error enum
             }
         }
+
     }
 }

@@ -1,15 +1,15 @@
 ﻿@model PracticalWerewolf.ViewModels.TruckDetailsViewModel
 
-
 <div class="col-md-9">
     <div class="panel panel-default">
         <div class="panel-heading">
-            @Html.DisplayName("Your Truck")
+            @Html.DisplayName("Your Truck")                        
+            @Html.ActionLink("Edit Your Truck", "Edit", "Truck", new { id = Model.Guid }, null)
         </div>
         <div class="panel-body">
                 <dl >
-                    @Html.HiddenFor(Model => Model.Lat)
-                    @Html.HiddenFor(Model => Model.Long)
+                    @Html.HiddenFor(Model => Model.Lat, new { id = "Lat" })
+                    @Html.HiddenFor(Model => Model.Long, new { id = "Long"})
                     <dt>
                         @Html.DisplayNameFor(model => model.LicenseNumber)
                     </dt>
@@ -35,13 +35,12 @@
                     </dd>
 
                     <dt>
-                        @Html.DisplayName("Choose Your Location")
+                        @Html.DisplayName("Your Location")
+                        @Html.ActionLink("Update Location", "Location", "Truck", new { id = Model.Guid }, null)
                     </dt>
-                    <dd>
-                        <div class="col-md-10" id="map" height 400px; width 80%;></div>
-                    </dd>
-
                 </dl>
+            <div id="map" style="height:400px"></div>
+            <script>loadAPI()</script>
         </div>
     </div>
 </div>

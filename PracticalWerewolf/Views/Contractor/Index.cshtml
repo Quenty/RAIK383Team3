@@ -4,6 +4,8 @@
     ViewBag.Title = "Contract";
 }
 
+<head></head>
+
 @Html.Partial("_StatusMessage")
 
 @if (@Model.ContractorInfo == null)
@@ -27,6 +29,12 @@ else
     else if (Model.ContractorInfo.ApprovalState == ContractorApprovalState.Approved)
     {
         Html.RenderPartial("_IndexApproved", Model);
+        @section Scripts {
+            <script src="~/Scripts/ContractorPartials.js"></script>
+            <script src="~/Scripts/GoogleMapAPI.js"></script>
+
+            @Scripts.Render("~/bundles/jquery")
+        }
     }
     else
     {
