@@ -22,6 +22,25 @@ namespace PracticalWerewolf.Helpers
             Engine.Razor.AddTemplate("OrderUpdate", template);
         }
 
+        public static async Task SendOrderConfirmEmail(OrderRequestInfo order, ApplicationUser user)
+        {
+            OrderUpdateModel model = new OrderUpdateModel
+            {
+                UserName = user.UserName,
+                OrderId = order.OrderRequestInfoGuid,
+                ArrivalDate = "In the near future",         //todo calculate this
+                Cost = "Lotsa Moneeyyy",                    //todo calculate this
+                Destination = order.DropOffAddress.RawInputAddress,
+                UpdateType = OrderUpdateType.Order,
+                UpdateDescription = "has been placed!",
+                LogoId = Guid.Empty.ToString()
+            };
+
+            string subject = "Order Confirmation";
+
+            await SendOrderUpdateEmail(model, user.Email, subject);
+        }
+
         public static async Task SendOrderShippedEmail(OrderRequestInfo order, ApplicationUser user)
         {
             OrderUpdateModel model = new OrderUpdateModel
@@ -37,6 +56,25 @@ namespace PracticalWerewolf.Helpers
             };
 
             string subject = "Your Order Has Shipped!";
+
+            await SendOrderUpdateEmail(model, user.Email, subject);
+        }
+
+        public static async Task SendOrderDeliveryEmail(OrderRequestInfo order, ApplicationUser user)
+        {
+            OrderUpdateModel model = new OrderUpdateModel
+            {
+                UserName = user.UserName,
+                OrderId = order.OrderRequestInfoGuid,
+                ArrivalDate = "In the near future",         //todo calculate this
+                Cost = "Lotsa Moneeyyy",                    //todo calculate this
+                Destination = order.DropOffAddress.RawInputAddress,
+                UpdateType = OrderUpdateType.Delivery,
+                UpdateDescription = "has been delivered!",
+                LogoId = Guid.Empty.ToString()
+            };
+
+            string subject = "Your Order Has Been Delivered";
 
             await SendOrderUpdateEmail(model, user.Email, subject);
         }

@@ -8,8 +8,9 @@ namespace PracticalWerewolf.EmailTemplates
 {
     public enum OrderUpdateType
     {
-        [Display(Description ="has Shipped")]
-        Shipping
+        Shipping,
+        Order,
+        Delivery
     }
 
     public class OrderUpdateModel
