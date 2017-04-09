@@ -31,7 +31,6 @@ namespace PracticalWerewolf.Controllers
         private readonly IUnitOfWork UnitOfWork;
         private readonly IOrderService OrderService;
 
-
         public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService, IUnitOfWork UnitOfWork)
         {
             this.UnitOfWork = UnitOfWork;

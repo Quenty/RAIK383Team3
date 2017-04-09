@@ -435,6 +435,7 @@
     <Content Include="Views\Order\Create.cshtml" />
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\TruckCapacityUnit.cshtml" />
+
     <Content Include="Views\Contractor\Pending.cshtml" />
     <Content Include="Views\Contractor\Current.cshtml" />
     <Content Include="Views\Contractor\Delivered.cshtml" />
