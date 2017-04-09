@@ -230,7 +230,6 @@ namespace PracticalWerewolf.Controllers
                 var user = await UserManager.FindByIdAsync(userId);
 
                 var truck = user.ContractorInfo.Truck;
-
                 if (truck != null)
                 {
                     var model = new TruckDetailsViewModel
@@ -244,8 +243,10 @@ namespace PracticalWerewolf.Controllers
                     };
                     return PartialView(model);
                 }
-
-                return HttpNotFound(); // TODO: Use StatusMessage template and an Error enum
+                else
+                {
+                    return HttpNotFound();
+                }
             }
             else
             {

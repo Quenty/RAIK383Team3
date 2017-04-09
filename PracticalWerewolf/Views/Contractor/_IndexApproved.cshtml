@@ -5,6 +5,15 @@
     <strong>Application approved!</strong> Your application has been approved by a manager!
 </div>
 
+@if (Model.ContractorInfo.Truck == null)
+{
+    <div class="alert alert-info" role="alert">
+        <span class="glyphicon glyphicon-ok-circle"></span>
+        <strong>@Html.ActionLink("Create Your Truck!", "Create", "Truck")</strong> Please follow this link to create your truck, you will not be considered for jobs until this is complete.
+         
+    </div>
+}
+
     <div class="row">
         <div class="col-md-3">
             <div class="list-group">

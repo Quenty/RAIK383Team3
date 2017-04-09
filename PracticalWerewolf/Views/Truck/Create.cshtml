@@ -11,8 +11,8 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.HiddenFor(m => m.Long )
-            @Html.HiddenFor(m => m.Lat )
+            @Html.HiddenFor(m => m.Long)
+            @Html.HiddenFor(m => m.Lat)
 
             @Html.LabelFor(model => model.LicenseNumber, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -37,12 +37,12 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <div class = "control-label col-md-2">
-                @Html.Label("Choose Your Location")
-            </div>
-                <div class="col-md-10" id="map" height: 400px; width: 80%;></div>
+
+        <div class="control-label col-md-2">
+            @Html.Label("Choose Your Location")
         </div>
+        <div class="col-md-10" id="map" style="height:400px; width:80%;"></div>
+
 
 
         <div class="form-group">
@@ -54,11 +54,11 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to Home Page", "Index", "Contractor")
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/GoogleMapAPI.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZ7pBFhPlZvw9Hm2CDAL7gFoI7s5WsPpc&callback=initMap"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZ7pBFhPlZvw9Hm2CDAL7gFoI7s5WsPpc&callback=createMap"></script>
 }
