@@ -47,6 +47,14 @@ namespace PracticalWerewolf.Services
             throw new NotImplementedException();
         }
 
+        public IQueryable<ContractorInfo> getAvailableContractorQuery()
+        {
+            return _contractorStore.Find(c => c.ApprovalState == ContractorApprovalState.Approved).AsQueryable()
+                .Where(c => c.IsAvailable)
+                .Where(c => c.Truck.AvailableCapacity.Volume > 0)
+                .Where(c => c.Truck.AvailableCapacity.Mass > 0);
+        }
+
 
         public void UpdateContractorTruck(Truck truck, ApplicationUser driver)
         {

@@ -20,6 +20,7 @@ namespace PracticalWerewolf.Controllers
         private readonly IUserInfoService UserInfoService;
         private readonly IUnitOfWork UnitOfWork;
         private readonly IOrderService OrderService;
+
         private readonly ApplicationUserManager UserManager;
 
         public enum OrderMessageId

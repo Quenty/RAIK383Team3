@@ -38,11 +38,16 @@ namespace PracticalWerewolf.Models
                 userIdentity.AddClaim(new Claim(ClaimTypes.Role, "Contractor"));
             }
 
-            if (user.CustomerInfo != null)
+            if (user.CustomerInfo == null)
             {
-                userIdentity.AddClaim(new Claim(ClaimTypes.Role, "Customer"));
-            }
+                user.CustomerInfo = new CustomerInfo
+                {
+                    CustomerInfoGuid = Guid.NewGuid()
+                };
 
+                await manager.UpdateAsync(user);
+            }
+            userIdentity.AddClaim(new Claim(ClaimTypes.Role, "Customer"));
 
             return userIdentity;
         }

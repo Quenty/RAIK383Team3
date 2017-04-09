@@ -40,6 +40,11 @@ namespace PracticalWerewolf.Services
             OrderStore.Update(order);
         }
 
+        public OrderService(IOrderStore OrderStore)
+        {
+            this.OrderStore = OrderStore;
+        }
+
         public void AssignOrder(Guid orderGuid, ContractorInfo contractor)
         {
             Order order = GetOrder(orderGuid);
@@ -76,7 +81,6 @@ namespace PracticalWerewolf.Services
             var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid);
             return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.InProgress).ToList();
         }
-
 
         public IEnumerable<Order> GetQueuedOrders(ContractorInfo contractor)
         {
