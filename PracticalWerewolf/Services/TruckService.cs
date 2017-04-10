@@ -21,8 +21,6 @@ namespace PracticalWerewolf.Services
             this.TruckStore = TruckStore;
         }
 
-        
-
         public void CreateTruck(Truck truck)
         {
             if (truck == null)

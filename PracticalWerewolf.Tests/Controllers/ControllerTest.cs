@@ -49,13 +49,19 @@ namespace PracticalWerewolf.Tests.Controllers
         }
 
         //This is the only way I could get mocking the user to work (getting the name, id, email, etc)
-        public static GenericPrincipal GetMockUser(string id)
+        public static GenericPrincipal GetMockUser(string id, List<Claim> claimsToAdd = null)
         {
             var identity = new GenericIdentity(id);
             List<Claim> claims = new List<Claim>(){
                     new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name", id),
                     new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier", id)
             };
+
+            if (claimsToAdd != null)
+            {
+                claims.AddRange(claimsToAdd);
+            }
+            
             identity.AddClaims(claims);
             var principal = new GenericPrincipal(identity, new string[0]);
 

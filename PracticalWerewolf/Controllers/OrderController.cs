@@ -1,4 +1,9 @@
-﻿using PracticalWerewolf.Services.Interfaces;
+﻿using Microsoft.AspNet.Identity;
+using PracticalWerewolf.Controllers.UnitOfWork;
+using PracticalWerewolf.Models.Orders;
+using PracticalWerewolf.Models.UserInfos;
+using PracticalWerewolf.Services.Interfaces;
+using PracticalWerewolf.ViewModels.Orders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,43 +15,38 @@ namespace PracticalWerewolf.Controllers
     [RequireHttps]
     public class OrderController : Controller
     {
-        IOrderRequestService OrderRequestService;
-        IOrderTrackService OrderTrackService;
+        private readonly IOrderRequestService OrderRequestService;
+        private readonly IOrderTrackService OrderTrackService;
+        private readonly IUserInfoService UserInfoService;
+        private readonly IUnitOfWork UnitOfWork;
+        private readonly ApplicationUserManager UserManager;
 
-        public OrderController(IOrderRequestService OrderRequestService, IOrderTrackService OrderTrackService)
+        public enum OrderMessageId
+        {
+            OrderCreatedSuccess,
+            OrderCreatedError
+        }
+
+        public OrderController(IOrderRequestService OrderRequestService, IOrderTrackService OrderTrackService, 
+            IUserInfoService UserInfoService, IUnitOfWork UnitOfWork, ApplicationUserManager UserManager)
         {
             this.OrderRequestService = OrderRequestService;
             this.OrderTrackService = OrderTrackService;
+            this.UserInfoService = UserInfoService;
+            this.UnitOfWork = UnitOfWork;
+            this.UserManager = UserManager;
         }
 
-        // GET: Order/Index
-        [Authorize (Roles= "Employees")]
-        public ActionResult Index()
+        public ActionResult Index(OrderMessageId? message)
         {
-            // Users will see a list of all orders
+            ViewBag.StatusMessage = message == OrderMessageId.OrderCreatedSuccess ? "Order placed successfully." 
+                : message == OrderMessageId.OrderCreatedError ? "Internal error. Try placing your order again"
+                : "";
 
-            // Depends upon IOrderRequestService.GetCustomerOrders
             return View();
         }
 
-        // GET: Order/Index/guid
-        [Authorize(Roles = ("Customers"))]
-        public ActionResult Index(string guid)
-        {
-            // Customer will see a list of past and present orders associated to them
-            // Depends upon IOrderRequestService.GetCustomerOrders
-            return View();
-        }
-
-        // GET: Order/ContractedIndex/guid
-        [Authorize(Roles = ("Contractors"))]
-        public ActionResult ContractedIndex(string guid)
-        {
-            // Contractor will see a list of past and present orders associated to them
-            // Depends upon IOrderTrackService.GetContractorOrders
-            return View();
-        }
-
+      
         // GET: Order/Details/guid
         [Authorize (Roles = "Employees, Contractors, Customers")]
         public ActionResult Details(string guid)
@@ -57,31 +57,45 @@ namespace PracticalWerewolf.Controllers
         }
 
         // GET: Order/Create
-        [Authorize (Roles = "Customer, Employees")]
         public ActionResult Create()
         {
-            // Takes user to a form to create a new order
-            // Shouldn't depend upon anything
             return View();
         }
 
-        // POST: Order/Create
+    
         [HttpPost]
-        [Authorize(Roles = "Customer, Employees")]
-        public ActionResult Create(FormCollection collection)
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = ("Customer"))]
+        public ActionResult Create(CreateOrderRequestViewModel model)
         {
-            // Takes the info from customer or employee and updates the database
-            // Depends upon IOrderService.Create
-            try
+            if (!ModelState.IsValid)
             {
-                // TODO: Add insert logic here
+                return View(model);
+            }
+            
+            CustomerInfo Requester = UserInfoService.GetUserCustomerInfo(User.Identity.GetUserId());
+            if (Requester == null)
+            {
+                return RedirectToAction("Index", new { message = OrderMessageId.OrderCreatedError });
+            }
 
-                return RedirectToAction("Index");
-            }
-            catch
+            model.DropOffAddress.CivicAddressGuid = Guid.NewGuid();
+            model.PickUpAddress.CivicAddressGuid = Guid.NewGuid();
+            model.Size.TruckCapacityUnitGuid = Guid.NewGuid();
+
+            OrderRequestService.CreateOrderRequestInfo(new OrderRequestInfo
             {
-                return View();
-            }
+                OrderRequestInfoGuid = Guid.NewGuid(),
+                DropOffAddress = model.DropOffAddress,
+                PickUpAddress = model.PickUpAddress,
+                Size = model.Size,
+                RequestDate = DateTime.Now,
+                Requester = Requester
+            });
+
+            UnitOfWork.SaveChanges();
+
+            return RedirectToAction("Index", new { message = OrderMessageId.OrderCreatedSuccess });
         }
 
         // GET: Order/Edit/guid
@@ -117,7 +131,7 @@ namespace PracticalWerewolf.Controllers
         public ActionResult Cancel(string guid)
         {
             // Gives customer and employee the option to cancel an order
-            // Depends upon IOrderRequestService.GetOrdersByCustomerInfo
+            // Depends upon IOrderService.CancelOrder(OrderGuid)
             return View();
         }
 
