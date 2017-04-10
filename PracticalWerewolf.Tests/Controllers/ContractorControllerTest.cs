@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using static PracticalWerewolf.Controllers.ContractorController;
 using System.Linq;
 using PracticalWerewolf.Controllers.UnitOfWork;
+using System.Security.Claims;
 using PracticalWerewolf.Models.Orders;
 
 namespace PracticalWerewolf.Tests.Controllers
@@ -92,20 +93,25 @@ namespace PracticalWerewolf.Tests.Controllers
                 IsAvailable = true,
                 Truck = new Truck()
             };
-            var contractor = new ApplicationUser() { UserName = email, ContractorInfo = contractorInfo };
+            var user = new ApplicationUser() { UserName = email, ContractorInfo = contractorInfo };
+
             var userManager = GetMockApplicationUserManager();
-            userManager.Setup(x => x.FindByIdAsync(It.IsAny<String>())).ReturnsAsync(contractor);
+            userManager.Setup(x => x.FindByIdAsync(It.IsAny<String>())).ReturnsAsync(user);
 
             var contractorService = new Mock<IContractorService>();
             var orderService = new Mock<IOrderService>();
-            var principal = GetMockUser(email);
+            var principal = GetMockUser(email, new List<Claim>()
+            {
+                new Claim(ClaimTypes.Role, "Contractor")
+            });
+
             var context = GetMockControllerContext(principal);
             var unitOfWork = new Mock<IUnitOfWork>();
             var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
             controller.ControllerContext = context;
 
 
-            var result = controller.Register().Result as RedirectToRouteResult;
+            var result = controller.Register() as RedirectToRouteResult;
 
             Assert.IsNotNull(result);
             Assert.AreEqual("Index", result.RouteValues["action"]);
@@ -127,7 +133,7 @@ namespace PracticalWerewolf.Tests.Controllers
             var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
             controller.ControllerContext = context;
 
-            var result = controller.Register().Result as ViewResult;
+            var result = controller.Register() as ViewResult;
 
             Assert.IsNotNull(result);
         }

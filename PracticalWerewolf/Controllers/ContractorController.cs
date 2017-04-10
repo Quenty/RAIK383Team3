@@ -2,6 +2,7 @@
 using PracticalWerewolf.Controllers.UnitOfWork;
 using PracticalWerewolf.Models.UserInfos;
 using PracticalWerewolf.Services.Interfaces;
+using PracticalWerewolf.ViewModels;
 using PracticalWerewolf.ViewModels.Contractor;
 using System;
 using System.Device.Location;
@@ -22,13 +23,14 @@ namespace PracticalWerewolf.Controllers
             DeniedSuccess,
             RegisterSuccess,
             AlreadyRegisteredError,
-            Error
+            Error,
+            NoTruckCreated
         }
 
-        private ApplicationUserManager UserManager { get; set; }
-        private IContractorService ContractorService { get; set; }
-        private IOrderService OrderService { get; set; }
-        private IUnitOfWork UnitOfWork { get; set; }
+        private readonly ApplicationUserManager UserManager;
+        private readonly IContractorService ContractorService;
+        private readonly IUnitOfWork UnitOfWork;
+        private readonly IOrderService OrderService;
 
         public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService, IUnitOfWork UnitOfWork)
         {
@@ -46,6 +48,7 @@ namespace PracticalWerewolf.Controllers
                 : message == ContractorMessageId.AlreadyRegisteredError ? "You are already registered as a contractor"
                 : message == ContractorMessageId.ApprovedSuccess ? "Contractor approved"
                 : message == ContractorMessageId.DeniedSuccess ? "Contractor denied"
+                : message == ContractorMessageId.NoTruckCreated ? "You must create a truck to access this page."
                 : "";
         }
 
@@ -65,18 +68,19 @@ namespace PracticalWerewolf.Controllers
                 };
 
                 return View(model);
+
             }
             else
             {
                 return View(new ContractorIndexModel());
             }
+
         }
 
 
-        public async Task<ActionResult> Register()
+        public ActionResult Register()
         {
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            if (user.ContractorInfo != null)
+            if (User.IsInRole("Contractor"))
             {
                 return RedirectToAction("Index", new { Message = ContractorMessageId.AlreadyRegisteredError });
             }
@@ -100,15 +104,16 @@ namespace PracticalWerewolf.Controllers
             return View(model);
         }
 
-        [Authorize(Roles="Employee")]
+        [Authorize(Roles = "Employee")]
         public ActionResult Approve(Guid guid, bool IsApproved)
         {
             if (guid.Equals(Guid.Empty))
             {
                 return RedirectToAction("Unapproved", new { Message = ContractorMessageId.Error });
             }
-                //Is this another instance where we want an IdentityResult?
-                ContractorService.SetApproval(guid, IsApproved ? ContractorApprovalState.Approved : ContractorApprovalState.Denied);
+
+            // Is this another instance where we want an IdentityResult?
+            ContractorService.SetApproval(guid, IsApproved ? ContractorApprovalState.Approved : ContractorApprovalState.Denied);
             UnitOfWork.SaveChanges();
 
             return RedirectToAction("Unapproved", new { Message = IsApproved ? ContractorMessageId.ApprovedSuccess : ContractorMessageId.DeniedSuccess });
@@ -152,7 +157,7 @@ namespace PracticalWerewolf.Controllers
             {
                 return RedirectToAction("Index", new { Message = ContractorMessageId.Error });
             }
-            
+
         }
 
         [Authorize(Roles = "Contractor")]
@@ -218,6 +223,39 @@ namespace PracticalWerewolf.Controllers
             else
             {
                 return View();
+            }
+        }
+
+        public async Task<ActionResult> _Status()
+        {
+            var userId = User.Identity.GetUserId();
+            if (userId != null)
+            {
+                var user = await UserManager.FindByIdAsync(userId);
+
+                var truck = user.ContractorInfo.Truck;
+                if (truck != null)
+                {
+                    var model = new TruckDetailsViewModel
+                    {
+                        Guid = truck.TruckGuid,
+                        LicenseNumber = truck.LicenseNumber,
+                        MaxCapacity = truck.MaxCapacity,
+                        Lat = truck.Location.Latitude,
+                        Long = truck.Location.Longitude
+                    };
+                    return PartialView(model);
+                }
+                else
+                {
+                    GenerateErrorMessage(ContractorMessageId.NoTruckCreated);
+                    return PartialView("_StatusMessage");
+                }
+            }
+            else
+            {
+                GenerateErrorMessage(ContractorMessageId.Error);
+                return PartialView("_StatusMessage");
             }
         }
 
