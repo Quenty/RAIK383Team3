@@ -1,6 +1,7 @@
 ﻿using GoogleMapsApi;
 using GoogleMapsApi.Entities.Directions.Request;
 using GoogleMapsApi.Entities.Directions.Response;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Spatial;
@@ -12,6 +13,8 @@ namespace PracticalWerewolf.Controllers
 {
     public class LocationHelper
     {
+        private static ILog logger = LogManager.GetLogger(typeof(LocationHelper));
+
         public static DbGeography CreatePoint(double lat, double lon, int srid = 4326)
         {
             string wkt = String.Format("POINT({0} {1})", lon, lat);
@@ -21,6 +24,13 @@ namespace PracticalWerewolf.Controllers
 
         public static DirectionsResponse GetRouteBetweenLocations(string origin, string destination)
         {
+            if(origin == null || destination == null)
+            {
+                //TODO: add possibly valuable info
+                logger.Error("GetRouteBetweenLocations(string, string) - null argument");
+                throw new ArgumentNullException();
+            }
+
             DirectionsRequest directionsRequest = new DirectionsRequest()
             {
                 Origin = origin,
@@ -34,7 +44,13 @@ namespace PracticalWerewolf.Controllers
 
         public static DirectionsResponse GetRouteBetweenLocations(CivicAddressDb origin, CivicAddressDb destination)
         {
-            return GetRouteBetweenLocations(origin, destination);
+            if (origin == null || destination == null)
+            {
+                //TODO: add possibly valuable info
+                logger.Error("GetRouteBetweenLocations(CivicAddressDb, CivicAddressDb) - null argument");
+                throw new ArgumentNullException();
+            }
+            return GetRouteBetweenLocations(origin.RawInputAddress, destination.RawInputAddress);
         }
     }
 }
