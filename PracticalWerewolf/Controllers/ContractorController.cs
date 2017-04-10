@@ -23,7 +23,8 @@ namespace PracticalWerewolf.Controllers
             DeniedSuccess,
             RegisterSuccess,
             AlreadyRegisteredError,
-            Error
+            Error,
+            NoTruckCreated
         }
 
         private readonly ApplicationUserManager UserManager;
@@ -47,6 +48,7 @@ namespace PracticalWerewolf.Controllers
                 : message == ContractorMessageId.AlreadyRegisteredError ? "You are already registered as a contractor"
                 : message == ContractorMessageId.ApprovedSuccess ? "Contractor approved"
                 : message == ContractorMessageId.DeniedSuccess ? "Contractor denied"
+                : message == ContractorMessageId.NoTruckCreated ? "You must create a truck to access this page."
                 : "";
         }
 
@@ -158,7 +160,7 @@ namespace PracticalWerewolf.Controllers
 
         }
 
-        public async Task<ActionResult> Pending()
+        public async Task<ActionResult> _Pending()
         {
             var userId = User.Identity.GetUserId();
             if (userId != null)
@@ -179,7 +181,7 @@ namespace PracticalWerewolf.Controllers
             }
         }
 
-        public async Task<ActionResult> Current()
+        public async Task<ActionResult> _Current()
         {
             var userId = User.Identity.GetUserId();
             if (userId != null)
@@ -200,7 +202,7 @@ namespace PracticalWerewolf.Controllers
             }
         }
 
-        public async Task<ActionResult> Delivered()
+        public async Task<ActionResult> _Delivered()
         {
             var userId = User.Identity.GetUserId();
             if (userId != null)
@@ -221,7 +223,7 @@ namespace PracticalWerewolf.Controllers
             }
         }
 
-        public async Task<ActionResult> Status()
+        public async Task<ActionResult> _Status()
         {
             var userId = User.Identity.GetUserId();
             if (userId != null)
@@ -235,7 +237,6 @@ namespace PracticalWerewolf.Controllers
                     {
                         Guid = truck.TruckGuid,
                         LicenseNumber = truck.LicenseNumber,
-                        // AvailableCapacity = truck.AvailableCapacity, // TODO: uncomment once there's data for this
                         MaxCapacity = truck.MaxCapacity,
                         Lat = truck.Location.Latitude,
                         Long = truck.Location.Longitude
@@ -244,12 +245,14 @@ namespace PracticalWerewolf.Controllers
                 }
                 else
                 {
-                    return HttpNotFound();
+                    GenerateErrorMessage(ContractorMessageId.NoTruckCreated);
+                    return PartialView("_StatusMessage");
                 }
             }
             else
             {
-                return HttpNotFound(); // TODO: Use StatusMessage template and an Error enum
+                GenerateErrorMessage(ContractorMessageId.Error);
+                return PartialView("_StatusMessage");
             }
         }
 
