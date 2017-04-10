@@ -24,4 +24,12 @@ namespace PracticalWerewolf.EmailTemplates
         public string Cost { get; set; }
         public string LogoId { get; set; }
     }
+
+    public class WorkOrderModel
+    {
+        public string ContractorUserName { get; set; }
+        public string PickUpAddress { get; set; }
+        public string DropOffAddress { get; set; }
+        public string LogoId { get; set; }
+    }
 }

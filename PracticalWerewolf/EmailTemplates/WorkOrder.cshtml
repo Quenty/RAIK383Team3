@@ -1,11 +1,11 @@
-﻿@Model PracticalWerewolf.EmailTemplates.OrderUpdateModel
+﻿@Model PracticalWerewolf.EmailTemplates.WorkOrderModel
 
 <!DOCTYPE html>
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Your Order @Model.UpdateType !</title>
+    <title>Work Order</title>
 </head>
 <body>
     <div>
@@ -30,7 +30,7 @@
                                             </table>
                                         </td>
                                         <td width="50%" style="text-align:right;font-size:large;">
-                                            @Model.UpdateType Confirmation
+                                            Work Order
                                         </td>
                                     </tr>
                                 </table>
@@ -40,10 +40,10 @@
                             <td>
                                 <hr />
                                 <p style="color:#02A9ED;font-size:medium">
-                                    Hi @Model.UserName,
+                                    Hi @Model.ContractorUserName,
                                 </p>
                                 <p>
-                                    Your order @Model.OrderId @Model.UpdateDescription
+                                    We have a new work order for you.
                                 </p>
                             </td>
                         </tr>
@@ -63,32 +63,24 @@
                                             <table width="100%" style="padding:20px">
                                                 <tr>
                                                     <td width="50%">
-                                                        <p><b>Arriving</b></p>
+                                                        <p><b>Pick Up Address</b></p>
                                                     </td>
                                                     <td>
-                                                        <p style="color:#41903f;font-size:medium;text-align:right">@Model.ArrivalDate</p>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <p><b>Destination</b></p>
-                                                    </td>
-                                                    <td>
-                                                        <p style="color:#41903f;font-size:medium;text-align:right">@Model.Destination</p>
+                                                        <p style="color:#41903f;font-size:medium;text-align:right">@Model.PickUpAddress</p>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <p><b>Cost</b></p>
+                                                        <p><b>Drop Off Address</b></p>
                                                     </td>
                                                     <td>
-                                                        <p style="color:#41903f;font-size:medium;text-align:right">@Model.Cost</p>
+                                                        <p style="color:#41903f;font-size:medium;text-align:right">@Model.DropOffAddress</p>
                                                     </td>
                                                 </tr>
                                             </table>
                                         </td>
                                         <td align="center">
-                                            <button onsubmit="www.staggeringbeauty.com" style="background-color:#428bca;border-color:#428bca;color:#fff;border:1px solid transparent;border-radius:6px;padding:10px 0px;">
+                                            <button onsubmit="www.staggeringbeauty.com" style="background-color:#428bca;border-color:#428bca;color:#fff;border:1px solid transparent;border-radius:6px;padding:10px 0px;" >
                                                 <a href="www.staggeringbeauty.com" style="padding:10px 16px;text-decoration:none;color:#fff;font-size:large;">Details »</a>
                                             </button>
                                         </td>

@@ -17,9 +17,18 @@ namespace PracticalWerewolf.Helpers
 
         static EmailHelper()
         {
-            var filePath = @"~\EmailTemplates\OrderUpdate.cshtml";
-            var template = System.IO.File.ReadAllText(System.Web.HttpContext.Current.Server.MapPath(filePath));
-            Engine.Razor.AddTemplate("OrderUpdate", template);
+            List<Tuple<string, string>> templateKeys = new List<Tuple<string, string>>
+            {
+                new Tuple<string, string>("OrderUpdate", @"~\EmailTemplates\OrderUpdate.cshtml"),
+                new Tuple<string, string>("WorkOrder", @"~\EmailTemplates\WorkOrder.cshtml"),
+            };
+            foreach(var keys in templateKeys)
+            {
+                var filePath = keys.Item2;
+                var template = System.IO.File.ReadAllText(System.Web.HttpContext.Current.Server.MapPath(filePath));
+                Engine.Razor.AddTemplate(keys.Item1, template);
+
+            }
         }
 
         public static async Task SendOrderConfirmEmail(OrderRequestInfo order, ApplicationUser user)
@@ -88,6 +97,36 @@ namespace PracticalWerewolf.Helpers
 
             imageIds.Add(new Tuple<string, string>(System.Web.HttpContext.Current.Server.MapPath("~/favicon.ico"), Guid.Empty.ToString()));
             var result = Engine.Razor.RunCompile("OrderUpdate", typeof(OrderUpdateModel), model);
+
+            int index = result.IndexOf("<!DOCTYPE html>");
+            result = result.Substring(index);
+
+            await _emailService.SendAsync(email, subject, result, imageIds);
+        }
+
+        public static async Task SendWorkOrderEmail(ApplicationUser contractor, OrderRequestInfo order)
+        {
+            WorkOrderModel model = new WorkOrderModel
+            {
+                ContractorUserName = contractor.UserName,
+                DropOffAddress = order.DropOffAddress.RawInputAddress,
+                PickUpAddress = order.PickUpAddress.RawInputAddress,
+                LogoId = Guid.Empty.ToString()
+            };
+            string subject = "Work Order Request";
+
+            await SendWorkOrderEmail(model, contractor.Email, subject);
+        }
+
+        private static async Task SendWorkOrderEmail(WorkOrderModel model, string email, string subject, List<Tuple<string, string>> imageIds = null)
+        {
+            if (imageIds == null)
+            {
+                imageIds = new List<Tuple<string, string>>();
+            }
+
+            imageIds.Add(new Tuple<string, string>(System.Web.HttpContext.Current.Server.MapPath("~/favicon.ico"), Guid.Empty.ToString()));
+            var result = Engine.Razor.RunCompile("WorkOrder", typeof(WorkOrderModel), model);
 
             int index = result.IndexOf("<!DOCTYPE html>");
             result = result.Substring(index);

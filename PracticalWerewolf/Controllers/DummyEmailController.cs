@@ -8,6 +8,7 @@ using RazorEngine;
 using RazorEngine.Templating;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Spatial;
 using System.Device.Location;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,6 +33,21 @@ namespace PracticalWerewolf.Controllers
             return View();
         }
 
+        public async Task<ActionResult> SendWorkOrder()
+        {
+            var me = _context.Users.First(x => x.Email.Equals("jesseelzhang@gmail.com"));
+            if (me == null)
+            {
+                return View();
+            }
+
+
+
+            await EmailHelper.SendWorkOrderEmail(me, me.CustomerInfo.OrderRequests.First());
+
+            return View();
+        }
+
         public async Task<ActionResult> SendEmail()
         {
             var me = _context.Users.First(x => x.Email.Equals("jesseelzhang@gmail.com"));
@@ -44,13 +60,55 @@ namespace PracticalWerewolf.Controllers
 
             await EmailHelper.SendOrderShippedEmail(me.CustomerInfo.OrderRequests.First(), me);
 
-            return View(); ;
+            return View();
         }
 
         public void Setup()
         {
             var me = _context.Users.First(x => x.Email.Equals("jesseelzhang@gmail.com"));
-            if(me.CustomerInfo == null)
+            
+            if(me.ContractorInfo == null)
+            {
+                me.ContractorInfo = new ContractorInfo
+                {
+                    ApprovalState = ContractorApprovalState.Approved,
+                    ContractorInfoGuid = Guid.NewGuid(),
+                    DriversLicenseId = "HERGEDY BLERGEDY",
+                    HomeAddress = new CivicAddressDb
+                    {
+                        CivicAddressGuid = Guid.NewGuid(),
+                        StreetNumber = "3025 North 169th Avenue",
+                        City = "Omaha",
+                        State = "Nebraska",
+                        Country = "USA",
+                        ZipCode = "68116",
+                        Route = "uh",
+                        RawInputAddress = "3025 North 169th Avenue, Omaha, NE 68116, USA"
+                    },
+                    IsAvailable = true,
+                    Truck = new Truck()
+                    {
+                        LicenseNumber = "Herp Berp Nerp",
+                        Location = LocationHelper.CreatePoint(3.14, 2.18),
+                        MaxCapacity = new TruckCapacityUnit()
+                        {
+                            Mass = 1,
+                            Volume = 2,
+                            TruckCapacityUnitGuid = Guid.NewGuid()
+                        },
+                        TruckGuid = Guid.NewGuid(),
+                        UsedCapacity = new TruckCapacityUnit()
+                        {
+                            Mass = 3,
+                            Volume = 4,
+                            TruckCapacityUnitGuid = Guid.NewGuid()
+                        }
+                    }
+                };
+                _context.SaveChanges();
+            }
+
+            if (me.CustomerInfo == null)
             {
                 me.CustomerInfo = new CustomerInfo()
                 {
