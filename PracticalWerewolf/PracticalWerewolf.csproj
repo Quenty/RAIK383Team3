@@ -293,15 +293,18 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CivicAddressDb.cs" />
+    <Compile Include="Models\Routes\RouteStop.cs" />
     <Compile Include="Services\ContractorService.cs" />
     <Compile Include="Services\CustomerService.cs" />
     <Compile Include="Services\EmployeeService.cs" />
     <Compile Include="Services\Interfaces\IOrderRequestService.cs" />
     <Compile Include="Services\Interfaces\IOrderTrackService.cs" />
     <Compile Include="Services\Interfaces\IUserInfoService.cs" />
+    <Compile Include="Services\Interfaces\IRouteStopService.cs" />
     <Compile Include="Services\OrderRequestService.cs" />
     <Compile Include="Services\OrderService.cs" />
     <Compile Include="Services\OrderTrackService.cs" />
+    <Compile Include="Services\RouteStopService.cs" />
     <Compile Include="Services\TruckService.cs" />
     <Compile Include="Services\UserInfoService.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
@@ -311,6 +314,8 @@
     <Compile Include="Stores\CustomerStore.cs" />
     <Compile Include="Stores\EmployeeStore.cs" />
     <Compile Include="Stores\Interfaces\IEntityStore.cs" />
+    <Compile Include="Stores\Interfaces\IRouteStopStore.cs" />
+    <Compile Include="Stores\Interfaces\RouteStopStore.cs" />
     <Compile Include="Stores\OrderStore.cs" />
     <Compile Include="Stores\TruckStore.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
