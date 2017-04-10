@@ -291,6 +291,10 @@
     <Compile Include="Migrations\201704022316375_Update-Relationships-3.Designer.cs">
       <DependentUpon>201704022316375_Update-Relationships-3.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704102247181_RoutePlanning.cs" />
+    <Compile Include="Migrations\201704102247181_RoutePlanning.Designer.cs">
+      <DependentUpon>201704102247181_RoutePlanning.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CivicAddressDb.cs" />
     <Compile Include="Models\Routes\RouteStop.cs" />
@@ -514,6 +518,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704022316375_Update-Relationships-3.resx">
       <DependentUpon>201704022316375_Update-Relationships-3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704102247181_RoutePlanning.resx">
+      <DependentUpon>201704102247181_RoutePlanning.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
