@@ -8,6 +8,7 @@ using PracticalWerewolf.Models.UserInfos;
 using PracticalWerewolf.Stores.Interfaces;
 using System.Text;
 using log4net;
+using PracticalWerewolf.Helpers;
 
 namespace PracticalWerewolf.Services
 {
@@ -88,12 +89,7 @@ namespace PracticalWerewolf.Services
                 var customerId = order.RequestInfo.Requester.CustomerInfoGuid;
                 var customer = _userManager.Users.Single(x => x.CustomerInfo.CustomerInfoGuid == customerId);
 
-                StringBuilder emailBody = new StringBuilder();
-                emailBody.Append($"Your order {order.OrderGuid} has been delivered!\n");
-                emailBody.Append("Thank you for working with Practical Werewolf.\n");
-                emailBody.Append("If you have any questions, comments, or concerns, don't hesitate to contact us at PracticalWerewolf@gmail.com.");
-
-                await _userManager.SendEmailAsync(customer.Id, "Your order has been delivered!", emailBody.ToString());
+                await EmailHelper.SendOrderDeliveredEmail(order.RequestInfo, customer);
             }
             else
             {
@@ -112,12 +108,7 @@ namespace PracticalWerewolf.Services
                 var customerId = order.RequestInfo.Requester.CustomerInfoGuid;
                 var customer = _userManager.Users.Single(x => x.CustomerInfo.CustomerInfoGuid == customerId);
 
-                StringBuilder emailBody = new StringBuilder();
-                emailBody.Append($"Your order {order.OrderGuid} has shipped!\n");
-                emailBody.Append("Thank you for working with Practical Werewolf.\n");
-                emailBody.Append("If you have any questions, comments, or concerns, don't hesitate to contact us at PracticalWerewolf@gmail.com.");
-
-                await _userManager.SendEmailAsync(customer.Id, "Your order has shipped!", emailBody.ToString());
+                await EmailHelper.SendOrderShippedEmail(order.RequestInfo, customer);
             }
             else
             {

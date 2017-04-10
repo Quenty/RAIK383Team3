@@ -69,7 +69,7 @@ namespace PracticalWerewolf.Helpers
             await SendOrderUpdateEmail(model, user.Email, subject);
         }
 
-        public static async Task SendOrderDeliveryEmail(OrderRequestInfo order, ApplicationUser user)
+        public static async Task SendOrderDeliveredEmail(OrderRequestInfo order, ApplicationUser user)
         {
             OrderUpdateModel model = new OrderUpdateModel
             {
