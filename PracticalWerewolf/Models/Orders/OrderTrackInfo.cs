@@ -8,7 +8,8 @@ using System.Web;
 
 namespace PracticalWerewolf.Models.Orders
 {
-    public enum OrderStatus {
+    public enum OrderStatus
+    {
         Complete,
         Cancelled,
         InProgress,
