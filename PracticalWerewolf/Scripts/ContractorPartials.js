@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
     $.ajax(
   {
-      url: '/Contractor/Pending',
+      url: '/Contractor/_Pending',
       data: { Id: "Main" }, //input parameters to action
       beforeSend: function () {
           $('#div-result').show();

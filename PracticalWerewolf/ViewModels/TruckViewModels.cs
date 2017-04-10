@@ -65,6 +65,17 @@ namespace PracticalWerewolf.ViewModels
         public ApplicationUser Owner { get; set; } // TODO: Refactor to UserInfo, store instead of loading ApplicationUser
     }
 
+    public class TruckUpdateLocation
+    {
+        public Guid Guid { get; set; }
+        [Display(Name = "Longitude")]
+        [Range(-180d, 180d, ErrorMessage = "Longitude must be between -180 and 180.")]
+        public double? Long { get; set; }
+        [Display(Name = "Latitude")]
+        [Range(-90d, 90d, ErrorMessage = "Latitude must be between -90 and 90.")]
+        public double? Lat { get; set; }
+    }
+
 
 
 }

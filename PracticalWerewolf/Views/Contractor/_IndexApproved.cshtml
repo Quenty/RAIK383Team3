@@ -5,24 +5,33 @@
     <strong>Application approved!</strong> Your application has been approved by a manager!
 </div>
 
-<div class="row">
-    <div class="col-md-3">
-        <div class="list-group">
-            <a class="list-group-item" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#Main"
-                href="@Url.Action("Pending")">
-                <span class="badge"></span>Pending Orders
-            </a>
-            <a class="list-group-item" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#Main"
-                href="@Url.Action("Current")">
-                <span class="badge"></span>Orders in your truck
-            </a>
-            <a class="list-group-item" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#Main"
-                href="@Url.Action("Delivered")">Delivered orders</a>
-            <a class="list-group-item" href="#">Current status <span class="label label-default pull-right">Available</span></a>
+
+@if (Model.ContractorInfo.Truck == null)
+{
+    <div class="alert alert-info" role="alert">
+        <span class="glyphicon glyphicon-ok-circle"></span>
+        <strong>@Html.ActionLink("Create Your Truck!", "Create", "Truck")</strong> Please follow this link to create your truck, you will not be considered for jobs until this is complete.
+         
+    </div>
+}
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group">
+                <a class="list-group-item" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#Main"
+                   href="@Url.Action("_Pending")">
+                    <span class="badge"></span>Pending Orders
+                </a>
+                <a class="list-group-item" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#Main"
+                   href="@Url.Action("_Current")">
+                    <span class="badge"></span>Orders in your truck
+                </a>
+                <a class="list-group-item" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#Main"
+                   href="@Url.Action("_Delivered")">Delivered orders</a>
+                <a class="list-group-item" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#Main"
+                   href="@Url.Action("_Status")">Current status<span class="label label-default pull-right">Available</span></a>
+            </div>
         </div>
-    </div>
-
-    <div id="Main">
-    </div>
-</div>
-
+        <div id="Main">
+		</div>
+	</div>

@@ -15,7 +15,7 @@ namespace PracticalWerewolf.Controllers
     {
         private static ILog logger = LogManager.GetLogger(typeof(LocationHelper));
 
-        public static DbGeography CreatePoint(double lat, double lon, int srid = 4326)
+        public static DbGeography CreatePoint(double? lat, double? lon, int srid = 4326)
         {
             string wkt = String.Format("POINT({0} {1})", lon, lat);
 
