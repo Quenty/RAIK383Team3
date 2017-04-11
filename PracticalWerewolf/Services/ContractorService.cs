@@ -20,6 +20,11 @@ namespace PracticalWerewolf.Services
             _contractorStore = store;
         }
 
+        public ContractorInfo GetContractor(Guid guid)
+        {
+            return _contractorStore.Single(contractorInfo => contractorInfo.ContractorInfoGuid == guid);        
+        }
+
         public ContractorInfo GetContractorByTruckGuid(Guid guid)
         {
             return _contractorStore.Find(c => c.Truck.TruckGuid == guid).FirstOrDefault();
@@ -43,6 +48,12 @@ namespace PracticalWerewolf.Services
 
         public void SetIsAvailable(Guid contractorInfoGuid, bool isAvailable)
         {
+            ContractorInfo info = _contractorStore.Single(c => c.ContractorInfoGuid == contractorInfoGuid, c => c.HomeAddress);
+            if (info != null)
+            {
+                info.IsAvailable = isAvailable;
+                _contractorStore.Update(info);
+            }
         }
 
         public void UpdateContractorTruck(Truck truck, ApplicationUser driver)

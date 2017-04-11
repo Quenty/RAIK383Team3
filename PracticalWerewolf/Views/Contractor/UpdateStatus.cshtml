@@ -1,0 +1,21 @@
+﻿@model PracticalWerewolf.ViewModels.Contractor.ContractorStatusModel
+
+@{
+    ViewBag.Title = "UpdateStatus";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <h4>Choose Your Location</h4>
+    <hr />
+    @Html.HiddenFor(m => m.ContractorGuid)
+    @Html.HiddenFor(m => m.ContractorStatus)
+    <div class="col-md-10" id="map" style="height:400px;"></div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Update" class="btn btn-default" />
+            </div>
+        </div>
+}

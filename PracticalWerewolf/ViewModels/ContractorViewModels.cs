@@ -50,6 +50,9 @@ namespace PracticalWerewolf.ViewModels.Contractor
 
     public class ContractorStatusModel
     {
+        [Required]
+        public Guid ContractorGuid { get; set; }
+
         public Boolean ContractorStatus { get; set; }
     }
 }
