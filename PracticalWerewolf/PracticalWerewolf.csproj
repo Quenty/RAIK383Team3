@@ -196,7 +196,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\Application\ApplicationDbContext.cs" />
+    <Compile Include="Application\ApplicationDbContext.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -338,7 +338,7 @@
     <Compile Include="Services\Interfaces\IOrderService.cs" />
     <Compile Include="Services\Interfaces\ITruckService.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="ViewModels\Orders\CreateOrderRequestViewModel.cs" />
+    <Compile Include="ViewModels\OrderViewModels.cs" />
     <Compile Include="ViewModels\TruckViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -351,9 +351,11 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\ContractorPartials.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\GoogleMapAPI.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\knockout-3.4.2.debug.js" />
@@ -433,6 +435,9 @@
     <Content Include="Views\Contractor\_IndexDeniedApproval.cshtml" />
     <Content Include="Views\Contractor\_IndexApproved.cshtml" />
     <Content Include="Views\Truck\_TruckDetails.cshtml" />
+    <Content Include="Views\Order\Create.cshtml" />
+    <Content Include="Views\Order\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TruckCapacityUnit.cshtml" />
     <Content Include="Views\Contractor\_UpdateStatus.cshtml" />
     <Content Include="Views\Contractor\_Pending.cshtml" />
     <Content Include="Views\Contractor\_Current.cshtml" />
