@@ -13,21 +13,21 @@ namespace PracticalWerewolf.Controllers
     public class SearchController : Controller
     {
         private readonly IUserInfoService UserInfoService;
-        private readonly ApplicationUserManager UserManager;
 
         public SearchController(IUserInfoService UserInfoService, ApplicationUserManager UserManager)
         {
             this.UserInfoService = UserInfoService;
         }
 
-        public ActionResult Results(string query, int page=0)
+        private SearchResultViewModel GetSearchResults(string query, int page = 0)
         {
             ViewBag.Query = query;
-             
+
             List<UserSearchResult> userResults = new List<UserSearchResult>();
             SearchResult result = UserInfoService.Search(query, page);
 
-            userResults.AddRange(result.Users.Select(user => new UserSearchResult {
+            userResults.AddRange(result.Users.Select(user => new UserSearchResult
+            {
                 Id = user.Id,
                 Email = user.Email,
                 IsContractor = user.ContractorInfo != null,
@@ -44,7 +44,17 @@ namespace PracticalWerewolf.Controllers
                 Users = userResults
             };
 
-            return View(model);
+            return model;
+        }
+
+        public ActionResult PartialResults(string query, int page = 0)
+        {
+            return PartialView("_PartialResults", GetSearchResults(query, page));
+        }
+
+        public ActionResult Results(string query, int page = 0)
+        {
+            return View("Results", GetSearchResults(query, page));
         }
     }
 }

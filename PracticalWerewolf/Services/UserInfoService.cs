@@ -8,6 +8,7 @@ using PracticalWerewolf.Stores;
 using PracticalWerewolf.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using PracticalWerewolf.Utility;
+using NinjaNye.SearchExtensions;
 
 namespace PracticalWerewolf.Services
 {
@@ -62,17 +63,23 @@ namespace PracticalWerewolf.Services
             }
             else
             {
-                Levenshtein levenshtein = new Levenshtein(query.ToLower());
-                IEnumerable<ApplicationUser> users = UserStore.Users.AsEnumerable()
-                    .OrderBy(x => levenshtein.Score(x.Email.ToLower()));
+                var users = UserStore.Users.AsQueryable().Search(
+                        x => x.Email, 
+                        x => x.Id, 
+                        x => x.UserInfo.FirstName, 
+                        x => x.UserInfo.LastName,
+                        x => x.ContractorInfo.HomeAddress.RawInputAddress,
+                        x => x.ContractorInfo.DriversLicenseId)
+                    .Containing(query.Split(' '))
+                    .ToRanked()
+                    .OrderByDescending(r => r.Hits)
+                    .Select(x => x.Item);
 
                 return new SearchResult
                 {
                     Page = page,
-                    TotalPages = (int) (users.Count() / PAGE_SIZE) + 1,
-                    Users = users.Skip(PAGE_SIZE * page)
-                        .Take(PAGE_SIZE)
-                        .ToList()
+                    TotalPages = (int)(users.Count() / PAGE_SIZE) + 1,
+                    Users = users.Skip(PAGE_SIZE * page).Take(PAGE_SIZE).ToList()
                 };
             }
         }

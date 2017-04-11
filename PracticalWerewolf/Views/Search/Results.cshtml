@@ -3,74 +3,84 @@
 @using Microsoft.AspNet.Identity
 @using PracticalWerewolf.ViewModels.Search
 
+<h2>@(String.IsNullOrEmpty(Model.Query) ? "Users" : "Search results for " + Html.Encode(Model.Query))</h2>
+
 @{
     ViewBag.Title = (String.IsNullOrEmpty(Model.Query) ? "Users" : Html.Encode(Model.Query)) + " - Search";
 }
 
-<h2>@(String.IsNullOrEmpty(Model.Query) ? "Users" : "Search results for " + Html.Encode(Model.Query))</h2>
 
 @if (Model.Users.Count() > 0)
 {
     <ul class="list-group">
         @foreach (UserSearchResult UserInfo in Model.Users)
         {
-            <li class="list-group-item">
-                @if (UserInfo.IsEmployee)
-                {
-                    <span class="label label-success">Employee</span>
-                }
-                @if (UserInfo.IsContractor)
-                {
-                    <span class="label label-primary">Contractor</span>
-                }
-                @if (UserInfo.BanTime.HasValue)
-                {
-                    <span class="label label-danger">Banned for @UserInfo.BanTime.Value.Duration().Days days, @UserInfo.BanTime.Value.Duration().Hours hours</span>
-                }
-                @UserInfo.Email
-                <div class="pull-right btn-group btn-group-xs" role="group">
-                    @if (Request.IsAuthenticated && User.IsInRole("Employee"))
-                    {
-                        if (!UserInfo.IsEmployee)
-                        {
-                            @Html.ActionLink("Make employee", "SetEmployee", "Administration", new { UserId = UserInfo.Id }, new { @class = "btn btn-xs btn-link" })
-                        }
+        <li class="list-group-item">
+            @if (UserInfo.IsEmployee)
+            {
+                <span class="label label-success">Employee</span>
+            }
+            @if (UserInfo.IsContractor)
+            {
+                <span class="label label-primary">Contractor</span>
+            }
+            @if (UserInfo.BanTime.HasValue)
+            {
+                <span class="label label-danger">Banned for @UserInfo.BanTime.Value.Duration().Days days, @UserInfo.BanTime.Value.Duration().Hours hours</span>
+            }
+            @UserInfo.Email
 
+            <div class="pull-right btn-group btn-group-xs" role="group">
+                @if (Request.IsAuthenticated && User.IsInRole("Employee"))
+                {
+                    if (!UserInfo.IsEmployee)
+                    {
+                        @Html.ActionLink("Make employee", "SetEmployee", "Administration", new { UserId = UserInfo.Id }, new { @class = "btn btn-xs btn-link" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Remove employee", "RemoveEmployee", "Administration", new { UserId = UserInfo.Id }, new { @class = "btn btn-xs btn-link" })
+                    }
+
+                    if (UserInfo.BanTime.HasValue)
+                    {
+                        @Html.ActionLink("Unban user", "UnbanUser", "Administration", new { UserId = UserInfo.Id }, new { @class = "btn btn-xs btn-link" })
+                    }
+                    else
+                    {
                         @Html.ActionLink("Ban user", "BanUser", "Administration", new { UserId = UserInfo.Id }, new { @class = "btn btn-xs btn-link" })
                     }
-                </div>
-                
-            </li>
+                }
+            </div>
+        </li>
         }
     </ul>
-} else {
+}
+else
+{
     <em>No users found</em>
 }
+
 
 <center>
     <nav aria-label="Page navigation">
         <ul class="pagination">
-            <li class="@(Model.Page <= 0 ? "disabled" : "")">
+            <li class="@(Model.Page <= 0 ? " disabled" : "" )">
                 <a href="@(Model.Page > 0 ? Url.Action("Results", new { query = Model.Query, page = Model.Page - 1} ) : "#")" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
-            
-            @*<li class="active">
-                <a href="#">@(Model.Page + 1) 
-                    <span class="sr-only">(current page)</span>
-                </a>
-            </li>*@
+
             @{
                 var min = Math.Max(0, Model.Page - 2);
                 var max = Math.Min(min + 5, Model.TotalPages);
 
-                for(var i=min; i < max; i++)
+                for (var i = min; i < max; i++)
                 {
-                    <li class="@(i == Model.Page ? "active" : "")">
-                        <a href="@(i == Model.Page ? "#" : Url.Action("Results", new { query = Model.Query, page = i} ))">
+                    <li class="@(i == Model.Page ? " active" : "" )">
+                        <a href="@(i == Model.Page ? " #" : Url.Action("Results", new { query=Model.Query, page=i} ))">
                             @(i + 1)
-                            
+
                             @if (i == Model.Page)
                             {
                                 @("of ") @Model.TotalPages
@@ -80,9 +90,9 @@
                     </li>
                 }
             }
-            
-            <li class="@(Model.Page >= Model.TotalPages ? "disabled" :"")">
-                <a href="@(Model.Page < Model.TotalPages-1 ? Url.Action("Results", new { query = Model.Query, page = Model.Page + 1} ) : "#")" aria-label="Next">
+
+            <li class="@(Model.Page >= Model.TotalPages ? " disabled" : "")">
+                <a href="@(Model.Page < Model.TotalPages-1 ? Url.Action(" Results", new { query=Model.Query, page=Model.Page + 1} ) : "#" )" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
