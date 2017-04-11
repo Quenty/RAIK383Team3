@@ -230,10 +230,9 @@ namespace PracticalWerewolf.Controllers
                     return RedirectToAction("Index", "Contractor", new { Message = "Could not update status successfully." });
                 }
             }
-            return RedirectToAction("Index", "Contractor", new { Message = "Could not update truck location successfully." });
+            return RedirectToAction("Index", "Contractor", new { Message = "Could not update status successfully. Invalid model." });
         }
 
-        public async Task<ActionResult> _Current()
         [Authorize(Roles = "Contractor")]
         public async Task<ActionResult> Current()
         {
