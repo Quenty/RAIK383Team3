@@ -1,0 +1,8 @@
+﻿@using (Html.BeginForm("Results", "Search", FormMethod.Get, new { @class = "navbar-form navbar-left" }))
+{
+    <div class="form-group">
+        <input type="text" name="query" class="form-control" placeholder="Search users" value="@ViewBag.Query">
+    </div>
+    <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+}
+
