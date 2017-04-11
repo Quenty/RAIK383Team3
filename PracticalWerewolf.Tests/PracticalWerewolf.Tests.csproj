@@ -118,8 +118,9 @@
     <Compile Include="Controllers\ContractorControllerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
+    <Compile Include="Services\OrderServiceTests.cs" />
     <Compile Include="Services\TruckServiceTest.cs" />
-    <Compile Include="Services\ContractorServiceTest.cs" />
+    <Compile Include="Services\ContractorServiceTests.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Stores\DbContext\MockContractorDbSet.cs" />
     <Compile Include="Stores\DbContext\MockDbSet.cs" />
