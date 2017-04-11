@@ -58,8 +58,7 @@ namespace PracticalWerewolf.Services
             OrderStore.Update(order);
         }
 
-
-        public IEnumerable<Order> GetQueuedOrders(ContractorInfo contractor)
+	public IEnumerable<Order> GetQueuedOrders(ContractorInfo contractor)
         {
             var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid);
             return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.Queued).ToList();

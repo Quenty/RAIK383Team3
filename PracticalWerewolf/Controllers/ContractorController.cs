@@ -2,6 +2,7 @@
 using PracticalWerewolf.Controllers.UnitOfWork;
 using PracticalWerewolf.Models.UserInfos;
 using PracticalWerewolf.Services.Interfaces;
+using PracticalWerewolf.ViewModels;
 using PracticalWerewolf.ViewModels.Contractor;
 using System;
 using System.Device.Location;
@@ -22,14 +23,14 @@ namespace PracticalWerewolf.Controllers
             DeniedSuccess,
             RegisterSuccess,
             AlreadyRegisteredError,
-            Error
+            Error,
+            NoTruckCreated
         }
 
         private readonly ApplicationUserManager UserManager;
         private readonly IContractorService ContractorService;
         private readonly IUnitOfWork UnitOfWork;
         private readonly IOrderService OrderService;
-
 
         public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService, IUnitOfWork UnitOfWork)
         {
@@ -47,6 +48,7 @@ namespace PracticalWerewolf.Controllers
                 : message == ContractorMessageId.AlreadyRegisteredError ? "You are already registered as a contractor"
                 : message == ContractorMessageId.ApprovedSuccess ? "Contractor approved"
                 : message == ContractorMessageId.DeniedSuccess ? "Contractor denied"
+                : message == ContractorMessageId.NoTruckCreated ? "You must create a truck to access this page."
                 : "";
         }
 
@@ -66,11 +68,13 @@ namespace PracticalWerewolf.Controllers
                 };
 
                 return View(model);
+
             }
             else
             {
                 return View(new ContractorIndexModel());
             }
+
         }
 
 
@@ -100,7 +104,7 @@ namespace PracticalWerewolf.Controllers
             return View(model);
         }
 
-        [Authorize(Roles="Employee")]
+        [Authorize(Roles = "Employee")]
         public ActionResult Approve(Guid guid, bool IsApproved)
         {
             if (guid.Equals(Guid.Empty))
@@ -153,8 +157,10 @@ namespace PracticalWerewolf.Controllers
             {
                 return RedirectToAction("Index", new { Message = ContractorMessageId.Error });
             }
+
         }
 
+        [Authorize(Roles = "Contractor")]
         public async Task<ActionResult> Pending()
         {
             var userId = User.Identity.GetUserId();
@@ -176,6 +182,7 @@ namespace PracticalWerewolf.Controllers
             }
         }
 
+        [Authorize(Roles = "Contractor")]
         public async Task<ActionResult> Current()
         {
             var userId = User.Identity.GetUserId();
@@ -197,6 +204,7 @@ namespace PracticalWerewolf.Controllers
             }
         }
 
+        [Authorize(Roles = "Contractor")]
         public async Task<ActionResult> Delivered()
         {
             var userId = User.Identity.GetUserId();
@@ -215,6 +223,39 @@ namespace PracticalWerewolf.Controllers
             else
             {
                 return View();
+            }
+        }
+
+        public async Task<ActionResult> _Status()
+        {
+            var userId = User.Identity.GetUserId();
+            if (userId != null)
+            {
+                var user = await UserManager.FindByIdAsync(userId);
+
+                var truck = user.ContractorInfo.Truck;
+                if (truck != null)
+                {
+                    var model = new TruckDetailsViewModel
+                    {
+                        Guid = truck.TruckGuid,
+                        LicenseNumber = truck.LicenseNumber,
+                        MaxCapacity = truck.MaxCapacity,
+                        Lat = truck.Location.Latitude,
+                        Long = truck.Location.Longitude
+                    };
+                    return PartialView(model);
+                }
+                else
+                {
+                    GenerateErrorMessage(ContractorMessageId.NoTruckCreated);
+                    return PartialView("_StatusMessage");
+                }
+            }
+            else
+            {
+                GenerateErrorMessage(ContractorMessageId.Error);
+                return PartialView("_StatusMessage");
             }
         }
 
