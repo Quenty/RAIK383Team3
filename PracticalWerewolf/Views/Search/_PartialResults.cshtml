@@ -6,7 +6,7 @@
 @foreach (UserSearchResult UserInfo in Model.Users)
 {
     <li class="">
-        <a href="#">
+        <a href="@Url.Action("Results", "Search", new { query = UserInfo.Email })">
             @UserInfo.Email
             @if (UserInfo.IsEmployee)
             {
