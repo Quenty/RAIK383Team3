@@ -64,5 +64,15 @@ namespace PracticalWerewolf.Services
             var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid);
             return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.Queued).ToList();
         }
+
+        public object GetOrders()
+        {
+            return OrderStore.GetAll().ToList();
+        }
+
+        public object GetOrders(CustomerInfo customerInfo)
+        {
+            return OrderStore.Find(o => o.RequestInfo.Requester.CustomerInfoGuid == customerInfo.CustomerInfoGuid);
+        }
     }
 }

@@ -17,6 +17,7 @@ namespace PracticalWerewolf.Controllers
     {
         private readonly IOrderRequestService OrderRequestService;
         private readonly IOrderTrackService OrderTrackService;
+        private readonly IOrderService OrderService;
         private readonly IUserInfoService UserInfoService;
         private readonly IUnitOfWork UnitOfWork;
         private readonly ApplicationUserManager UserManager;
@@ -24,31 +25,34 @@ namespace PracticalWerewolf.Controllers
         public enum OrderMessageId
         {
             OrderCreatedSuccess,
-            OrderCreatedError
+            OrderCreatedError,
+            Error
         }
 
-        public OrderController(IOrderRequestService OrderRequestService, IOrderTrackService OrderTrackService, 
-            IUserInfoService UserInfoService, IUnitOfWork UnitOfWork, ApplicationUserManager UserManager)
+        public OrderController(IOrderRequestService OrderRequestService, IOrderTrackService OrderTrackService,
+            IUserInfoService UserInfoService, IUnitOfWork UnitOfWork, ApplicationUserManager UserManager, IOrderService OrderService)
         {
             this.OrderRequestService = OrderRequestService;
             this.OrderTrackService = OrderTrackService;
             this.UserInfoService = UserInfoService;
             this.UnitOfWork = UnitOfWork;
             this.UserManager = UserManager;
+            this.OrderService = OrderService;
         }
 
         public ActionResult Index(OrderMessageId? message)
         {
-            ViewBag.StatusMessage = message == OrderMessageId.OrderCreatedSuccess ? "Order placed successfully." 
+            ViewBag.StatusMessage = message == OrderMessageId.OrderCreatedSuccess ? "Order placed successfully."
                 : message == OrderMessageId.OrderCreatedError ? "Internal error. Try placing your order again"
+                : message == OrderMessageId.Error ? "Something went wrong, please try again!"
                 : "";
 
             return View();
         }
 
-      
+
         // GET: Order/Details/guid
-        [Authorize (Roles = "Employees, Contractors, Customers")]
+        [Authorize(Roles = "Employees, Contractors, Customers")]
         public ActionResult Details(string guid)
         {
             // Will get detailed information on a specific order
@@ -62,7 +66,7 @@ namespace PracticalWerewolf.Controllers
             return View();
         }
 
-    
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = ("Customer"))]
@@ -72,7 +76,7 @@ namespace PracticalWerewolf.Controllers
             {
                 return View(model);
             }
-            
+
             CustomerInfo Requester = UserInfoService.GetUserCustomerInfo(User.Identity.GetUserId());
             if (Requester == null)
             {
@@ -189,5 +193,27 @@ namespace PracticalWerewolf.Controllers
                 return View();
             }
         }
+
+        //[Authorize (Roles = "Employee")]
+        public ActionResult AllOrders()
+        {
+            var orders = OrderService.GetOrders();
+            return View("Order", orders);
+        }
+
+        public ActionResult Orders()
+        {
+            var customerInfo = UserInfoService.GetUserCustomerInfo(User.Identity.GetUserId());
+            try
+            {
+                var orders = OrderService.GetOrders(customerInfo);
+                return View("Order", orders);
+            } 
+            catch
+            {
+                return RedirectToAction("Index", new { message = OrderMessageId.Error });
+            }
+        }
+
     }
 }

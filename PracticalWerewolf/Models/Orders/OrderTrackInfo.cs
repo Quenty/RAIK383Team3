@@ -11,6 +11,7 @@ namespace PracticalWerewolf.Models.Orders
     public enum OrderStatus {
         Complete,
         Cancelled,
+        [Display(Name = "In Progress")]
         InProgress,
         Queued
     }
@@ -21,6 +22,7 @@ namespace PracticalWerewolf.Models.Orders
         public Guid OrderTrackInfoGuid { get; set; }
 
         [Required]
+        [Display(Name = "Status")]
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Queued;
 
         // One-to-zero-or-one relationship
