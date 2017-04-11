@@ -209,8 +209,10 @@
     <Compile Include="Controllers\LocationHelper.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\TruckController.cs" />
     <Compile Include="Controllers\UnitOfWork\IUnitOfWork.cs" />
+    <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\Validation\MustBeTrueAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -313,6 +315,7 @@
     <Compile Include="Stores\Interfaces\IEntityStore.cs" />
     <Compile Include="Stores\OrderStore.cs" />
     <Compile Include="Stores\TruckStore.cs" />
+    <Compile Include="Utility\Levenshtein.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\IApplicationUser.cs" />
     <Compile Include="Models\UserInfos\ContractorInfo.cs" />
@@ -339,6 +342,7 @@
     <Compile Include="Services\Interfaces\ITruckService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\OrderViewModels.cs" />
+    <Compile Include="ViewModels\SearchViewModels.cs" />
     <Compile Include="ViewModels\TruckViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -437,10 +441,13 @@
     <Content Include="Views\Contractor\Pending.cshtml" />
     <Content Include="Views\Contractor\Current.cshtml" />
     <Content Include="Views\Contractor\Delivered.cshtml" />
+    <Content Include="Views\Shared\_SearchPartial.cshtml" />
+    <Content Include="Views\Search\Results.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Scripts\ViewModels\Contractor\" />
+    <Folder Include="Views\UserInfo\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
