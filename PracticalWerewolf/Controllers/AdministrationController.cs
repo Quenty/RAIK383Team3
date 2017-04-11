@@ -22,7 +22,7 @@ namespace PracticalWerewolf.Controllers
         {
             if (UserId == null)
             {
-                // TODO: error
+                throw new ArgumentNullException();
             }
 
             await UserManager.SetLockoutEnabledAsync(UserId, true);
@@ -35,7 +35,7 @@ namespace PracticalWerewolf.Controllers
         {
             if (UserId == null)
             {
-                // TODO: error
+                throw new ArgumentNullException();
             }
 
             await UserManager.SetLockoutEnabledAsync(UserId, false);
@@ -47,7 +47,7 @@ namespace PracticalWerewolf.Controllers
         {
             if (UserId == null)
             {
-                // TODO: error
+                throw new ArgumentNullException();
             }
 
             var User = UserManager.FindByIdAsync(UserId).Result;
@@ -64,14 +64,14 @@ namespace PracticalWerewolf.Controllers
         {
             if (UserId == null)
             {
-                // TODO: error
+                throw new ArgumentNullException();
             }
 
             var User = UserManager.FindByIdAsync(UserId).Result;
 
             if (User.EmployeeInfo != null)
             {
-                // TODO: Error
+                throw new ArgumentException("User already is employee");
             }
 
             User.EmployeeInfo = new Models.UserInfos.EmployeeInfo
@@ -80,8 +80,6 @@ namespace PracticalWerewolf.Controllers
             };
 
             var result = UserManager.UpdateAsync(User).Result;
-
-            // TODO: Check result
 
             return Redirect(Request.UrlReferrer.ToString());
         }
