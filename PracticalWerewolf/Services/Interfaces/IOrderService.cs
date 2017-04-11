@@ -4,33 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PracticalWerewolf.Models.UserInfos;
 
 namespace PracticalWerewolf.Services.Interfaces
 {
-    interface IOrderService
+    public interface IOrderService
     {
-        // Depends upon IOrderStore.Create
-        void CreateOrder(OrderRequestInfo order);
-
-        // Depends upon IOrderStore.Get
-        Order GetOrder(Guid orderGuid);
-
-        // Depends upon IOrderStore.Get(OrderStatus orderStatus)
-        IEnumerable<Order> GetOrders(OrderStatus orderStatus);
-
-        // Depends upon IOrderStore.GetOrdersByCustomerInfoGuid
-        IEnumerable<Order> GetOrdersByCustomerInfo(Guid customerInfoGuid);
-
-        // Depends upon IOrderStore.GetByUserGuids
-        IEnumerable<Order> GetByUserGuids(Guid userId);
-
-        // Depends upon this.GetOrders
-        IEnumerable<Order> GetQueuedOrders(OrderStatus orderStatus);
-
-        // Depends upon IOrderStore.Get
-        IEnumerable<Order> GetOrders();
-
-        // Depends upon IOrderRequestService.UpdateOrderStatus
+        IEnumerable<Order> GetQueuedOrders(ContractorInfo contractor);
+        IEnumerable<Order> GetInprogressOrders(ContractorInfo contractor);
+        IEnumerable<Order> GetDeliveredOrders(ContractorInfo contractor);
+        void AssignOrder(Guid orderGuid, ContractorInfo contractor);
         void CancelOrder(Guid orderGuid);
     }
 }

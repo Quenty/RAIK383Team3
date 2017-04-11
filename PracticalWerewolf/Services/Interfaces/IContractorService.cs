@@ -22,6 +22,8 @@ namespace PracticalWerewolf.Services.Interfaces
 
         ContractorInfo GetContractorByTruckGuid(Guid guid);
 
+        IQueryable<ContractorInfo> getAvailableContractorQuery();
+
         void UpdateContractorTruck(Truck truck, ApplicationUser user);
 
         ContractorInfo GetContractor(Guid guid);

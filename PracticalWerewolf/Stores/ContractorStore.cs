@@ -17,8 +17,6 @@ namespace PracticalWerewolf.Stores
         {
         }
 
-
-
         ContractorInfo IEntityStore<ContractorInfo>.Single(System.Linq.Expressions.Expression<Func<ContractorInfo, bool>> where, params System.Linq.Expressions.Expression<Func<ContractorInfo, object>>[] includeProperties)
         {
             return base.Single(where, includeProperties);
@@ -33,7 +31,7 @@ namespace PracticalWerewolf.Stores
         {
             base.Update(contractor);
             contractor.Truck = truck;
-            
+
         }
     }
 }

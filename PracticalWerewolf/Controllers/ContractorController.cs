@@ -2,10 +2,9 @@
 using PracticalWerewolf.Controllers.UnitOfWork;
 using PracticalWerewolf.Models.UserInfos;
 using PracticalWerewolf.Services.Interfaces;
-using PracticalWerewolf.Stores.Interfaces;
+using PracticalWerewolf.ViewModels;
 using PracticalWerewolf.ViewModels.Contractor;
 using System;
-using System.Collections.Generic;
 using System.Device.Location;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,18 +26,21 @@ namespace PracticalWerewolf.Controllers
             RegisterSuccess,
             AlreadyRegisteredError,
             Error,
-            StatusChangeSuccess
+            StatusChangeSuccess,
+            NoTruckCreated
         }
 
-        private ApplicationUserManager UserManager { get; set; }
-        private IContractorService ContractorService { get; set; }
-        private IUnitOfWork UnitOfWork { get; set; }
+        private readonly ApplicationUserManager UserManager;
+        private readonly IContractorService ContractorService;
+        private readonly IUnitOfWork UnitOfWork;
+        private readonly IOrderService OrderService;
 
-        public ContractorController(ApplicationUserManager UserManager, IContractorService ContractorService, IUnitOfWork UnitOfWork)
+        public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService, IUnitOfWork UnitOfWork)
         {
             this.UnitOfWork = UnitOfWork;
             this.UserManager = UserManager;
             this.ContractorService = ContractorService;
+            this.OrderService = OrderService;
         }
 
         private void GenerateErrorMessage(ContractorMessageId? message)
@@ -50,6 +52,7 @@ namespace PracticalWerewolf.Controllers
                 : message == ContractorMessageId.ApprovedSuccess ? "Contractor approved"
                 : message == ContractorMessageId.DeniedSuccess ? "Contractor denied"
                 : message == ContractorMessageId.StatusChangeSuccess ? "Status successfully changed"
+                : message == ContractorMessageId.NoTruckCreated ? "You must create a truck to access this page."
                 : "";
         }
 
@@ -69,18 +72,19 @@ namespace PracticalWerewolf.Controllers
                 };
 
                 return View(model);
+
             }
             else
             {
                 return View(new ContractorIndexModel());
             }
+
         }
 
 
-        public async Task<ActionResult> Register()
+        public ActionResult Register()
         {
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            if (user.ContractorInfo != null)
+            if (User.IsInRole("Contractor"))
             {
                 return RedirectToAction("Index", new { Message = ContractorMessageId.AlreadyRegisteredError });
             }
@@ -104,15 +108,16 @@ namespace PracticalWerewolf.Controllers
             return View(model);
         }
 
-        [Authorize(Roles="Employee")]
+        [Authorize(Roles = "Employee")]
         public ActionResult Approve(Guid guid, bool IsApproved)
         {
             if (guid.Equals(Guid.Empty))
             {
                 return RedirectToAction("Unapproved", new { Message = ContractorMessageId.Error });
             }
-                //Is this another instance where we want an IdentityResult?
-                ContractorService.SetApproval(guid, IsApproved ? ContractorApprovalState.Approved : ContractorApprovalState.Denied);
+
+            // Is this another instance where we want an IdentityResult?
+            ContractorService.SetApproval(guid, IsApproved ? ContractorApprovalState.Approved : ContractorApprovalState.Denied);
             UnitOfWork.SaveChanges();
 
             return RedirectToAction("Unapproved", new { Message = IsApproved ? ContractorMessageId.ApprovedSuccess : ContractorMessageId.DeniedSuccess });
@@ -156,58 +161,31 @@ namespace PracticalWerewolf.Controllers
             {
                 return RedirectToAction("Index", new { Message = ContractorMessageId.Error });
             }
-            
+
         }
 
+        public async Task<ActionResult> _Pending()
+        {
+            var userId = User.Identity.GetUserId();
+            if (userId != null)
+            {
+                var user = await UserManager.FindByIdAsync(userId);
 
+                var contractor = user.ContractorInfo;
+                var model = new PendingOrderViewModel()
+                {
+                    Orders = OrderService.GetQueuedOrders(contractor)
+                };
 
-        //[HttpPost]
-        //[AllowAnonymous]
-        //public async Task<ActionResult> ChangeStatus(ContractorMessageId? message)
-        //{
-        //    GenerateErrorMessage(message);
+                return PartialView(model);
+            }
+            else
+            {
+                return View();
+            }
+        }
 
-        //    var userId = User.Identity.GetUserId();
-        //    if (userId != null)
-        //    {
-        //        var user = await UserManager.FindByIdAsync(userId);
-
-        //        var model = new ContractorIndexModel
-        //        {
-        //            ContractorInfo = user.ContractorInfo,
-        //        };
-
-        //        return View(model);
-        //    }
-        //    else
-        //    {
-        //        return View(new ContractorIndexModel());
-        //    }
-        //}
-        //[HttpPost]
-        //public async Task<ActionResult> ChangeStatus(ContractorMessageId? message)
-        //{
-        //    GenerateErrorMessage(message);
-
-        //    var userId = User.Identity.GetUserId();
-        //    if (userId != null)
-        //    {
-        //        var user = await UserManager.FindByIdAsync(userId);
-
-        //        var model = new ContractorIndexModel
-        //        {
-        //            ContractorInfo = user.ContractorInfo,
-        //        };
-
-        //        return View(model);
-        //    }
-        //    else
-        //    {
-        //        return View(new ContractorIndexModel());
-        //    }
-        //}
-
-        public ActionResult UpdateStatus(string id)
+        public ActionResult _UpdateStatus(string id)
         {
             if (!String.IsNullOrEmpty(id))
             {
@@ -235,7 +213,7 @@ namespace PracticalWerewolf.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult UpdateStatus(ContractorStatusModel returnedModel)
+        public ActionResult _UpdateStatus(ContractorStatusModel returnedModel)
         {
             if (ModelState.IsValid)
             {
@@ -253,93 +231,79 @@ namespace PracticalWerewolf.Controllers
             return RedirectToAction("Index", "Contractor", new { Message = "Could not update truck location successfully." });
         }
 
+        public async Task<ActionResult> _Current()
+        {
+            var userId = User.Identity.GetUserId();
+            if (userId != null)
+            {
+                var user = await UserManager.FindByIdAsync(userId);
 
+                var contractor = user.ContractorInfo;
+                var model = new CurrentOrderViewModel()
+                {
+                    Orders = OrderService.GetInprogressOrders(contractor)
+                };
 
-        //[HttpPost]
-        //public async Task<ActionResult> ChangeTheValue(ContractorIndexModel model)
-        //{
-        //    var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-        //    user.ContractorInfo.IsAvailable = !user.ContractorInfo.IsAvailable;
-        //    UserManager.Update(user);
+                return PartialView(model);
+            }
+            else
+            {
+                return View();
+            }
+        }
 
-        //    var m = new ContractorIndexModel();
-        //    //m.ContractorInfo = model.ContractorInfo;
-        //    //m.ContractorInfo.IsAvailable = !model.ContractorInfo.IsAvailable;
-        //    return Json(m.ContractorInfo.IsAvailable);
-        //}
+        public async Task<ActionResult> _Delivered()
+        {
+            var userId = User.Identity.GetUserId();
+            if (userId != null)
+            {
+                var user = await UserManager.FindByIdAsync(userId);
 
+                var contractor = user.ContractorInfo;
+                var model = new DeliveredOrderViewModel()
+                {
+                    Orders = OrderService.GetDeliveredOrders(contractor)
+                };
 
-        //[HttpPost]
-        //public ActionResult StatusUpdate(ContractorInfo model)
-        //{
-        //    ContractorService.SetIsAvailable(model.ContractorInfoGuid, !model.IsAvailable);
-        //    UnitOfWork.SaveChanges();
+                return PartialView(model);
+            }
+            else
+            {
+                return View();
+            }
+        }
 
-        //    return RedirectToAction("Index", new { Message = ContractorMessageId.AlreadyRegisteredError});
+        public async Task<ActionResult> _Status()
+        {
+            var userId = User.Identity.GetUserId();
+            if (userId != null)
+            {
+                var user = await UserManager.FindByIdAsync(userId);
 
-        //}
-
-        //[HttpPost]
-        //public async Task<ActionResult> Changestatus(ContractorIndexModel model)
-        //{
-        //    var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-        //    var userStatus = user.ContractorInfo.IsAvailable;
-        //    if (user.ContractorInfo == null)
-        //    {
-        //        return RedirectToAction("Error", new { Message = ContractorMessageId.Error });
-        //    }
-        //    model.ContractorInfo.IsAvailable = !model.ContractorInfo.IsAvailable;
-        //    try
-        //    {
-        //        // Your code...
-        //        // Could also be before try if you know the exception occurs in SaveChanges
-        //        var result = await UserManager.UpdateAsync(user);
-        //        if (result.Succeeded)
-        //        {
-        //            return View(model);
-        //            //return RedirectToAction("Index", new { Message = ContractorMessageId.RegisterSuccess });
-        //        }
-        //        else
-        //        {
-        //            return RedirectToAction("Error", new { Message = ContractorMessageId.Error });
-        //        }
-        //    }
-        //    catch (DbEntityValidationException e)
-        //    {
-        //        foreach (var eve in e.EntityValidationErrors)
-        //        {
-        //            System.Diagnostics.Debug.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
-        //                eve.Entry.Entity.GetType().Name, eve.Entry.State);
-        //            foreach (var ve in eve.ValidationErrors)
-        //            {
-        //                System.Diagnostics.Debug.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
-        //                    ve.PropertyName, ve.ErrorMessage);
-        //            }
-        //        }
-        //        throw;
-        //    }
-        //}
-
-        //public async Task<ActionResult> ChangeStatus(ContractorMessageId? message)
-        //{
-        //    GenerateErrorMessage(message);
-
-        //    var userId = User.Identity.GetUserId();
-        //    if (userId != null)
-        //    {
-        //        var user = await UserManager.FindByIdAsync(userId);
-
-        //        var model = new ContractorIndexModel
-        //        {
-        //            ContractorInfo = user.ContractorInfo,
-        //        };
-
-        //        return View(model);
-        //    }
-        //    else
-        //    {
-        //        return View(new ContractorIndexModel());
-        //    }
-        //}
+                var truck = user.ContractorInfo.Truck;
+                if (truck != null)
+                {
+                    var model = new TruckDetailsViewModel
+                    {
+                        Guid = truck.TruckGuid,
+                        LicenseNumber = truck.LicenseNumber,
+                        MaxCapacity = truck.MaxCapacity,
+                        Lat = truck.Location.Latitude,
+                        Long = truck.Location.Longitude
+                    };
+                    return PartialView(model);
+                }
+                else
+                {
+                    GenerateErrorMessage(ContractorMessageId.NoTruckCreated);
+                    return PartialView("_StatusMessage");
+                }
+            }
+            else
+            {
+                GenerateErrorMessage(ContractorMessageId.Error);
+                return PartialView("_StatusMessage");
+            }
+        }
     }
 }

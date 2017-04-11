@@ -13,6 +13,7 @@ using System.Activities;
 using System.Data.Entity.Spatial;
 using PracticalWerewolf.Application;
 using log4net;
+using PracticalWerewolf.Services;
 
 namespace PracticalWerewolf.Controllers
 {
@@ -152,7 +153,7 @@ namespace PracticalWerewolf.Controllers
 
                     UnitOfWork.SaveChanges();
 
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index", "Contractor");
 
                 }
                 catch
@@ -196,7 +197,7 @@ namespace PracticalWerewolf.Controllers
                     TruckService.CreateTruck(model);
                     ContractorService.UpdateContractorTruck(model, user);
                     UnitOfWork.SaveChanges();
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index", "Contractor");
 
                 }
                 catch
@@ -204,7 +205,57 @@ namespace PracticalWerewolf.Controllers
                     logger.Error("Create(ViewModel) - Error getting user, creating TruckCapacityUnit, creating Truck, or ContractorService.UpdateContractorTruck()");
                 }
             }
-            return RedirectToAction("Index", new { Message = "Could not create truck successfully." });
+            return RedirectToAction("Index", "Contractor",new { Message = "Could not create truck successfully." });
         }
+
+        public ActionResult Location(string id)
+        {
+            if (!String.IsNullOrEmpty(id))
+            {
+                try
+                {
+
+                    var guid = new Guid(id);
+                    var truck = TruckService.GetTruck(guid);
+                    var model = new TruckUpdateLocation
+                    {
+                        Guid = guid,
+                        Lat = truck.Location.Latitude,
+                        Long = truck.Location.Longitude
+
+                    };
+
+                    return View(model);
+                }
+                catch
+                {
+                    logger.Error("Edit() - error getting truck or creating ViewModel");
+                }
+            }
+            return HttpNotFound();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Location(TruckUpdateLocation returnedModel)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var location = LocationHelper.CreatePoint(returnedModel.Lat, returnedModel.Long);
+
+                    TruckService.UpdateTruckLocation(returnedModel.Guid, location);
+                    UnitOfWork.SaveChanges();
+                    return RedirectToAction("Index", "Contractor");
+                }
+                catch
+                {
+                    logger.Error("UpdateLocation - Error in UpdateTruckLocation");
+                }
+            }
+            return RedirectToAction("Index", "Contractor", new { Message = "Could not update truck location successfully." });
+        }
+
     }
 }
