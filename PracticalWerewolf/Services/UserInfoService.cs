@@ -57,7 +57,7 @@ namespace PracticalWerewolf.Services
                 return new SearchResult
                 {
                     Page = page,
-                    TotalPages = (int)(users.Count() / PAGE_SIZE) + 1,
+                    TotalPages = (int) Math.Ceiling((Decimal)users.Count() / PAGE_SIZE),
                     Users = users.OrderBy(x => x.Email.ToLower()).Skip(PAGE_SIZE * page).Take(PAGE_SIZE).ToList()
                 };
             }
@@ -69,8 +69,11 @@ namespace PracticalWerewolf.Services
                         x => x.UserInfo.FirstName, 
                         x => x.UserInfo.LastName,
                         x => x.ContractorInfo.HomeAddress.RawInputAddress,
+                        x => (x.EmployeeInfo == null) ? "" : "employee",
+                        x => (x.ContractorInfo == null) ? "" : "contractor",
+                        x => (x.LockoutEnabled && x.LockoutEndDateUtc > DateTime.UtcNow) ? "banned" : "",
                         x => x.ContractorInfo.DriversLicenseId)
-                    .Containing(query.Split(' '))
+                    .Containing(query.Split(' ', ':', '!', '@', '.', ','))
                     .ToRanked()
                     .OrderByDescending(r => r.Hits)
                     .Select(x => x.Item);
@@ -78,8 +81,9 @@ namespace PracticalWerewolf.Services
                 return new SearchResult
                 {
                     Page = page,
-                    TotalPages = (int)(users.Count() / PAGE_SIZE) + 1,
-                    Users = users.Skip(PAGE_SIZE * page).Take(PAGE_SIZE).ToList()
+                    TotalResults = users.Count(),
+                    TotalPages = (int) Math.Ceiling((Decimal) users.Count() / PAGE_SIZE),
+                    Users = users.Skip(PAGE_SIZE * page).Take(PAGE_SIZE).ToList(),
                 };
             }
         }

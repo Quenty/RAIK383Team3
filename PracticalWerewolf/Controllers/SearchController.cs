@@ -32,7 +32,7 @@ namespace PracticalWerewolf.Controllers
                 Email = user.Email,
                 IsContractor = user.ContractorInfo != null,
                 IsEmployee = user.EmployeeInfo != null,
-                BanTime = (user.LockoutEnabled && user.LockoutEndDateUtc > DateTime.Now) ? (user.LockoutEndDateUtc - DateTime.Now) : null
+                BanTime = (user.LockoutEnabled && user.LockoutEndDateUtc > DateTime.UtcNow) ? (user.LockoutEndDateUtc - DateTime.UtcNow) : null
             }));
 
 
@@ -41,7 +41,8 @@ namespace PracticalWerewolf.Controllers
                 Query = query,
                 Page = result.Page,
                 TotalPages = result.TotalPages,
-                Users = userResults
+                Users = userResults,
+                TotalResults = result.TotalResults
             };
 
             return model;

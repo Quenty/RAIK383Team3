@@ -10,6 +10,7 @@ namespace PracticalWerewolf.Services.Interfaces
 {
     public class SearchResult
     {
+        public int TotalResults { get; set; }
         public int TotalPages { get; set; }
         public int Page { get; set; }
         public IEnumerable<ApplicationUser> Users { get; set; }

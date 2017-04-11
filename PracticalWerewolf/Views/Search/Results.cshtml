@@ -9,9 +9,11 @@
     ViewBag.Title = (String.IsNullOrEmpty(Model.Query) ? "Users" : Html.Encode(Model.Query)) + " - Search";
 }
 
+<p class="text-muted">@Model.TotalResults result@(Model.TotalResults == 1 ? "" : "s") found</p>
 
 @if (Model.Users.Count() > 0)
 {
+    
     <ul class="list-group">
         @foreach (UserSearchResult UserInfo in Model.Users)
         {
@@ -58,7 +60,7 @@
 }
 else
 {
-    <em>No users found</em>
+    
 }
 
 
@@ -91,7 +93,7 @@ else
                 }
             }
 
-            <li class="@(Model.Page >= Model.TotalPages ? " disabled" : "")">
+            <li class="@(Model.Page+1 >= Model.TotalPages ? " disabled" : "")">
                 <a href="@(Model.Page < Model.TotalPages-1 ? Url.Action("Results", new { query = Model.Query, page=Model.Page + 1} ) : "#" )" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
