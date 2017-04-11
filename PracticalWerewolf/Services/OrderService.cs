@@ -6,6 +6,8 @@ using System.Web;
 using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.Stores.Interfaces;
 using PracticalWerewolf.Models.UserInfos;
+using log4net;
+
 
 namespace PracticalWerewolf.Services
 {
@@ -13,6 +15,7 @@ namespace PracticalWerewolf.Services
     {
         private readonly IOrderStore OrderStore;
         private readonly IContractorStore ContractorStore;
+        private static readonly ILog log = LogManager.GetLogger(typeof(IOrderService));
 
         public OrderService(IOrderStore OrderStore, IContractorStore ContractorStore)
         {
@@ -56,17 +59,34 @@ namespace PracticalWerewolf.Services
 
         public void AssignOrders()
         {
-            var Orders = GetUnassignedOrders();
-
+            var Orders = GetUnassignedOrders().ToList();
+            
+            // Initial slow, trivial algorithm
             foreach (Order order in Orders)
             {
-                AssignOrder(order, )
+                double volume = order.RequestInfo.Size.Volume;
+                IQueryable<ContractorInfo> ContractorQuery = ContractorStore.getAvailableContractorsQuery()
+                    .Where(x => x.Truck.MaxCapacity.Volume >= x.Truck.UsedCapacity.Volume + volume);
+
+                ContractorInfo contractorInfo = ContractorQuery.FirstOrDefault();
+                if (contractorInfo != null)
+                {
+                    AssignOrder(order.OrderGuid, contractorInfo);
+                }
+                else
+                {
+                    log.Warn("Failed to assign order, no available contractors");
+                }
             }
         }
 
         public IEnumerable<Order> GetUnassignedOrders()
         {
-            return OrderStore.Find(o => o.TrackInfo.OrderStatus == OrderStatus.Queued)
+            return OrderStore.Find(o => o.TrackInfo.OrderStatus == OrderStatus.Queued, 
+                o => o.TrackInfo, 
+                o => o.TrackInfo.Assignee,
+                o => o.RequestInfo,
+                o => o.RequestInfo.Size)
                 .Where(o => o.TrackInfo.Assignee == null);
         }
 

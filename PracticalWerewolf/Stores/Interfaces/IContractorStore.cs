@@ -13,6 +13,6 @@ namespace PracticalWerewolf.Stores.Interfaces
     public interface IContractorStore : IEntityStore<ContractorInfo>
     {
         void UpdateContractorTruck(ContractorInfo contractor, Truck truck);
-        IQueryable<ContractorInfo> getAvailableContractorsQuery()
+        IQueryable<ContractorInfo> getAvailableContractorsQuery();
     }
 }
