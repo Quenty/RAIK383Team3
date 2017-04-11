@@ -200,7 +200,7 @@ namespace PracticalWerewolf.Controllers
                         ContractorStatus = contractor.IsAvailable
                     };
 
-                    return View(model);
+                    return PartialView(model);
                 }
                 catch
                 {
