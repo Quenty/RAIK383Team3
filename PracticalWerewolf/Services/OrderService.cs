@@ -10,35 +10,38 @@ using log4net;
 using PracticalWerewolf.Helpers;
 using PracticalWerewolf.Models.UserInfos;
 
+
 namespace PracticalWerewolf.Services
 {
     public class OrderService : IOrderService
     {
         private static ILog logger = LogManager.GetLogger(typeof(OrderService));
-        private readonly IOrderStore _orderStore;
-        private readonly ApplicationUserManager _userManager;
+        private readonly IOrderStore OrderStore;
+        private readonly IContractorStore ContractorStore;
+        private readonly ApplicationUserManager UserManager;
 
-        public OrderService (IOrderStore orderStore, ApplicationUserManager userManager)
+        public OrderService (IOrderStore orderStore, IContractorStore contractorStore, ApplicationUserManager userManager)
         {
-            _orderStore = orderStore;
-            _userManager = userManager;
+            this.OrderStore = orderStore;
+            this.ContractorStore = contractorStore;
+            this.UserManager = userManager;
         }
 
         public IEnumerable<Order> GetDeliveredOrders(ContractorInfo contractor)
         {
-            var allOrders = _orderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid);
+            var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid);
             return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.Complete).ToList();
         }
 
         public IEnumerable<Order> GetInprogressOrders(ContractorInfo contractor)
         {
-            var allOrders = _orderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid);
+            var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid);
             return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.InProgress).ToList();
         }
 
         public Order GetOrder(Guid orderGuid)
         {
-            Order order = _orderStore.Single(o => o.OrderGuid == orderGuid);
+            Order order = OrderStore.Single(o => o.OrderGuid == orderGuid);
             if (order == null)
             {
                 throw new ArgumentException("Order does not exist in database");
@@ -52,7 +55,7 @@ namespace PracticalWerewolf.Services
 
             OrderTrackInfo orderTrackInfo = order.TrackInfo ?? new OrderTrackInfo();
             orderTrackInfo.OrderStatus = OrderStatus.Cancelled;
-            _orderStore.Update(order);
+            OrderStore.Update(order);
         }
 
         public void AssignOrder(Guid orderGuid, ContractorInfo contractor)
@@ -61,25 +64,58 @@ namespace PracticalWerewolf.Services
             OrderTrackInfo orderTrackInfo = order.TrackInfo ?? new OrderTrackInfo();
             orderTrackInfo.OrderStatus = OrderStatus.InProgress;
             orderTrackInfo.Assignee = contractor;
-            _orderStore.Update(order);
+            OrderStore.Update(order);
+        }
+
+        public void AssignOrders()
+        {
+            var Orders = GetUnassignedOrders().ToList();
+            
+            // Initial slow, trivial algorithm
+            foreach (Order order in Orders)
+            {
+                double volume = order.RequestInfo.Size.Volume;
+                IQueryable<ContractorInfo> ContractorQuery = ContractorStore.getAvailableContractorsQuery()
+                    .Where(x => x.Truck.MaxCapacity.Volume >= x.Truck.UsedCapacity.Volume + volume);
+
+                ContractorInfo contractorInfo = ContractorQuery.FirstOrDefault();
+                if (contractorInfo != null)
+                {
+                    AssignOrder(order.OrderGuid, contractorInfo);
+                }
+                else
+                {
+                    logger.Warn("Failed to assign order, no available contractors");
+                }
+            }
+        }
+
+        public IEnumerable<Order> GetUnassignedOrders()
+        {
+            return OrderStore.Find(o => o.TrackInfo.OrderStatus == OrderStatus.Queued, 
+                o => o.TrackInfo, 
+                o => o.TrackInfo.Assignee,
+                o => o.RequestInfo,
+                o => o.RequestInfo.Size)
+                .Where(o => o.TrackInfo.Assignee == null);
         }
 
         public IEnumerable<Order> GetQueuedOrders(ContractorInfo contractor)
         {
-            var allOrders = _orderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid);
+            var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid);
             return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.Queued).ToList();
         }
 
         public async void SetOrderAsComplete(Guid orderId)
         {
-            var order = _orderStore.Find(orderId);
+            var order = OrderStore.Find(orderId);
             if (order != null)
             {
                 order.TrackInfo.OrderStatus = OrderStatus.Complete;
-                _orderStore.Update(order);
+                OrderStore.Update(order);
 
                 var customerId = order.RequestInfo.Requester.CustomerInfoGuid;
-                var customer = _userManager.Users.Single(x => x.CustomerInfo.CustomerInfoGuid == customerId);
+                var customer = UserManager.Users.Single(x => x.CustomerInfo.CustomerInfoGuid == customerId);
 
                 await EmailHelper.SendOrderDeliveredEmail(order.RequestInfo, customer);
             }
@@ -91,14 +127,14 @@ namespace PracticalWerewolf.Services
 
         public async void SetOrderAsInProgress(Guid orderId)
         {
-            var order = _orderStore.Find(orderId);
+            var order = OrderStore.Find(orderId);
             if (order != null)
             {
                 order.TrackInfo.OrderStatus = OrderStatus.InProgress;
-                _orderStore.Update(order);
+                OrderStore.Update(order);
 
                 var customerId = order.RequestInfo.Requester.CustomerInfoGuid;
-                var customer = _userManager.Users.Single(x => x.CustomerInfo.CustomerInfoGuid == customerId);
+                var customer = UserManager.Users.Single(x => x.CustomerInfo.CustomerInfoGuid == customerId);
 
                 await EmailHelper.SendOrderShippedEmail(order.RequestInfo, customer);
             }

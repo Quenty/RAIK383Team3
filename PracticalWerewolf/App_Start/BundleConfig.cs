@@ -30,6 +30,9 @@ namespace PracticalWerewolf
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
 
+            bundles.Add(new ScriptBundle("~/bundles/search-autocomplete").Include(
+                      "~/Scripts/search-autocomplete.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
                       "~/Scripts/knockout-3.4.2.js"));
         }

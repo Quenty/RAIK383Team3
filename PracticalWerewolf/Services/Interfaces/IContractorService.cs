@@ -12,16 +12,10 @@ namespace PracticalWerewolf.Services.Interfaces
 {
     public interface IContractorService
     {
-        // Depends upon IContractorStore.Update
         void SetIsAvailable(Guid contractorInfoGuid, bool isAvailable);
-
-        // Depends upon IContractorStore.Update
         void SetApproval(Guid contractorInfoGuid, ContractorApprovalState isApproved);
-
         IEnumerable<ContractorInfo> GetUnapprovedContractors();
-
         ContractorInfo GetContractorByTruckGuid(Guid guid);
-
         IQueryable<ContractorInfo> getAvailableContractorQuery();
 
         void UpdateContractorTruck(Truck truck, ApplicationUser user);
