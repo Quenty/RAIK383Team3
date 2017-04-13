@@ -21,7 +21,7 @@ namespace PracticalWerewolf.Models.Routes
         [Required]
         public virtual Order Order { get; set; }
 
-        private long EstimatedTicksToNextStop { get; set; }
+        public long EstimatedTicksToNextStop { get; set; }
 
         [NotMapped]
         public TimeSpan EstimatedTimeToNextStop
@@ -35,6 +35,8 @@ namespace PracticalWerewolf.Models.Routes
                 EstimatedTicksToNextStop = value.Ticks;
             }
         }
+
+        public int DistanceToNextStop { get; set; }
 
         [Required]
         public long StopOrder { get; set; }

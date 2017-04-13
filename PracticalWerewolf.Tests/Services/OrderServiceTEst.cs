@@ -115,10 +115,11 @@ namespace PracticalWerewolf.Tests.Services
         private static OrderService GetOrderServiceWithDbSet(DbSet<Order> dbSet)
         {
             var mockContext = new Mock<IDbSetFactory>();
+            var mockUserManager = new Mock<ApplicationUserManager>();
             mockContext.Setup(x => x.CreateDbSet<Order>()).Returns(dbSet);
             var store = new OrderStore(mockContext.Object);
 
-            return new OrderService(store);
+            return new OrderService(store, mockUserManager.Object);
         }
     }
 }

@@ -13,6 +13,8 @@ namespace PracticalWerewolf.Migrations
                     {
                         RouteStopGuid = c.Guid(nullable: false),
                         Type = c.Int(nullable: false),
+                        EstimatedTicksToNextStop = c.Long(nullable: false),
+                        DistanceToNextStop = c.Int(nullable: false),
                         StopOrder = c.Long(nullable: false),
                         Order_OrderGuid = c.Guid(nullable: false),
                     })
