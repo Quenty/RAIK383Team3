@@ -45,6 +45,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GoogleMapsApi, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GoogleMapsApi.0.64.0\lib\net45\GoogleMapsApi.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
@@ -72,6 +76,10 @@
     </Reference>
     <Reference Include="Ninject.Web.Mvc, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.MVC5.3.2.1.0\lib\net45-full\Ninject.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RazorEngine, Version=3.9.3.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorEngine.3.9.3\lib\net45\RazorEngine.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -212,9 +220,11 @@
     <Compile Include="Controllers\TruckController.cs" />
     <Compile Include="Controllers\UnitOfWork\IUnitOfWork.cs" />
     <Compile Include="Controllers\Validation\MustBeTrueAttribute.cs" />
+    <Compile Include="EmailTemplates\EmailViewModels.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\EmailHelper.cs" />
     <Compile Include="Migrations\201701292303341_InitialCreate.cs" />
     <Compile Include="Migrations\201701292303341_InitialCreate.Designer.cs">
       <DependentUpon>201701292303341_InitialCreate.cs</DependentUpon>
@@ -363,6 +373,8 @@
     <Content Include="Scripts\ContractorPartials.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="EmailTemplates\OrderUpdate.cshtml" />
+    <Content Include="EmailTemplates\WorkOrder.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\GoogleMapAPI.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
