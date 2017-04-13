@@ -13,7 +13,7 @@ namespace PracticalWerewolf.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201704102247181_RoutePlanning"; }
+            get { return "201704131655350_RoutePlanning"; }
         }
         
         string IMigrationMetadata.Source

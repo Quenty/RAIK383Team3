@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -18,11 +19,24 @@ namespace PracticalWerewolf.Models.Routes
         public StopType Type { get; set; }
 
         [Required]
-        public Order Order { get; set; }
+        public virtual Order Order { get; set; }
 
-        public TimeSpan TimeToNextStop { get; set; }
+        private long EstimatedTicksToNextStop { get; set; }
+
+        [NotMapped]
+        public TimeSpan EstimatedTimeToNextStop
+        {
+            get
+            {
+                return TimeSpan.FromTicks(EstimatedTicksToNextStop);
+            }
+            set
+            {
+                EstimatedTicksToNextStop = value.Ticks;
+            }
+        }
 
         [Required]
-        public long StopIndex { get; set; }
+        public long StopOrder { get; set; }
     }
 }

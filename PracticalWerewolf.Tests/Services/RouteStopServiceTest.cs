@@ -62,7 +62,7 @@ namespace PracticalWerewolf.Tests.Services
             for(int i = 0; i < 7; i++)
             {
                 Assert.AreEqual(stops.ElementAt(i), result.ElementAt(i));
-                Assert.AreEqual(i, result.ElementAt(i).StopIndex);
+                Assert.AreEqual(i, result.ElementAt(i).StopOrder);
             }
         }
 
@@ -274,22 +274,22 @@ namespace PracticalWerewolf.Tests.Services
         {
             return new List<RouteStop>()
             {
-                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.InProgress), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, TimeToNextStop = TimeSpan.Zero, StopIndex = 0 },
-                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, TimeToNextStop = TimeSpan.Zero, StopIndex = 1 },
-                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, TimeToNextStop = TimeSpan.Zero, StopIndex = 2 },
-                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, TimeToNextStop = TimeSpan.Zero, StopIndex = 3 },
-                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, TimeToNextStop = TimeSpan.Zero, StopIndex = 4 },
-                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, TimeToNextStop = TimeSpan.Zero, StopIndex = 5 },
-                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, TimeToNextStop = TimeSpan.Zero, StopIndex = 6 },
-                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Cancelled), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, TimeToNextStop = TimeSpan.Zero, StopIndex = -1 },
-                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, TimeToNextStop = TimeSpan.Zero, StopIndex = -2 },
-                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, TimeToNextStop = TimeSpan.Zero, StopIndex = -3 },
+                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.InProgress), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 0 },
+                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 1 },
+                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 2 },
+                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 3 },
+                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 4 },
+                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 5 },
+                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 6 },
+                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Cancelled), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = -1 },
+                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = -2 },
+                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = -3 },
 
-                new RouteStop() {Order = CreateRandomOrder(otherUser, OrderStatus.Cancelled), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, TimeToNextStop = TimeSpan.Zero, StopIndex = 0 },
-                new RouteStop() {Order = CreateRandomOrder(otherUser, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, TimeToNextStop = TimeSpan.Zero, StopIndex = 2 },
-                new RouteStop() {Order = CreateRandomOrder(otherUser, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, TimeToNextStop = TimeSpan.Zero, StopIndex = 1 },
-                new RouteStop() {Order = CreateRandomOrder(otherUser, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, TimeToNextStop = TimeSpan.Zero, StopIndex = -1 },
-                new RouteStop() {Order = CreateRandomOrder(otherUser, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, TimeToNextStop = TimeSpan.Zero, StopIndex = -2 },
+                new RouteStop() {Order = CreateRandomOrder(otherUser, OrderStatus.Cancelled), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 0 },
+                new RouteStop() {Order = CreateRandomOrder(otherUser, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 2 },
+                new RouteStop() {Order = CreateRandomOrder(otherUser, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 1 },
+                new RouteStop() {Order = CreateRandomOrder(otherUser, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = -1 },
+                new RouteStop() {Order = CreateRandomOrder(otherUser, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = -2 },
 
             };
         }

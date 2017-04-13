@@ -13,8 +13,7 @@ namespace PracticalWerewolf.Migrations
                     {
                         RouteStopGuid = c.Guid(nullable: false),
                         Type = c.Int(nullable: false),
-                        TimeToNextStop = c.Time(nullable: false, precision: 7),
-                        StopIndex = c.Long(nullable: false),
+                        StopOrder = c.Long(nullable: false),
                         Order_OrderGuid = c.Guid(nullable: false),
                     })
                 .PrimaryKey(t => t.RouteStopGuid)
