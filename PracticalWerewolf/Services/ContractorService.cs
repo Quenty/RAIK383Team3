@@ -55,6 +55,7 @@ namespace PracticalWerewolf.Services
                 .Where(c => c.Truck.AvailableCapacity.Mass > 0);
         }
 
+
         public void UpdateContractorTruck(Truck truck, ApplicationUser driver)
         {
             driver.ContractorInfo.Truck = truck;

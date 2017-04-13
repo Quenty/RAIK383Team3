@@ -30,6 +30,7 @@
                     <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "About" ? "active" : "")">@Html.ActionLink("About", "About", "Home")</li>
                     <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Contractor" ? "active" : "")">@Html.ActionLink("Contract", "Index", "Contractor")</li>
                 </ul>
+                @Html.Partial("_SearchPartial")
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
@@ -48,5 +49,6 @@
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/knockout")
     @RenderSection("scripts", required: false)
+    @Scripts.Render("~/bundles/search-autocomplete");
 </body>
 </html>
