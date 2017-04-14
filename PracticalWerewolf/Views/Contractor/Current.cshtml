@@ -25,6 +25,8 @@
                             <th>
                                 @Html.DisplayNameFor(m => m.Orders.FirstOrDefault().RequestInfo.Size)
                             </th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
 
@@ -32,11 +34,14 @@
                         <tr>
                             @foreach (var item in Model.Orders)
                             {
-                                <td>item.RequestInfo.RequestDate</td>
-                                <td>item.RequestInfo.Size</td>
-                                <td>item.RequestInfo.PickUpAddress</td>
+                                <td>@item.RequestInfo.RequestDate</td>
+                                <td>@item.RequestInfo.Size</td>
+                                <td>@item.RequestInfo.PickUpAddress</td>
                                 <td>
                                     @Html.ActionLink("Details", "Details", new { id = item.OrderGuid }) |
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Confirm Order", "Confirmation", "Order", new { id = item.OrderGuid})
                                 </td>
                             }
                         </tr>

@@ -17,5 +17,6 @@ namespace PracticalWerewolf.Services.Interfaces
         void CancelOrder(Guid orderGuid);
         object GetOrders();
         object GetOrders(CustomerInfo customerInfo);
+        void SetOrderAsComplete(Guid guid);
     }
 }

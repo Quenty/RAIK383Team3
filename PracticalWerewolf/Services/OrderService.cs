@@ -74,5 +74,13 @@ namespace PracticalWerewolf.Services
         {
             return OrderStore.Find(o => o.RequestInfo.Requester.CustomerInfoGuid == customerInfo.CustomerInfoGuid);
         }
+
+        public void SetOrderAsComplete(Guid guid)
+        {
+            Order order = GetOrder(guid);
+            OrderTrackInfo orderTrackInfo = order.TrackInfo;
+            orderTrackInfo.OrderStatus = OrderStatus.Complete;
+            OrderStore.Update(order);
+        }
     }
 }

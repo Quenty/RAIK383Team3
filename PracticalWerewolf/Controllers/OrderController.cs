@@ -5,9 +5,6 @@ using PracticalWerewolf.Models.UserInfos;
 using PracticalWerewolf.Services.Interfaces;
 using PracticalWerewolf.ViewModels.Orders;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace PracticalWerewolf.Controllers
@@ -26,6 +23,8 @@ namespace PracticalWerewolf.Controllers
         {
             OrderCreatedSuccess,
             OrderCreatedError,
+            CancelOrderError,
+            CouldNotUpdateStatus,
             Error
         }
 
@@ -43,8 +42,10 @@ namespace PracticalWerewolf.Controllers
         public ActionResult Index(OrderMessageId? message)
         {
             ViewBag.StatusMessage = message == OrderMessageId.OrderCreatedSuccess ? "Order placed successfully."
-                : message == OrderMessageId.OrderCreatedError ? "Internal error. Try placing your order again"
+                : message == OrderMessageId.OrderCreatedError ? "Internal error. Try placing your order again."
                 : message == OrderMessageId.Error ? "Something went wrong, please try again!"
+                : message == OrderMessageId.CancelOrderError ? "Internal error. Please try to cancel order again."
+                : message == OrderMessageId.CouldNotUpdateStatus ? "Internal error. Could not update order status, try again."
                 : "";
 
             return View();
@@ -130,31 +131,26 @@ namespace PracticalWerewolf.Controllers
             }
         }
 
-        // GET: Order/Cancel/guid
-        [Authorize(Roles = "Customer, Employees")]
-        public ActionResult Cancel(string guid)
-        {
-            // Gives customer and employee the option to cancel an order
-            // Depends upon IOrderService.CancelOrder(OrderGuid)
-            return View();
-        }
-
         // POST: Order/Cancel/guid
         [HttpPost]
         [Authorize(Roles = "Customer, Employees")]
         public ActionResult Cancel(string guid, FormCollection collection)
         {
-            // Updates the database by removing the specific order
-            // Depends upon IOrderTrackService.UpdateOrderStatus
-            try
+            if (!String.IsNullOrEmpty(guid))
             {
-                // TODO: Add cancel logic here
-                return RedirectToAction("Index");
+                try
+                {
+                    var Guid = new Guid(guid);
+                    OrderService.CancelOrder(Guid);
+                    UnitOfWork.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch
+                {
+                    return RedirectToAction("Index", new { message = OrderMessageId.CancelOrderError });
+                }
             }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction("Index", new { message = OrderMessageId.CancelOrderError });
         }
 
         // POST: Order/Reject/guid
@@ -169,29 +165,38 @@ namespace PracticalWerewolf.Controllers
 
         // GET: Order/Confirmation/guid
         [Authorize(Roles = "Contractor")]
-        public ActionResult Confirmation(string guid)
+        public ActionResult Confirmation(string id)
         {
-            // Page for the contractor to collect signature once product is delivered
-            // Depends upon IOrderTrackService.UpdateOrderStatus, ITruckService.UpdateTruckCurrentCapacity
-            return View();
+            var model = new ConfirmationViewModel
+            {
+                Guid = new Guid(id)
+            };
+            return View(model);
         }
 
+        
         // POST: Order/Confirmation/guid
         [Authorize(Roles = "Contractor")]
-        public ActionResult Confirmation(string guid, FormCollection collection)
+        [HttpPost]
+        [ActionName("Confirmation")]
+        public ActionResult ConfirmationPost(ConfirmationViewModel model )
         {
-            // Updates the database by marking the order as completed
-            // Depends upon IOrderTrackService.UpdateOrderStatus, ITruckService.UpdateTruckCurrentCapacity
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add delete logic here
+                try
+                {
+                    OrderService.SetOrderAsComplete(model.Guid);
+                    UnitOfWork.SaveChanges();
 
-                return RedirectToAction("Index");
+                    return RedirectToAction("Index", "Contractor");
+                }
+                catch
+                {
+                    return RedirectToAction("Index", "Contractor", new { Message = OrderMessageId.CouldNotUpdateStatus });
+                }
             }
-            catch
-            {
-                return View();
-            }
+            else
+                return RedirectToAction("Index", "Contractor", new { Message = OrderMessageId.Error });
         }
 
         //[Authorize (Roles = "Employee")]
