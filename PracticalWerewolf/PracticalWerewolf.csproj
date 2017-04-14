@@ -359,7 +359,6 @@
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\knockout-3.4.2.debug.js" />
-    <Content Include="Scripts\GoogleMapAPI.js" />
     <Content Include="Scripts\knockout-3.4.2.js" />
     <Content Include="Scripts\mapautocomplete.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -428,8 +427,6 @@
     <Content Include="Views\Truck\Details.cshtml" />
     <Content Include="Views\Truck\Edit.cshtml" />
     <Content Include="Views\Truck\Create.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\CivicAddressDb.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\CivicAddressDb.cshtml" />
     <Content Include="Views\Shared\_StatusMessage.cshtml" />
     <Content Include="Views\Contractor\_IndexPendingApproval.cshtml" />
     <Content Include="Views\Contractor\_IndexDeniedApproval.cshtml" />
