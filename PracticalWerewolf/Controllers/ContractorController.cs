@@ -27,7 +27,10 @@ namespace PracticalWerewolf.Controllers
             AlreadyRegisteredError,
             Error,
             StatusChangeSuccess,
-            NoTruckCreated
+            StatusError,
+            NoTruckCreated,
+            TruckCreationError,
+            TruckLocationUpdateError
         }
 
         private readonly ApplicationUserManager UserManager;
@@ -53,6 +56,9 @@ namespace PracticalWerewolf.Controllers
                 : message == ContractorMessageId.DeniedSuccess ? "Contractor denied"
                 : message == ContractorMessageId.StatusChangeSuccess ? "Status successfully changed"
                 : message == ContractorMessageId.NoTruckCreated ? "You must create a truck to access this page."
+                : message == ContractorMessageId.StatusError ? "Could not update status successfully."
+                : message == ContractorMessageId.TruckCreationError ? "Could not create truck successfully."
+                : message == ContractorMessageId.TruckLocationUpdateError ? "Could not update truck location successfully"
                 : "";
         }
 
@@ -187,7 +193,7 @@ namespace PracticalWerewolf.Controllers
         }
 
 
-        public ActionResult _UpdateStatus(string id)
+        public ActionResult UpdateStatus(string id)
         {
             if (!String.IsNullOrEmpty(id))
             {
@@ -202,11 +208,11 @@ namespace PracticalWerewolf.Controllers
                         ContractorStatus = contractor.IsAvailable
                     };
 
-                    return PartialView(model);
+                    return PartialView("_UpdateStatus", model);
                 }
                 catch
                 {
-                    return RedirectToAction("Index", "Contractor", new { Message = "Could not update status successfully." });
+                    return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.StatusError });
                 }
             }
             return HttpNotFound();
@@ -215,7 +221,7 @@ namespace PracticalWerewolf.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult _UpdateStatus(ContractorStatusModel returnedModel)
+        public ActionResult UpdateStatus(ContractorStatusModel returnedModel)
         {
             if (ModelState.IsValid)
             {
@@ -227,10 +233,10 @@ namespace PracticalWerewolf.Controllers
                 }
                 catch
                 {
-                    return RedirectToAction("Index", "Contractor", new { Message = "Could not update status successfully." });
+                    return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.StatusError });
                 }
             }
-            return RedirectToAction("Index", "Contractor", new { Message = "Could not update status successfully. Invalid model." });
+            return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.StatusError });
         }
 
         [Authorize(Roles = "Contractor")]
