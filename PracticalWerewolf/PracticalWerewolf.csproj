@@ -218,7 +218,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ContractorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\LocationHelper.cs" />
+    <Compile Include="Helpers\LocationHelper.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
@@ -316,6 +316,7 @@
     <Compile Include="Models\Routes\RouteStop.cs" />
     <Compile Include="Services\ContractorService.cs" />
     <Compile Include="Services\CustomerService.cs" />
+    <Compile Include="Services\DirectionResponse.cs" />
     <Compile Include="Services\EmployeeService.cs" />
     <Compile Include="Services\Interfaces\IOrderRequestService.cs" />
     <Compile Include="Services\Interfaces\IOrderTrackService.cs" />
@@ -324,6 +325,8 @@
     <Compile Include="Services\OrderRequestService.cs" />
     <Compile Include="Services\OrderService.cs" />
     <Compile Include="Services\OrderTrackService.cs" />
+    <Compile Include="Services\RoutePlannerDelegate.cs" />
+    <Compile Include="Services\RoutePlannerService.cs" />
     <Compile Include="Services\RouteStopService.cs" />
     <Compile Include="Services\TruckService.cs" />
     <Compile Include="Services\UserInfoService.cs" />
