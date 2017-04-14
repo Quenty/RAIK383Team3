@@ -10,6 +10,7 @@ namespace PracticalWerewolf.Services.Interfaces
 {
     public interface IOrderService
     {
+        IEnumerable<Order> GetUnassignedOrders();
         IEnumerable<Order> GetQueuedOrders(ContractorInfo contractor);
         IEnumerable<Order> GetInprogressOrders(ContractorInfo contractor);
         IEnumerable<Order> GetDeliveredOrders(ContractorInfo contractor);
@@ -18,5 +19,6 @@ namespace PracticalWerewolf.Services.Interfaces
         object GetOrders();
         object GetOrders(CustomerInfo customerInfo);
         void SetOrderAsComplete(Guid guid);
+        void AssignOrders();
     }
 }

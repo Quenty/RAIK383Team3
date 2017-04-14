@@ -1,0 +1,112 @@
+﻿@Model PracticalWerewolf.EmailTemplates.OrderUpdateModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Your Order @Model.UpdateType !</title>
+</head>
+<body>
+    <div>
+        <table width="500px" style="background-color:#F8F9F9;padding:20px">
+            <tr>
+                <td>
+                    <table width="100%">
+                        <tr id="Header">
+                            <td>
+                                <table>
+                                    <tr>
+                                        <td width="50%">
+                                            <table id="Icon">
+                                                <tr>
+                                                    <td>
+                                                        <img src="cid:@Model.LogoId" height="32" width="32" style="padding:5px" />
+                                                    </td>
+                                                    <td style="font-size:large;">
+                                                        <b>Practical Werewolf</b>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td width="50%" style="text-align:right;font-size:large;">
+                                            @Model.UpdateType Confirmation
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <hr />
+                                <p style="color:#02A9ED;font-size:medium">
+                                    Hi @Model.UserName,
+                                </p>
+                                <p>
+                                    Your order @Model.OrderId @Model.UpdateDescription
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <hr />
+                                <p style="color:#02A9ED;font-size:large">
+                                    Details
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table width="100%">
+                                    <tr>
+                                        <td width="66%">
+                                            <table width="100%" style="padding:20px">
+                                                <tr>
+                                                    <td width="50%">
+                                                        <p><b>Arriving</b></p>
+                                                    </td>
+                                                    <td>
+                                                        <p style="color:#41903f;font-size:medium;text-align:right">@Model.ArrivalDate</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <p><b>Destination</b></p>
+                                                    </td>
+                                                    <td>
+                                                        <p style="color:#41903f;font-size:medium;text-align:right">@Model.Destination</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <p><b>Cost</b></p>
+                                                    </td>
+                                                    <td>
+                                                        <p style="color:#41903f;font-size:medium;text-align:right">@Model.Cost</p>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td align="center">
+                                            <button onsubmit="www.staggeringbeauty.com" style="background-color:#428bca;border-color:#428bca;color:#fff;border:1px solid transparent;border-radius:6px;padding:10px 0px;">
+                                                <a href="www.staggeringbeauty.com" style="padding:10px 16px;text-decoration:none;color:#fff;font-size:large;">Details »</a>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p style="text-align:center;color:#02A9ED">
+                                    Thank you for using Practical Werewolf!
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

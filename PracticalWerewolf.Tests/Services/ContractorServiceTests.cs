@@ -17,7 +17,7 @@ using PracticalWerewolf.Models;
 namespace PracticalWerewolf.Tests.Services
 {
     [TestClass]
-    public class ContractorServiceTest
+    public class ContractorServiceTests
     {
         [TestMethod]
         public void GetUnapprovedContractors_NoContractors_EmptyList()

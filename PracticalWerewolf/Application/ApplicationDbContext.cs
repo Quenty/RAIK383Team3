@@ -2,6 +2,7 @@
 using PracticalWerewolf.Controllers.UnitOfWork;
 using PracticalWerewolf.Models;
 using PracticalWerewolf.Models.Orders;
+using PracticalWerewolf.Models.Routes;
 using PracticalWerewolf.Models.Trucks;
 using PracticalWerewolf.Models.UserInfos;
 using PracticalWerewolf.Stores.Interfaces;
@@ -35,6 +36,8 @@ namespace PracticalWerewolf.Application
         public DbSet<Order> Order { get; set; }
         public DbSet<OrderRequestInfo> OrderRequestInfo { get; set; }
         public DbSet<OrderTrackInfo> OrderTrackInfo { get; set; }
+
+        public DbSet<RouteStop> RouteStop { get; set; }
 
         public static ApplicationDbContext Create()
         {

@@ -62,6 +62,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         // GET: Order/Create
+        [Authorize(Roles = ("Customer"))]
         public ActionResult Create()
         {
             return View();
@@ -98,6 +99,7 @@ namespace PracticalWerewolf.Controllers
                 Requester = Requester
             });
 
+            OrderService.AssignOrders();
             UnitOfWork.SaveChanges();
 
             return RedirectToAction("Index", new { message = OrderMessageId.OrderCreatedSuccess });
