@@ -42,7 +42,7 @@ namespace PracticalWerewolf.Services
             {
                 try
                 {
-                    List<RouteStop> route = _routeStopService.GetContractorRoute(contractor).ToList();
+                    List<RouteStop> route = _routeStopService.GetContractorRouteAsNoTracking(contractor).ToList();
                     var planner = new RoutePlannerDelegate(contractor, order, route);
                     planner.CalculateOptimalRoute();
                     options.Add(planner);
@@ -68,6 +68,8 @@ namespace PracticalWerewolf.Services
             modifiedStops.Remove(optimalPlan.PickUp);
             modifiedStops.Remove(optimalPlan.DropOff);
             _routeStopService.Update(modifiedStops);
+
+            order.TrackInfo.Assignee = optimalPlan.Contractor;
 
             ApplicationUser user = _contractorService.GetUserByContractorInfo(optimalPlan.Contractor);
             await EmailHelper.SendWorkOrderEmail(user, optimalPlan.Order.RequestInfo);

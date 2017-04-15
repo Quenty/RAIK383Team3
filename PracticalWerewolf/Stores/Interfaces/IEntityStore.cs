@@ -9,6 +9,7 @@ namespace PracticalWerewolf.Stores.Interfaces
     public interface IEntityStore<T> where T : class
     {
         IQueryable<T> AsQueryable();
+        IQueryable<T> AsNoTracking();
         IEnumerable<T> GetAll(params Expression<Func<T, object>>[] includeProperties);
         IEnumerable<T> Find(Expression<Func<T, bool>> where, params Expression<Func<T, object>>[] includeProperties);
         T Find(object id);

@@ -1,5 +1,4 @@
-﻿using PracticalWerewolf.Controllers;
-using PracticalWerewolf.Models.Orders;
+﻿using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.Models.Routes;
 using PracticalWerewolf.Models.UserInfos;
 using System;
@@ -8,6 +7,7 @@ using System.Device.Location;
 using GoogleMapsApi.Entities.Directions.Response;
 using PracticalWerewolf.Models.Trucks;
 using System.Linq;
+using PracticalWerewolf.Helpers;
 
 namespace PracticalWerewolf.Services
 {
@@ -59,12 +59,12 @@ namespace PracticalWerewolf.Services
             GetDistances();
             GetTruckCapacityUnits();
 
-            var sublists = GetSubRoutesWithNoCapacityConflicts();
-            var results = new List<SubRouteCalculationResult>();
+            IEnumerable<Tuple<int, int>> sublists = GetSubRoutesWithNoCapacityConflicts();
+            List<SubRouteCalculationResult> results = new List<SubRouteCalculationResult>();
 
             foreach(var sublist in sublists)
             {
-                var result = GetBestPickUpAndDropOffPlacementInSublist(sublist.Item1, sublist.Item2);
+                SubRouteCalculationResult result = GetBestPickUpAndDropOffPlacementInSublist(sublist.Item1, sublist.Item2);
                 results.Add(result);
             }
             //this shows us what happens if we pick up and drop off order at the end of the route
@@ -80,6 +80,8 @@ namespace PracticalWerewolf.Services
             }
 
             DistanceChanged = best.DistanceChanged;
+
+            //insert pickup and dropoff into route
 
             Route.Insert(best.DropOffIndex, DropOff);
             var prev = Route[best.DropOffIndex - 1];

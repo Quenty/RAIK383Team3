@@ -9,11 +9,8 @@ using Microsoft.AspNet.Identity;
 using PracticalWerewolf.Models;
 using PracticalWerewolf.Models.UserInfos;
 using PracticalWerewolf.Controllers.UnitOfWork;
-using System.Activities;
-using System.Data.Entity.Spatial;
-using PracticalWerewolf.Application;
 using log4net;
-using PracticalWerewolf.Services;
+using PracticalWerewolf.Helpers;
 
 namespace PracticalWerewolf.Controllers
 {

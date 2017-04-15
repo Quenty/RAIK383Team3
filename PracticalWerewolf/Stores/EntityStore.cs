@@ -27,6 +27,11 @@ namespace PracticalWerewolf.Stores
             return _dbSet;
         }
 
+        public IQueryable<T> AsNoTracking()
+        {
+            return _dbSet.AsNoTracking();
+        }
+
         public IEnumerable<T> GetAll(params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> query = AsQueryable();

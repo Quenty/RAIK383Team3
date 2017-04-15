@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PracticalWerewolf.Controllers;
 using GoogleMapsApi.Entities.Directions.Response;
 using System.Linq;
 using System.Device.Location;
+using PracticalWerewolf.Helpers;
 
 namespace PracticalWerewolf.Tests.Helpers
 {
