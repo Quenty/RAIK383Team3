@@ -48,7 +48,7 @@ namespace PracticalWerewolf.Services
             };
         }
 
-        public void DoWerk()
+        public void CalculateOptimalRoute()
         {
             if (!Route.Any())
             {

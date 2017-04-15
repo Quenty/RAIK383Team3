@@ -44,5 +44,23 @@ namespace PracticalWerewolf.Services
 
             return _routeStopStore.AsQueryable().Where(x => x.Order.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid).FirstOrDefault(x => x.Order.TrackInfo.OrderStatus == OrderStatus.InProgress);
         }
+
+        public void Update(RouteStop entity)
+        {
+            _routeStopStore.Update(entity);
+        }
+
+        public void Update(IEnumerable<RouteStop> entities)
+        {
+            foreach(RouteStop entity in entities)
+            {
+                _routeStopStore.Update(entity);
+            }
+        }
+
+        public void Insert(RouteStop entity)
+        {
+            _routeStopStore.Insert(entity);
+        }
     }
 }

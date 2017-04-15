@@ -47,7 +47,7 @@ namespace PracticalWerewolf.Services
             throw new NotImplementedException();
         }
 
-        public IQueryable<ContractorInfo> getAvailableContractorQuery()
+        public IQueryable<ContractorInfo> GetAvailableContractorQuery()
         {
             return _contractorStore.Find(c => c.ApprovalState == ContractorApprovalState.Approved).AsQueryable()
                 .Where(c => c.IsAvailable)
@@ -61,6 +61,11 @@ namespace PracticalWerewolf.Services
             driver.ContractorInfo.Truck = truck;
             var result = _userManager.UpdateAsync(driver);
             result.Wait(); // TODO: Make this async
+        }
+
+        public ApplicationUser GetUserByContractorInfo(ContractorInfo contractor)
+        {
+            return _userManager.Users.SingleOrDefault(x => x.ContractorInfo.ContractorInfoGuid == contractor.ContractorInfoGuid);
         }
     }
 }
