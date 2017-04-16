@@ -71,6 +71,36 @@ namespace PracticalWerewolf.Tests.Helpers
         }
 
         [TestMethod]
+        public void GetRouteBetweenLocations_CivicAddressDbNoRawInputAddress_TestDistanceBewteenJesseesHomes()
+        {
+            CivicAddressDb origin = new CivicAddressDb()
+            {
+                StreetNumber = "3025 North 169th Avenue",
+                City = "Omaha",
+                State = "NE",
+                ZipCode = "68116",
+                Country = "USA"
+            };
+
+            CivicAddressDb destination = new CivicAddressDb()
+            {
+                StreetNumber = "630 North 14th Street, Kauffman Hall",
+                City = "Lincoln",
+                State = "NE",
+                ZipCode = "68508",
+                Country = "USA"
+            };
+            DirectionsResponse result = LocationHelper.GetRouteBetweenLocations(origin, destination);
+
+            if (result.Status != DirectionsStatusCodes.OVER_QUERY_LIMIT)
+            {
+                Assert.AreEqual(DirectionsStatusCodes.OK, result.Status);
+                Assert.AreEqual("53.1 mi", result.Routes.ElementAt(0).Legs.ElementAt(0).Distance.Text);
+                Assert.AreEqual(85456, result.Routes.ElementAt(0).Legs.ElementAt(0).Distance.Value, 100);
+            }
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void GetRouteBetweenLocations_NullCivicAddressDb_TestDistanceBewteenJesseesHomes()
         {

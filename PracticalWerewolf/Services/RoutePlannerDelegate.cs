@@ -13,10 +13,10 @@ namespace PracticalWerewolf.Services
 {
     public class RoutePlannerDelegate
     {
-
-        public ContractorInfo Contractor { get; set; }
-        public Order Order { get; set; }
-        public List<RouteStop> Route { get; set; }
+        public bool WillWork = true;
+        public ContractorInfo Contractor { get; }
+        public Order Order { get; }
+        public List<RouteStop> Route { get; }
         public RouteStop PickUp { get; }
         public RouteStop DropOff { get; }
         public int DistanceChanged { get; set; }
@@ -50,13 +50,20 @@ namespace PracticalWerewolf.Services
 
         public void CalculateOptimalRoute()
         {
+            if(!IsWithinMaxCapacity(Order.RequestInfo.Size, Contractor.Truck.MaxCapacity))
+            {
+                WillWork = false;
+                return;
+            }
+
+            GetDistances();
+
             if (!Route.Any())
             {
                 DeliverFromHomeAddress();
                 return;
             }
             
-            GetDistances();
             GetTruckCapacityUnits();
 
             IEnumerable<Tuple<int, int>> sublists = GetSubRoutesWithNoCapacityConflicts();
@@ -84,14 +91,32 @@ namespace PracticalWerewolf.Services
             //insert pickup and dropoff into route
 
             Route.Insert(best.DropOffIndex, DropOff);
-            var prev = Route[best.DropOffIndex - 1];
+
+            //set previous numbers
+            Route.Insert(best.PickUpIndex, PickUp);
+            RouteStop prev = Route[best.PickUpIndex - 1];
+            prev.DistanceToNextStop = GetDistanceFromPickUp(prev);
+            prev.EstimatedTimeToNextStop = GetTimeFromPickUp(prev);
+
+            //set PickUp numbers
+            var next = Route[best.PickUpIndex + 1];
+            PickUp.DistanceToNextStop = GetDistanceFromPickUp(next);
+            PickUp.EstimatedTimeToNextStop = GetTimeFromPickUp(next);
+
+            //update distance to DropOff here in case we have to insert PickUp first
+            //not DropOffIndex-1 because we inserted PickUp before it
+            prev = Route[best.DropOffIndex];
             prev.DistanceToNextStop = GetDistanceFromDropOff(prev);
             prev.EstimatedTimeToNextStop = GetTimeFromDropOff(prev);
 
-            Route.Insert(best.PickUpIndex, PickUp);
-            prev = Route[best.PickUpIndex - 1];
-            prev.DistanceToNextStop = GetDistanceFromPickUp(prev);
-            prev.EstimatedTimeToNextStop = GetTimeFromPickUp(prev);
+            //update DropOff index if it's not the last one
+            if (!Route.Last().Equals(DropOff))
+            {
+                int nextIndex = Route.IndexOf(DropOff) + 1;
+                next = Route[nextIndex];
+                DropOff.DistanceToNextStop = GetDistanceFromDropOff(next);
+                DropOff.EstimatedTimeToNextStop = GetTimeFromDropOff(next);
+            }
 
             OrderRouteStops();
         }
@@ -104,6 +129,7 @@ namespace PracticalWerewolf.Services
             var pickUpLocation = Order.RequestInfo.PickUpAddress;
             var dropOffLocation = Order.RequestInfo.DropOffAddress;
 
+            //PickUp location to all stops
             foreach(var stop in Route)
             {
                 var location = (stop.Type == StopType.PickUp) ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
@@ -115,9 +141,19 @@ namespace PracticalWerewolf.Services
                 }
             }
 
-            _pickUpToStop.Add(dropOffLocation, LocationHelper.GetRouteBetweenLocations(pickUpLocation, dropOffLocation));
+            //PickUp to DropOff
+            if (!_pickUpToStop.ContainsKey(dropOffLocation))
+            {
+                _pickUpToStop.Add(dropOffLocation, LocationHelper.GetRouteBetweenLocations(pickUpLocation, dropOffLocation));
+            }
+            //DropOff to PickUp
+            if (!_dropOffToStop.ContainsKey(pickUpLocation))
+            {
+                _dropOffToStop.Add(pickUpLocation, LocationHelper.GetRouteBetweenLocations(dropOffLocation, pickUpLocation));
+            }
 
 
+            //DropOFf location to all stops
             foreach (var stop in Route)
             {
                 var location = (stop.Type == StopType.PickUp) ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
@@ -187,13 +223,12 @@ namespace PracticalWerewolf.Services
 
         private SubRouteCalculationResult GetBestPickUpAndDropOffPlacementInSublist(int start, int end)
         {
-            var count = end - start + 1;
             var best = new SubRouteCalculationResult();
 
             //i and j are the indexes we would put them 
-            for(int i = 1; i < count; i++)
+            for(int i = start + 1; i <= end; i++)
             {
-                for(int j = i; j < count; j++)
+                for(int j = i; j <= end; j++)
                 {
                     //calculate new distance
                     int totalDistance = 0;
@@ -205,9 +240,12 @@ namespace PracticalWerewolf.Services
 
                     previousDistance += prev.DistanceToNextStop;
 
-                    var next = Route[j + 1];
-                    var distanceFromDropOff = GetDistanceFromDropOff(next);
-                    totalDistance += distanceFromDropOff;
+                    if (j < Route.Count)
+                    {
+                        var next = Route[j];
+                        var distanceFromDropOff = GetDistanceFromDropOff(next);
+                        totalDistance += distanceFromDropOff;
+                    }
 
                     if (i == j)
                     {
@@ -217,7 +255,7 @@ namespace PracticalWerewolf.Services
                     }
                     else
                     {
-                        var afterPickUp = Route[i + 1];
+                        var afterPickUp = Route[i];
                         var afterPickUpDistance = GetDistanceFromPickUp(afterPickUp);
                         totalDistance += afterPickUpDistance;
 
@@ -275,25 +313,57 @@ namespace PracticalWerewolf.Services
         private int GetDistanceFromPickUp(RouteStop stop)
         {
             var address = stop.Type == StopType.PickUp ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
-            return _pickUpToStop[address].Routes.First().Legs.First().Distance.Value;
+
+            if (address.Equals(Order.RequestInfo.PickUpAddress))
+            {
+                return 0;
+            }
+            else
+            {
+                return _pickUpToStop[address].Routes.First().Legs.First().Distance.Value;
+            }
         }
 
         private int GetDistanceFromDropOff(RouteStop stop)
         {
             var address = stop.Type == StopType.PickUp ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
-            return _dropOffToStop[address].Routes.First().Legs.First().Distance.Value;
+
+            if (address.Equals(Order.RequestInfo.DropOffAddress))
+            {
+                return 0;
+            }
+            else
+            {
+                return _dropOffToStop[address].Routes.First().Legs.First().Distance.Value;
+            }
         }
 
         private TimeSpan GetTimeFromDropOff(RouteStop stop)
         {
             var address = stop.Type == StopType.PickUp ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
-            return _dropOffToStop[address].Routes.First().Legs.First().Duration.Value;
+
+            if (address.Equals(Order.RequestInfo.DropOffAddress))
+            {
+                return TimeSpan.Zero;
+            }
+            else
+            {
+                return _dropOffToStop[address].Routes.First().Legs.First().Duration.Value;
+            }
         }
 
         private TimeSpan GetTimeFromPickUp(RouteStop stop)
         {
             var address = stop.Type == StopType.PickUp ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
-            return _pickUpToStop[address].Routes.First().Legs.First().Duration.Value;
+
+            if (address.Equals(Order.RequestInfo.PickUpAddress))
+            {
+                return TimeSpan.Zero;
+            }
+            else
+            {
+                return _pickUpToStop[address].Routes.First().Legs.First().Duration.Value;
+            }
         }
 
         private TruckCapacityUnit AddCapacities(TruckCapacityUnit capacity1, TruckCapacityUnit capacity2)

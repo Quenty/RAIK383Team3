@@ -45,7 +45,10 @@ namespace PracticalWerewolf.Services
                     List<RouteStop> route = _routeStopService.GetContractorRouteAsNoTracking(contractor).ToList();
                     var planner = new RoutePlannerDelegate(contractor, order, route);
                     planner.CalculateOptimalRoute();
-                    options.Add(planner);
+                    if (planner.WillWork)
+                    {
+                        options.Add(planner);
+                    }
                 }
                 catch (Exception e)
                 {
