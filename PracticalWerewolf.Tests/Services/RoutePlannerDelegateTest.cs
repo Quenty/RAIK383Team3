@@ -284,14 +284,5 @@ namespace PracticalWerewolf.Tests.Services
                 Assert.AreEqual(expectedDistances.ElementAt(i), routePlanner.Route.ElementAt(i).DistanceToNextStop, expectedDistances.ElementAt(i) * epsilon);
             }
         }
-
-
-        //TODO:
-        /*
-         * Several working tests
-         * pick up and drop off in between two points
-         */
-
-
     }
 }
