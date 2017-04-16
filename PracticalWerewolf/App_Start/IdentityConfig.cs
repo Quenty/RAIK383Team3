@@ -12,6 +12,7 @@ using Ninject;
 using System.Net.Mail;
 using System.Net;
 using log4net;
+using System.Collections.Generic;
 
 namespace PracticalWerewolf
 {
@@ -25,7 +26,45 @@ namespace PracticalWerewolf
             email.To.Add(new MailAddress(message.Destination));
             email.Subject = message.Subject;
             email.Body = message.Body;
+            email.IsBodyHtml = true;
 
+            try
+            {
+                using (var smtp = new SmtpClient())
+                {
+                    await smtp.SendMailAsync(email);
+                }
+
+            }
+            catch (Exception e)
+            {
+                var ex = e.InnerException;
+                var errorMessage = "SendAsync() - Inner Exception: " + ex.Message + "\n" + "Stack Track: " + ex.StackTrace;
+                logger.Error(errorMessage);
+            }
+        }
+
+        public async Task SendAsync(string destination, string subject, string body, List<Tuple<string, string>> imageIds = null)
+        {
+            var email = new MailMessage();
+            email.To.Add(new MailAddress(destination));
+            email.Subject = subject;
+            email.Body = body;
+            email.IsBodyHtml = true;
+
+            AlternateView view = AlternateView.CreateAlternateViewFromString(body, null, "text/html");
+
+            if (imageIds != null)
+            {
+                foreach (var imageResource in imageIds)
+                {
+                    var image = new LinkedResource(imageResource.Item1);
+                    image.ContentId = imageResource.Item2;
+                    view.LinkedResources.Add(image);
+                }
+
+                email.AlternateViews.Add(view);
+            }
             try
             {
                 using (var smtp = new SmtpClient())

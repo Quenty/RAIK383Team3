@@ -45,6 +45,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GoogleMapsApi, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GoogleMapsApi.0.64.0\lib\net45\GoogleMapsApi.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
@@ -62,6 +66,10 @@
       <HintPath>..\packages\Microsoft.SqlServer.Types.11.0.1\lib\net20\Microsoft.SqlServer.Types.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="NinjaNye.SearchExtensions, Version=2.0.6149.33145, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NinjaNye.SearchExtensions.2.0.6149.33145\lib\net40\NinjaNye.SearchExtensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.3.2.0.0\lib\net45-full\Ninject.dll</HintPath>
       <Private>True</Private>
@@ -72,6 +80,10 @@
     </Reference>
     <Reference Include="Ninject.Web.Mvc, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.MVC5.3.2.1.0\lib\net45-full\Ninject.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RazorEngine, Version=3.9.3.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorEngine.3.9.3\lib\net45\RazorEngine.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -209,12 +221,16 @@
     <Compile Include="Controllers\LocationHelper.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\TruckController.cs" />
     <Compile Include="Controllers\UnitOfWork\IUnitOfWork.cs" />
+    <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\Validation\MustBeTrueAttribute.cs" />
+    <Compile Include="EmailTemplates\EmailViewModels.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\EmailHelper.cs" />
     <Compile Include="Migrations\201701292303341_InitialCreate.cs" />
     <Compile Include="Migrations\201701292303341_InitialCreate.Designer.cs">
       <DependentUpon>201701292303341_InitialCreate.cs</DependentUpon>
@@ -291,17 +307,24 @@
     <Compile Include="Migrations\201704022316375_Update-Relationships-3.Designer.cs">
       <DependentUpon>201704022316375_Update-Relationships-3.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201704131724547_RoutePlanning.cs" />
+    <Compile Include="Migrations\201704131724547_RoutePlanning.Designer.cs">
+      <DependentUpon>201704131724547_RoutePlanning.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CivicAddressDb.cs" />
+    <Compile Include="Models\Routes\RouteStop.cs" />
     <Compile Include="Services\ContractorService.cs" />
     <Compile Include="Services\CustomerService.cs" />
     <Compile Include="Services\EmployeeService.cs" />
     <Compile Include="Services\Interfaces\IOrderRequestService.cs" />
     <Compile Include="Services\Interfaces\IOrderTrackService.cs" />
     <Compile Include="Services\Interfaces\IUserInfoService.cs" />
+    <Compile Include="Services\Interfaces\IRouteStopService.cs" />
     <Compile Include="Services\OrderRequestService.cs" />
     <Compile Include="Services\OrderService.cs" />
     <Compile Include="Services\OrderTrackService.cs" />
+    <Compile Include="Services\RouteStopService.cs" />
     <Compile Include="Services\TruckService.cs" />
     <Compile Include="Services\UserInfoService.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
@@ -311,8 +334,11 @@
     <Compile Include="Stores\CustomerStore.cs" />
     <Compile Include="Stores\EmployeeStore.cs" />
     <Compile Include="Stores\Interfaces\IEntityStore.cs" />
+    <Compile Include="Stores\Interfaces\IRouteStopStore.cs" />
+    <Compile Include="Stores\Interfaces\RouteStopStore.cs" />
     <Compile Include="Stores\OrderStore.cs" />
     <Compile Include="Stores\TruckStore.cs" />
+    <Compile Include="Utility\Levenshtein.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\IApplicationUser.cs" />
     <Compile Include="Models\UserInfos\ContractorInfo.cs" />
@@ -339,6 +365,7 @@
     <Compile Include="Services\Interfaces\ITruckService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\OrderViewModels.cs" />
+    <Compile Include="ViewModels\SearchViewModels.cs" />
     <Compile Include="ViewModels\TruckViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -354,6 +381,8 @@
     <Content Include="Scripts\ContractorPartials.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="EmailTemplates\OrderUpdate.cshtml" />
+    <Content Include="EmailTemplates\WorkOrder.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\GoogleMapAPI.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
@@ -371,6 +400,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\search-autocomplete.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="SqlServerTypes\x64\msvcr120.dll">
@@ -385,6 +415,7 @@
     <Content Include="SqlServerTypes\x86\SqlServerSpatial130.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Views\Search\_PartialResults.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -436,6 +467,8 @@
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\TruckCapacityUnit.cshtml" />
     <Content Include="Views\Contractor\_UpdateStatus.cshtml" />
+    <Content Include="Views\Shared\_SearchPartial.cshtml" />
+    <Content Include="Views\Search\Results.cshtml" />
     <Content Include="Views\Contractor\_Pending.cshtml" />
     <Content Include="Views\Contractor\_Current.cshtml" />
     <Content Include="Views\Contractor\_Delivered.cshtml" />
@@ -447,6 +480,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Scripts\ViewModels\Contractor\" />
     <Folder Include="Views\Order\" />
+    <Folder Include="Views\UserInfo\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -532,6 +566,9 @@
     <EmbeddedResource Include="Migrations\201704022316375_Update-Relationships-3.resx">
       <DependentUpon>201704022316375_Update-Relationships-3.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704131724547_RoutePlanning.resx">
+      <DependentUpon>201704131724547_RoutePlanning.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -12,6 +12,9 @@ using PracticalWerewolf.Stores.Interfaces;
 using Moq;
 using PracticalWerewolf.Stores;
 using System.Linq;
+using Microsoft.AspNet.Identity.EntityFramework;
+using PracticalWerewolf.Models;
+using Microsoft.AspNet.Identity;
 
 namespace PracticalWerewolf.Tests.Services
 {
@@ -115,10 +118,18 @@ namespace PracticalWerewolf.Tests.Services
         private static OrderService GetOrderServiceWithDbSet(DbSet<Order> dbSet)
         {
             var mockContext = new Mock<IDbSetFactory>();
+            var mockUserManager = new Mock<ApplicationUserManager>();
             mockContext.Setup(x => x.CreateDbSet<Order>()).Returns(dbSet);
             var store = new OrderStore(mockContext.Object);
 
-            return new OrderService(store);
+            var mockContractorContext = new Mock<IDbSetFactory>();
+            var contractorStore = new ContractorStore(mockContractorContext.Object);
+
+            
+            var userStore = new Mock<IUserStore<ApplicationUser>>();
+            var userManager = new Mock<ApplicationUserManager>(userStore.Object);
+
+            return new OrderService(store, contractorStore, userManager.Object);
         }
     }
 }
