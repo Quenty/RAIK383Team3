@@ -25,21 +25,44 @@
                             <th>
                                 @Html.DisplayNameFor(m => m.Orders.FirstOrDefault().RequestInfo.Size)
                             </th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
-
                     <tbody>
-                        <tr>
-                            @foreach (var item in Model.Orders)
-                            {
-                                <td>item.RequestInfo.RequestDate</td>
-                                <td>item.RequestInfo.Size</td>
-                                <td>item.RequestInfo.PickUpAddress</td>
+                        @foreach (var item in Model.Orders)
+                        {
+                            <tr>
+                                <td>@item.RequestInfo.RequestDate</td>
+                                <td>@Html.DisplayFor(modelItem => item.RequestInfo.PickUpAddress)</td>
                                 <td>
-                                    @Html.ActionLink("Details", "Details", new { id = item.OrderGuid }) |
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayNameFor(m => m.Orders.FirstOrDefault().RequestInfo.Size.Mass)
+                                            </td>
+                                            <td>
+                                                @item.RequestInfo.Size.Mass
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayNameFor(m => m.Orders.FirstOrDefault().RequestInfo.Size.Volume)
+                                            </td>
+                                            <td>
+                                                @item.RequestInfo.Size.Volume
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
-                            }
-                        </tr>
+                                <td>
+                                    @Html.ActionLink("Details", "Details", new { id = item.OrderGuid })
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Confirm Order", "Confirmation", "Order", new { id = item.OrderGuid })
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 }
                 else

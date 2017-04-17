@@ -22,6 +22,7 @@ namespace PracticalWerewolf.Tests.Services
         public void UserWithNoRoute_HomeToPickUpToDropOff()
         {
             var user = ServiceTestUtils.CreateUser(email);
+            user.ContractorInfo.HomeAddress = new CivicAddressDb { RawInputAddress = "1504 S 1st Ave Sioux Falls, SD 57105" };
             user.ContractorInfo.Truck.Location = LocationHelper.CreatePoint(43.5318683, -96.7271978);
             user.ContractorInfo.Truck.MaxCapacity = new TruckCapacityUnit { Mass = 200, Volume = 200 };
             user.ContractorInfo.Truck.UsedCapacity = new TruckCapacityUnit { Mass = 0, Volume = 0 };
@@ -32,7 +33,7 @@ namespace PracticalWerewolf.Tests.Services
             Order order = ServiceTestUtils.CreateOrder(user, Models.Orders.OrderStatus.Queued, pickUpAddress, dropOffAddress, orderSize);
 
             List<RouteStop> route = new List<RouteStop>();
-            RoutePlannerDelegate routePlanner = new RoutePlannerDelegate(user.ContractorInfo, order, route);
+            ContractorRoutePlanner routePlanner = new ContractorRoutePlanner(user.ContractorInfo, order, route);
 
 
             routePlanner.CalculateOptimalRoute();
@@ -59,6 +60,7 @@ namespace PracticalWerewolf.Tests.Services
         public void UserWithNoRoute_AddToEndOfRoute()
         {
             var user = ServiceTestUtils.CreateUser(email);
+            user.ContractorInfo.HomeAddress = new CivicAddressDb { RawInputAddress = "1504 S 1st Ave Sioux Falls, SD 57105" };
             user.ContractorInfo.Truck.Location = LocationHelper.CreatePoint(43.5318683, -96.7271978);
             user.ContractorInfo.Truck.MaxCapacity = new TruckCapacityUnit { Mass = 200, Volume = 200 };
             user.ContractorInfo.Truck.UsedCapacity = new TruckCapacityUnit { Mass = 0, Volume = 0 };
@@ -92,7 +94,7 @@ namespace PracticalWerewolf.Tests.Services
                 new RouteStop {Order = order1, Type = StopType.DropOff,  DistanceToNextStop = 1752026, EstimatedTimeToNextStop = new TimeSpan(15, 55, 0), StopOrder = 2},
                 new RouteStop {Order = order2, Type = StopType.DropOff,  DistanceToNextStop = 0, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 3}
             };
-            RoutePlannerDelegate routePlanner = new RoutePlannerDelegate(user.ContractorInfo, order, route);
+            ContractorRoutePlanner routePlanner = new ContractorRoutePlanner(user.ContractorInfo, order, route);
 
 
             routePlanner.CalculateOptimalRoute();
@@ -125,6 +127,7 @@ namespace PracticalWerewolf.Tests.Services
         public void UserWithNoRoute_OrderThatWontFitInCar()
         {
             var user = ServiceTestUtils.CreateUser(email);
+            user.ContractorInfo.HomeAddress = new CivicAddressDb { RawInputAddress = "1504 S 1st Ave Sioux Falls, SD 57105" };
             user.ContractorInfo.Truck.Location = LocationHelper.CreatePoint(43.5318683, -96.7271978);
             user.ContractorInfo.Truck.MaxCapacity = new TruckCapacityUnit { Mass = 180, Volume = 180 };
             user.ContractorInfo.Truck.UsedCapacity = new TruckCapacityUnit { Mass = 0, Volume = 0 };
@@ -135,7 +138,7 @@ namespace PracticalWerewolf.Tests.Services
             Order order = ServiceTestUtils.CreateOrder(user, Models.Orders.OrderStatus.Queued, pickUpAddress, dropOffAddress, orderSize);
 
             List<RouteStop> route = new List<RouteStop>();
-            RoutePlannerDelegate routePlanner = new RoutePlannerDelegate(user.ContractorInfo, order, route);
+            ContractorRoutePlanner routePlanner = new ContractorRoutePlanner(user.ContractorInfo, order, route);
 
 
             routePlanner.CalculateOptimalRoute();
@@ -149,6 +152,7 @@ namespace PracticalWerewolf.Tests.Services
         public void UserWithNoRoute_TruckDoesntFitTemporarily()
         {
             var user = ServiceTestUtils.CreateUser(email);
+            user.ContractorInfo.HomeAddress = new CivicAddressDb { RawInputAddress = "1504 S 1st Ave Sioux Falls, SD 57105" };
             user.ContractorInfo.Truck.Location = LocationHelper.CreatePoint(43.5318683, -96.7271978);
             user.ContractorInfo.Truck.MaxCapacity = new TruckCapacityUnit { Mass = 200, Volume = 200 };
             user.ContractorInfo.Truck.UsedCapacity = new TruckCapacityUnit { Mass = 0, Volume = 0 };
@@ -185,7 +189,7 @@ namespace PracticalWerewolf.Tests.Services
                 new RouteStop {Order = order1, Type = StopType.DropOff,  DistanceToNextStop = 1198211, EstimatedTimeToNextStop = new TimeSpan(10, 49, 0), StopOrder = 2},
                 new RouteStop {Order = order2, Type = StopType.DropOff,  DistanceToNextStop = 0, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 3}
             };
-            RoutePlannerDelegate routePlanner = new RoutePlannerDelegate(user.ContractorInfo, order, route);
+            ContractorRoutePlanner routePlanner = new ContractorRoutePlanner(user.ContractorInfo, order, route);
 
 
             routePlanner.CalculateOptimalRoute();
@@ -223,6 +227,7 @@ namespace PracticalWerewolf.Tests.Services
         public void UserWithNoRoute_AddBetweenSameStop()
         {
             var user = ServiceTestUtils.CreateUser(email);
+            user.ContractorInfo.HomeAddress = new CivicAddressDb { RawInputAddress = "1504 S 1st Ave Sioux Falls, SD 57105" };
             user.ContractorInfo.Truck.Location = LocationHelper.CreatePoint(43.5318683, -96.7271978);
             user.ContractorInfo.Truck.MaxCapacity = new TruckCapacityUnit { Mass = 200, Volume = 200 };
             user.ContractorInfo.Truck.UsedCapacity = new TruckCapacityUnit { Mass = 0, Volume = 0 };
@@ -256,7 +261,7 @@ namespace PracticalWerewolf.Tests.Services
                 new RouteStop {Order = order1, Type = StopType.DropOff,  DistanceToNextStop = 1059572, EstimatedTimeToNextStop = new TimeSpan(9, 20, 0), StopOrder = 2},
                 new RouteStop {Order = order2, Type = StopType.DropOff,  DistanceToNextStop = 0, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 3}
             };
-            RoutePlannerDelegate routePlanner = new RoutePlannerDelegate(user.ContractorInfo, order, route);
+            ContractorRoutePlanner routePlanner = new ContractorRoutePlanner(user.ContractorInfo, order, route);
 
 
             routePlanner.CalculateOptimalRoute();

@@ -64,14 +64,14 @@ namespace PracticalWerewolf.Services
                 logger.Error("ya fuqed up");
             }
 
-            List<RoutePlannerDelegate> options = new List<RoutePlannerDelegate>();
+            List<ContractorRoutePlanner> options = new List<ContractorRoutePlanner>();
 
             foreach (ContractorInfo contractor in contractors)
             {
                 try
                 {
                     List<RouteStop> route = _routeStopService.GetContractorRouteAsNoTracking(contractor).ToList();
-                    var planner = new RoutePlannerDelegate(contractor, order, route);
+                    var planner = new ContractorRoutePlanner(contractor, order, route);
                     planner.CalculateOptimalRoute();
                     if (planner.WillWork)
                     {
@@ -90,7 +90,7 @@ namespace PracticalWerewolf.Services
                 return;
             }
 
-            RoutePlannerDelegate optimalPlan = GetOptimalPlan(options);
+            ContractorRoutePlanner optimalPlan = GetOptimalPlan(options);
 
             _routeStopService.Insert(optimalPlan.PickUp);
             _routeStopService.Insert(optimalPlan.DropOff);
@@ -107,7 +107,7 @@ namespace PracticalWerewolf.Services
             //_unitOfWork.SaveChanges();
         }
 
-        private RoutePlannerDelegate GetOptimalPlan(IEnumerable<RoutePlannerDelegate> options)
+        private ContractorRoutePlanner GetOptimalPlan(IEnumerable<ContractorRoutePlanner> options)
         {
             return options.Aggregate((a, b) => a.DistanceChanged < b.DistanceChanged ? a : b);
         }

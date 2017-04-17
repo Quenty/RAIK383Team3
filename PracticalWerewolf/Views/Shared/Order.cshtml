@@ -1,21 +1,33 @@
 ﻿@model IEnumerable<PracticalWerewolf.Models.Orders.Order>
 
 @{
-    ViewBag.Title = "View";
+    ViewBag.Title = "Order";
 }
 
-<h2>View</h2>
+<h2>Order</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
     <tr>
+        <th>@Html.DisplayNameFor(m => m.RequestInfo.RequestDate) </th>
+        <th>@Html.DisplayNameFor(m => m.RequestInfo.Size.Mass )</th>
+        <th>@Html.DisplayNameFor(m => m.RequestInfo.Size.Volume)</th>
+        <th>@Html.DisplayNameFor(m => m.RequestInfo.PickUpAddress.RawInputAddress )</th>
+        <th>@Html.DisplayNameFor(m => m.RequestInfo.DropOffAddress.RawInputAddress )</th>
+        <th>@Html.DisplayNameFor(m => m.TrackInfo.OrderStatus )</th>
         <th></th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
+        <td>@item.RequestInfo.RequestDate</td>
+        <td>@item.RequestInfo.Size.Mass </td>
+        <td>@item.RequestInfo.Size.Volume</td>
+        <td>@item.RequestInfo.PickUpAddress.RawInputAddress </td>
+        <td>@item.RequestInfo.DropOffAddress.RawInputAddress </td>
+        <td>@item.TrackInfo.OrderStatus</td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.OrderGuid }) |
             @Html.ActionLink("Details", "Details", new { id=item.OrderGuid }) |

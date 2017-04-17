@@ -11,7 +11,7 @@ using PracticalWerewolf.Helpers;
 
 namespace PracticalWerewolf.Services
 {
-    public class RoutePlannerDelegate
+    public class ContractorRoutePlanner
     {
         public bool WillWork = true;
         public ContractorInfo Contractor { get; }
@@ -27,7 +27,7 @@ namespace PracticalWerewolf.Services
 
 
 
-        public RoutePlannerDelegate(ContractorInfo contractor, Order order, List<RouteStop> route)
+        public ContractorRoutePlanner(ContractorInfo contractor, Order order, List<RouteStop> route)
         {
             Contractor = contractor;
             Order = order;

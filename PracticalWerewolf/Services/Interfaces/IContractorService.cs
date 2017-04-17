@@ -21,5 +21,7 @@ namespace PracticalWerewolf.Services.Interfaces
         void UpdateContractorTruck(Truck truck, ApplicationUser user);
 
         ApplicationUser GetUserByContractorInfo(ContractorInfo contractor);
+
+        ContractorInfo GetContractor(Guid guid);
     }
 }

@@ -9,7 +9,9 @@ using System.Device.Location;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Data.Entity.Validation;
 using System.Web.Mvc;
+
 
 namespace PracticalWerewolf.Controllers
 {
@@ -24,7 +26,11 @@ namespace PracticalWerewolf.Controllers
             RegisterSuccess,
             AlreadyRegisteredError,
             Error,
-            NoTruckCreated
+            StatusChangeSuccess,
+            StatusError,
+            NoTruckCreated,
+            TruckCreationError,
+            TruckLocationUpdateError
         }
 
         private readonly ApplicationUserManager UserManager;
@@ -48,7 +54,11 @@ namespace PracticalWerewolf.Controllers
                 : message == ContractorMessageId.AlreadyRegisteredError ? "You are already registered as a contractor"
                 : message == ContractorMessageId.ApprovedSuccess ? "Contractor approved"
                 : message == ContractorMessageId.DeniedSuccess ? "Contractor denied"
+                : message == ContractorMessageId.StatusChangeSuccess ? "Status successfully changed"
                 : message == ContractorMessageId.NoTruckCreated ? "You must create a truck to access this page."
+                : message == ContractorMessageId.StatusError ? "Could not update status successfully."
+                : message == ContractorMessageId.TruckCreationError ? "Could not create truck successfully."
+                : message == ContractorMessageId.TruckLocationUpdateError ? "Could not update truck location successfully"
                 : "";
         }
 
@@ -182,6 +192,53 @@ namespace PracticalWerewolf.Controllers
             }
         }
 
+
+        public ActionResult UpdateStatus(string id)
+        {
+            if (!String.IsNullOrEmpty(id))
+            {
+                try
+                {
+
+                    var guid = new Guid(id);
+                    var contractor = ContractorService.GetContractor(guid);
+                    var model = new ContractorStatusModel
+                    {
+                        ContractorGuid = guid,
+                        ContractorStatus = contractor.IsAvailable
+                    };
+
+                    return PartialView("_UpdateStatus", model);
+                }
+                catch
+                {
+                    return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.StatusError });
+                }
+            }
+            return HttpNotFound();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateStatus(ContractorStatusModel returnedModel)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    ContractorService.SetIsAvailable(returnedModel.ContractorGuid, !returnedModel.ContractorStatus);
+                    UnitOfWork.SaveChanges();
+                    return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.StatusChangeSuccess });
+                }
+                catch
+                {
+                    return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.StatusError });
+                }
+            }
+            return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.StatusError });
+        }
+
         [Authorize(Roles = "Contractor")]
         public async Task<ActionResult> _Current()
         {
@@ -258,6 +315,5 @@ namespace PracticalWerewolf.Controllers
                 return PartialView("_StatusMessage");
             }
         }
-
     }
 }

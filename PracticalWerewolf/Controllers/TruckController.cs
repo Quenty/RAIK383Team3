@@ -202,7 +202,7 @@ namespace PracticalWerewolf.Controllers
                     logger.Error("Create(ViewModel) - Error getting user, creating TruckCapacityUnit, creating Truck, or ContractorService.UpdateContractorTruck()");
                 }
             }
-            return RedirectToAction("Index", "Contractor",new { Message = "Could not create truck successfully." });
+            return RedirectToAction("Index", "Contractor",new { Message = ContractorController.ContractorMessageId.TruckCreationError });
         }
 
         public ActionResult Location(string id)
@@ -251,7 +251,7 @@ namespace PracticalWerewolf.Controllers
                     logger.Error("UpdateLocation - Error in UpdateTruckLocation");
                 }
             }
-            return RedirectToAction("Index", "Contractor", new { Message = "Could not update truck location successfully." });
+            return RedirectToAction("Index", "Contractor", new { Message = ContractorController.ContractorMessageId.TruckLocationUpdateError });
         }
 
     }
