@@ -81,6 +81,11 @@ namespace PracticalWerewolf.Stores
             _dbSetFactory.ChangeObjectState(entity, EntityState.Modified);
         }
 
+        public void Attach(T entity)
+        {
+            _dbSet.Attach(entity);
+        }
+
         public T Refresh(T entity)
         {
             _dbSetFactory.RefreshEntity(ref entity);

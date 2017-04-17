@@ -17,5 +17,9 @@ namespace PracticalWerewolf.Services.Interfaces
         void Update(IEnumerable<RouteStop> entities);
 
         void Insert(RouteStop entity);
+
+        void Attach(RouteStop entity);
+
+        void Attach(IEnumerable<RouteStop> entities);
     }
 }

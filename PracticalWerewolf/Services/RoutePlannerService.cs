@@ -92,13 +92,15 @@ namespace PracticalWerewolf.Services
 
             ContractorRoutePlanner optimalPlan = GetOptimalPlan(options);
 
-            _routeStopService.Insert(optimalPlan.PickUp);
-            _routeStopService.Insert(optimalPlan.DropOff);
+            //_routeStopService.Insert(optimalPlan.PickUp);
+            //_routeStopService.Insert(optimalPlan.DropOff);
 
-            List<RouteStop> modifiedStops = optimalPlan.Route;
-            modifiedStops.Remove(optimalPlan.PickUp);
-            modifiedStops.Remove(optimalPlan.DropOff);
-            _routeStopService.Update(modifiedStops);
+            //List<RouteStop> modifiedStops = optimalPlan.Route;
+            //modifiedStops.Remove(optimalPlan.PickUp);
+            //modifiedStops.Remove(optimalPlan.DropOff);
+            //_routeStopService.Update(modifiedStops);
+            _routeStopService.Attach(optimalPlan.Route);
+            _routeStopService.Update(optimalPlan.Route);
 
             order.TrackInfo.Assignee = optimalPlan.Contractor;
 
