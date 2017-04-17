@@ -50,21 +50,9 @@ namespace PracticalWerewolf.ViewModels.Contractor
     }
 
    
-    public class PendingOrderViewModel
+    public class PagedOrderListViewModel
     {
-        [Display(Name = "Pending Orders")]
-        public IEnumerable<Order> Orders { get; set; }
-    }
-
-    public class CurrentOrderViewModel
-    {
-        [Display(Name = "Current Orders")]
-        public IEnumerable<Order> Orders { get; set; }
-    }
-
-    public class DeliveredOrderViewModel
-    {
-        [Display(Name = "Delivered Orders")]
+        public String DisplayName { get; set; } = "Orders";
         public IEnumerable<Order> Orders { get; set; }
     }
 }

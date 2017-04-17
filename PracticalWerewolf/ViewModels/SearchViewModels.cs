@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PracticalWerewolf.ViewModels.Paged;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -17,9 +18,7 @@ namespace PracticalWerewolf.ViewModels.Search
     public class SearchResultViewModel
     {
         public string Query { get; set; }
-        public int Page { get; set; }
-        public int TotalPages { get; set; }
-        public int TotalResults { get; set; }
+        public PagedDataViewModel PagedData { get; set; }
         public IEnumerable<UserSearchResult> Users { get; set; }
     }
 }
