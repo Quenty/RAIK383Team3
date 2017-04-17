@@ -384,6 +384,7 @@
     <Content Include="EmailTemplates\OrderUpdate.cshtml" />
     <Content Include="EmailTemplates\WorkOrder.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\Esignature.js" />
     <Content Include="Scripts\GoogleMapAPI.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
@@ -466,6 +467,7 @@
     <Content Include="Views\Order\Create.cshtml" />
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\TruckCapacityUnit.cshtml" />
+    <Content Include="Views\Order\Confirmation.cshtml" />
     <Content Include="Views\Contractor\_UpdateStatus.cshtml" />
     <Content Include="Views\Shared\_SearchPartial.cshtml" />
     <Content Include="Views\Search\Results.cshtml" />

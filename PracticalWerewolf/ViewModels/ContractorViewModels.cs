@@ -18,6 +18,7 @@ namespace PracticalWerewolf.ViewModels.Contractor
         [MaxLength(14, ErrorMessage = "DriversLicenseId must be less than 14 characters")]
         public String DriversLicenseId { get; set; }
 
+        [Display(Name = "Street Address")]
         public String RawAddressString { get; set; }
 
         [Required]

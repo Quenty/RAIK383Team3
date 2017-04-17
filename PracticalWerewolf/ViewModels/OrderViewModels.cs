@@ -22,4 +22,8 @@ namespace PracticalWerewolf.ViewModels.Orders
         [Display(Name = "Drop off address", Description = "Where your package going")]
         public CivicAddressDb DropOffAddress { get; set; }
     }
+    public class ConfirmationViewModel
+    {
+        public Guid Guid { get; set; }
+    }
 }

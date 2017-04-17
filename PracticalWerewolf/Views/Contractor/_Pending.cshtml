@@ -14,33 +14,33 @@
             <table class="table table-hover">
                 @if (Model.Orders != null && Model.Orders.Count() > 0)
                 {
-                <thead>
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(m => m.Orders.FirstOrDefault().RequestInfo.RequestDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(m => m.Orders.FirstOrDefault().RequestInfo.PickUpAddress)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(m => m.Orders.FirstOrDefault().RequestInfo.Size)
-                        </th>
-                    </tr>
-                </thead>
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(m => m.Orders.FirstOrDefault().RequestInfo.RequestDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(m => m.Orders.FirstOrDefault().RequestInfo.PickUpAddress)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(m => m.Orders.FirstOrDefault().RequestInfo.Size)
+                            </th>
+                        </tr>
+                    </thead>
 
-                <tbody>
-                    <tr>
-                        @foreach (var item in Model.Orders)
-                        {
-                            <td>item.RequestInfo.RequestDate</td>
-                                <td>item.RequestInfo.Size</td>
-                                <td>item.RequestInfo.PickUpAddress</td>
+                    <tbody>
+                        <tr>
+                            @foreach (var item in Model.Orders)
+                            {
+                                <td>@item.RequestInfo.RequestDate</td>
+                                <td>@item.RequestInfo.Size</td>
+                                <td>@item.RequestInfo.PickUpAddress</td>
                                 <td>
                                     @Html.ActionLink("Details", "Details", new { id = item.OrderGuid }) |
                                 </td>
-                        }
-                    </tr>
-                </tbody>
+                            }
+                        </tr>
+                    </tbody>
                 }
                 else
                 {
