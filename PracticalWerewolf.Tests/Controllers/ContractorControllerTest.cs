@@ -356,7 +356,7 @@ namespace PracticalWerewolf.Tests.Controllers
 
 
             var result = controller.Pending().Result as PartialViewResult;
-            var viewModel = result.Model as PendingOrderViewModel;
+            var viewModel = result.Model as PagedOrderListViewModel;
 
 
             Assert.IsNotNull(viewModel);
@@ -389,7 +389,7 @@ namespace PracticalWerewolf.Tests.Controllers
 
 
             var result = controller.Pending().Result as PartialViewResult;
-            var viewModel = result.Model as PendingOrderViewModel;
+            var viewModel = result.Model as PagedOrderListViewModel;
 
 
             Assert.IsNotNull(viewModel);
@@ -435,7 +435,7 @@ namespace PracticalWerewolf.Tests.Controllers
 
 
             var result = controller.Current().Result as PartialViewResult;
-            var viewModel = result.Model as CurrentOrderViewModel;
+            var viewModel = result.Model as PagedOrderListViewModel;
 
 
             Assert.IsNotNull(viewModel);
@@ -468,7 +468,7 @@ namespace PracticalWerewolf.Tests.Controllers
 
 
             var result = controller.Current().Result as PartialViewResult;
-            var viewModel = result.Model as CurrentOrderViewModel;
+            var viewModel = result.Model as PagedOrderListViewModel;
 
 
             Assert.IsNotNull(viewModel);
@@ -514,7 +514,7 @@ namespace PracticalWerewolf.Tests.Controllers
 
 
             var result = controller.Delivered().Result as PartialViewResult;
-            var viewModel = result.Model as DeliveredOrderViewModel;
+            var viewModel = result.Model as PagedOrderListViewModel;
 
 
             Assert.IsNotNull(viewModel);
@@ -547,7 +547,7 @@ namespace PracticalWerewolf.Tests.Controllers
 
 
             var result = controller.Delivered().Result as PartialViewResult;
-            var viewModel = result.Model as DeliveredOrderViewModel;
+            var viewModel = result.Model as PagedOrderListViewModel;
 
 
             Assert.IsNotNull(viewModel);
