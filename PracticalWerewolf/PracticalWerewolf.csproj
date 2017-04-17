@@ -453,12 +453,12 @@
     <Content Include="Views\Contractor\Register.cshtml" />
     <Content Include="Views\Contractor\Index.cshtml" />
     <Content Include="Views\Contractor\Unapproved.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\CivicAddressDb.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\CivicAddressDb.cshtml" />
     <Content Include="Views\Truck\Index.cshtml" />
     <Content Include="Views\Truck\Details.cshtml" />
     <Content Include="Views\Truck\Edit.cshtml" />
     <Content Include="Views\Truck\Create.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\CivicAddressDb.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\CivicAddressDb.cshtml" />
     <Content Include="Views\Shared\_StatusMessage.cshtml" />
     <Content Include="Views\Contractor\_IndexPendingApproval.cshtml" />
     <Content Include="Views\Contractor\_IndexDeniedApproval.cshtml" />
@@ -468,6 +468,7 @@
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\TruckCapacityUnit.cshtml" />
     <Content Include="Views\Order\Confirmation.cshtml" />
+    <Content Include="Views\Contractor\_UpdateStatus.cshtml" />
     <Content Include="Views\Shared\_SearchPartial.cshtml" />
     <Content Include="Views\Search\Results.cshtml" />
     <Content Include="Views\Contractor\_Pending.cshtml" />
@@ -480,6 +481,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Scripts\ViewModels\Contractor\" />
+    <Folder Include="Views\Order\" />
     <Folder Include="Views\UserInfo\" />
   </ItemGroup>
   <ItemGroup>
@@ -537,6 +539,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703142101256_Get-Set-Properties.resx">
       <DependentUpon>201703142101256_Get-Set-Properties.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703142125042_Fix-Contractor-Info-Required.resx">
       <DependentUpon>201703142125042_Fix-Contractor-Info-Required.cs</DependentUpon>
