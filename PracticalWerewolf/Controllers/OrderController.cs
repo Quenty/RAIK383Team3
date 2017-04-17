@@ -136,13 +136,13 @@ namespace PracticalWerewolf.Controllers
         // POST: Order/Cancel/guid
         [HttpPost]
         [Authorize(Roles = "Customer, Employees")]
-        public ActionResult Cancel(string guid, FormCollection collection)
+        public ActionResult Cancel(string id)
         {
-            if (!String.IsNullOrEmpty(guid))
+            if (!String.IsNullOrEmpty(id))
             {
                 try
                 {
-                    var Guid = new Guid(guid);
+                    var Guid = new Guid(id);
                     OrderService.CancelOrder(Guid);
                     UnitOfWork.SaveChanges();
                     return RedirectToAction("Index");
