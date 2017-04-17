@@ -106,25 +106,6 @@ namespace PracticalWerewolf.Services
             return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.Queued).ToList();
         }
 
-        public async void SetOrderAsComplete(Guid orderId)
-        {
-            var order = OrderStore.Find(orderId);
-            if (order != null)
-            {
-                order.TrackInfo.OrderStatus = OrderStatus.Complete;
-                OrderStore.Update(order);
-
-                var customerId = order.RequestInfo.Requester.CustomerInfoGuid;
-                var customer = UserManager.Users.Single(x => x.CustomerInfo.CustomerInfoGuid == customerId);
-
-                await EmailHelper.SendOrderDeliveredEmail(order.RequestInfo, customer);
-            }
-            else
-            {
-                logger.Error($"SetOrderAsComplete() - No order with id {orderId.ToString()}");
-            }
-        }
-
         public async void SetOrderAsInProgress(Guid orderId)
         {
             var order = OrderStore.Find(orderId);
@@ -142,6 +123,29 @@ namespace PracticalWerewolf.Services
             {
                 logger.Error($"SetOrderAsInProgress() - No order with id {orderId.ToString()}");
             }
+        }
+
+        public object GetOrders()
+        {
+            return OrderStore.GetAll().ToList();
+        }
+
+        public object GetOrders(CustomerInfo customerInfo)
+        {
+            return OrderStore.Find(o => o.RequestInfo.Requester.CustomerInfoGuid == customerInfo.CustomerInfoGuid);
+        }
+
+        public async void SetOrderAsComplete(Guid guid)
+        {
+            Order order = GetOrder(guid);
+            OrderTrackInfo orderTrackInfo = order.TrackInfo;
+            orderTrackInfo.OrderStatus = OrderStatus.Complete;
+            OrderStore.Update(order);
+
+            var customerId = order.RequestInfo.Requester.CustomerInfoGuid;
+            var customer = UserManager.Users.Single(x => x.CustomerInfo.CustomerInfoGuid == customerId);
+
+            await EmailHelper.SendOrderDeliveredEmail(order.RequestInfo, customer);
         }
 
         public IEnumerable<Order> GetOrderHistory(Guid customerInfoGuid)

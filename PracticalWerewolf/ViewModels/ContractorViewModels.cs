@@ -18,6 +18,7 @@ namespace PracticalWerewolf.ViewModels.Contractor
         [MaxLength(14, ErrorMessage = "DriversLicenseId must be less than 14 characters")]
         public String DriversLicenseId { get; set; }
 
+        [Display(Name = "Street Address")]
         public String RawAddressString { get; set; }
 
         [Required]
@@ -49,10 +50,18 @@ namespace PracticalWerewolf.ViewModels.Contractor
         public ContractorInfo ContractorInfo { get; set; }
     }
 
+    public class ContractorStatusModel
+    {
+        [Required]
+        public Guid ContractorGuid { get; set; }
+
+        public Boolean ContractorStatus { get; set; }
+    }
    
     public class PagedOrderListViewModel
     {
         public String DisplayName { get; set; } = "Orders";
         public IEnumerable<Order> Orders { get; set; }
+        public String OrderListCommand { get; set; } = "Details";
     }
 }

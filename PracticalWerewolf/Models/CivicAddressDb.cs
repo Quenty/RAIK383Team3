@@ -34,7 +34,7 @@ namespace System.Device.Location
         [Key]
         public Guid CivicAddressGuid { get; set; }
 
-        [Display(Prompt = "Street address")]
+        [Display(Prompt = "Street address", Name = "Street Address")]
         public String RawInputAddress { get; set; }
     }
 }

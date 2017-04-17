@@ -25,8 +25,13 @@
                 </a>
             </li>
             <li role="presentation">
-                <a class="" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#ajax-contractor-pane" data-tab-name="status" href="@Url.Action("_Status")">
-                    Current status <span class="label label-default pull-right">Available</span>
+                <a class="" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#ajax-contractor-pane" data-tab-name="status" href="@Url.Action("UpdateStatus", "Contractor",  new { id = Model.ContractorInfo.ContractorInfoGuid.ToString() })">
+                    Current status <span class="label label-default pull-right">@(Model.ContractorInfo.IsAvailable ? "Available" : "Not available")</span>
+                </a>
+            </li>
+            <li role="presentation">
+                <a class="" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#ajax-contractor-pane" data-tab-name="truck" href="@Url.Action("_Status", "Contractor",  new { id = Model.ContractorInfo.ContractorInfoGuid.ToString() })">
+                    Truck and Location
                 </a>
             </li>
         </ul>

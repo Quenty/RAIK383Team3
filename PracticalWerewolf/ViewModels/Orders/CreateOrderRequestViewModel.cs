@@ -1,6 +1,4 @@
 ﻿using PracticalWerewolf.Models.Trucks;
-using PracticalWerewolf.ViewModels.Contractor;
-using PracticalWerewolf.ViewModels.Paged;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,11 +8,6 @@ using System.Web;
 
 namespace PracticalWerewolf.ViewModels.Orders
 {
-    public class OrderIndex
-    {
-        public PagedOrderListViewModel PagedOrderListViewModel { get; set; }
-    }
-
     public class CreateOrderRequestViewModel
     {
         [Required]
@@ -28,9 +21,5 @@ namespace PracticalWerewolf.ViewModels.Orders
         [Required]
         [Display(Name = "Drop off address", Description = "Where your package going")]
         public CivicAddressDb DropOffAddress { get; set; }
-    }
-    public class ConfirmationViewModel
-    {
-        public Guid Guid { get; set; }
     }
 }

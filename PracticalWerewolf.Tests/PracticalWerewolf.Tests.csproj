@@ -123,9 +123,11 @@
     <Compile Include="Services\ContractorServiceTests.cs" />
     <Compile Include="Services\TruckServiceTest.cs" />
     <Compile Include="Services\OrderServiceTest.cs" />
+    <Compile Include="Services\RouteStopServiceTest.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Stores\DbContext\MockContractorDbSet.cs" />
     <Compile Include="Stores\DbContext\MockDbSet.cs" />
+    <Compile Include="Stores\DbContext\MockRouteStopDbSet.cs" />
     <Compile Include="Stores\DbContext\MockOrderDbSet.cs" />
     <Compile Include="Stores\DbContext\MockTruckDbSet.cs" />
     <Compile Include="Stores\DbContext\MockUserDbSet.cs" />

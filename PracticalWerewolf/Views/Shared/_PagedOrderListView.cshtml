@@ -67,7 +67,7 @@ switch (status)
                         @OrderStatusBadge(item.TrackInfo.OrderStatus)
                     </td>
                     <td class="hidden-print">
-                        @Html.ActionLink("Details", "Details", new { id = item.OrderGuid, @class = "btn btn-xs btn-link" })
+                        @Html.ActionLink(Model.OrderListCommand == null ? "Details" : Model.OrderListCommand, "Order", new { id = item.OrderGuid, @class = "btn btn-xs btn-link" })
                     </td>
                 </tr>
                         
