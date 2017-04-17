@@ -8,6 +8,18 @@
 
 @Html.Partial("_StatusMessage")
 
+
+@if (Model.ContractorInfo != null && Model.ContractorInfo.ApprovalState != ContractorApprovalState.Denied && Model.ContractorInfo.Truck == null)
+{
+    <div class="alert alert-info" role="alert">
+        @Html.ActionLink("Register", "Create", "Truck", null, new { @class = "btn btn-primary pull-right" })
+        <h4>No truck on record</h4> 
+        <p>Please @Html.ActionLink("register your truck", "Create", "Truck", null, new { @class = "alert-link" }). You will not be considered for jobs until this is complete.</p>
+
+
+    </div>
+}
+
 @if (@Model.ContractorInfo == null)
 {
     <div class="jumbotron">
@@ -32,8 +44,6 @@ else
         @section Scripts {
             <script src="~/Scripts/ContractorPartials.js"></script>
             <script src="~/Scripts/GoogleMapAPI.js"></script>
-
-            @Scripts.Render("~/bundles/jquery")
         }
     }
     else
