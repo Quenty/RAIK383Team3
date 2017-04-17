@@ -143,5 +143,12 @@ namespace PracticalWerewolf.Services
                 logger.Error($"SetOrderAsInProgress() - No order with id {orderId.ToString()}");
             }
         }
+
+        public IEnumerable<Order> GetOrderHistory(Guid customerInfoGuid)
+        {
+            return OrderStore
+                .Find(x => x.RequestInfo.Requester.CustomerInfoGuid == customerInfoGuid)
+                .OrderByDescending(x => x.RequestInfo.RequestDate);
+        }
     }
 }
