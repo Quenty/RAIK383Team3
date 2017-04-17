@@ -105,6 +105,7 @@ namespace PracticalWerewolf.App_Start
             kernel.Bind<ITruckService>().To<TruckService>();
             kernel.Bind<IUserInfoService>().To<UserInfoService>();
             kernel.Bind<IRouteStopService>().To<RouteStopService>();
+            kernel.Bind<IRoutePlannerService>().To<RoutePlannerService>();
         }        
     }
 }

@@ -320,6 +320,7 @@
     <Compile Include="Services\EmployeeService.cs" />
     <Compile Include="Services\Interfaces\IOrderRequestService.cs" />
     <Compile Include="Services\Interfaces\IOrderTrackService.cs" />
+    <Compile Include="Services\Interfaces\IRoutePlannerService.cs" />
     <Compile Include="Services\Interfaces\IUserInfoService.cs" />
     <Compile Include="Services\Interfaces\IRouteStopService.cs" />
     <Compile Include="Services\OrderRequestService.cs" />

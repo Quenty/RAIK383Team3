@@ -84,7 +84,7 @@ namespace PracticalWerewolf.Migrations
                 customer
                 );
 
-            TruckCapacityUnit capacity = new TruckCapacityUnit { TruckCapacityUnitGuid = Guid.NewGuid() };
+            TruckCapacityUnit capacity = new TruckCapacityUnit { TruckCapacityUnitGuid = Guid.NewGuid() , Mass = 9999, Volume = 9999};
             TruckCapacityUnit used = new TruckCapacityUnit { TruckCapacityUnitGuid = Guid.NewGuid() };
             context.TruckCapacityUnit.AddOrUpdate(
                 capacity,

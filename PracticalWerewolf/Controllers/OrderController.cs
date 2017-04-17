@@ -7,6 +7,7 @@ using PracticalWerewolf.ViewModels.Orders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -20,7 +21,7 @@ namespace PracticalWerewolf.Controllers
         private readonly IUserInfoService UserInfoService;
         private readonly IUnitOfWork UnitOfWork;
         private readonly IOrderService OrderService;
-
+        private readonly IRoutePlannerService RoutePlannerService;
         private readonly ApplicationUserManager UserManager;
 
         public enum OrderMessageId
@@ -30,7 +31,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         public OrderController(IOrderRequestService OrderRequestService, IOrderTrackService OrderTrackService, 
-            IUserInfoService UserInfoService, IUnitOfWork UnitOfWork, ApplicationUserManager UserManager, IOrderService OrderService)
+            IUserInfoService UserInfoService, IUnitOfWork UnitOfWork, ApplicationUserManager UserManager, IOrderService OrderService, IRoutePlannerService RoutePlannerService)
         {
             this.OrderRequestService = OrderRequestService;
             this.OrderTrackService = OrderTrackService;
@@ -38,6 +39,7 @@ namespace PracticalWerewolf.Controllers
             this.UnitOfWork = UnitOfWork;
             this.UserManager = UserManager;
             this.OrderService = OrderService;
+            this.RoutePlannerService = RoutePlannerService;
         }
 
         public ActionResult Index(OrderMessageId? message)
@@ -70,7 +72,7 @@ namespace PracticalWerewolf.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = ("Customer"))]
-        public ActionResult Create(CreateOrderRequestViewModel model)
+        public async Task<ActionResult> Create(CreateOrderRequestViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -97,8 +99,14 @@ namespace PracticalWerewolf.Controllers
                 Requester = Requester
             });
 
-            OrderService.AssignOrders();
             UnitOfWork.SaveChanges();
+
+            await RoutePlannerService.AssignOrders();
+
+            //OrderService.AssignOrders();
+            UnitOfWork.SaveChanges();
+            //Task task = new Task(new Action(RoutePlannerService.AssignOrders));
+            //task.Start();
 
             return RedirectToAction("Index", new { message = OrderMessageId.OrderCreatedSuccess });
         }

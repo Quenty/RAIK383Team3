@@ -1,5 +1,6 @@
 ﻿using log4net;
 using PracticalWerewolf.Application;
+using PracticalWerewolf.Controllers.UnitOfWork;
 using PracticalWerewolf.Helpers;
 using PracticalWerewolf.Models;
 using PracticalWerewolf.Models.Orders;
@@ -9,31 +10,58 @@ using PracticalWerewolf.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace PracticalWerewolf.Services
 {
-    public class RoutePlannerService
+    public class RoutePlannerService : IRoutePlannerService
     {
         private static readonly ILog logger = LogManager.GetLogger(typeof(RoutePlannerService));
+        private readonly IOrderService _orderService;
         private readonly IRouteStopService _routeStopService;
         private readonly IContractorService _contractorService;
         private readonly ApplicationDbContext _dbContext;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public RoutePlannerService(IRouteStopService routeStopService, IContractorService contractorService, ApplicationDbContext dbContext)
+        public RoutePlannerService(IOrderService orderService, IRouteStopService routeStopService, IContractorService contractorService, ApplicationDbContext dbContext, IUnitOfWork unitOfWork)
         {
+            _orderService = orderService;
             _routeStopService = routeStopService;
             _contractorService = contractorService;
             _dbContext = dbContext;
+            _unitOfWork = unitOfWork;
         }
 
-        public async void AssignOrder(Order order)
+        public async Task AssignOrders()
         {
-            IEnumerable<ContractorInfo> contractors = _contractorService.GetAvailableContractorQuery();
-            if (!contractors.Any())
+            var orders = _orderService.GetUnassignedOrders().ToList();
+
+            foreach(Order order in orders)
             {
-                logger.Warn("AssignOrder() - No available contractors");
-                return;
+                await AssignOrder(order);
+            }
+
+        }
+
+        public async Task AssignOrder(Order order)
+        {
+
+            IEnumerable<ContractorInfo> contractors = null;
+
+            try
+            {
+                contractors = _contractorService.GetAvailableContractorQuery().ToList();
+                if (!contractors.Any())
+                {
+                    logger.Warn("AssignOrder() - No available contractors");
+                    return;
+                }
+            }
+            catch (Exception e)
+            {
+                var inner = e.InnerException;
+                logger.Error("ya fuqed up");
             }
 
             List<RoutePlannerDelegate> options = new List<RoutePlannerDelegate>();
@@ -76,6 +104,7 @@ namespace PracticalWerewolf.Services
 
             ApplicationUser user = _contractorService.GetUserByContractorInfo(optimalPlan.Contractor);
             await EmailHelper.SendWorkOrderEmail(user, optimalPlan.Order.RequestInfo);
+            //_unitOfWork.SaveChanges();
         }
 
         private RoutePlannerDelegate GetOptimalPlan(IEnumerable<RoutePlannerDelegate> options)

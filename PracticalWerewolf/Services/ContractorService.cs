@@ -50,9 +50,9 @@ namespace PracticalWerewolf.Services
         public IQueryable<ContractorInfo> GetAvailableContractorQuery()
         {
             return _contractorStore.Find(c => c.ApprovalState == ContractorApprovalState.Approved).AsQueryable()
-                .Where(c => c.IsAvailable)
-                .Where(c => c.Truck.AvailableCapacity.Volume > 0)
-                .Where(c => c.Truck.AvailableCapacity.Mass > 0);
+                .Where(c => c.IsAvailable);
+//                .Where(c => c.Truck.UsedCapacity.Volume < c.Truck.MaxCapacity.Volume)
+//                .Where(c => c.Truck.UsedCapacity.Mass < c.Truck.MaxCapacity.Mass);
         }
 
 

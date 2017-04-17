@@ -296,10 +296,7 @@ namespace PracticalWerewolf.Services
 
         private void DeliverFromHomeAddress()
         {
-            var home = Contractor.Truck.Location;
-            var homeAddress = string.Format($"{home.Latitude}, {home.Longitude}");
-
-            var result = LocationHelper.GetRouteBetweenLocations(homeAddress, Order.RequestInfo.PickUpAddress.RawInputAddress);
+            var result = LocationHelper.GetRouteBetweenLocations(Contractor.HomeAddress, Order.RequestInfo.PickUpAddress);
             PickUp.DistanceToNextStop = GetDistanceFromPickUp(DropOff);
             PickUp.EstimatedTimeToNextStop = GetTimeFromPickUp(DropOff);
 
