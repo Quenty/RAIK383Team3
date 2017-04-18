@@ -121,9 +121,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
     <Compile Include="Services\ContractorServiceTests.cs" />
+    <Compile Include="Services\ServiceTestUtils.cs" />
     <Compile Include="Services\TruckServiceTest.cs" />
     <Compile Include="Services\OrderServiceTest.cs" />
     <Compile Include="Services\RouteStopServiceTest.cs" />
+    <Compile Include="Services\RoutePlannerDelegateTest.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Stores\DbContext\MockContractorDbSet.cs" />
     <Compile Include="Stores\DbContext\MockDbSet.cs" />

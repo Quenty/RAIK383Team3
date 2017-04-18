@@ -94,6 +94,7 @@ namespace PracticalWerewolf.App_Start
             kernel.Bind<IOrderStore>().To<OrderStore>();
             kernel.Bind<ITruckStore>().To<TruckStore>();
             kernel.Bind<IRouteStopStore>().To<RouteStopStore>();
+            kernel.Bind<IOrderTrackInfoStore>().To<OrderTrackInfoStore>();
 
             //Services
             kernel.Bind<IContractorService>().To<ContractorService>();
@@ -105,6 +106,8 @@ namespace PracticalWerewolf.App_Start
             kernel.Bind<ITruckService>().To<TruckService>();
             kernel.Bind<IUserInfoService>().To<UserInfoService>();
             kernel.Bind<IRouteStopService>().To<RouteStopService>();
+            kernel.Bind<IRoutePlannerService>().To<RoutePlannerService>();
+            
         }        
     }
 }

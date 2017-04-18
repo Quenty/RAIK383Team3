@@ -18,24 +18,26 @@ namespace PracticalWerewolf.Services
         private static ILog logger = LogManager.GetLogger(typeof(OrderService));
         private readonly IOrderStore OrderStore;
         private readonly IContractorStore ContractorStore;
+        private readonly IOrderTrackInfoStore OrderTrackInfoStore;
         private readonly ApplicationUserManager UserManager;
 
-        public OrderService (IOrderStore orderStore, IContractorStore contractorStore, ApplicationUserManager userManager)
+        public OrderService (IOrderStore orderStore, IContractorStore contractorStore, IOrderTrackInfoStore orderTrackInfoStore, ApplicationUserManager userManager)
         {
             this.OrderStore = orderStore;
             this.ContractorStore = contractorStore;
+            this.OrderTrackInfoStore = orderTrackInfoStore;
             this.UserManager = userManager;
         }
 
         public IEnumerable<Order> GetDeliveredOrders(ContractorInfo contractor)
         {
-            var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid);
+            var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid).ToList();
             return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.Complete).ToList();
         }
 
         public IEnumerable<Order> GetInprogressOrders(ContractorInfo contractor)
         {
-            var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid);
+            var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid).ToList();
             return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.InProgress).ToList();
         }
 
@@ -64,7 +66,11 @@ namespace PracticalWerewolf.Services
             OrderTrackInfo orderTrackInfo = order.TrackInfo ?? new OrderTrackInfo();
             orderTrackInfo.OrderStatus = OrderStatus.InProgress;
             orderTrackInfo.Assignee = contractor;
-            OrderStore.Update(order);
+
+            OrderStore.GetEntry(order).CurrentValues.SetValues(order);
+            OrderTrackInfoStore.GetEntry(orderTrackInfo).CurrentValues.SetValues(orderTrackInfo);
+
+            //OrderStore.Update(order);
         }
 
         public void AssignOrders()
@@ -102,7 +108,7 @@ namespace PracticalWerewolf.Services
 
         public IEnumerable<Order> GetQueuedOrders(ContractorInfo contractor)
         {
-            var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid);
+            var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid).ToList();
             return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.Queued).ToList();
         }
 
