@@ -121,7 +121,17 @@ namespace PracticalWerewolf.Tests.Services
 
             var newGuid = Guid.NewGuid();
             var newTruck = new Truck() { TruckGuid = newGuid };
-            truckService.UpdateCapacity(newGuid, newCapacity);
+
+            try
+            {
+                truckService.UpdateCapacity(newGuid, newCapacity);
+                Assert.Fail();
+            }
+            catch (Exception e)
+            {
+                Assert.AreEqual(e.Message, "Truck does not exist in database!");
+            }
+            
 
             var truck = truckService.GetTruck(guid);
             Assert.AreEqual(guid, truck.TruckGuid);
