@@ -232,14 +232,14 @@ namespace PracticalWerewolf.Controllers
                 {
                     ContractorService.SetIsAvailable(returnedModel.ContractorGuid, !returnedModel.ContractorStatus);
                     UnitOfWork.SaveChanges();
-                    return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.StatusChangeSuccess });
+                    return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusChangeSuccess }) + "#status");
                 }
                 catch
                 {
-                    return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.StatusError });
+                    return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusError }) + "#status");
                 }
             }
-            return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.StatusError });
+            return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusError }) + "#status");
         }
 
         [Authorize(Roles = "Contractor")]
