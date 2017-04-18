@@ -30,7 +30,8 @@ namespace PracticalWerewolf.Controllers
             StatusError,
             NoTruckCreated,
             TruckCreationError,
-            TruckLocationUpdateError
+            TruckLocationUpdateError,
+            TruckLocationUpdatedSuccess
         }
 
         private readonly ApplicationUserManager UserManager;
@@ -59,6 +60,7 @@ namespace PracticalWerewolf.Controllers
                 : message == ContractorMessageId.StatusError ? "Could not update status successfully."
                 : message == ContractorMessageId.TruckCreationError ? "Could not create truck successfully."
                 : message == ContractorMessageId.TruckLocationUpdateError ? "Could not update truck location successfully"
+                : message == ContractorMessageId.TruckLocationUpdatedSuccess ? "Truck location updated successfully"
                 : "";
         }
 
