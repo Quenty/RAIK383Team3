@@ -179,12 +179,13 @@ namespace PracticalWerewolf.Controllers
                 var user = await UserManager.FindByIdAsync(userId);
 
                 var contractor = user.ContractorInfo;
-                var model = new PendingOrderViewModel()
+                var model = new PagedOrderListViewModel()
                 {
+                    DisplayName = "Pending orders",
                     Orders = OrderService.GetQueuedOrders(contractor)
                 };
 
-                return PartialView(model);
+                return PartialView("_PagedOrderListPane", model);
             }
             else
             {
@@ -248,12 +249,14 @@ namespace PracticalWerewolf.Controllers
                 var user = await UserManager.FindByIdAsync(userId);
 
                 var contractor = user.ContractorInfo;
-                var model = new CurrentOrderViewModel()
+                var model = new PagedOrderListViewModel()
                 {
-                    Orders = OrderService.GetInprogressOrders(contractor)
+                    DisplayName = "Current orders",
+                    Orders = OrderService.GetInprogressOrders(contractor),
+                    OrderListCommand = "Confirmation"
                 };
 
-                return PartialView(model);
+                return PartialView("_PagedOrderListPane", model);
             }
             else
             {
@@ -270,12 +273,13 @@ namespace PracticalWerewolf.Controllers
                 var user = await UserManager.FindByIdAsync(userId);
 
                 var contractor = user.ContractorInfo;
-                var model = new DeliveredOrderViewModel()
+                var model = new PagedOrderListViewModel()
                 {
+                    DisplayName = "Delivered orders",
                     Orders = OrderService.GetDeliveredOrders(contractor)
                 };
 
-                return PartialView(model);
+                return PartialView("_PagedOrderListPane", model);
             }
             else
             {

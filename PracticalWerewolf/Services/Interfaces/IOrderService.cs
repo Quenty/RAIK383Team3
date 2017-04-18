@@ -20,5 +20,6 @@ namespace PracticalWerewolf.Services.Interfaces
         object GetOrders(CustomerInfo customerInfo);
         void SetOrderAsComplete(Guid guid);
         void AssignOrders();
+        IEnumerable<Order> GetOrderHistory(Guid customerInfoGuid);
     }
 }

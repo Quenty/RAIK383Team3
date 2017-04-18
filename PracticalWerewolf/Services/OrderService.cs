@@ -147,5 +147,12 @@ namespace PracticalWerewolf.Services
 
             await EmailHelper.SendOrderDeliveredEmail(order.RequestInfo, customer);
         }
+
+        public IEnumerable<Order> GetOrderHistory(Guid customerInfoGuid)
+        {
+            return OrderStore
+                .Find(x => x.RequestInfo.Requester.CustomerInfoGuid == customerInfoGuid)
+                .OrderByDescending(x => x.RequestInfo.RequestDate);
+        }
     }
 }

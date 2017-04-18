@@ -1,0 +1,12 @@
+﻿@model PracticalWerewolf.ViewModels.Contractor.PagedOrderListViewModel
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        @(Model.DisplayName)
+    </div>
+    <div class="panel-body">
+        @{
+            Html.RenderPartial("_PagedOrderListView", Model);
+        }
+    </div>
+</div>

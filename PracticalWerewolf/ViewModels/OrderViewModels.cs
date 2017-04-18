@@ -1,4 +1,6 @@
 ﻿using PracticalWerewolf.Models.Trucks;
+using PracticalWerewolf.ViewModels.Contractor;
+using PracticalWerewolf.ViewModels.Paged;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,6 +10,11 @@ using System.Web;
 
 namespace PracticalWerewolf.ViewModels.Orders
 {
+    public class OrderIndex
+    {
+        public PagedOrderListViewModel PagedOrderListViewModel { get; set; }
+    }
+
     public class CreateOrderRequestViewModel
     {
         [Required]
