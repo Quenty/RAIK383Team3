@@ -202,10 +202,9 @@ namespace PracticalWerewolf.Controllers
 
                     var guid = new Guid(id);
                     var contractor = ContractorService.GetContractor(guid);
-                    var model = new ContractorStatusModel
+                    var model = new ContractorIndexModel
                     {
-                        ContractorGuid = guid,
-                        ContractorStatus = contractor.IsAvailable
+                        ContractorInfo = contractor
                     };
 
                     return PartialView("_UpdateStatus", model);
@@ -221,13 +220,14 @@ namespace PracticalWerewolf.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult UpdateStatus(ContractorStatusModel returnedModel)
+        public ActionResult UpdateStatus(ContractorIndexModel model)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    ContractorService.SetIsAvailable(returnedModel.ContractorGuid, !returnedModel.ContractorStatus);
+                    ContractorService.SetIsAvailable(model.ContractorInfo.ContractorInfoGuid, !model.ContractorInfo.IsAvailable);
+                    OrderService.GetQueuedOrders(model.ContractorInfo);
                     UnitOfWork.SaveChanges();
                     return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.StatusChangeSuccess });
                 }
