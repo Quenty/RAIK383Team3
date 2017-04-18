@@ -7,38 +7,28 @@
         @Html.ActionLink("Edit Your Truck", "Edit", "Truck", new { id = Model.Guid }, new { @class = "btn btn-xs btn-default pull-right" })
     </div>
     <div class="panel-body">
-        <dl>
-            @Html.HiddenFor(Model => Model.Lat, new { id = "Lat" })
-            @Html.HiddenFor(Model => Model.Long, new { id = "Long" })
-            <dt>
-                @Html.DisplayNameFor(model => model.LicenseNumber)
-            </dt>
+        @Html.HiddenFor(Model => Model.Lat, new { id = "Lat" })
+        @Html.HiddenFor(Model => Model.Long, new { id = "Long" })
 
-            <dd>
-                @Html.DisplayFor(model => model.LicenseNumber)
-            </dd>
+        <div class="row">
+            @Html.LabelFor(model => model.LicenseNumber, new { @class = "col-md-3" })
+            @Html.DisplayFor(model => model.LicenseNumber, new { @class = "col-md-6" })
+        </div>
+        <div class="row">
+            @Html.LabelFor(model => model.MaxCapacity.Mass, new { @class = "col-md-3" })
+            @Html.DisplayFor(model => model.MaxCapacity.Mass, new { @class = "col-md-6" })
+        </div>
+        <div class="row">
+            @Html.LabelFor(model => model.MaxCapacity.Volume, new { @class = "col-md-3" })
+            @Html.DisplayFor(model => model.MaxCapacity.Volume, new { @class = "col-md-6" })
+        </div>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.MaxCapacity.Mass)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.MaxCapacity.Mass)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.MaxCapacity.Volume)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.MaxCapacity.Volume)
-            </dd>
-
-            <dt>
-                @Html.DisplayName("Your Location")
-                @Html.ActionLink("Update Location", "Location", "Truck", new { id = Model.Guid }, null)
-            </dt>
-        </dl>
+        <div class="row" style="margin-bottom:10px">
+            <div class="pull-right col-md-9">
+                @Html.ActionLink("Update Location", "Location", "Truck", new { id = Model.Guid }, new { @class = "btn btn-xs btn-default pull-right" })
+            </div>
+            @Html.Label("Last known truck location", new { @class = "col-md-3" })
+        </div>
         <div id="map" style="height:400px"></div>
         <script>loadAPI()</script>
     </div>
