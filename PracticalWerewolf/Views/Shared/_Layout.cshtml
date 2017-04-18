@@ -10,7 +10,7 @@
     @RenderSection("styles", required: false)
 </head>
 <body>
-    <nav class="navbar navbar-default navbar-static-top">
+    <nav class="navbar navbar-inverse navbar-static-top">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -18,8 +18,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="@Url.Action("Index", "Home")" class="navbar-brand" style="padding-top:10px; padding-bottom:10px;">
-                    <img alt="Brand" src="/favicon.ico" height="30" width="30">
+                <a href="@Url.Action("Index", "Home")" class="navbar-brand navbar-brand-image">
+                    <img alt="Practical Werewolf" height="40" width="40" src="/favicon.ico" />
+                </a>
+                <a href="@Url.Action("Index", "Home")" class="navbar-brand hidden-md hidden-lg hidden-sm">
+                    Practical Werewolf
                 </a>
                 @*@Html.ActionLink("Practical Werewolf", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
             </div>
@@ -49,6 +52,6 @@
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/knockout")
     @RenderSection("scripts", required: false)
-    @Scripts.Render("~/bundles/search-autocomplete");
+    @Scripts.Render("~/bundles/search-autocomplete")
 </body>
 </html>

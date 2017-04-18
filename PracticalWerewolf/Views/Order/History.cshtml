@@ -1,0 +1,16 @@
+﻿@model PracticalWerewolf.ViewModels.Contractor.PagedOrderListViewModel
+
+@{
+    ViewBag.Title = "Order History";
+}
+
+<h2 class="pull-left">Order History</h2>
+<div class="btn-group pull-right" role="group">
+    <h2>
+        <button type="button" class="btn btn-default hidden-print" onclick="window.print()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> Print</button>
+    </h2>
+</div>
+
+@{
+    Html.RenderPartial("_PagedOrderListView", Model);
+}

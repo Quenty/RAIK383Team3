@@ -1,4 +1,5 @@
 ﻿using PracticalWerewolf.Services.Interfaces;
+using PracticalWerewolf.ViewModels.Paged;
 using PracticalWerewolf.ViewModels.Search;
 using System;
 using System.Collections.Generic;
@@ -39,10 +40,13 @@ namespace PracticalWerewolf.Controllers
             SearchResultViewModel model = new SearchResultViewModel
             {
                 Query = query,
-                Page = result.Page,
-                TotalPages = result.TotalPages,
                 Users = userResults,
-                TotalResults = result.TotalResults
+                PagedData = new PagedDataViewModel
+                {
+                    Page = result.Page,
+                    TotalPages = result.TotalPages,
+                    TotalResults = result.TotalResults
+                },
             };
 
             return model;
