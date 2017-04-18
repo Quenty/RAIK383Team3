@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using PracticalWerewolf.Controllers.UnitOfWork;
 using PracticalWerewolf.Models.UserInfos;
+using PracticalWerewolf.Services;
 using PracticalWerewolf.Services.Interfaces;
 using PracticalWerewolf.ViewModels;
 using PracticalWerewolf.ViewModels.Contractor;
@@ -37,6 +38,7 @@ namespace PracticalWerewolf.Controllers
         private readonly IContractorService ContractorService;
         private readonly IUnitOfWork UnitOfWork;
         private readonly IOrderService OrderService;
+        private readonly IRoutePlannerService RoutePlannerService;
 
         public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService, IUnitOfWork UnitOfWork)
         {
@@ -220,16 +222,26 @@ namespace PracticalWerewolf.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult UpdateStatus(ContractorIndexModel model)
+        public async Task<ActionResult> UpdateStatus(ContractorIndexModel model)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
                     ContractorService.SetIsAvailable(model.ContractorInfo.ContractorInfoGuid, !model.ContractorInfo.IsAvailable);
-                    OrderService.GetQueuedOrders(model.ContractorInfo);
                     UnitOfWork.SaveChanges();
-                    return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.StatusChangeSuccess });
+                    var queuedOrders = OrderService.GetQueuedOrders(model.ContractorInfo);
+                    if (queuedOrders != null)
+                    {
+                        foreach (var order in queuedOrders)
+                        {
+                            OrderService.UnqueueOrder(order, model.ContractorInfo);
+                        }
+                        await RoutePlannerService.AssignOrders();
+
+                        UnitOfWork.SaveChanges();
+                    }
+                    return RedirectToAction("UpdateStatus", "Contractor", new { Message = ContractorMessageId.StatusChangeSuccess });
                 }
                 catch
                 {

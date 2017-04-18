@@ -64,7 +64,17 @@ namespace PracticalWerewolf.Services
             OrderTrackInfo orderTrackInfo = order.TrackInfo ?? new OrderTrackInfo();
             orderTrackInfo.OrderStatus = OrderStatus.InProgress;
             orderTrackInfo.Assignee = contractor;
+            contractor.AssignedOrders.Add(orderTrackInfo);
             OrderStore.Update(order);
+            ContractorStore.Update(contractor);
+        }
+
+        public void UnqueueOrder(Order order, ContractorInfo contractor)
+        {
+            contractor.AssignedOrders.Remove(order.TrackInfo);
+            order.TrackInfo.Assignee = null;
+            OrderStore.Update(order);
+            ContractorStore.Update(contractor);
         }
 
         public void AssignOrders()
@@ -103,6 +113,12 @@ namespace PracticalWerewolf.Services
         public IEnumerable<Order> GetQueuedOrders(ContractorInfo contractor)
         {
             var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid).ToList();
+            return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.Queued).ToList();
+        }
+
+        public IEnumerable<Order> GetQueuedOrders(Guid contractorInfoGuid)
+        {
+            var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractorInfoGuid).ToList();
             return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.Queued).ToList();
         }
 
