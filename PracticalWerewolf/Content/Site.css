@@ -52,3 +52,7 @@ textarea {
     padding-top:10px; 
     padding-bottom:10px;
 }
+
+.contractor-body-pane {
+    min-height: 300px;
+}
