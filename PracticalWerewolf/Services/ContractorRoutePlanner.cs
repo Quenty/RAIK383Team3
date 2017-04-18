@@ -38,14 +38,12 @@ namespace PracticalWerewolf.Services
             PickUp = new RouteStop
             {
                 RouteStopGuid = Guid.NewGuid(),
-                Order = Order,
                 Type = StopType.PickUp
             };
 
             DropOff = new RouteStop
             {
                 RouteStopGuid = Guid.NewGuid(),
-                Order = Order,
                 Type = StopType.DropOff
             };
         }
@@ -341,90 +339,118 @@ namespace PracticalWerewolf.Services
 
         private int GetDistanceFromPickUp(RouteStop stop)
         {
-            var address = stop.Type == StopType.PickUp ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
+            CivicAddressDb address = null;
 
-            if (address.Equals(Order.RequestInfo.PickUpAddress))
+            if (stop.Equals(PickUp))
             {
                 return 0;
             }
+            else if (stop.Equals(DropOff))
+            {
+                address = Order.RequestInfo.DropOffAddress;
+            }
             else
             {
-                if (_pickUpToStop.ContainsKey(address))
-                {
-                    return _pickUpToStop[address].Routes.First().Legs.First().Distance.Value;
-                }
-                else
-                {
-                    logger.Warn($"Failed to retrieve address {address.ToString()}");
-                    return int.MaxValue;
-                }
+                address = stop.Type == StopType.PickUp ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
+            }
+
+
+            if (_pickUpToStop.ContainsKey(address))
+            {
+                return _pickUpToStop[address].Routes.First().Legs.First().Distance.Value;
+            }
+            else
+            {
+                logger.Warn($"Failed to retrieve address {address.ToString()}");
+                return int.MaxValue;
             }
         }
 
         private int GetDistanceFromDropOff(RouteStop stop)
         {
-            var address = stop.Type == StopType.PickUp ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
 
-            if (address.Equals(Order.RequestInfo.DropOffAddress))
+            CivicAddressDb address = null;
+
+            if (stop.Equals(DropOff))
             {
                 return 0;
             }
+            else if (stop.Equals(PickUp))
+            {
+                address = Order.RequestInfo.PickUpAddress;
+            }
             else
             {
-                if (_dropOffToStop.ContainsKey(address))
-                {
-                    return _dropOffToStop[address].Routes.First().Legs.First().Distance.Value;
-                }
-                else
-                {
-                    logger.Warn($"Failed to retrieve address {address.ToString()}");
-                    return int.MaxValue;
-                }
+                address = stop.Type == StopType.PickUp ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
+            }
+
+            if (_dropOffToStop.ContainsKey(address))
+            {
+                return _dropOffToStop[address].Routes.First().Legs.First().Distance.Value;
+            }
+            else
+            {
+                logger.Warn($"Failed to retrieve address {address.ToString()}");
+                return int.MaxValue;
             }
         }
 
         private TimeSpan GetTimeFromDropOff(RouteStop stop)
         {
-            var address = stop.Type == StopType.PickUp ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
+            CivicAddressDb address = null;
 
-            if (address.Equals(Order.RequestInfo.DropOffAddress))
+            if (stop.Equals(DropOff))
             {
                 return TimeSpan.Zero;
             }
+            else if (stop.Equals(PickUp))
+            {
+                address = Order.RequestInfo.PickUpAddress;
+            }
             else
             {
-                if (_dropOffToStop.ContainsKey(address))
-                {
-                    return _dropOffToStop[address].Routes.First().Legs.First().Duration.Value;
-                }
-                else
-                {
-                    logger.Warn($"Failed to retrieve address {address.ToString()}");
-                    return TimeSpan.MaxValue;
-                }
+                address = stop.Type == StopType.PickUp ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
+            }
+
+
+            if (_dropOffToStop.ContainsKey(address))
+            {
+                return _dropOffToStop[address].Routes.First().Legs.First().Duration.Value;
+            }
+            else
+            {
+                logger.Warn($"Failed to retrieve address {address.ToString()}");
+                return TimeSpan.MaxValue;
             }
         }
 
         private TimeSpan GetTimeFromPickUp(RouteStop stop)
         {
-            var address = stop.Type == StopType.PickUp ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
 
-            if (address.Equals(Order.RequestInfo.PickUpAddress))
+            CivicAddressDb address = null;
+
+            if (stop.Equals(PickUp))
             {
                 return TimeSpan.Zero;
             }
+            else if (stop.Equals(DropOff))
+            {
+                address = Order.RequestInfo.DropOffAddress;
+            }
             else
             {
-                if (_pickUpToStop.ContainsKey(address))
-                {
-                    return _pickUpToStop[address].Routes.First().Legs.First().Duration.Value;
-                }
-                else
-                {
-                    logger.Warn($"Failed to retrieve address {address.ToString()}");
-                    return TimeSpan.MaxValue;
-                }
+                address = stop.Type == StopType.PickUp ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
+            }
 
+
+            if (_pickUpToStop.ContainsKey(address))
+            {
+                return _pickUpToStop[address].Routes.First().Legs.First().Duration.Value;
+            }
+            else
+            {
+                logger.Warn($"Failed to retrieve address {address.ToString()}");
+                return TimeSpan.MaxValue;
             }
         }
 

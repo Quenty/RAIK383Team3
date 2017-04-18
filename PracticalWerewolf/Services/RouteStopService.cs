@@ -36,6 +36,21 @@ namespace PracticalWerewolf.Services
                 .OrderBy(x => x.StopOrder);
         }
 
+        public IEnumerable<RouteStop> GetContractorRoute(ContractorInfo contractor)
+        {
+            if (contractor == null)
+            {
+                logger.Error("GetContractorRoute() - Null contractor");
+                throw new ArgumentNullException();
+            }
+
+            return _routeStopStore.AsQueryable()
+                .Include(x => x.Order)
+                .Where(x => x.Order.TrackInfo.OrderStatus == OrderStatus.Queued || x.Order.TrackInfo.OrderStatus == OrderStatus.InProgress)
+                .Where(x => x.Order.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid)
+                .OrderBy(x => x.StopOrder);
+        }
+
         public RouteStop GetContractorCurrentAssignment(ContractorInfo contractor)
         {
             if (contractor == null)
