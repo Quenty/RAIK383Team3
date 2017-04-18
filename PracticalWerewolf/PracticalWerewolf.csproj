@@ -338,9 +338,11 @@
     <Compile Include="Stores\CustomerStore.cs" />
     <Compile Include="Stores\EmployeeStore.cs" />
     <Compile Include="Stores\Interfaces\IEntityStore.cs" />
+    <Compile Include="Stores\Interfaces\IOrderTrackInfoStore.cs" />
     <Compile Include="Stores\Interfaces\IRouteStopStore.cs" />
     <Compile Include="Stores\Interfaces\RouteStopStore.cs" />
     <Compile Include="Stores\OrderStore.cs" />
+    <Compile Include="Stores\OrderTrackInfoStore.cs" />
     <Compile Include="Stores\TruckStore.cs" />
     <Compile Include="Utility\Levenshtein.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />

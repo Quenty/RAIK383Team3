@@ -128,8 +128,9 @@ namespace PracticalWerewolf.Tests.Services
             
             var userStore = new Mock<IUserStore<ApplicationUser>>();
             var userManager = new Mock<ApplicationUserManager>(userStore.Object);
+            var orderTrackStore = new Mock<IOrderTrackInfoStore>();
 
-            return new OrderService(store, contractorStore, userManager.Object);
+            return new OrderService(store, contractorStore, orderTrackStore.Object, userManager.Object);
         }
     }
 }

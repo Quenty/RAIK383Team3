@@ -18,12 +18,14 @@ namespace PracticalWerewolf.Services
         private static ILog logger = LogManager.GetLogger(typeof(OrderService));
         private readonly IOrderStore OrderStore;
         private readonly IContractorStore ContractorStore;
+        private readonly IOrderTrackInfoStore OrderTrackInfoStore;
         private readonly ApplicationUserManager UserManager;
 
-        public OrderService (IOrderStore orderStore, IContractorStore contractorStore, ApplicationUserManager userManager)
+        public OrderService (IOrderStore orderStore, IContractorStore contractorStore, IOrderTrackInfoStore orderTrackInfoStore, ApplicationUserManager userManager)
         {
             this.OrderStore = orderStore;
             this.ContractorStore = contractorStore;
+            this.OrderTrackInfoStore = orderTrackInfoStore;
             this.UserManager = userManager;
         }
 
@@ -64,7 +66,11 @@ namespace PracticalWerewolf.Services
             OrderTrackInfo orderTrackInfo = order.TrackInfo ?? new OrderTrackInfo();
             orderTrackInfo.OrderStatus = OrderStatus.InProgress;
             orderTrackInfo.Assignee = contractor;
-            OrderStore.Update(order);
+
+            OrderStore.GetEntry(order).CurrentValues.SetValues(order);
+            OrderTrackInfoStore.GetEntry(orderTrackInfo).CurrentValues.SetValues(orderTrackInfo);
+
+            //OrderStore.Update(order);
         }
 
         public void AssignOrders()

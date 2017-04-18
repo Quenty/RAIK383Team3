@@ -371,7 +371,7 @@ namespace PracticalWerewolf.Services
             }
             else
             {
-                if (_pickUpToStop.ContainsKey(address))
+                if (_dropOffToStop.ContainsKey(address))
                 {
                     return _dropOffToStop[address].Routes.First().Legs.First().Distance.Value;
                 }
