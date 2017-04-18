@@ -393,6 +393,8 @@
     <Content Include="Scripts\GoogleMapAPI.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\js-cookie\js.cookie-2.1.4.min.js" />
+    <Content Include="Scripts\js-cookie\js.cookie.js" />
     <Content Include="Scripts\knockout-3.4.2.debug.js" />
     <Content Include="Scripts\knockout-3.4.2.js" />
     <Content Include="Scripts\mapautocomplete.js" />
@@ -486,7 +488,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Scripts\ViewModels\Contractor\" />
-    <Folder Include="Views\Order\" />
     <Folder Include="Views\UserInfo\" />
   </ItemGroup>
   <ItemGroup>
