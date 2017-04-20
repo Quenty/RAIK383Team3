@@ -179,7 +179,7 @@ namespace PracticalWerewolf.Controllers
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
-                    return RedirectToAction("SendCode", "Account");
+                    return RedirectToAction("AddPhoneNumber", "Manage");
                 }
                 AddErrors(result);
             }
