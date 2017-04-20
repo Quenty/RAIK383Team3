@@ -5,7 +5,7 @@
     }
     else
     {
-        $("li.active > a[data-ajax=true]").click();
+        $("#ajax-nav-controls > li.active > a[data-ajax=true]").click();
     }
 }
 
@@ -13,7 +13,7 @@ var currentTabName = "";
 var originalTitle = document.title;
 
 function updateActivePartial() {
-    $("li.active").removeClass("active");
+    $("#ajax-nav-controls > li.active").removeClass("active");
     $(this.parentElement).addClass("active");
 
     var tabName = this.getAttribute("data-tab-name");

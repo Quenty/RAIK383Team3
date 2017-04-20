@@ -247,12 +247,12 @@ namespace PracticalWerewolf.Controllers
 
                     TruckService.UpdateTruckLocation(returnedModel.Guid, location);
                     UnitOfWork.SaveChanges();
-                    return RedirectToAction("Index", "Contractor", new { Message = ContractorController.ContractorMessageId.TruckLocationUpdatedSuccess });
+                    return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorController.ContractorMessageId.TruckLocationUpdatedSuccess }) + "#truck");
                 }
                 catch
                 {
                     logger.Error("UpdateLocation - Error in UpdateTruckLocation");
-                    return RedirectToAction("Index", "Contractor", new { Message = ContractorController.ContractorMessageId.TruckLocationUpdateError });
+                    return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorController.ContractorMessageId.TruckLocationUpdateError }) + "#truck");
                 }
             }
             else

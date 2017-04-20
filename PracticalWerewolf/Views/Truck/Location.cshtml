@@ -55,6 +55,9 @@
                     draggable: true
                 });
 
+                map.setZoom(10);
+                map.panTo(marker.position);
+
                 var update_timeout = null;
 
                 google.maps.event.addListener(map, 'click', function (event) {
