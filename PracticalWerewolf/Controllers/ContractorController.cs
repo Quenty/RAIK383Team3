@@ -304,6 +304,7 @@ namespace PracticalWerewolf.Controllers
                         Guid = truck.TruckGuid,
                         LicenseNumber = truck.LicenseNumber,
                         MaxCapacity = truck.MaxCapacity,
+                        AvailableCapacity = truck.AvailableCapacity,
                         Lat = truck.Location.Latitude,
                         Long = truck.Location.Longitude
                     };

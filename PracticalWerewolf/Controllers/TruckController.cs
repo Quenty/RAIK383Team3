@@ -58,7 +58,7 @@ namespace PracticalWerewolf.Controllers
                     Lat = item.Location.Latitude,
                     Long = item.Location.Longitude,
                     MaxCapacity = item.MaxCapacity,
-                    //AvailableCapacity = item.AvailableCapacity, //TODO: uncomment once we have actual data
+                    AvailableCapacity = item.AvailableCapacity,
                     Owner = owner
                 };
                 truckModels.Add(toAdd);
@@ -86,7 +86,7 @@ namespace PracticalWerewolf.Controllers
                     {
                         Guid = new Guid(id),
                         LicenseNumber = truck.LicenseNumber,
-                        // AvailableCapacity = truck.AvailableCapacity, // TODO: uncomment once there's data for this
+                        AvailableCapacity = truck.AvailableCapacity, // TODO: uncomment once there's data for this
                         MaxCapacity = truck.MaxCapacity,
                         Lat = truck.Location.Latitude,
                         Long = truck.Location.Longitude,

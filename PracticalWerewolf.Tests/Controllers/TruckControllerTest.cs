@@ -186,7 +186,7 @@ namespace PracticalWerewolf.Tests.Controllers
             Assert.AreEqual(model.Lat, 3.14);
             Assert.AreEqual(model.Long, 2.18);
             Assert.AreEqual("James", model.LicenseNumber);
-            //Assert.IsNotNull(model.AvailableCapacity);
+            Assert.IsNotNull(model.AvailableCapacity);
         }
 
         [TestMethod]

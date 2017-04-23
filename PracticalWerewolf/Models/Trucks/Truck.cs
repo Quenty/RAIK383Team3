@@ -42,6 +42,11 @@ namespace PracticalWerewolf.Models.Trucks
         public TruckCapacityUnit AvailableCapacity {
             get
             {
+                if (UsedCapacity == null)
+                {
+                    return MaxCapacity;
+                }
+
                 return new TruckCapacityUnit
                 {
                     TruckCapacityUnitGuid = Guid.NewGuid(),

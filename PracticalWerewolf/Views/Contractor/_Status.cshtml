@@ -4,31 +4,20 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         @Html.DisplayName("Your Truck")
+        <span class="label label-info" title="Your truck's license number'" style="margin-left:10px">@Model.LicenseNumber</span>
         @Html.ActionLink("Edit Your Truck", "Edit", "Truck", new { id = Model.Guid }, new { @class = "btn btn-xs btn-default pull-right" })
     </div>
     <div class="panel-body">
         @Html.HiddenFor(Model => Model.Lat, new { id = "Lat" })
         @Html.HiddenFor(Model => Model.Long, new { id = "Long" })
+        
+        <p>Your truck can hold an estimated @Model.MaxCapacity.Mass lbs and @Model.MaxCapacity.Volume cubic ft in total. </p>
+        <p>Of that capacity, @Model.AvailableCapacity.Mass lbs and @Model.AvailableCapacity.Volume cubic ft are available. </p>
+        <div class="pull-right">
+            @Html.ActionLink("Update Location", "Location", "Truck", new { id = Model.Guid }, new { @class = "btn btn-xs btn-default pull-right" })
+        </div>
+        <h4>Last known truck location</h4>
 
-        <div class="row">
-            @Html.LabelFor(model => model.LicenseNumber, new { @class = "col-md-3" })
-            @Html.DisplayFor(model => model.LicenseNumber, new { @class = "col-md-6" })
-        </div>
-        <div class="row">
-            @Html.LabelFor(model => model.MaxCapacity.Mass, new { @class = "col-md-3" })
-            @Html.DisplayFor(model => model.MaxCapacity.Mass, new { @class = "col-md-6" })
-        </div>
-        <div class="row">
-            @Html.LabelFor(model => model.MaxCapacity.Volume, new { @class = "col-md-3" })
-            @Html.DisplayFor(model => model.MaxCapacity.Volume, new { @class = "col-md-6" })
-        </div>
-
-        <div class="row" style="margin-bottom:10px">
-            <div class="pull-right col-md-9">
-                @Html.ActionLink("Update Location", "Location", "Truck", new { id = Model.Guid }, new { @class = "btn btn-xs btn-default pull-right" })
-            </div>
-            @Html.Label("Last known truck location", new { @class = "col-md-3" })
-        </div>
         <div id="map" style="height:400px"></div>
         <script>loadAPI()</script>
     </div>
