@@ -233,17 +233,17 @@ namespace PracticalWerewolf.Controllers
                     ContractorService.SetIsAvailable(model.ContractorGuid, !model.ContractorStatus);
                     UnitOfWork.SaveChanges();
                     var queuedOrders = OrderService.GetQueuedOrders(model.ContractorGuid);
-                    if (queuedOrders != null)
+                    if (queuedOrders.Count() != 0)
                     {
                         foreach (var order in queuedOrders)
                         {
                             OrderService.UnqueueOrder(order, model.ContractorGuid);
                         }
+                        UnitOfWork.SaveChanges();
                         await RoutePlannerService.AssignOrders();
-
                         UnitOfWork.SaveChanges();
                     }
-                    return RedirectToAction("UpdateStatus", "Contractor", new { Message = ContractorMessageId.StatusChangeSuccess });
+                    return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.StatusChangeSuccess });
                 }
                 catch(Exception e)
                 {
