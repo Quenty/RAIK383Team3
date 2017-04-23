@@ -9,7 +9,9 @@ using PracticalWerewolf.Models.UserInfos;
 using PracticalWerewolf.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -18,50 +20,42 @@ namespace PracticalWerewolf.Services
     public class RoutePlannerService : IRoutePlannerService
     {
         private static readonly ILog logger = LogManager.GetLogger(typeof(RoutePlannerService));
+
         private readonly IOrderService _orderService;
         private readonly IRouteStopService _routeStopService;
         private readonly IContractorService _contractorService;
-        private readonly ApplicationDbContext _dbContext;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly EmailService _emailService;
 
-        public RoutePlannerService(IOrderService orderService, IRouteStopService routeStopService, IContractorService contractorService, ApplicationDbContext dbContext, IUnitOfWork unitOfWork)
+        public RoutePlannerService(IOrderService orderService, IRouteStopService routeStopService, IContractorService contractorService, IUnitOfWork unitOfWork, EmailService emailService)
         {
             _orderService = orderService;
             _routeStopService = routeStopService;
             _contractorService = contractorService;
-            _dbContext = dbContext;
             _unitOfWork = unitOfWork;
+            _emailService = emailService;
         }
 
-        public async Task AssignOrders()
+        public void AssignOrders()
         {
             var orders = _orderService.GetUnassignedOrders().ToList();
 
             foreach(Order order in orders)
             {
-                await AssignOrder(order);
+                AssignOrder(order);
             }
-
         }
 
-        public async Task AssignOrder(Order order)
+        public void AssignOrder(Order order)
         {
 
             IEnumerable<ContractorInfo> contractors = null;
 
-            try
+            contractors = _contractorService.GetAvailableContractorQuery().ToList();
+            if (!contractors.Any())
             {
-                contractors = _contractorService.GetAvailableContractorQuery().ToList();
-                if (!contractors.Any())
-                {
-                    logger.Warn("AssignOrder() - No available contractors");
-                    return;
-                }
-            }
-            catch (Exception e)
-            {
-                var inner = e.InnerException;
-                logger.Error("ya fuqed up");
+                logger.Warn("AssignOrder() - No available contractors");
+                return;
             }
 
             List<ContractorRoutePlanner> options = new List<ContractorRoutePlanner>();
@@ -82,7 +76,7 @@ namespace PracticalWerewolf.Services
                 {
                     logger.Error($"AssignOrder() - Error with RoutePlannerDelegate with ContractorInfoGuid {contractor.ContractorInfoGuid.ToString()} - {e.ToString()}");
                 }
-            }
+            } 
 
             if (!options.Any())
             {
@@ -109,13 +103,25 @@ namespace PracticalWerewolf.Services
             _orderService.AssignOrder(order.OrderGuid, optimalPlan.Contractor);
 
             ApplicationUser user = _contractorService.GetUserByContractorInfo(optimalPlan.Contractor);
-            await EmailHelper.SendWorkOrderEmail(user, optimalPlan.Order.RequestInfo);
-            //_unitOfWork.SaveChanges();
+            _emailService.SendWorkOrderEmail(user, optimalPlan.Order.RequestInfo);
+
+            _unitOfWork.SaveChanges();
         }
 
         private ContractorRoutePlanner GetOptimalPlan(IEnumerable<ContractorRoutePlanner> options)
         {
-            return options.Aggregate((a, b) => a.DistanceChanged < b.DistanceChanged ? a : b);
+            var optimalRoute = options.First();
+
+            foreach(var option in options)
+            {
+                //This assumes that the addition of a new order will not cause the route total distance to decrease
+                if(option.DistanceChanged < optimalRoute.DistanceChanged && option.DistanceChanged >= 0)
+                {
+                    optimalRoute = option;
+                }
+            }
+
+            return optimalRoute;
         }
         
     }

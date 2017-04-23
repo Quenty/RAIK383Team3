@@ -31,7 +31,8 @@ namespace PracticalWerewolf.Controllers
             StatusError,
             NoTruckCreated,
             TruckCreationError,
-            TruckLocationUpdateError
+            TruckLocationUpdateError,
+            TruckLocationUpdatedSuccess
         }
 
         private readonly ApplicationUserManager UserManager;
@@ -61,6 +62,7 @@ namespace PracticalWerewolf.Controllers
                 : message == ContractorMessageId.StatusError ? "Could not update status successfully."
                 : message == ContractorMessageId.TruckCreationError ? "Could not create truck successfully."
                 : message == ContractorMessageId.TruckLocationUpdateError ? "Could not update truck location successfully"
+                : message == ContractorMessageId.TruckLocationUpdatedSuccess ? "Truck location updated successfully"
                 : "";
         }
 
@@ -243,11 +245,12 @@ namespace PracticalWerewolf.Controllers
                         await RoutePlannerService.AssignOrders();
                         UnitOfWork.SaveChanges();
                     }
-                    return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.StatusChangeSuccess });
+
+                    return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusChangeSuccess }) + "#status");
                 }
                 catch(Exception e)
                 {
-                    return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.StatusError });
+                    return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusError }) + "#status");
                 }
             }
             return RedirectToAction("Index", "Contractor", new { Message = "bad model" });

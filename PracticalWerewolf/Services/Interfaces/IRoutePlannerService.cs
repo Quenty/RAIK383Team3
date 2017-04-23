@@ -9,7 +9,7 @@ namespace PracticalWerewolf.Services.Interfaces
 {
     public interface IRoutePlannerService
     {
-        Task AssignOrders();
-        Task AssignOrder(Order order);
+        void AssignOrders();
+        void AssignOrder(Order order);
     }
 }

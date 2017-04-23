@@ -15,7 +15,26 @@ namespace PracticalWerewolf.Services
     public class ContractorRoutePlanner
     {
         private static ILog logger = LogManager.GetLogger(typeof(ContractorRoutePlanner)); 
-        public bool WillWork = true;
+        private bool _WillWork = true;
+
+        private bool _AlreadyCalculated = false;
+        public bool WillWork { get
+            {
+                if (!_AlreadyCalculated)
+                {
+                    try
+                    {
+                        CalculateOptimalRoute();
+                    }
+                    catch (Exception e)
+                    {
+                        logger.Error($"AssignOrder() - Error with RoutePlannerDelegate with ContractorInfoGuid {Contractor.ContractorInfoGuid.ToString()} - {e.ToString()}");
+                    }
+                }
+
+                return _WillWork;
+            }
+        }
         public ContractorInfo Contractor { get; }
         public Order Order { get; }
         public List<RouteStop> Route { get; }
@@ -23,8 +42,8 @@ namespace PracticalWerewolf.Services
         public RouteStop DropOff { get; }
         public int DistanceChanged { get; set; }
 
-        private Dictionary<CivicAddressDb, DirectionsResponse> _pickUpToStop = new Dictionary<CivicAddressDb, DirectionsResponse>();
-        private Dictionary<CivicAddressDb, DirectionsResponse> _dropOffToStop = new Dictionary<CivicAddressDb, DirectionsResponse>();
+        private Dictionary<string, DirectionsResponse> _pickUpToStop = new Dictionary<string, DirectionsResponse>();
+        private Dictionary<string, DirectionsResponse> _dropOffToStop = new Dictionary<string, DirectionsResponse>();
         private List<TruckCapacityUnit> _capacityUnits = new List<TruckCapacityUnit>(); //these will be the capacities immediately after the stop corresponding to the index
 
 
@@ -46,17 +65,26 @@ namespace PracticalWerewolf.Services
                 RouteStopGuid = Guid.NewGuid(),
                 Type = StopType.DropOff
             };
+
+            
         }
 
         public void CalculateOptimalRoute()
         {
-            if(!IsWithinMaxCapacity(Order.RequestInfo.Size, Contractor.Truck.MaxCapacity))
+
+            if (_AlreadyCalculated)
             {
-                WillWork = false;
                 return;
             }
 
-            GetDistances();
+            _AlreadyCalculated = true;
+
+            if (!IsWithinMaxCapacity(Order.RequestInfo.Size, Contractor.Truck.MaxCapacity))
+            {
+                _WillWork = false;
+                return;
+            }
+
 
             if (!Route.Any())
             {
@@ -67,6 +95,8 @@ namespace PracticalWerewolf.Services
             GetTruckCapacityUnits();
 
             IEnumerable<Tuple<int, int>> sublists = GetSubRoutesWithNoCapacityConflicts();
+            GetDistances(sublists);
+
             List<SubRouteCalculationResult> results = new List<SubRouteCalculationResult>();
 
             foreach(var sublist in sublists)
@@ -124,73 +154,58 @@ namespace PracticalWerewolf.Services
 
 
 
-        private void GetDistances()
+        private void GetDistances(IEnumerable<Tuple<int, int>> sublists)
         {
             var pickUpLocation = Order.RequestInfo.PickUpAddress;
             var dropOffLocation = Order.RequestInfo.DropOffAddress;
 
-            //PickUp location to all stops
-            foreach(var stop in Route)
+            //PickUp to DropOff and vice versa
+            var pickUpToDropOff = LocationHelper.GetRouteBetweenLocations(pickUpLocation, dropOffLocation);
+            if (pickUpToDropOff.Status == DirectionsStatusCodes.OK)
             {
-                var location = (stop.Type == StopType.PickUp) ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
-
-                if (!_pickUpToStop.ContainsKey(location))
-                {
-                    var response = LocationHelper.GetRouteBetweenLocations(pickUpLocation, location);
-                    if(response.Status == DirectionsStatusCodes.OK)
-                    {
-                        _pickUpToStop.Add(location, response);
-                    }
-                    else
-                    {
-                        logger.Warn($"Google Maps Api failed to load address {location}. Error is {response.Status}");
-                    }
-                }
+                _pickUpToStop.Add(dropOffLocation.ToString(), pickUpToDropOff);
+                _dropOffToStop.Add(pickUpLocation.ToString(), pickUpToDropOff);
             }
-
-            //PickUp to DropOff
-            if (!_pickUpToStop.ContainsKey(dropOffLocation))
+            else
             {
-                var response = LocationHelper.GetRouteBetweenLocations(pickUpLocation, dropOffLocation);
-                if (response.Status == DirectionsStatusCodes.OK)
-                {
-                    _pickUpToStop.Add(dropOffLocation, response);
-                }
-                else
-                {
-                    logger.Warn($"Google Maps Api failed to load address {dropOffLocation}. Error is {response.Status}");
-                }
+                logger.Warn($"Google Maps Api failed to load address {dropOffLocation}. Error is {pickUpToDropOff.Status}");
             }
-            //DropOff to PickUp
-            if (!_dropOffToStop.ContainsKey(pickUpLocation))
+           
+            foreach(var subroute in sublists)
             {
-                var response = LocationHelper.GetRouteBetweenLocations(dropOffLocation, pickUpLocation);
-                if (response.Status == DirectionsStatusCodes.OK)
+                //we want the last index for all the subroutes except the last subroute, which is past the last item in routes
+                var endIndex = subroute.Equals(sublists.Last()) ? subroute.Item2 - 1 : subroute.Item2;
+                for(var i = subroute.Item1; i <= endIndex; i++)
                 {
-                    _dropOffToStop.Add(pickUpLocation, response);
-                }
-                else
-                {
-                    logger.Warn($"Google Maps Api failed to load address {dropOffLocation}. Error is {response.Status}");
-                }
-            }
+                    var stop = Route.ElementAt(i);
+                    var location = (stop.Type == StopType.PickUp) ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
 
-
-            //DropOff location to all stops
-            foreach (var stop in Route)
-            {
-                var location = (stop.Type == StopType.PickUp) ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
-
-                if (!_dropOffToStop.ContainsKey(location))
-                {
-                    var response = LocationHelper.GetRouteBetweenLocations(dropOffLocation, location);
-                    if (response.Status == DirectionsStatusCodes.OK)
+                    //Add PickUp to location
+                    if (!_pickUpToStop.ContainsKey(location.ToString()))
                     {
-                        _dropOffToStop.Add(location, response);
+                        var response = LocationHelper.GetRouteBetweenLocations(pickUpLocation, location);
+                        if (response.Status == DirectionsStatusCodes.OK)
+                        {
+                            _pickUpToStop.Add(location.ToString(), response);
+                        }
+                        else
+                        {
+                            logger.Warn($"Google Maps Api failed to load address {location}. Error is {response.Status}");
+                        }
                     }
-                    else
+
+                    //Add DropOffToLocation
+                    if (!_dropOffToStop.ContainsKey(location.ToString()))
                     {
-                        logger.Warn($"Google Maps Api failed to load address {dropOffLocation}. Error is {response.Status}");
+                        var response = LocationHelper.GetRouteBetweenLocations(dropOffLocation, location);
+                        if (response.Status == DirectionsStatusCodes.OK)
+                        {
+                            _dropOffToStop.Add(location.ToString(), response);
+                        }
+                        else
+                        {
+                            logger.Warn($"Google Maps Api failed to load address {location}. Error is {response.Status}");
+                        }
                     }
                 }
             }
@@ -326,11 +341,12 @@ namespace PracticalWerewolf.Services
 
         private void DeliverFromHomeAddress()
         {
-            var result = LocationHelper.GetRouteBetweenLocations(Contractor.HomeAddress, Order.RequestInfo.PickUpAddress);
-            PickUp.DistanceToNextStop = GetDistanceFromPickUp(DropOff);
-            PickUp.EstimatedTimeToNextStop = GetTimeFromPickUp(DropOff);
+            var homeToPickUp = LocationHelper.GetRouteBetweenLocations(Contractor.HomeAddress, Order.RequestInfo.PickUpAddress);
+            var pickUpToDropoff = LocationHelper.GetRouteBetweenLocations(Order.RequestInfo.PickUpAddress, Order.RequestInfo.DropOffAddress);
+            PickUp.DistanceToNextStop = pickUpToDropoff.Routes.First().Legs.First().Distance.Value;
+            PickUp.EstimatedTimeToNextStop = pickUpToDropoff.Routes.First().Legs.First().Duration.Value;
 
-            DistanceChanged = result.Routes.First().Legs.First().Distance.Value + PickUp.DistanceToNextStop;
+            DistanceChanged = homeToPickUp.Routes.First().Legs.First().Distance.Value + PickUp.DistanceToNextStop;
             Route.Add(PickUp);
             Route.Add(DropOff);
 
@@ -354,10 +370,13 @@ namespace PracticalWerewolf.Services
                 address = stop.Type == StopType.PickUp ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
             }
 
-
-            if (_pickUpToStop.ContainsKey(address))
+            if (_pickUpToStop.ContainsKey(address.ToString()))
             {
-                return _pickUpToStop[address].Routes.First().Legs.First().Distance.Value;
+                return _pickUpToStop[address.ToString()].Routes.First().Legs.First().Distance.Value;
+            }
+            else if (address.ToString().Equals(Order.RequestInfo.PickUpAddress.ToString()))
+            {
+                return 0;
             }
             else
             {
@@ -384,9 +403,13 @@ namespace PracticalWerewolf.Services
                 address = stop.Type == StopType.PickUp ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
             }
 
-            if (_dropOffToStop.ContainsKey(address))
+            if (_dropOffToStop.ContainsKey(address.ToString()))
             {
-                return _dropOffToStop[address].Routes.First().Legs.First().Distance.Value;
+                return _dropOffToStop[address.ToString()].Routes.First().Legs.First().Distance.Value;
+            }
+            else if (address.ToString().Equals(Order.RequestInfo.DropOffAddress.ToString()))
+            {
+                return 0;
             }
             else
             {
@@ -413,9 +436,13 @@ namespace PracticalWerewolf.Services
             }
 
 
-            if (_dropOffToStop.ContainsKey(address))
+            if (_dropOffToStop.ContainsKey(address.ToString()))
             {
-                return _dropOffToStop[address].Routes.First().Legs.First().Duration.Value;
+                return _dropOffToStop[address.ToString()].Routes.First().Legs.First().Duration.Value;
+            }
+            else if (address.ToString().Equals(Order.RequestInfo.DropOffAddress.ToString()))
+            {
+                return TimeSpan.Zero;
             }
             else
             {
@@ -443,9 +470,13 @@ namespace PracticalWerewolf.Services
             }
 
 
-            if (_pickUpToStop.ContainsKey(address))
+            if (_pickUpToStop.ContainsKey(address.ToString()))
             {
-                return _pickUpToStop[address].Routes.First().Legs.First().Duration.Value;
+                return _pickUpToStop[address.ToString()].Routes.First().Legs.First().Duration.Value;
+            }
+            else if (address.ToString().Equals(Order.RequestInfo.PickUpAddress.ToString()))
+            {
+                return TimeSpan.Zero;
             }
             else
             {

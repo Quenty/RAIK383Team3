@@ -41,8 +41,7 @@ namespace PracticalWerewolf.Services
                 RequestInfo = requestInfo,
                 TrackInfo = new OrderTrackInfo
                 {
-                    OrderTrackInfoGuid = Guid.NewGuid(),
-                    OrderStatus = OrderStatus.Queued
+                    OrderTrackInfoGuid = Guid.NewGuid()
                 }
             });
         }

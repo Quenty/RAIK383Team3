@@ -117,14 +117,13 @@ namespace PracticalWerewolf.Tests.Services
 
             routePlanner.CalculateOptimalRoute();
 
+
             Assert.IsTrue(routePlanner.WillWork);
             Assert.AreEqual(user.ContractorInfo, routePlanner.Contractor);
             Assert.IsNotNull(routePlanner.PickUp);
-            Assert.AreEqual(order, routePlanner.PickUp.Order);
             Assert.AreEqual(StopType.PickUp, routePlanner.PickUp.Type);
 
             Assert.IsNotNull(routePlanner.DropOff);
-            Assert.AreEqual(order, routePlanner.DropOff.Order);
             Assert.AreEqual(StopType.DropOff, routePlanner.DropOff.Type);
 
             //check that it's within 5% of the expected distance
@@ -182,11 +181,9 @@ namespace PracticalWerewolf.Tests.Services
             Assert.IsTrue(routePlanner.WillWork);
             Assert.AreEqual(user.ContractorInfo, routePlanner.Contractor);
             Assert.IsNotNull(routePlanner.PickUp);
-            Assert.AreEqual(order, routePlanner.PickUp.Order);
             Assert.AreEqual(StopType.PickUp, routePlanner.PickUp.Type);
 
             Assert.IsNotNull(routePlanner.DropOff);
-            Assert.AreEqual(order, routePlanner.DropOff.Order);
             Assert.AreEqual(StopType.DropOff, routePlanner.DropOff.Type);
 
             //check that it's within 5% of the expected distance
@@ -276,11 +273,9 @@ namespace PracticalWerewolf.Tests.Services
             Assert.IsTrue(routePlanner.WillWork);
             Assert.AreEqual(user.ContractorInfo, routePlanner.Contractor);
             Assert.IsNotNull(routePlanner.PickUp);
-            Assert.AreEqual(order, routePlanner.PickUp.Order);
             Assert.AreEqual(StopType.PickUp, routePlanner.PickUp.Type);
 
             Assert.IsNotNull(routePlanner.DropOff);
-            Assert.AreEqual(order, routePlanner.DropOff.Order);
             Assert.AreEqual(StopType.DropOff, routePlanner.DropOff.Type);
 
             Assert.AreEqual(3, routePlanner.Route.IndexOf(routePlanner.PickUp));
@@ -348,11 +343,9 @@ namespace PracticalWerewolf.Tests.Services
             Assert.IsTrue(routePlanner.WillWork);
             Assert.AreEqual(user.ContractorInfo, routePlanner.Contractor);
             Assert.IsNotNull(routePlanner.PickUp);
-            Assert.AreEqual(order, routePlanner.PickUp.Order);
             Assert.AreEqual(StopType.PickUp, routePlanner.PickUp.Type);
 
             Assert.IsNotNull(routePlanner.DropOff);
-            Assert.AreEqual(order, routePlanner.DropOff.Order);
             Assert.AreEqual(StopType.DropOff, routePlanner.DropOff.Type);
 
             //check that it's within 5% of the expected distance

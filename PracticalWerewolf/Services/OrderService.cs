@@ -20,13 +20,15 @@ namespace PracticalWerewolf.Services
         private readonly IContractorStore ContractorStore;
         private readonly IOrderTrackInfoStore OrderTrackInfoStore;
         private readonly ApplicationUserManager UserManager;
+        private readonly EmailService EmailService;
 
-        public OrderService (IOrderStore orderStore, IContractorStore contractorStore, IOrderTrackInfoStore orderTrackInfoStore, ApplicationUserManager userManager)
+        public OrderService (IOrderStore orderStore, IContractorStore contractorStore, IOrderTrackInfoStore orderTrackInfoStore, ApplicationUserManager userManager, EmailService emailService)
         {
             this.OrderStore = orderStore;
             this.ContractorStore = contractorStore;
             this.OrderTrackInfoStore = orderTrackInfoStore;
             this.UserManager = userManager;
+            this.EmailService = emailService;
         }
 
         public IEnumerable<Order> GetDeliveredOrders(ContractorInfo contractor)
@@ -63,7 +65,17 @@ namespace PracticalWerewolf.Services
         public void AssignOrder(Guid orderGuid, ContractorInfo contractor)
         {
             Order order = GetOrder(orderGuid);
-            OrderTrackInfo orderTrackInfo = order.TrackInfo ?? new OrderTrackInfo();
+            
+            if(order.TrackInfo == null)
+            {
+                order.TrackInfo = new OrderTrackInfo{ OrderTrackInfoGuid = Guid.NewGuid() };
+                OrderTrackInfoStore.Insert(order.TrackInfo);
+            } else
+            {
+                OrderTrackInfoStore.Update(order.TrackInfo);
+            }
+
+            OrderTrackInfo orderTrackInfo = order.TrackInfo;
             orderTrackInfo.OrderStatus = OrderStatus.InProgress;
             orderTrackInfo.Assignee = contractor;
             OrderStore.GetEntry(order).CurrentValues.SetValues(order);
@@ -72,6 +84,9 @@ namespace PracticalWerewolf.Services
             OrderStore.Update(order);
             ContractorStore.Update(contractor);
         }
+
+            //OrderStore.GetEntry(order).CurrentValues.SetValues(order);
+            //OrderTrackInfoStore.GetEntry(orderTrackInfo).CurrentValues.SetValues(orderTrackInfo);
 
         public void UnqueueOrder(Order order, Guid contractorInfoGuid)
         {
@@ -138,7 +153,7 @@ namespace PracticalWerewolf.Services
                 var customerId = order.RequestInfo.Requester.CustomerInfoGuid;
                 var customer = UserManager.Users.Single(x => x.CustomerInfo.CustomerInfoGuid == customerId);
 
-                await EmailHelper.SendOrderShippedEmail(order.RequestInfo, customer);
+                await EmailService.SendOrderShippedEmail(order.RequestInfo, customer);
             }
             else
             {
@@ -166,7 +181,7 @@ namespace PracticalWerewolf.Services
             var customerId = order.RequestInfo.Requester.CustomerInfoGuid;
             var customer = UserManager.Users.Single(x => x.CustomerInfo.CustomerInfoGuid == customerId);
 
-            await EmailHelper.SendOrderDeliveredEmail(order.RequestInfo, customer);
+            await EmailService.SendOrderDeliveredEmail(order.RequestInfo, customer);
         }
 
         public IEnumerable<Order> GetOrderHistory(Guid customerInfoGuid)

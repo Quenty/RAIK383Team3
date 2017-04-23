@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using Hangfire;
+using Microsoft.AspNet.Identity;
 using PracticalWerewolf.Controllers.UnitOfWork;
 using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.Models.UserInfos;
@@ -85,7 +86,7 @@ namespace PracticalWerewolf.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = ("Customer"))]
-        public async Task<ActionResult> Create(CreateOrderRequestViewModel model)
+        public ActionResult Create(CreateOrderRequestViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -114,12 +115,9 @@ namespace PracticalWerewolf.Controllers
 
             UnitOfWork.SaveChanges();
 
-            await RoutePlannerService.AssignOrders();
-
-            //OrderService.AssignOrders();
-            UnitOfWork.SaveChanges();
-            //Task task = new Task(new Action(RoutePlannerService.AssignOrders));
-            //task.Start();
+            //RoutePlannerService.BeginAssignOrderTask();
+            BackgroundJob.Enqueue(() =>  RoutePlannerService.AssignOrders()  );
+            
 
             return RedirectToAction("Index", new { message = OrderMessageId.OrderCreatedSuccess });
         }
