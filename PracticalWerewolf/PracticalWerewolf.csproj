@@ -327,7 +327,6 @@
     <Compile Include="Models\Routes\RouteStop.cs" />
     <Compile Include="Services\ContractorService.cs" />
     <Compile Include="Services\CustomerService.cs" />
-    <Compile Include="Services\DirectionResponse.cs" />
     <Compile Include="Services\EmployeeService.cs" />
     <Compile Include="Services\Interfaces\IOrderRequestService.cs" />
     <Compile Include="Services\Interfaces\IOrderTrackService.cs" />

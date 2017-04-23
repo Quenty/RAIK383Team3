@@ -78,11 +78,6 @@ namespace PracticalWerewolf.Services
             OrderTrackInfo orderTrackInfo = order.TrackInfo;
             orderTrackInfo.OrderStatus = OrderStatus.InProgress;
             orderTrackInfo.Assignee = contractor;
-
-            //OrderStore.GetEntry(order).CurrentValues.SetValues(order);
-            //OrderTrackInfoStore.GetEntry(orderTrackInfo).CurrentValues.SetValues(orderTrackInfo);
-
-            //OrderStore.Update(order);
         }
 
         public void AssignOrders()

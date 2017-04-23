@@ -109,12 +109,7 @@ namespace PracticalWerewolf.Application
         {
             _context.Entry<T>(entity).Reload();
         }
-
-        public DbEntityEntry<T> GetEntry<T>(ref T entity) where T : class
-        {
-            return _context.Entry<T>(entity);
-        }
-
+        
         #endregion
     }
 }
