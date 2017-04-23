@@ -92,15 +92,21 @@ namespace PracticalWerewolf.Services
 
             ContractorRoutePlanner optimalPlan = GetOptimalPlan(options);
 
+            List<RouteStop> trackedRoute = _routeStopService.GetContractorRoute(optimalPlan.Contractor).ToList();
+
             _routeStopService.Insert(optimalPlan.PickUp);
             _routeStopService.Insert(optimalPlan.DropOff);
 
-            List<RouteStop> modifiedStops = optimalPlan.Route;
-            modifiedStops.Remove(optimalPlan.PickUp);
-            modifiedStops.Remove(optimalPlan.DropOff);
-            _routeStopService.Update(modifiedStops);
+            int pickUpIndex = optimalPlan.Route.IndexOf(optimalPlan.PickUp);
+            int dropOffIndex = optimalPlan.Route.IndexOf(optimalPlan.DropOff);
 
-            order.TrackInfo.Assignee = optimalPlan.Contractor;
+            optimalPlan.PickUp.Order = order;
+            optimalPlan.DropOff.Order = order;
+
+            trackedRoute.Insert(pickUpIndex, optimalPlan.PickUp);
+            trackedRoute.Insert(dropOffIndex, optimalPlan.DropOff);
+
+            _orderService.AssignOrder(order.OrderGuid, optimalPlan.Contractor);
 
             ApplicationUser user = _contractorService.GetUserByContractorInfo(optimalPlan.Contractor);
             await EmailHelper.SendWorkOrderEmail(user, optimalPlan.Order.RequestInfo);

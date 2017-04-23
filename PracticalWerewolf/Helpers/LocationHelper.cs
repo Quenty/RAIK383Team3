@@ -52,26 +52,10 @@ namespace PracticalWerewolf.Helpers
                 throw new ArgumentNullException();
             }
 
-            string originAddress = GetStringAddress(origin);
-            string destinationAddress = GetStringAddress(destination);
+            string originAddress = origin.ToString();
+            string destinationAddress = destination.ToString();
 
             return GetRouteBetweenLocations(originAddress, destinationAddress);
-        }
-
-        private static string GetStringAddress(CivicAddressDb address)
-        {
-            if (String.IsNullOrEmpty(address.RawInputAddress))
-            {
-                string cityState = string.Join(", ", address.City, address.State);
-                string zipCountry = string.Join(", ", address.ZipCode, address.Country);
-                string value = string.Join(" ", address.StreetNumber, address.Route, cityState, zipCountry);
-
-                return value;
-            }
-            else
-            {
-                return address.RawInputAddress;
-            }
         }
     }
 }

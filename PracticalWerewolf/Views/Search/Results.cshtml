@@ -9,11 +9,10 @@
     ViewBag.Title = (String.IsNullOrEmpty(Model.Query) ? "Users" : Html.Encode(Model.Query)) + " - Search";
 }
 
-<p class="text-muted">@Model.TotalResults result@(Model.TotalResults == 1 ? "" : "s") found</p>
+<p class="text-muted">@Model.PagedData.TotalResults result@(Model.PagedData.TotalResults == 1 ? "" : "s") found</p>
 
 @if (Model.Users.Count() > 0)
 {
-    
     <ul class="list-group">
         @foreach (UserSearchResult UserInfo in Model.Users)
         {
@@ -28,7 +27,7 @@
             }
             @if (UserInfo.BanTime.HasValue)
             {
-                <span class="label label-danger">Banned for @((int) (UserInfo.BanTime.Value.Duration().Days / 365)) years, @(UserInfo.BanTime.Value.Duration().Days % 365) days, @UserInfo.BanTime.Value.Duration().Hours hours</span>
+                <span class="label label-danger">Banned for @((int)(UserInfo.BanTime.Value.Duration().Days / 365)) years, @(UserInfo.BanTime.Value.Duration().Days % 365) days, @UserInfo.BanTime.Value.Duration().Hours hours</span>
             }
             @UserInfo.Email
 
@@ -57,47 +56,9 @@
         </li>
         }
     </ul>
+
+    Html.RenderPartial("_PagedDataNavigator", Model.PagedData);
+} else {
+
 }
-else
-{
-    
-}
 
-
-<center>
-    <nav aria-label="Page navigation">
-        <ul class="pagination">
-            <li class="@(Model.Page <= 0 ? " disabled" : "" )">
-                <a href="@(Model.Page > 0 ? Url.Action("Results", new { query = Model.Query, page = Model.Page - 1} ) : "#")" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-
-            @{
-                var min = Math.Max(0, Model.Page - 2);
-                var max = Math.Min(min + 5, Model.TotalPages);
-
-                for (var i = min; i < max; i++)
-                {
-                    <li class="@(i == Model.Page ? " active" : "" )">
-                        <a href="@(i == Model.Page ? " #" : Url.Action("Results", new { query = Model.Query, page=i} ))">
-                            @(i + 1)
-
-                            @if (i == Model.Page)
-                            {
-                                @("of ") @Model.TotalPages
-                                <span class="sr-only">(current page)</span>
-                            }
-                        </a>
-                    </li>
-                }
-            }
-
-            <li class="@(Model.Page+1 >= Model.TotalPages ? " disabled" : "")">
-                <a href="@(Model.Page < Model.TotalPages-1 ? Url.Action("Results", new { query = Model.Query, page=Model.Page + 1} ) : "#" )" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</center>

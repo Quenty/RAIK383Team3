@@ -3,6 +3,7 @@ using PracticalWerewolf.Controllers.UnitOfWork;
 using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.Models.UserInfos;
 using PracticalWerewolf.Services.Interfaces;
+using PracticalWerewolf.ViewModels.Contractor;
 using PracticalWerewolf.ViewModels.Orders;
 using System;
 using System.Threading.Tasks;
@@ -42,6 +43,19 @@ namespace PracticalWerewolf.Controllers
             this.RoutePlannerService = RoutePlannerService;
         }
 
+        private PagedOrderListViewModel GetOrderHistoryPage()
+        {
+            var CustomerInfoGuid = UserManager.FindById(User.Identity.GetUserId()).CustomerInfo.CustomerInfoGuid;
+
+            var model = new PagedOrderListViewModel
+            {
+                DisplayName = "Order history",
+                Orders = OrderService.GetOrderHistory(CustomerInfoGuid)
+            };
+
+            return model;
+        }
+
         public ActionResult Index(OrderMessageId? message)
         {
             ViewBag.StatusMessage = message == OrderMessageId.OrderCreatedSuccess ? "Order placed successfully."
@@ -51,17 +65,13 @@ namespace PracticalWerewolf.Controllers
                 : message == OrderMessageId.CouldNotUpdateStatus ? "Internal error. Could not update order status, try again."
                 : "";
 
-            return View();
-        }
+            var model = new PracticalWerewolf.ViewModels.Orders.OrderIndex();
+            if (User.IsInRole("Customer"))
+            {
+                model.PagedOrderListViewModel = GetOrderHistoryPage();
+            }
 
-
-        // GET: Order/Details/guid
-        [Authorize(Roles = "Employees, Contractors, Customers")]
-        public ActionResult Details(string guid)
-        {
-            // Will get detailed information on a specific order
-            // Depends upon IOrderService.GetByUserGuids
-            return View();
+            return View(model);
         }
 
         // GET: Order/Create
@@ -112,6 +122,14 @@ namespace PracticalWerewolf.Controllers
             //task.Start();
 
             return RedirectToAction("Index", new { message = OrderMessageId.OrderCreatedSuccess });
+        }
+
+        [Authorize(Roles = "Customer")]
+        public ActionResult History()
+        {
+           
+
+            return View(GetOrderHistoryPage());
         }
 
         // GET: Order/Edit/guid

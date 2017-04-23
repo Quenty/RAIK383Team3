@@ -12,10 +12,16 @@ namespace PracticalWerewolf.Services.Interfaces
         //retrieves the current in progress routeStop for the contractor
         RouteStop GetContractorCurrentAssignment(ContractorInfo contractor);
 
+        IEnumerable<RouteStop> GetContractorRoute(ContractorInfo contractor);
+
         void Update(RouteStop entity);
 
         void Update(IEnumerable<RouteStop> entities);
 
         void Insert(RouteStop entity);
+
+        void Attach(RouteStop entity);
+
+        void Attach(IEnumerable<RouteStop> entities);
     }
 }

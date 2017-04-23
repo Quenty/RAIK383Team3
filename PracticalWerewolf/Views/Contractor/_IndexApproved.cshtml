@@ -1,41 +1,41 @@
 ﻿@model PracticalWerewolf.ViewModels.Contractor.ContractorIndexModel
 
 <div class="alert alert-success" role="alert">
-    <span class="glyphicon glyphicon-ok-circle"></span>
-    <strong>Application approved!</strong> Your application has been approved by a manager!
+    <h4>Application approved!</h4>
+    <p>Your application has been approved by a manager!</p>
 </div>
 
 
-@if (Model.ContractorInfo.Truck == null)
-{
-    <div class="alert alert-info" role="alert">
-        <span class="glyphicon glyphicon-ok-circle"></span>
-        <strong>@Html.ActionLink("Create Your Truck!", "Create", "Truck")</strong> Please follow this link to create your truck, you will not be considered for jobs until this is complete.
-         
+<div class="row">
+    <div class="col-md-3">
+        <ul class="nav nav-pills nav-stacked">
+            <li role="presentation">
+                <a data-ajax="true" data-ajax-mode="replace" data-ajax-update="#ajax-contractor-pane" data-tab-name="pending" href="@Url.Action("_Pending")">
+                    Pending Orders <span class="badge pull-right"></span>
+                </a>
+            </li>
+            <li role="presentation">
+                <a data-ajax="true" data-ajax-mode="replace" data-ajax-update="#ajax-contractor-pane" data-tab-name="current" href="@Url.Action("_Current")">
+                    Orders in your truck <span class="badge pull-right"></span>
+                </a>
+            </li>
+            <li role="presentation">
+                <a data-ajax="true" data-ajax-mode="replace" data-ajax-update="#ajax-contractor-pane" data-tab-name="delivered" href="@Url.Action("_Delivered")">
+                    Delivered orders <span class="badge pull-right"></span>
+                </a>
+            </li>
+            <li role="presentation">
+                <a class="" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#ajax-contractor-pane" data-tab-name="status" href="@Url.Action("UpdateStatus", "Contractor",  new { id = Model.ContractorInfo.ContractorInfoGuid.ToString() })">
+                    Current status <span class="label label-default pull-right">@(Model.ContractorInfo.IsAvailable ? "Available" : "Not available")</span>
+                </a>
+            </li>
+            <li role="presentation">
+                <a class="" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#ajax-contractor-pane" data-tab-name="truck" href="@Url.Action("_Status", "Contractor",  new { id = Model.ContractorInfo.ContractorInfoGuid.ToString() })">
+                    Truck and Location
+                </a>
+            </li>
+        </ul>
     </div>
-}
-
-    <div class="row">
-        <div class="col-md-3">
-            <div class="list-group">
-                <a class="list-group-item" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#Main"
-                   href="@Url.Action("_Pending")">
-                    <span class="badge"></span>Pending Orders
-                </a>
-                <a class="list-group-item" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#Main"
-                   href="@Url.Action("_Current")">
-                    <span class="badge"></span>Orders in your truck
-                </a>
-                <a class="list-group-item" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#Main"
-                   href="@Url.Action("_Delivered")">Delivered orders</a>
-                <a class="list-group-item" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#Main"
-                   href="@Url.Action("UpdateStatus", "Contractor", new { id = Model.ContractorInfo.ContractorInfoGuid })">Current status<span class="label label-default pull-right">
-                   @(Model.ContractorInfo.IsAvailable ? "Available" : "Not available")
-                    </span></a>
-                <a class="list-group-item" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#Main"
-                   href="@Url.Action("_Status", "Contractor", new { id = Model.ContractorInfo.ContractorInfoGuid.ToString() }, null)">Location Update and Truck</a>
-            </div>
-        </div>
-        <div id="Main">
-		</div>
-	</div>
+    <div id="ajax-contractor-pane" class="col-md-9">
+    </div>
+</div>

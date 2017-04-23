@@ -23,15 +23,15 @@ namespace PracticalWerewolf.Models.Orders
         public virtual TruckCapacityUnit Size { get; set; }
 
         [Required]
-        [Display(Name = "Date Requested")]
+        [Display(Name = "Request date")]
         public DateTime RequestDate { get; set; }
 
         [Required]
-        [Display(Name = "Pick Up Address")]
+        [Display(Name = "Pick up address")]
         public virtual CivicAddressDb PickUpAddress { get; set; }
 
         [Required]
-        [Display(Name = "Drop Off Address")]
+        [Display(Name = "Delivery address")]
         public virtual CivicAddressDb DropOffAddress { get; set; }
     }
 }

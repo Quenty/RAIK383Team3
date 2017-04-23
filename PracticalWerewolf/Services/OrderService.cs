@@ -18,12 +18,14 @@ namespace PracticalWerewolf.Services
         private static ILog logger = LogManager.GetLogger(typeof(OrderService));
         private readonly IOrderStore OrderStore;
         private readonly IContractorStore ContractorStore;
+        private readonly IOrderTrackInfoStore OrderTrackInfoStore;
         private readonly ApplicationUserManager UserManager;
 
-        public OrderService (IOrderStore orderStore, IContractorStore contractorStore, ApplicationUserManager userManager)
+        public OrderService (IOrderStore orderStore, IContractorStore contractorStore, IOrderTrackInfoStore orderTrackInfoStore, ApplicationUserManager userManager)
         {
             this.OrderStore = orderStore;
             this.ContractorStore = contractorStore;
+            this.OrderTrackInfoStore = orderTrackInfoStore;
             this.UserManager = userManager;
         }
 
@@ -64,6 +66,8 @@ namespace PracticalWerewolf.Services
             OrderTrackInfo orderTrackInfo = order.TrackInfo ?? new OrderTrackInfo();
             orderTrackInfo.OrderStatus = OrderStatus.InProgress;
             orderTrackInfo.Assignee = contractor;
+            OrderStore.GetEntry(order).CurrentValues.SetValues(order);
+            OrderTrackInfoStore.GetEntry(orderTrackInfo).CurrentValues.SetValues(orderTrackInfo);
             contractor.AssignedOrders.Add(orderTrackInfo);
             OrderStore.Update(order);
             ContractorStore.Update(contractor);
@@ -163,6 +167,13 @@ namespace PracticalWerewolf.Services
             var customer = UserManager.Users.Single(x => x.CustomerInfo.CustomerInfoGuid == customerId);
 
             await EmailHelper.SendOrderDeliveredEmail(order.RequestInfo, customer);
+        }
+
+        public IEnumerable<Order> GetOrderHistory(Guid customerInfoGuid)
+        {
+            return OrderStore
+                .Find(x => x.RequestInfo.Requester.CustomerInfoGuid == customerInfoGuid)
+                .OrderByDescending(x => x.RequestInfo.RequestDate);
         }
     }
 }

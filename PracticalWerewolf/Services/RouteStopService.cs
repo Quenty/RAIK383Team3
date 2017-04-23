@@ -30,12 +30,22 @@ namespace PracticalWerewolf.Services
             }
 
             return _routeStopStore.AsNoTracking()
-                .Include(x => x.DistanceToNextStop)
-                .Include(x => x.EstimatedTicksToNextStop)
-                .Include(x => x.EstimatedTimeToNextStop)
                 .Include(x => x.Order)
-                .Include(x => x.StopOrder)
-                .Include(x => x.Type)
+                .Where(x => x.Order.TrackInfo.OrderStatus == OrderStatus.Queued || x.Order.TrackInfo.OrderStatus == OrderStatus.InProgress)
+                .Where(x => x.Order.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid)
+                .OrderBy(x => x.StopOrder);
+        }
+
+        public IEnumerable<RouteStop> GetContractorRoute(ContractorInfo contractor)
+        {
+            if (contractor == null)
+            {
+                logger.Error("GetContractorRoute() - Null contractor");
+                throw new ArgumentNullException();
+            }
+
+            return _routeStopStore.AsQueryable()
+                .Include(x => x.Order)
                 .Where(x => x.Order.TrackInfo.OrderStatus == OrderStatus.Queued || x.Order.TrackInfo.OrderStatus == OrderStatus.InProgress)
                 .Where(x => x.Order.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid)
                 .OrderBy(x => x.StopOrder);
@@ -68,6 +78,19 @@ namespace PracticalWerewolf.Services
         public void Insert(RouteStop entity)
         {
             _routeStopStore.Insert(entity);
+        }
+
+        public void Attach(RouteStop entity)
+        {
+            _routeStopStore.Attach(entity);
+        }
+
+        public void Attach(IEnumerable<RouteStop> entities)
+        {
+            foreach(var entity in entities)
+            {
+                _routeStopStore.Attach(entity);
+            }
         }
     }
 }

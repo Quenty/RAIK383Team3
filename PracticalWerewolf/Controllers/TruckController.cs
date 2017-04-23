@@ -189,7 +189,8 @@ namespace PracticalWerewolf.Controllers
                         TruckGuid = Guid.NewGuid(),
                         LicenseNumber = returnedModel.LicenseNumber,
                         MaxCapacity = capacityUnit,
-                        Location = LocationHelper.CreatePoint(returnedModel.Lat, returnedModel.Long)
+                        Location = LocationHelper.CreatePoint(returnedModel.Lat, returnedModel.Long),
+                        UsedCapacity = new TruckCapacityUnit()
                     };
                     TruckService.CreateTruck(model);
                     ContractorService.UpdateContractorTruck(model, user);

@@ -8,17 +8,13 @@
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.ContractorGuid)
     @Html.HiddenFor(m => m.ContractorStatus)
-    <div class="col-md-9 alert-danger">WARNING: Updating status to unavailable will cancel all pending orders. You must complete your current orders after indicating you are unavailable.</div>
-    <hr />
+    <div class="alert alert-warning"><h4>Warning</h4>Updating status to unavailable will cancel all pending orders. You must complete your current orders after indicating you are unavailable.</div>
     <hr />
     <div class="col-md-6">
-        <h4>Change your status </h4>(Current status:
-@(Model.ContractorStatus ? "Available" : "Not Available")
-        )
+        <h4>Change your status </h4>
+        Current status: @(Model.ContractorStatus ? "Available" : "Not Available")
     </div>
-    
-       <div class="col-md-3 pull-right alert">
-        <input type="submit" value="Change Status" class="btn btn-default pull-right" />
+    <div class="col-md-3 pull-right alert">
+        <input type="submit" value="@(Model.ContractorStatus ? "Stop being available" : "Be available")" class="btn btn-default pull-right" />
     </div>
-
 }

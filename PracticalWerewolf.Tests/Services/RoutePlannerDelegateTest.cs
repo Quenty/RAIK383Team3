@@ -18,17 +18,96 @@ namespace PracticalWerewolf.Tests.Services
 
         private static string email = "jesseelzhang@gmail.com";
 
+        private static CivicAddressDb home = new CivicAddressDb
+        {
+            RawInputAddress = "1504 S 1st Ave Sioux Falls, SD 57105",
+            StreetNumber = "1504",
+            Route = "S 1st Ave",
+            City = "Sioux Falls",
+            State = "SD",
+            ZipCode = "57105"
+        };
+
+        private static CivicAddressDb buildertrend = new CivicAddressDb
+        {
+            RawInputAddress = "11718 Nicholas St, Omaha, NE 68154",
+            StreetNumber = "11718",
+            Route = "Nicholas St",
+            City = "Omaha",
+            State = "NE",
+            ZipCode = "68154"
+        };
+
+        private static CivicAddressDb sms = new CivicAddressDb
+        {
+            RawInputAddress = "5800 W 107th St, Overland Park, KS 66207",
+            StreetNumber = "5800",
+            Route = "W 107th St",
+            City = "Overland Park",
+            State = "KS",
+            ZipCode = "66207"
+        };
+
+        private static CivicAddressDb knoxville = new CivicAddressDb
+        {
+            RawInputAddress = "2915 Island Home Ave, Knoxville, TN 37920",
+            StreetNumber = "2915",
+            Route = "Island Home Ave",
+            City = "Knoxville",
+            State = "Tn",
+            ZipCode = "37920"
+        };
+
+        private static CivicAddressDb disney = new CivicAddressDb
+        {
+            RawInputAddress = "Walt Disney World Resort, Orlando, FL 32830",
+            StreetNumber = "Walt Disney World Resort",
+            City = "Orlando",
+            State = "FL",
+            ZipCode = "32830"
+        };
+
+        private static CivicAddressDb microsoft = new CivicAddressDb
+        {
+            RawInputAddress = "1 Microsoft Way, Redmond, WA 98052",
+            StreetNumber = "1",
+            Route = "Microsoft Way",
+            City = "Redmond",
+            State = "WA",
+            ZipCode = "98052"
+        };
+
+        private static CivicAddressDb roblox = new CivicAddressDb
+        {
+            RawInputAddress = "60 E 3rd Ave, San Mateo, CA 94401",
+            StreetNumber = "60",
+            Route = "E 3rd Ave",
+            City = "San Mateo",
+            State = "CA",
+            ZipCode = "94401"
+        };
+
+        private static CivicAddressDb mormonChurch = new CivicAddressDb
+        {
+            RawInputAddress = "241 N 300 W, Salt Lake City, UT 84103",
+            StreetNumber = "141",
+            Route = "N 300 W",
+            City = "Salt Lake City",
+            State = "UT",
+            ZipCode = "84103"
+        };
+
         [TestMethod]
         public void UserWithNoRoute_HomeToPickUpToDropOff()
         {
             var user = ServiceTestUtils.CreateUser(email);
-            user.ContractorInfo.HomeAddress = new CivicAddressDb { RawInputAddress = "1504 S 1st Ave Sioux Falls, SD 57105" };
+            user.ContractorInfo.HomeAddress = home;
             user.ContractorInfo.Truck.Location = LocationHelper.CreatePoint(43.5318683, -96.7271978);
             user.ContractorInfo.Truck.MaxCapacity = new TruckCapacityUnit { Mass = 200, Volume = 200 };
             user.ContractorInfo.Truck.UsedCapacity = new TruckCapacityUnit { Mass = 0, Volume = 0 };
 
-            CivicAddressDb pickUpAddress = new CivicAddressDb{ RawInputAddress = "11718 Nicholas St, Omaha, NE 68154" };
-            CivicAddressDb dropOffAddress = new CivicAddressDb { RawInputAddress = "5800 W 107th St, Overland Park, KS 66207" };
+            CivicAddressDb pickUpAddress = buildertrend;
+            CivicAddressDb dropOffAddress = sms;
             TruckCapacityUnit orderSize = new TruckCapacityUnit { Mass = 90, Volume = 90 };
             Order order = ServiceTestUtils.CreateOrder(user, Models.Orders.OrderStatus.Queued, pickUpAddress, dropOffAddress, orderSize);
 
@@ -60,25 +139,25 @@ namespace PracticalWerewolf.Tests.Services
         public void UserWithNoRoute_AddToEndOfRoute()
         {
             var user = ServiceTestUtils.CreateUser(email);
-            user.ContractorInfo.HomeAddress = new CivicAddressDb { RawInputAddress = "1504 S 1st Ave Sioux Falls, SD 57105" };
+            user.ContractorInfo.HomeAddress = home;
             user.ContractorInfo.Truck.Location = LocationHelper.CreatePoint(43.5318683, -96.7271978);
             user.ContractorInfo.Truck.MaxCapacity = new TruckCapacityUnit { Mass = 200, Volume = 200 };
             user.ContractorInfo.Truck.UsedCapacity = new TruckCapacityUnit { Mass = 0, Volume = 0 };
 
-            CivicAddressDb pickUpAddress = new CivicAddressDb { RawInputAddress = "2915 Island Home Ave, Knoxville, TN 37920" };
-            CivicAddressDb dropOffAddress = new CivicAddressDb { RawInputAddress = "Walt Disney World Resort, Orlando, FL 32830" };
+            CivicAddressDb pickUpAddress = knoxville;
+            CivicAddressDb dropOffAddress = disney;
             TruckCapacityUnit orderSize = new TruckCapacityUnit { Mass = 90, Volume = 90 };
             Order order = ServiceTestUtils.CreateOrder(user, OrderStatus.Queued, pickUpAddress, dropOffAddress, orderSize);
 
             //Create Route Stops
 
-            CivicAddressDb pickUpAddress1 = new CivicAddressDb { RawInputAddress = "1 Microsoft Way, Redmond, WA 98052" };
-            CivicAddressDb dropOffAddress1 = new CivicAddressDb { RawInputAddress = "60 E South Temple # 1800, Salt Lake City, UT 84111" };
+            CivicAddressDb pickUpAddress1 = microsoft;
+            CivicAddressDb dropOffAddress1 = mormonChurch;
             TruckCapacityUnit orderSize1 = new TruckCapacityUnit { Mass = 90, Volume = 90 };
             Order order1 = ServiceTestUtils.CreateOrder(user, OrderStatus.InProgress, pickUpAddress1, dropOffAddress1, orderSize1);
 
-            CivicAddressDb pickUpAddress2 = new CivicAddressDb { RawInputAddress = "60 E 3rd Ave, San Mateo, CA 94401" };
-            CivicAddressDb dropOffAddress2 = new CivicAddressDb { RawInputAddress = "5800 W 107th St, Overland Park, KS 66207" };
+            CivicAddressDb pickUpAddress2 = roblox;
+            CivicAddressDb dropOffAddress2 = sms;
             TruckCapacityUnit orderSize2 = new TruckCapacityUnit { Mass = 90, Volume = 90 };
             Order order2 = ServiceTestUtils.CreateOrder(user, OrderStatus.Queued, pickUpAddress2, dropOffAddress2, orderSize2);
 
@@ -127,13 +206,13 @@ namespace PracticalWerewolf.Tests.Services
         public void UserWithNoRoute_OrderThatWontFitInCar()
         {
             var user = ServiceTestUtils.CreateUser(email);
-            user.ContractorInfo.HomeAddress = new CivicAddressDb { RawInputAddress = "1504 S 1st Ave Sioux Falls, SD 57105" };
+            user.ContractorInfo.HomeAddress = home;
             user.ContractorInfo.Truck.Location = LocationHelper.CreatePoint(43.5318683, -96.7271978);
             user.ContractorInfo.Truck.MaxCapacity = new TruckCapacityUnit { Mass = 180, Volume = 180 };
             user.ContractorInfo.Truck.UsedCapacity = new TruckCapacityUnit { Mass = 0, Volume = 0 };
 
-            CivicAddressDb pickUpAddress = new CivicAddressDb { RawInputAddress = "11718 Nicholas St, Omaha, NE 68154" };
-            CivicAddressDb dropOffAddress = new CivicAddressDb { RawInputAddress = "5800 W 107th St, Overland Park, KS 66207" };
+            CivicAddressDb pickUpAddress = buildertrend;
+            CivicAddressDb dropOffAddress = sms;
             TruckCapacityUnit orderSize = new TruckCapacityUnit { Mass = 200, Volume = 200 };
             Order order = ServiceTestUtils.CreateOrder(user, Models.Orders.OrderStatus.Queued, pickUpAddress, dropOffAddress, orderSize);
 
@@ -152,26 +231,25 @@ namespace PracticalWerewolf.Tests.Services
         public void UserWithNoRoute_TruckDoesntFitTemporarily()
         {
             var user = ServiceTestUtils.CreateUser(email);
-            user.ContractorInfo.HomeAddress = new CivicAddressDb { RawInputAddress = "1504 S 1st Ave Sioux Falls, SD 57105" };
+            user.ContractorInfo.HomeAddress = home;
             user.ContractorInfo.Truck.Location = LocationHelper.CreatePoint(43.5318683, -96.7271978);
             user.ContractorInfo.Truck.MaxCapacity = new TruckCapacityUnit { Mass = 200, Volume = 200 };
             user.ContractorInfo.Truck.UsedCapacity = new TruckCapacityUnit { Mass = 0, Volume = 0 };
 
-            CivicAddressDb pickUpAddress = new CivicAddressDb { RawInputAddress = "60 E 3rd Ave, San Mateo, CA 94401" };
-            CivicAddressDb dropOffAddress = new CivicAddressDb { RawInputAddress = "Walt Disney World Resort, Orlando, FL 32830" };
+            CivicAddressDb pickUpAddress = roblox;
+            CivicAddressDb dropOffAddress = disney;
             TruckCapacityUnit orderSize = new TruckCapacityUnit { Mass = 90, Volume = 90 };
             Order order = ServiceTestUtils.CreateOrder(user, OrderStatus.Queued, pickUpAddress, dropOffAddress, orderSize);
 
             //Create Route Stops
 
-            CivicAddressDb pickUpAddress1 = new CivicAddressDb { RawInputAddress = "1 Microsoft Way, Redmond, WA 98052" };
-            CivicAddressDb dropOffAddress1 = new CivicAddressDb { RawInputAddress = "5800 W 107th St, Overland Park, KS 66207" };
+            CivicAddressDb pickUpAddress1 = microsoft;
+            CivicAddressDb dropOffAddress1 = sms;
             TruckCapacityUnit orderSize1 = new TruckCapacityUnit { Mass = 90, Volume = 90 };
             Order order1 = ServiceTestUtils.CreateOrder(user, OrderStatus.InProgress, pickUpAddress1, dropOffAddress1, orderSize1);
 
-            //60 E 3rd Ave, San Mateo, CA 94401
-            CivicAddressDb pickUpAddress2 = new CivicAddressDb { RawInputAddress = "60 E South Temple # 1800, Salt Lake City, UT 84111" };
-            CivicAddressDb dropOffAddress2 = new CivicAddressDb { RawInputAddress = "2915 Island Home Ave, Knoxville, TN 37920" };
+            CivicAddressDb pickUpAddress2 = mormonChurch;
+            CivicAddressDb dropOffAddress2 = knoxville;
             TruckCapacityUnit orderSize2 = new TruckCapacityUnit { Mass = 90, Volume = 90 };
             Order order2 = ServiceTestUtils.CreateOrder(user, OrderStatus.Queued, pickUpAddress2, dropOffAddress2, orderSize2);
 
@@ -227,25 +305,25 @@ namespace PracticalWerewolf.Tests.Services
         public void UserWithNoRoute_AddBetweenSameStop()
         {
             var user = ServiceTestUtils.CreateUser(email);
-            user.ContractorInfo.HomeAddress = new CivicAddressDb { RawInputAddress = "1504 S 1st Ave Sioux Falls, SD 57105" };
+            user.ContractorInfo.HomeAddress = home;
             user.ContractorInfo.Truck.Location = LocationHelper.CreatePoint(43.5318683, -96.7271978);
             user.ContractorInfo.Truck.MaxCapacity = new TruckCapacityUnit { Mass = 200, Volume = 200 };
             user.ContractorInfo.Truck.UsedCapacity = new TruckCapacityUnit { Mass = 0, Volume = 0 };
 
-            CivicAddressDb pickUpAddress = new CivicAddressDb { RawInputAddress = "60 E South Temple # 1800, Salt Lake City, UT 84111" }; 
-            CivicAddressDb dropOffAddress = new CivicAddressDb { RawInputAddress = "5800 W 107th St, Overland Park, KS 66207" }; 
+            CivicAddressDb pickUpAddress = mormonChurch; 
+            CivicAddressDb dropOffAddress = sms; 
             TruckCapacityUnit orderSize = new TruckCapacityUnit { Mass = 90, Volume = 90 };
             Order order = ServiceTestUtils.CreateOrder(user, OrderStatus.Queued, pickUpAddress, dropOffAddress, orderSize);
 
             //Create Route Stops
 
-            CivicAddressDb pickUpAddress1 = new CivicAddressDb { RawInputAddress = "1 Microsoft Way, Redmond, WA 98052" };
-            CivicAddressDb dropOffAddress1 = new CivicAddressDb { RawInputAddress = "2915 Island Home Ave, Knoxville, TN 37920" };
+            CivicAddressDb pickUpAddress1 = microsoft;
+            CivicAddressDb dropOffAddress1 = knoxville;
             TruckCapacityUnit orderSize1 = new TruckCapacityUnit { Mass = 45, Volume = 45 };
             Order order1 = ServiceTestUtils.CreateOrder(user, OrderStatus.InProgress, pickUpAddress1, dropOffAddress1, orderSize1);
 
-            CivicAddressDb pickUpAddress2 = new CivicAddressDb { RawInputAddress = "60 E 3rd Ave, San Mateo, CA 94401" };
-            CivicAddressDb dropOffAddress2 = new CivicAddressDb { RawInputAddress = "Walt Disney World Resort, Orlando, FL 32830" };
+            CivicAddressDb pickUpAddress2 = roblox;
+            CivicAddressDb dropOffAddress2 = disney;
             TruckCapacityUnit orderSize2 = new TruckCapacityUnit { Mass = 45, Volume = 45 };
             Order order2 = ServiceTestUtils.CreateOrder(user, OrderStatus.Queued, pickUpAddress2, dropOffAddress2, orderSize2);
 
