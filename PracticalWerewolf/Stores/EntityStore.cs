@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web;
@@ -25,6 +26,11 @@ namespace PracticalWerewolf.Stores
         public IQueryable<T> AsQueryable()
         {
             return _dbSet;
+        }
+
+        public IQueryable<T> AsNoTracking()
+        {
+            return _dbSet.AsNoTracking();
         }
 
         public IEnumerable<T> GetAll(params Expression<Func<T, object>>[] includeProperties)
@@ -74,6 +80,11 @@ namespace PracticalWerewolf.Stores
         {
             if (entity == null) throw new ArgumentNullException();
             _dbSetFactory.ChangeObjectState(entity, EntityState.Modified);
+        }
+
+        public void Attach(T entity)
+        {
+            _dbSet.Attach(entity);
         }
 
         public T Refresh(T entity)
