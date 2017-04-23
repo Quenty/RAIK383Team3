@@ -45,8 +45,8 @@ namespace PracticalWerewolf.Controllers
 
         private PagedOrderListViewModel GetOrderHistoryPage()
         {
-            var CustomerInfoGuid = UserManager.FindById(User.Identity.GetUserId()).CustomerInfo.CustomerInfoGuid;
             ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
+            var CustomerInfoGuid = user.CustomerInfo.CustomerInfoGuid;
 
             var model = new PagedOrderListViewModel
             {
@@ -140,32 +140,32 @@ namespace PracticalWerewolf.Controllers
         //GET: /Order/Order/id
         public ActionResult Order(string id)
         {
-            if(id != null)
+            if (id != null)
             {
-            Guid Guid = new Guid(id);
-            Order Order = OrderService.GetOrder(Guid);
-            if(Order == null)
+                Guid guid = new Guid(id);
+                Order Order = OrderService.GetOrder(guid);
+                if (Order == null)
                 {
                     return RedirectToAction("Index", new { Message = OrderMessageId.CouldNotFindOrderError });
                 }
-            ApplicationUser customer = UserManager.Users.Single(u => u.CustomerInfo.CustomerInfoGuid == Order.RequestInfo.Requester.CustomerInfoGuid);
-            ApplicationUser driver = null;
-            if (Order.TrackInfo.Assignee != null)
-            {
-                driver = UserManager.Users.Single(u => u.ContractorInfo.ContractorInfoGuid == Order.TrackInfo.Assignee.ContractorInfoGuid);
-            }
+                ApplicationUser customer = UserManager.Users.Single(u => u.CustomerInfo.CustomerInfoGuid == Order.RequestInfo.Requester.CustomerInfoGuid);
+                ApplicationUser driver = null;
+                if (Order.TrackInfo.Assignee != null)
+                {
+                    driver = UserManager.Users.Single(u => u.ContractorInfo.ContractorInfoGuid == Order.TrackInfo.Assignee.ContractorInfoGuid);
+                }
 
-            var model = new OrderDetailsViewModel
-            {
-                DropOffAddress = Order.RequestInfo.DropOffAddress,
-                PickUpAddress = Order.RequestInfo.PickUpAddress,
-                Size = Order.RequestInfo.Size,
-                RequestDate = Order.RequestInfo.RequestDate,
-                Customer = customer,
-                Contractor = driver
-            };
+                var model = new OrderDetailsViewModel
+                {
+                    DropOffAddress = Order.RequestInfo.DropOffAddress,
+                    PickUpAddress = Order.RequestInfo.PickUpAddress,
+                    Size = Order.RequestInfo.Size,
+                    RequestDate = Order.RequestInfo.RequestDate,
+                    Customer = customer,
+                    Contractor = driver
+                };
 
-            return View(model);
+                return View(model);
             }
             else
             {
