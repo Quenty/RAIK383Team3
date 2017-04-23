@@ -18,9 +18,7 @@ namespace PracticalWerewolf.Controllers
         private ApplicationUserManager _userManager;
         private SmsService _smsService;
 
-        public ManageController(ApplicationUserManager userManager,
-                                ApplicationSignInManager signInManager,
-                                SmsService smsService)
+        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, SmsService smsService)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -31,9 +29,7 @@ namespace PracticalWerewolf.Controllers
         {
             get
             {
-                return _signInManager ?? HttpContext
-                                             .GetOwinContext()
-                                             .Get<ApplicationSignInManager>();
+                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
             private set
             {
@@ -45,9 +41,7 @@ namespace PracticalWerewolf.Controllers
         {
             get
             {
-                return _userManager ?? HttpContext
-                                          .GetOwinContext()
-                                          .GetUserManager<ApplicationUserManager>();
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             }
             private set
             {
@@ -93,9 +87,7 @@ namespace PracticalWerewolf.Controllers
                 var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
                 if (user != null)
                 {
-                    await SignInManager.SignInAsync(user,
-                                                    isPersistent: false,
-                                                    rememberBrowser: false);
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
                 message = ManageMessageId.RemoveLoginSuccess;
             }
@@ -146,9 +138,7 @@ namespace PracticalWerewolf.Controllers
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
             if (user != null)
             {
-                await SignInManager.SignInAsync(user,
-                                                isPersistent: false,
-                                                rememberBrowser: false);
+                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
             }
             return RedirectToAction("Index", "Manage");
         }
@@ -187,7 +177,8 @@ namespace PracticalWerewolf.Controllers
             var result = await UserManager.VerifyChangePhoneNumberTokenAsync(
                 User.Identity.GetUserId(),
                 model.Code,
-                model.PhoneNumber);
+                model.PhoneNumber
+                );
 
             if (result)
             {
@@ -331,18 +322,14 @@ namespace PracticalWerewolf.Controllers
         // GET: /Manage/LinkLoginCallback
         public async Task<ActionResult> LinkLoginCallback()
         {
-            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(
-                XsrfKey,
-                User.Identity.GetUserId());
+            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, User.Identity.GetUserId());
             if (loginInfo == null)
             {
                 return RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
             }
             var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(),
                                                          loginInfo.Login);
-            return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction(
-                "ManageLogins",
-                new { Message = ManageMessageId.Error });
+            return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction( "ManageLogins", new { Message = ManageMessageId.Error });
         }
 
         protected override void Dispose(bool disposing)

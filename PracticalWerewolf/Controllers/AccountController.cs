@@ -20,8 +20,7 @@ namespace PracticalWerewolf.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager,
-                                 ApplicationSignInManager signInManager)
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -31,9 +30,7 @@ namespace PracticalWerewolf.Controllers
         {
             get
             {
-                return _signInManager ?? HttpContext
-                                            .GetOwinContext()
-                                            .Get<ApplicationSignInManager>();
+                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
             private set
             {
@@ -45,9 +42,7 @@ namespace PracticalWerewolf.Controllers
         {
             get
             {
-                return _userManager ?? HttpContext
-                                           .GetOwinContext()
-                                           .GetUserManager<ApplicationUserManager>();
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             }
             private set
             {
@@ -76,10 +71,7 @@ namespace PracticalWerewolf.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email,
-                                                                 model.Password,
-                                                                 model.RememberMe,
-                                                                 shouldLockout: false);
+            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -101,9 +93,7 @@ namespace PracticalWerewolf.Controllers
 
         // GET: /Account/VerifyCode
         [AllowAnonymous]
-        public async Task<ActionResult> VerifyCode(string provider,
-                                                   string returnUrl,
-                                                   bool rememberMe)
+        public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
         {
             // Require that the user has already logged in via username/password or external login
             if (!await SignInManager.HasBeenVerifiedAsync())
@@ -274,10 +264,7 @@ namespace PracticalWerewolf.Controllers
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
             // Request a redirect to the external login provider
-            return new ChallengeResult(provider,
-                                       Url.Action("ExternalLoginCallback",
-                                       "Account",
-                                       new { ReturnUrl = returnUrl }));
+            return new ChallengeResult(provider, Url.Action("ExternalLoginCallback",  "Account", new { ReturnUrl = returnUrl }));
         }
 
         // GET: /Account/SendCode
@@ -290,10 +277,7 @@ namespace PracticalWerewolf.Controllers
                 return View("Error");
             }
             var userFactors = await UserManager.GetValidTwoFactorProvidersAsync(userId);
-            var factorOptions = userFactors
-                                  .Select(purpose =>
-                                            new SelectListItem { Text = purpose, Value = purpose })
-                                  .ToList();
+            var factorOptions = userFactors.Select(purpose =>  new SelectListItem { Text = purpose, Value = purpose }).ToList();
             return View(new SendCodeViewModel
             {
                 Providers = factorOptions,
@@ -385,9 +369,7 @@ namespace PracticalWerewolf.Controllers
                     result = await UserManager.AddLoginAsync(user.Id, info.Login);
                     if (result.Succeeded)
                     {
-                        await SignInManager.SignInAsync(user,
-                                                        isPersistent: false,
-                                                        rememberBrowser: false);
+                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                         return RedirectToLocal(returnUrl);
                     }
                 }
