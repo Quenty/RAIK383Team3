@@ -114,7 +114,7 @@ namespace PracticalWerewolf.Controllers
                     {
                         throw new Exception("Truck is null");
                     }
-                    if (User.IsInRole("Contractor"))
+                    if (!User.IsInRole("Employee"))
                     {
                         var UserInfo = UserManager.FindById(User.Identity.GetUserId());
                         if (UserInfo.ContractorInfo.Truck != truck)

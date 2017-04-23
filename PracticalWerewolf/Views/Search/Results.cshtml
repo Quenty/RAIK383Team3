@@ -29,7 +29,7 @@
             <div class="pull-right btn-group btn-group-xs" role="group">
                 @if (Request.IsAuthenticated)
                 {
-                    @if (UserInfo.TruckGuid.HasValue)
+                    if (UserInfo.TruckGuid.HasValue)
                     {
                         @Html.ActionLink("See Truck", "Details", "Truck", new { id = UserInfo.TruckGuid.Value.ToString() }, new { @class = "btn btn-xs btn-link" })
                     }
