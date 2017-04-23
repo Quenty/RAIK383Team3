@@ -28,6 +28,9 @@ function initMap() {
             clickable: true
         });
 
+        map.setZoom(10);
+        map.panTo(marker.position);
+
         google.maps.event.trigger(map, 'resize')
     } else {
         $("#map").append(map.getDiv());

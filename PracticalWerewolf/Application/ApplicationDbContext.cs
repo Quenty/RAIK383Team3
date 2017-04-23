@@ -13,6 +13,7 @@ using System.Data.Entity.Validation;
 using System.Device.Location;
 using System.Linq;
 using System.Web;
+using System.Data.Entity.Infrastructure;
 
 namespace PracticalWerewolf.Application
 {
@@ -55,7 +56,6 @@ namespace PracticalWerewolf.Application
         {
             _context = context;
         }
-
 
         #region IUnitOfWork Members
 
@@ -109,7 +109,7 @@ namespace PracticalWerewolf.Application
         {
             _context.Entry<T>(entity).Reload();
         }
-
+        
         #endregion
     }
 }

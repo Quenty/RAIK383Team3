@@ -9,11 +9,8 @@ using Microsoft.AspNet.Identity;
 using PracticalWerewolf.Models;
 using PracticalWerewolf.Models.UserInfos;
 using PracticalWerewolf.Controllers.UnitOfWork;
-using System.Activities;
-using System.Data.Entity.Spatial;
-using PracticalWerewolf.Application;
 using log4net;
-using PracticalWerewolf.Services;
+using PracticalWerewolf.Helpers;
 
 namespace PracticalWerewolf.Controllers
 {
@@ -192,7 +189,8 @@ namespace PracticalWerewolf.Controllers
                         TruckGuid = Guid.NewGuid(),
                         LicenseNumber = returnedModel.LicenseNumber,
                         MaxCapacity = capacityUnit,
-                        Location = LocationHelper.CreatePoint(returnedModel.Lat, returnedModel.Long)
+                        Location = LocationHelper.CreatePoint(returnedModel.Lat, returnedModel.Long),
+                        UsedCapacity = new TruckCapacityUnit()
                     };
                     TruckService.CreateTruck(model);
                     ContractorService.UpdateContractorTruck(model, user);
@@ -247,14 +245,18 @@ namespace PracticalWerewolf.Controllers
 
                     TruckService.UpdateTruckLocation(returnedModel.Guid, location);
                     UnitOfWork.SaveChanges();
-                    return RedirectToAction("Index", "Contractor");
+                    return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorController.ContractorMessageId.TruckLocationUpdatedSuccess }) + "#truck");
                 }
                 catch
                 {
                     logger.Error("UpdateLocation - Error in UpdateTruckLocation");
+                    return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorController.ContractorMessageId.TruckLocationUpdateError }) + "#truck");
                 }
             }
-            return RedirectToAction("Index", "Contractor", new { Message = ContractorController.ContractorMessageId.TruckLocationUpdateError });
+            else
+            {
+                return View(returnedModel);
+            }
         }
 
     }

@@ -7,6 +7,7 @@ using PracticalWerewolf.Stores.Interfaces;
 using PracticalWerewolf.Models;
 using PracticalWerewolf.Models.Trucks;
 using PracticalWerewolf.Models.Orders;
+using System.Data.Entity;
 
 namespace PracticalWerewolf.Services
 {
@@ -57,12 +58,15 @@ namespace PracticalWerewolf.Services
             }
         }
 
-        public IQueryable<ContractorInfo> getAvailableContractorQuery()
+        public IQueryable<ContractorInfo> GetAvailableContractorQuery()
         {
             return _contractorStore.Find(c => c.ApprovalState == ContractorApprovalState.Approved).AsQueryable()
                 .Where(c => c.IsAvailable)
-                .Where(c => c.Truck.AvailableCapacity.Volume > 0)
-                .Where(c => c.Truck.AvailableCapacity.Mass > 0);
+                .Where(c => c.Truck != null)
+                .Include(c => c.Truck)
+                .Include(c => c.Truck.UsedCapacity);
+//                .Where(c => c.Truck.UsedCapacity.Volume < c.Truck.MaxCapacity.Volume)
+//                .Where(c => c.Truck.UsedCapacity.Mass < c.Truck.MaxCapacity.Mass);
         }
 
 
@@ -71,6 +75,11 @@ namespace PracticalWerewolf.Services
             driver.ContractorInfo.Truck = truck;
             var result = _userManager.UpdateAsync(driver);
             result.Wait(); // TODO: Make this async
+        }
+
+        public ApplicationUser GetUserByContractorInfo(ContractorInfo contractor)
+        {
+            return _userManager.Users.SingleOrDefault(x => x.ContractorInfo.ContractorInfoGuid == contractor.ContractorInfoGuid);
         }
     }
 }

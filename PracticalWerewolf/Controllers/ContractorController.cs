@@ -30,7 +30,8 @@ namespace PracticalWerewolf.Controllers
             StatusError,
             NoTruckCreated,
             TruckCreationError,
-            TruckLocationUpdateError
+            TruckLocationUpdateError,
+            TruckLocationUpdatedSuccess
         }
 
         private readonly ApplicationUserManager UserManager;
@@ -59,6 +60,7 @@ namespace PracticalWerewolf.Controllers
                 : message == ContractorMessageId.StatusError ? "Could not update status successfully."
                 : message == ContractorMessageId.TruckCreationError ? "Could not create truck successfully."
                 : message == ContractorMessageId.TruckLocationUpdateError ? "Could not update truck location successfully"
+                : message == ContractorMessageId.TruckLocationUpdatedSuccess ? "Truck location updated successfully"
                 : "";
         }
 
@@ -171,7 +173,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         [Authorize(Roles = "Contractor")]
-        public async Task<ActionResult> Pending()
+        public async Task<ActionResult> _Pending()
         {
             var userId = User.Identity.GetUserId();
             if (userId != null)
@@ -230,18 +232,18 @@ namespace PracticalWerewolf.Controllers
                 {
                     ContractorService.SetIsAvailable(returnedModel.ContractorGuid, !returnedModel.ContractorStatus);
                     UnitOfWork.SaveChanges();
-                    return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.StatusChangeSuccess });
+                    return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusChangeSuccess }) + "#status");
                 }
                 catch
                 {
-                    return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.StatusError });
+                    return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusError }) + "#status");
                 }
             }
-            return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.StatusError });
+            return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusError }) + "#status");
         }
 
         [Authorize(Roles = "Contractor")]
-        public async Task<ActionResult> Current()
+        public async Task<ActionResult> _Current()
         {
             var userId = User.Identity.GetUserId();
             if (userId != null)
@@ -265,7 +267,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         [Authorize(Roles = "Contractor")]
-        public async Task<ActionResult> Delivered()
+        public async Task<ActionResult> _Delivered()
         {
             var userId = User.Identity.GetUserId();
             if (userId != null)

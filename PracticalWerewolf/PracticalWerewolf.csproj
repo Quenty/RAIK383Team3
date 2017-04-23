@@ -49,6 +49,18 @@
       <HintPath>..\packages\GoogleMapsApi.0.64.0\lib\net45\GoogleMapsApi.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Hangfire.Core, Version=1.6.12.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.Core.1.6.12\lib\net45\Hangfire.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Hangfire.Ninject, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.Ninject.1.2.0\lib\net45\Hangfire.Ninject.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Hangfire.SqlServer, Version=1.6.12.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.SqlServer.1.6.12\lib\net45\Hangfire.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
@@ -235,7 +247,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ContractorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\LocationHelper.cs" />
+    <Compile Include="Helpers\LocationHelper.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
@@ -247,7 +259,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\EmailHelper.cs" />
     <Compile Include="Helpers\Twilio.cs" />
     <Compile Include="Migrations\201701292303341_InitialCreate.cs" />
     <Compile Include="Migrations\201701292303341_InitialCreate.Designer.cs">
@@ -337,11 +348,14 @@
     <Compile Include="Services\EmployeeService.cs" />
     <Compile Include="Services\Interfaces\IOrderRequestService.cs" />
     <Compile Include="Services\Interfaces\IOrderTrackService.cs" />
+    <Compile Include="Services\Interfaces\IRoutePlannerService.cs" />
     <Compile Include="Services\Interfaces\IUserInfoService.cs" />
     <Compile Include="Services\Interfaces\IRouteStopService.cs" />
     <Compile Include="Services\OrderRequestService.cs" />
     <Compile Include="Services\OrderService.cs" />
     <Compile Include="Services\OrderTrackService.cs" />
+    <Compile Include="Services\ContractorRoutePlanner.cs" />
+    <Compile Include="Services\RoutePlannerService.cs" />
     <Compile Include="Services\RouteStopService.cs" />
     <Compile Include="Services\TruckService.cs" />
     <Compile Include="Services\UserInfoService.cs" />
@@ -352,9 +366,11 @@
     <Compile Include="Stores\CustomerStore.cs" />
     <Compile Include="Stores\EmployeeStore.cs" />
     <Compile Include="Stores\Interfaces\IEntityStore.cs" />
+    <Compile Include="Stores\Interfaces\IOrderTrackInfoStore.cs" />
     <Compile Include="Stores\Interfaces\IRouteStopStore.cs" />
     <Compile Include="Stores\Interfaces\RouteStopStore.cs" />
     <Compile Include="Stores\OrderStore.cs" />
+    <Compile Include="Stores\OrderTrackInfoStore.cs" />
     <Compile Include="Stores\TruckStore.cs" />
     <Compile Include="Utility\Levenshtein.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
@@ -411,6 +427,8 @@
     <Content Include="Scripts\GoogleMapAPI.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\js-cookie\js.cookie-2.1.4.min.js" />
+    <Content Include="Scripts\js-cookie\js.cookie.js" />
     <Content Include="Scripts\knockout-3.4.2.debug.js" />
     <Content Include="Scripts\knockout-3.4.2.js" />
     <Content Include="Scripts\mapautocomplete.js" />

@@ -1,15 +1,21 @@
 ﻿@model PracticalWerewolf.ViewModels.Contractor.ContractorIndexModel
 
-<div class="alert alert-success" role="alert">
-    <h4>Application approved!</h4>
-    <p>Your application has been approved by a manager!</p>
-</div>
+@if (Request.Cookies["approved-message-seen"] == null)
+{
 
+    <div class="alert alert-success alert-dismissable" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" 
+                onclick="Cookies.set('approved-message-seen', true, { path: '' });"><span aria-hidden="true">&times;</span></button>
+
+        <h4>Application approved!</h4>
+        <p>Your application has been approved by a manager!</p>
+    </div>
+}
 
 <div class="row">
     <div class="col-md-3">
-        <ul class="nav nav-pills nav-stacked">
-            <li role="presentation">
+        <ul class="nav nav-pills nav-stacked" id="ajax-nav-controls">
+            <li role="presentation" class="active">
                 <a data-ajax="true" data-ajax-mode="replace" data-ajax-update="#ajax-contractor-pane" data-tab-name="pending" href="@Url.Action("Pending")">
                     Pending Orders <span class="badge pull-right"></span>
                 </a>
@@ -37,5 +43,12 @@
         </ul>
     </div>
     <div id="ajax-contractor-pane" class="col-md-9">
+        <div class="panel panel-default contractor-body-pane">
+            <div class="panel-heading">
+                Loading
+            </div>
+            <div class="panel-body">
+            </div>
+        </div>
     </div>
 </div>
