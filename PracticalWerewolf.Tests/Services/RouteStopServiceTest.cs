@@ -27,7 +27,7 @@ namespace PracticalWerewolf.Tests.Services
         [TestMethod]
         public void GetContractorRoute_EmptyDbSet_EmptyList()
         {
-            var user = CreateUser(email);
+            var user = ServiceTestUtils.CreateUser(email);
 
             var dbSet = new MockRouteStopDbSet();
             var dbContext = new Mock<IDbSetFactory>();
@@ -35,7 +35,7 @@ namespace PracticalWerewolf.Tests.Services
             var routeStopStore = new RouteStopStore(dbContext.Object);
             var routeStopService = new RouteStopService(routeStopStore);
 
-            var result = routeStopService.GetContractorRoute(user.ContractorInfo);
+            var result = routeStopService.GetContractorRouteAsNoTracking(user.ContractorInfo);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(0, result.Count());
@@ -44,8 +44,8 @@ namespace PracticalWerewolf.Tests.Services
         [TestMethod]
         public void GetContractorRoute_DbSet_OrderedList_SevenItems()
         {
-            var user = CreateUser(email);
-            var otherUser = CreateUser(otherEmail);
+            var user = ServiceTestUtils.CreateUser(email);
+            var otherUser = ServiceTestUtils.CreateUser(otherEmail);
             var stops = CreateRouteStops(user, otherUser);
 
             var dbSet = new MockRouteStopDbSet();
@@ -55,7 +55,7 @@ namespace PracticalWerewolf.Tests.Services
             var routeStopStore = new RouteStopStore(dbContext.Object);
             var routeStopService = new RouteStopService(routeStopStore);
 
-            var result = routeStopService.GetContractorRoute(user.ContractorInfo);
+            var result = routeStopService.GetContractorRouteAsNoTracking(user.ContractorInfo);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(7, result.Count());
@@ -69,8 +69,8 @@ namespace PracticalWerewolf.Tests.Services
         [TestMethod]
         public void GetContractorRoute_DbSetNoInProgressOrQueued_EmptyList()
         {
-            var user = CreateUser(email);
-            var otherUser = CreateUser(otherEmail);
+            var user = ServiceTestUtils.CreateUser(email);
+            var otherUser = ServiceTestUtils.CreateUser(otherEmail);
             var stops = CreateRouteStops(user, otherUser);
 
             var dbSet = new MockRouteStopDbSet();
@@ -80,7 +80,7 @@ namespace PracticalWerewolf.Tests.Services
             var routeStopStore = new RouteStopStore(dbContext.Object);
             var routeStopService = new RouteStopService(routeStopStore);
 
-            var result = routeStopService.GetContractorRoute(otherUser.ContractorInfo);
+            var result = routeStopService.GetContractorRouteAsNoTracking(otherUser.ContractorInfo);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(0, result.Count());
@@ -97,7 +97,7 @@ namespace PracticalWerewolf.Tests.Services
             var routeStopService = new RouteStopService(routeStopStore);
             ContractorInfo info = null;
 
-            var result = routeStopService.GetContractorRoute(info);
+            var result = routeStopService.GetContractorRouteAsNoTracking(info);
 
             Assert.Fail();
         }
@@ -106,7 +106,7 @@ namespace PracticalWerewolf.Tests.Services
         [TestMethod]
         public void GetContractorCurrentAssignment_EmptyDbSet_Null()
         {
-            var user = CreateUser(email);
+            var user = ServiceTestUtils.CreateUser(email);
 
             var dbSet = new MockRouteStopDbSet();
             var dbContext = new Mock<IDbSetFactory>();
@@ -122,8 +122,8 @@ namespace PracticalWerewolf.Tests.Services
         [TestMethod]
         public void GetContractorCurrentAssignment_DbSetWithOneInProgress_NotNull()
         {
-            var user = CreateUser(email);
-            var otherUser = CreateUser(otherEmail);
+            var user = ServiceTestUtils.CreateUser(email);
+            var otherUser = ServiceTestUtils.CreateUser(otherEmail);
             var stops = CreateRouteStops(user, otherUser);
 
             var dbSet = new MockRouteStopDbSet();
@@ -142,8 +142,8 @@ namespace PracticalWerewolf.Tests.Services
         [TestMethod]
         public void GetContractorCurrentAssignment_DbSetWithZeroInProgress_Null()
         {
-            var user = CreateUser(email);
-            var otherUser = CreateUser(otherEmail);
+            var user = ServiceTestUtils.CreateUser(email);
+            var otherUser = ServiceTestUtils.CreateUser(otherEmail);
             var stops = CreateRouteStops(user, otherUser);
 
             var dbSet = new MockRouteStopDbSet();
@@ -178,118 +178,26 @@ namespace PracticalWerewolf.Tests.Services
 
 
 
-
-
-
-        private static Random random = new Random();
-
-        private static ApplicationUser CreateUser(string email)
-        {
-            var license = RandomString(8);
-            var address = CreateRandomAddress();
-            var truck = CreateRandomTruck();
-
-            var user = new ApplicationUser
-            {
-                Id = email,
-                UserName = email,
-                Email = email,
-                ContractorInfo = new ContractorInfo
-                {
-                    ContractorInfoGuid = Guid.NewGuid(),
-                    DriversLicenseId = license,
-                    HomeAddress = address,
-                    ApprovalState = ContractorApprovalState.Approved,
-                    IsAvailable = true,
-                    Truck = truck
-                },
-                CustomerInfo = new CustomerInfo
-                {
-                    CustomerInfoGuid = Guid.NewGuid()
-                }
-            };
-
-            return user;
-        }
-
-        private static Order CreateRandomOrder(ApplicationUser user, OrderStatus status)
-        {
-            return new Order
-            {
-                OrderGuid = Guid.NewGuid(),
-                RequestInfo = new OrderRequestInfo
-                {
-                    OrderRequestInfoGuid = Guid.NewGuid(),
-                    RequestDate = DateTime.Now,
-                    Requester = user.CustomerInfo,
-                    DropOffAddress = CreateRandomAddress(),
-                    PickUpAddress = CreateRandomAddress(),
-                    Size = new TruckCapacityUnit() { TruckCapacityUnitGuid = Guid.NewGuid(), Mass = random.Next(), Volume = random.Next() }
-                },
-                TrackInfo = new OrderTrackInfo
-                {
-                    Assignee = user.ContractorInfo,
-                    CurrentTruck = user.ContractorInfo.Truck,
-                    OrderStatus = status,
-                    OrderTrackInfoGuid = Guid.NewGuid()
-                }
-            };
-        }
-
-        private static CivicAddressDb CreateRandomAddress()
-        {
-            return new CivicAddressDb
-            {
-                CivicAddressGuid = Guid.NewGuid(),
-                City = RandomString(8),
-                State = RandomString(8),
-                Country = RandomString(8),
-                StreetNumber = RandomString(8),
-                ZipCode = RandomString(8),
-                RawInputAddress = RandomString(25),
-                Route = RandomString(8)
-            };
-        }
-
-        private static Truck CreateRandomTruck()
-        {
-            return new Truck()
-            {
-                LicenseNumber = RandomString(8),
-                Location = LocationHelper.CreatePoint(random.Next(-89, 89), random.Next(-89, 89)),
-                MaxCapacity = new TruckCapacityUnit() { TruckCapacityUnitGuid = Guid.NewGuid(), Mass = random.Next(), Volume = random.Next() },
-                UsedCapacity = new TruckCapacityUnit() { TruckCapacityUnitGuid = Guid.NewGuid(), Mass = random.Next(), Volume = random.Next() },
-                TruckGuid = Guid.NewGuid()
-            };
-        }
-
-        private static string RandomString(int length)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Repeat(chars, length)
-              .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
-
         private static IEnumerable<RouteStop> CreateRouteStops(ApplicationUser user, ApplicationUser otherUser)
         {
             return new List<RouteStop>()
             {
-                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.InProgress), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 0 },
-                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 1 },
-                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 2 },
-                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 3 },
-                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 4 },
-                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 5 },
-                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 6 },
-                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Cancelled), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = -1 },
-                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = -2 },
-                new RouteStop() {Order = CreateRandomOrder(user, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = -3 },
+                new RouteStop() {Order = ServiceTestUtils.CreateRandomOrder(user, OrderStatus.InProgress), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 0 },
+                new RouteStop() {Order = ServiceTestUtils.CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 1 },
+                new RouteStop() {Order = ServiceTestUtils.CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 2 },
+                new RouteStop() {Order = ServiceTestUtils.CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 3 },
+                new RouteStop() {Order = ServiceTestUtils.CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 4 },
+                new RouteStop() {Order = ServiceTestUtils.CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 5 },
+                new RouteStop() {Order = ServiceTestUtils.CreateRandomOrder(user, OrderStatus.Queued), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 6 },
+                new RouteStop() {Order = ServiceTestUtils.CreateRandomOrder(user, OrderStatus.Cancelled), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = -1 },
+                new RouteStop() {Order = ServiceTestUtils.CreateRandomOrder(user, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = -2 },
+                new RouteStop() {Order = ServiceTestUtils.CreateRandomOrder(user, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = -3 },
 
-                new RouteStop() {Order = CreateRandomOrder(otherUser, OrderStatus.Cancelled), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 0 },
-                new RouteStop() {Order = CreateRandomOrder(otherUser, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 2 },
-                new RouteStop() {Order = CreateRandomOrder(otherUser, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 1 },
-                new RouteStop() {Order = CreateRandomOrder(otherUser, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = -1 },
-                new RouteStop() {Order = CreateRandomOrder(otherUser, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = -2 },
+                new RouteStop() {Order = ServiceTestUtils.CreateRandomOrder(otherUser, OrderStatus.Cancelled), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 0 },
+                new RouteStop() {Order = ServiceTestUtils.CreateRandomOrder(otherUser, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 2 },
+                new RouteStop() {Order = ServiceTestUtils.CreateRandomOrder(otherUser, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.DropOff, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 1 },
+                new RouteStop() {Order = ServiceTestUtils.CreateRandomOrder(otherUser, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = -1 },
+                new RouteStop() {Order = ServiceTestUtils.CreateRandomOrder(otherUser, OrderStatus.Complete), RouteStopGuid = Guid.NewGuid(), Type = StopType.PickUp, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = -2 },
 
             };
         }

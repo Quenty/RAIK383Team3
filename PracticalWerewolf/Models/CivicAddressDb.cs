@@ -36,5 +36,14 @@ namespace System.Device.Location
 
         [Display(Prompt = "Street address", Name = "Street Address")]
         public String RawInputAddress { get; set; }
+
+        public override string ToString()
+        {
+            string cityState = string.Join(", ", City, State);
+            string zipCountry = string.Join(", ", ZipCode, Country);
+            string value = string.Join(" ", StreetNumber, Route, cityState, zipCountry);
+
+            return value;
+        }
     }
 }

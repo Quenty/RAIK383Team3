@@ -9,11 +9,8 @@ using Microsoft.AspNet.Identity;
 using PracticalWerewolf.Models;
 using PracticalWerewolf.Models.UserInfos;
 using PracticalWerewolf.Controllers.UnitOfWork;
-using System.Activities;
-using System.Data.Entity.Spatial;
-using PracticalWerewolf.Application;
 using log4net;
-using PracticalWerewolf.Services;
+using PracticalWerewolf.Helpers;
 
 namespace PracticalWerewolf.Controllers
 {
@@ -58,7 +55,7 @@ namespace PracticalWerewolf.Controllers
                     Lat = item.Location.Latitude,
                     Long = item.Location.Longitude,
                     MaxCapacity = item.MaxCapacity,
-                    AvailableCapacity = item.AvailableCapacity,
+                    AvailableCapacity = item.GetAvailableCapacity(),
                     Owner = owner
                 };
                 truckModels.Add(toAdd);
@@ -86,7 +83,7 @@ namespace PracticalWerewolf.Controllers
                     {
                         Guid = new Guid(id),
                         LicenseNumber = truck.LicenseNumber,
-                        AvailableCapacity = truck.AvailableCapacity, // TODO: uncomment once there's data for this
+                        AvailableCapacity = truck.GetAvailableCapacity(),
                         MaxCapacity = truck.MaxCapacity,
                         Lat = truck.Location.Latitude,
                         Long = truck.Location.Longitude,
@@ -192,7 +189,8 @@ namespace PracticalWerewolf.Controllers
                         TruckGuid = Guid.NewGuid(),
                         LicenseNumber = returnedModel.LicenseNumber,
                         MaxCapacity = capacityUnit,
-                        Location = LocationHelper.CreatePoint(returnedModel.Lat, returnedModel.Long)
+                        Location = LocationHelper.CreatePoint(returnedModel.Lat, returnedModel.Long),
+                        UsedCapacity = new TruckCapacityUnit()
                     };
                     TruckService.CreateTruck(model);
                     ContractorService.UpdateContractorTruck(model, user);

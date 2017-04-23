@@ -35,25 +35,23 @@ namespace PracticalWerewolf.Models.Trucks
         [Display(Name = "License Plate Number")]
         public virtual String LicenseNumber { get; set; }
 
-                                                                
+
         // Gets broken down into different props but stays in the truck table
-        public DbGeography Location { get; set; } 
+        public DbGeography Location { get; set; }
 
-        public TruckCapacityUnit AvailableCapacity {
-            get
+        public TruckCapacityUnit GetAvailableCapacity()
+        {
+            if (UsedCapacity == null)
             {
-                if (UsedCapacity == null)
-                {
-                    return MaxCapacity;
-                }
-
-                return new TruckCapacityUnit
-                {
-                    TruckCapacityUnitGuid = Guid.NewGuid(),
-                    Mass = MaxCapacity.Mass - UsedCapacity.Mass,
-                    Volume = MaxCapacity.Volume - UsedCapacity.Volume
-                };
+                return MaxCapacity;
             }
+
+            return new TruckCapacityUnit
+            {
+                TruckCapacityUnitGuid = Guid.NewGuid(),
+                Mass = MaxCapacity.Mass - UsedCapacity.Mass,
+                Volume = MaxCapacity.Volume - UsedCapacity.Volume
+            };
         }
 
         //TODO Calculate from orders associated with truck

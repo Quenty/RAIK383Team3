@@ -10,12 +10,10 @@ using PracticalWerewolf.ViewModels;
 using System.Linq;
 using System.Data.Entity.Spatial;
 using PracticalWerewolf.Controllers.UnitOfWork;
-using Microsoft.AspNet.Identity;
-using PracticalWerewolf.Application;
 using PracticalWerewolf.Tests.Stores.DbContext;
 using PracticalWerewolf.Models;
 using PracticalWerewolf.Models.UserInfos;
-using System.Threading.Tasks;
+using PracticalWerewolf.Helpers;
 
 namespace PracticalWerewolf.Tests.Controllers
 {
