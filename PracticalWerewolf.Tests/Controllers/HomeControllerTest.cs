@@ -33,6 +33,8 @@ namespace PracticalWerewolf.Tests.Controllers
 
             // Act
             ViewResult result = controller.About() as ViewResult;
+
+            // Assert
             Assert.IsNotNull(result);
         }
     }
