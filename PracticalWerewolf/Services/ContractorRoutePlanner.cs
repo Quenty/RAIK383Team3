@@ -42,8 +42,8 @@ namespace PracticalWerewolf.Services
         public RouteStop DropOff { get; }
         public int DistanceChanged { get; set; }
 
-        private Dictionary<CivicAddressDb, DirectionsResponse> _pickUpToStop = new Dictionary<CivicAddressDb, DirectionsResponse>();
-        private Dictionary<CivicAddressDb, DirectionsResponse> _dropOffToStop = new Dictionary<CivicAddressDb, DirectionsResponse>();
+        private Dictionary<string, DirectionsResponse> _pickUpToStop = new Dictionary<string, DirectionsResponse>();
+        private Dictionary<string, DirectionsResponse> _dropOffToStop = new Dictionary<string, DirectionsResponse>();
         private List<TruckCapacityUnit> _capacityUnits = new List<TruckCapacityUnit>(); //these will be the capacities immediately after the stop corresponding to the index
 
 
@@ -163,8 +163,8 @@ namespace PracticalWerewolf.Services
             var pickUpToDropOff = LocationHelper.GetRouteBetweenLocations(pickUpLocation, dropOffLocation);
             if (pickUpToDropOff.Status == DirectionsStatusCodes.OK)
             {
-                _pickUpToStop.Add(dropOffLocation, pickUpToDropOff);
-                _dropOffToStop.Add(pickUpLocation, pickUpToDropOff);
+                _pickUpToStop.Add(dropOffLocation.ToString(), pickUpToDropOff);
+                _dropOffToStop.Add(pickUpLocation.ToString(), pickUpToDropOff);
             }
             else
             {
@@ -181,12 +181,12 @@ namespace PracticalWerewolf.Services
                     var location = (stop.Type == StopType.PickUp) ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
 
                     //Add PickUp to location
-                    if (!_pickUpToStop.ContainsKey(location))
+                    if (!_pickUpToStop.ContainsKey(location.ToString()))
                     {
                         var response = LocationHelper.GetRouteBetweenLocations(pickUpLocation, location);
                         if (response.Status == DirectionsStatusCodes.OK)
                         {
-                            _pickUpToStop.Add(location, response);
+                            _pickUpToStop.Add(location.ToString(), response);
                         }
                         else
                         {
@@ -195,12 +195,12 @@ namespace PracticalWerewolf.Services
                     }
 
                     //Add DropOffToLocation
-                    if (!_dropOffToStop.ContainsKey(location))
+                    if (!_dropOffToStop.ContainsKey(location.ToString()))
                     {
                         var response = LocationHelper.GetRouteBetweenLocations(dropOffLocation, location);
                         if (response.Status == DirectionsStatusCodes.OK)
                         {
-                            _dropOffToStop.Add(location, response);
+                            _dropOffToStop.Add(location.ToString(), response);
                         }
                         else
                         {
@@ -370,10 +370,13 @@ namespace PracticalWerewolf.Services
                 address = stop.Type == StopType.PickUp ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
             }
 
-
-            if (_pickUpToStop.ContainsKey(address))
+            if (_pickUpToStop.ContainsKey(address.ToString()))
             {
-                return _pickUpToStop[address].Routes.First().Legs.First().Distance.Value;
+                return _pickUpToStop[address.ToString()].Routes.First().Legs.First().Distance.Value;
+            }
+            else if (address.ToString().Equals(Order.RequestInfo.PickUpAddress.ToString()))
+            {
+                return 0;
             }
             else
             {
@@ -400,9 +403,13 @@ namespace PracticalWerewolf.Services
                 address = stop.Type == StopType.PickUp ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
             }
 
-            if (_dropOffToStop.ContainsKey(address))
+            if (_dropOffToStop.ContainsKey(address.ToString()))
             {
-                return _dropOffToStop[address].Routes.First().Legs.First().Distance.Value;
+                return _dropOffToStop[address.ToString()].Routes.First().Legs.First().Distance.Value;
+            }
+            else if (address.ToString().Equals(Order.RequestInfo.DropOffAddress.ToString()))
+            {
+                return 0;
             }
             else
             {
@@ -429,9 +436,13 @@ namespace PracticalWerewolf.Services
             }
 
 
-            if (_dropOffToStop.ContainsKey(address))
+            if (_dropOffToStop.ContainsKey(address.ToString()))
             {
-                return _dropOffToStop[address].Routes.First().Legs.First().Duration.Value;
+                return _dropOffToStop[address.ToString()].Routes.First().Legs.First().Duration.Value;
+            }
+            else if (address.ToString().Equals(Order.RequestInfo.DropOffAddress.ToString()))
+            {
+                return TimeSpan.Zero;
             }
             else
             {
@@ -459,9 +470,13 @@ namespace PracticalWerewolf.Services
             }
 
 
-            if (_pickUpToStop.ContainsKey(address))
+            if (_pickUpToStop.ContainsKey(address.ToString()))
             {
-                return _pickUpToStop[address].Routes.First().Legs.First().Duration.Value;
+                return _pickUpToStop[address.ToString()].Routes.First().Legs.First().Duration.Value;
+            }
+            else if (address.ToString().Equals(Order.RequestInfo.PickUpAddress.ToString()))
+            {
+                return TimeSpan.Zero;
             }
             else
             {

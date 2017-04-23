@@ -24,6 +24,7 @@ namespace PracticalWerewolf
     {
         private static readonly ILog logger = LogManager.GetLogger(typeof(EmailService));
         private static bool templateKeysInitialized = false;
+        private static string faviconFilePath;
 
         public EmailService()
         {
@@ -43,6 +44,7 @@ namespace PracticalWerewolf
                 };
                 try
                 {
+                    faviconFilePath = System.Web.HttpContext.Current.Server.MapPath(@"~/favicon.ico");
                     foreach (var keys in templateKeys)
                     {
                         var filePath = keys.Item2;
@@ -79,6 +81,43 @@ namespace PracticalWerewolf
             {
                 var ex = e.InnerException;
                 var errorMessage = "SendAsync() - Inner Exception: " + ex.Message + "\n" + "Stack Track: " + ex.StackTrace;
+                logger.Error(errorMessage);
+            }
+        }
+
+        public void Send(string destination, string subject, string body, List<Tuple<string, string>> imageIds = null)
+        {
+            var email = new MailMessage();
+            email.To.Add(new MailAddress(destination));
+            email.Subject = subject;
+            email.Body = body;
+            email.IsBodyHtml = true;
+
+            AlternateView view = AlternateView.CreateAlternateViewFromString(body, null, "text/html");
+
+            if (imageIds != null)
+            {
+                foreach (var imageResource in imageIds)
+                {
+                    var image = new LinkedResource(imageResource.Item1);
+                    image.ContentId = imageResource.Item2;
+                    view.LinkedResources.Add(image);
+                }
+
+                email.AlternateViews.Add(view);
+            }
+            try
+            {
+                using (var smtp = new SmtpClient())
+                {
+                    smtp.Send(email);
+                }
+
+            }
+            catch (Exception e)
+            {
+                var ex = e.InnerException;
+                var errorMessage = "Send() - Inner Exception: " + ex.Message + "\n" + "Stack Track: " + ex.StackTrace;
                 logger.Error(errorMessage);
             }
         }
@@ -196,7 +235,7 @@ namespace PracticalWerewolf
                 imageIds = new List<Tuple<string, string>>();
             }
 
-            imageIds.Add(new Tuple<string, string>(System.Web.HttpContext.Current.Server.MapPath("~/favicon.ico"), Guid.Empty.ToString()));
+            imageIds.Add(new Tuple<string, string>(faviconFilePath, Guid.Empty.ToString()));
             var result = Engine.Razor.RunCompile("OrderUpdate", typeof(OrderUpdateModel), model);
 
             int index = result.IndexOf("<!DOCTYPE html>");
@@ -205,7 +244,7 @@ namespace PracticalWerewolf
             await SendAsync(email, subject, result, imageIds);
         }
 
-        public async Task SendWorkOrderEmail(ApplicationUser contractor, OrderRequestInfo order)
+        public void SendWorkOrderEmail(ApplicationUser contractor, OrderRequestInfo order)
         {
             initTemplateKeys();
             if (templateKeysInitialized)
@@ -219,24 +258,24 @@ namespace PracticalWerewolf
                 };
                 string subject = "Work Order Request";
 
-                await SendWorkOrderEmail(model, contractor.Email, subject);
+                SendWorkOrderEmail(model, contractor.Email, subject);
             }
         }
 
-        private async Task SendWorkOrderEmail(WorkOrderModel model, string email, string subject, List<Tuple<string, string>> imageIds = null)
+        private void SendWorkOrderEmail(WorkOrderModel model, string email, string subject, List<Tuple<string, string>> imageIds = null)
         {
             if (imageIds == null)
             {
                 imageIds = new List<Tuple<string, string>>();
             }
 
-            imageIds.Add(new Tuple<string, string>(System.Web.HttpContext.Current.Server.MapPath("~/favicon.ico"), Guid.Empty.ToString()));
+            imageIds.Add(new Tuple<string, string>(faviconFilePath, Guid.Empty.ToString()));
             var result = Engine.Razor.RunCompile("WorkOrder", typeof(WorkOrderModel), model);
 
             int index = result.IndexOf("<!DOCTYPE html>");
             result = result.Substring(index);
 
-            await SendAsync(email, subject, result, imageIds);
+            Send(email, subject, result, imageIds);
         }
 
     }

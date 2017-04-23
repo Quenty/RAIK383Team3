@@ -69,7 +69,12 @@ namespace PracticalWerewolf.Services
             if(order.TrackInfo == null)
             {
                 order.TrackInfo = new OrderTrackInfo{ OrderTrackInfoGuid = Guid.NewGuid() };
+                OrderTrackInfoStore.Insert(order.TrackInfo);
+            } else
+            {
+                OrderTrackInfoStore.Update(order.TrackInfo);
             }
+
             OrderTrackInfo orderTrackInfo = order.TrackInfo;
             orderTrackInfo.OrderStatus = OrderStatus.InProgress;
             orderTrackInfo.Assignee = contractor;
@@ -77,8 +82,7 @@ namespace PracticalWerewolf.Services
             //OrderStore.GetEntry(order).CurrentValues.SetValues(order);
             //OrderTrackInfoStore.GetEntry(orderTrackInfo).CurrentValues.SetValues(orderTrackInfo);
 
-            OrderTrackInfoStore.Update(orderTrackInfo);
-            OrderStore.Update(order);
+            //OrderStore.Update(order);
         }
 
         public void AssignOrders()
