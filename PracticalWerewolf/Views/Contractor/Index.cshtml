@@ -42,6 +42,7 @@ else
     {
         Html.RenderPartial("_IndexApproved", Model);
         @section Scripts {
+            @Scripts.Render("~/bundles/js-cookie")
             <script src="~/Scripts/ContractorPartials.js"></script>
             <script src="~/Scripts/GoogleMapAPI.js"></script>
         }

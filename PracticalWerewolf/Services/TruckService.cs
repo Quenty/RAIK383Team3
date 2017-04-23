@@ -51,13 +51,17 @@ namespace PracticalWerewolf.Services
             if (capacity == null)
             {
                 logger.Error("UpdateCapacity() - null TruckCapacityUnit passed in");
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("TruckCapacityUnit is null");
             }
             var truck = GetTruck(truckGuid);
             if (truck != null)
             {
                 truck.MaxCapacity = capacity;
                 TruckStore.Update(truck);
+            }
+            else
+            {
+                throw new Exception("Truck does not exist in database!");
             }
         }
 
