@@ -110,6 +110,19 @@ namespace PracticalWerewolf.Controllers
 
                     var guid = new Guid(id);
                     var truck = TruckService.GetTruck(guid);
+                    if (truck == null)
+                    {
+                        throw new Exception("Truck is null");
+                    }
+                    if (User.IsInRole("Contractor"))
+                    {
+                        var UserInfo = UserManager.FindById(User.Identity.GetUserId());
+                        if (UserInfo.ContractorInfo.Truck != truck)
+                        {
+                            throw new Exception("Cannot edit other user's truck");
+                        }
+                    }
+
                     var model = new TruckUpdateViewModel
                     {
                         Guid = guid,
