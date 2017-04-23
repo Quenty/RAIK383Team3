@@ -22,6 +22,7 @@ namespace PracticalWerewolf.Controllers
         private readonly IUnitOfWork UnitOfWork;
         private readonly IRoutePlannerService RoutePlannerService;
         private readonly ApplicationUserManager UserManager;
+        private readonly EmailService EmailService;
 
         public enum OrderMessageId
         {
@@ -33,7 +34,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         public OrderController(IOrderRequestService OrderRequestService, IOrderTrackService OrderTrackService, 
-            IUserInfoService UserInfoService, IUnitOfWork UnitOfWork, ApplicationUserManager UserManager, IOrderService OrderService, IRoutePlannerService RoutePlannerService)
+            IUserInfoService UserInfoService, IUnitOfWork UnitOfWork, ApplicationUserManager UserManager, IOrderService OrderService, IRoutePlannerService RoutePlannerService, EmailService EmailService)
         {
             this.OrderRequestService = OrderRequestService;
             this.OrderTrackService = OrderTrackService;
@@ -42,6 +43,7 @@ namespace PracticalWerewolf.Controllers
             this.UserManager = UserManager;
             this.OrderService = OrderService;
             this.RoutePlannerService = RoutePlannerService;
+            this.EmailService = EmailService;
         }
 
         private PagedOrderListViewModel GetOrderHistoryPage()
@@ -86,7 +88,7 @@ namespace PracticalWerewolf.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = ("Customer"))]
-        public ActionResult Create(CreateOrderRequestViewModel model)
+        public async Task<ActionResult> Create(CreateOrderRequestViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -103,7 +105,7 @@ namespace PracticalWerewolf.Controllers
             model.PickUpAddress.CivicAddressGuid = Guid.NewGuid();
             model.Size.TruckCapacityUnitGuid = Guid.NewGuid();
 
-            OrderRequestService.CreateOrderRequestInfo(new OrderRequestInfo
+            var request = new OrderRequestInfo
             {
                 OrderRequestInfoGuid = Guid.NewGuid(),
                 DropOffAddress = model.DropOffAddress,
@@ -111,11 +113,14 @@ namespace PracticalWerewolf.Controllers
                 Size = model.Size,
                 RequestDate = DateTime.Now,
                 Requester = Requester
-            });
+            };
+
+            OrderRequestService.CreateOrderRequestInfo(request);
 
             UnitOfWork.SaveChanges();
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            await EmailService.SendOrderConfirmEmail(request, user);
 
-            //RoutePlannerService.BeginAssignOrderTask();
             BackgroundJob.Enqueue(() =>  RoutePlannerService.AssignOrders()  );
             
 
