@@ -10,7 +10,7 @@ using PracticalWerewolf.Tests.Stores.DbContext;
 using PracticalWerewolf.Stores;
 using System.Data.Entity.Spatial;
 using System.Data.Entity;
-using PracticalWerewolf.Controllers;
+using PracticalWerewolf.Helpers;
 
 namespace PracticalWerewolf.Tests.Services
 {

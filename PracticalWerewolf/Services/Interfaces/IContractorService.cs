@@ -16,9 +16,11 @@ namespace PracticalWerewolf.Services.Interfaces
         void SetApproval(Guid contractorInfoGuid, ContractorApprovalState isApproved);
         IEnumerable<ContractorInfo> GetUnapprovedContractors();
         ContractorInfo GetContractorByTruckGuid(Guid guid);
-        IQueryable<ContractorInfo> getAvailableContractorQuery();
+        IQueryable<ContractorInfo> GetAvailableContractorQuery();
 
         void UpdateContractorTruck(Truck truck, ApplicationUser user);
+
+        ApplicationUser GetUserByContractorInfo(ContractorInfo contractor);
 
         ContractorInfo GetContractor(Guid guid);
     }

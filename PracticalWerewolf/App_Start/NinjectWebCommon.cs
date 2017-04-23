@@ -24,7 +24,8 @@ namespace PracticalWerewolf.App_Start
     using System.Reflection;
     using Microsoft.Owin.Security;
     using Microsoft.Owin.Security.DataProtection;
-
+    using Hangfire;
+    using System.Linq;
     public static class NinjectWebCommon 
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
@@ -76,24 +77,13 @@ namespace PracticalWerewolf.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<IUserStore<ApplicationUser>, UserStore<ApplicationUser>>().To<UserStore<ApplicationUser>>().InRequestScope();
-            kernel.Bind<ApplicationSignInManager>().ToSelf().InRequestScope();
-            kernel.Bind<ApplicationUserManager>().ToSelf().InRequestScope();
-            kernel.Bind<DbContext, IdentityDbContext<ApplicationUser>>().To<ApplicationDbContext>().InRequestScope();
-            kernel.Bind<IUnitOfWork, IDbSetFactory, ApplicationContextAdapter>().To<ApplicationContextAdapter>().InRequestScope();
-            kernel.Bind<IAuthenticationManager>().ToMethod((context) =>
-            {
-                var cbase = new HttpContextWrapper(HttpContext.Current);
-                return cbase.GetOwinContext().Authentication;
-            }).InRequestScope();
-
             //Stores
             kernel.Bind<IContractorStore>().To<ContractorStore>();
             kernel.Bind<ICustomerStore>().To<CustomerStore>();
             kernel.Bind<IEmployeeStore>().To<EmployeeStore>();
             kernel.Bind<IOrderStore>().To<OrderStore>();
             kernel.Bind<ITruckStore>().To<TruckStore>();
-            kernel.Bind<IRouteStopStore>().To<RouteStopStore>();
+            kernel.Bind<IOrderTrackInfoStore>().To<OrderTrackInfoStore>();
 
             //Services
             kernel.Bind<IContractorService>().To<ContractorService>();
@@ -104,7 +94,25 @@ namespace PracticalWerewolf.App_Start
             kernel.Bind<IOrderTrackService>().To<OrderTrackService>();
             kernel.Bind<ITruckService>().To<TruckService>();
             kernel.Bind<IUserInfoService>().To<UserInfoService>();
+
+            kernel.Bind<IRouteStopStore>().To<RouteStopStore>();
             kernel.Bind<IRouteStopService>().To<RouteStopService>();
+            kernel.Bind<IRoutePlannerService, RoutePlannerService>().To<RoutePlannerService>();
+
+
+
+            kernel.Bind<IUserStore<ApplicationUser>, UserStore<ApplicationUser>>().To<UserStore<ApplicationUser>>().InRequestScope();
+            kernel.Bind<ApplicationSignInManager>().ToSelf().InRequestScope();
+            kernel.Bind<ApplicationUserManager>().ToSelf().InRequestScope();
+            kernel.Bind<IAuthenticationManager>().ToMethod((context) =>
+            {
+                var cbase = new HttpContextWrapper(HttpContext.Current);
+                return cbase.GetOwinContext().Authentication;
+            }).InRequestScope();
+            
+            kernel.Bind<DbContext, IdentityDbContext<ApplicationUser>>().To<ApplicationDbContext>().InNamedOrBackgroundJobScope(context => context.Kernel.Components.GetAll<INinjectHttpApplicationPlugin>().Select(c => c.GetRequestScope(context)).FirstOrDefault(s => s != null));
+            kernel.Bind<IUnitOfWork, IDbSetFactory, ApplicationContextAdapter>().To<ApplicationContextAdapter>().InNamedOrBackgroundJobScope(context => context.Kernel.Components.GetAll<INinjectHttpApplicationPlugin>().Select(c => c.GetRequestScope(context)).FirstOrDefault(s => s != null));
+            kernel.Bind<SmsService>().To<SmsService>();
         }        
     }
 }

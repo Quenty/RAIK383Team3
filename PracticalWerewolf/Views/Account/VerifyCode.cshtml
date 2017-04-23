@@ -1,11 +1,10 @@
 ﻿@model PracticalWerewolf.ViewModels.VerifyCodeViewModel
-@{
-    ViewBag.Title = "Verify";
-}
+<p>We have sent you a SMS with a code to your phone number.</p>
 
-<h2>@ViewBag.Title.</h2>
+<p>To complete your phone number verification, please enter the 6-digit activation code.</p>
 
-@using (Html.BeginForm("VerifyCode", "Account", new { ReturnUrl = Model.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" })) {
+@using (Html.BeginForm("VerifyCode", "Account", new { ReturnUrl = Model.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
     @Html.AntiForgeryToken()
     @Html.Hidden("provider", @Model.Provider)
     @Html.Hidden("rememberMe", @Model.RememberMe)
@@ -28,7 +27,7 @@
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Submit" />
+            <input type="submit" class="btn btn-default" value="Confirm" />
         </div>
     </div>
 }
