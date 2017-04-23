@@ -155,24 +155,24 @@ namespace PracticalWerewolf.Controllers
             if (id != null)
             {
                 Guid guid = new Guid(id);
-                Order Order = OrderService.GetOrder(guid);
-                if (Order == null)
+                Order order = OrderService.GetOrder(guid);
+                if (order == null)
                 {
                     return RedirectToAction("Index", new { Message = OrderMessageId.CouldNotFindOrderError });
                 }
-                ApplicationUser customer = UserManager.Users.Single(u => u.CustomerInfo.CustomerInfoGuid == Order.RequestInfo.Requester.CustomerInfoGuid);
+                ApplicationUser customer = UserManager.Users.Single(u => u.CustomerInfo.CustomerInfoGuid == order.RequestInfo.Requester.CustomerInfoGuid);
                 ApplicationUser driver = null;
-                if (Order.TrackInfo.Assignee != null)
+                if (order.TrackInfo.Assignee != null)
                 {
-                    driver = UserManager.Users.Single(u => u.ContractorInfo.ContractorInfoGuid == Order.TrackInfo.Assignee.ContractorInfoGuid);
+                    driver = UserManager.Users.Single(u => u.ContractorInfo.ContractorInfoGuid == order.TrackInfo.Assignee.ContractorInfoGuid);
                 }
 
                 var model = new OrderDetailsViewModel
                 {
-                    DropOffAddress = Order.RequestInfo.DropOffAddress,
-                    PickUpAddress = Order.RequestInfo.PickUpAddress,
-                    Size = Order.RequestInfo.Size,
-                    RequestDate = Order.RequestInfo.RequestDate,
+                    DropOffAddress = order.RequestInfo.DropOffAddress,
+                    PickUpAddress = order.RequestInfo.PickUpAddress,
+                    Size = order.RequestInfo.Size,
+                    RequestDate = order.RequestInfo.RequestDate,
                     Customer = customer,
                     Contractor = driver
                 };
