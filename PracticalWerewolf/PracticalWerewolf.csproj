@@ -460,6 +460,7 @@
     <Content Include="Views\Shared\_PagedOrderListView.cshtml" />
     <Content Include="Views\Order\History.cshtml" />
     <Content Include="Views\Contractor\_PagedOrderListPane.cshtml" />
+    <Content Include="Views\Order\Order.cshtml" />
     <None Include="Views\Search\_PartialResults.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
