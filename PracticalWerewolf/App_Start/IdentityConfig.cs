@@ -13,12 +13,51 @@ using System.Net.Mail;
 using System.Net;
 using log4net;
 using System.Collections.Generic;
+using RazorEngine;
+using RazorEngine.Templating;
+using PracticalWerewolf.Models.Orders;
+using PracticalWerewolf.EmailTemplates;
 
 namespace PracticalWerewolf
 {
     public class EmailService : IIdentityMessageService
     {
         private static readonly ILog logger = LogManager.GetLogger(typeof(EmailService));
+        private static bool templateKeysInitialized = false;
+
+        public EmailService()
+        {
+            initTemplateKeys();
+        }
+
+        private void initTemplateKeys()
+        {
+            if (!templateKeysInitialized)
+            {
+                templateKeysInitialized = true;
+
+                List<Tuple<string, string>> templateKeys = new List<Tuple<string, string>>
+                {
+                    new Tuple<string, string>("OrderUpdate", @"~\EmailTemplates\OrderUpdate.cshtml"),
+                    new Tuple<string, string>("WorkOrder", @"~\EmailTemplates\WorkOrder.cshtml"),
+                };
+                try
+                {
+                    foreach (var keys in templateKeys)
+                    {
+                        var filePath = keys.Item2;
+                        var fullPath = System.Web.HttpContext.Current.Server.MapPath(filePath);
+                        var template = System.IO.File.ReadAllText(fullPath);
+                        Engine.Razor.AddTemplate(keys.Item1, template);
+                    }
+                }
+                catch
+                {
+                    templateKeysInitialized = false;
+                    logger.Error("Error intializing email templates");  
+                }
+            }
+        }
 
         public async Task SendAsync(IdentityMessage message)
         {
@@ -80,6 +119,126 @@ namespace PracticalWerewolf
                 logger.Error(errorMessage);
             }
         }
+
+        public async Task SendOrderConfirmEmail(OrderRequestInfo order, ApplicationUser user)
+        {
+            initTemplateKeys();
+            if (templateKeysInitialized)
+            {
+                OrderUpdateModel model = new OrderUpdateModel
+                {
+                    UserName = user.UserName,
+                    OrderId = order.OrderRequestInfoGuid,
+                    ArrivalDate = "In the near future",         //todo calculate this
+                    Cost = "Lotsa Moneeyyy",                    //todo calculate this
+                    Destination = order.DropOffAddress.RawInputAddress,
+                    UpdateType = OrderUpdateType.Order,
+                    UpdateDescription = "has been placed!",
+                    LogoId = Guid.Empty.ToString()
+                };
+
+                string subject = "Order Confirmation";
+
+                await SendOrderUpdateEmail(model, user.Email, subject);
+            }
+        }
+
+        public async Task SendOrderShippedEmail(OrderRequestInfo order, ApplicationUser user)
+        {
+            initTemplateKeys();
+            if (templateKeysInitialized)
+            {
+                OrderUpdateModel model = new OrderUpdateModel
+                {
+                    UserName = user.UserName,
+                    OrderId = order.OrderRequestInfoGuid,
+                    ArrivalDate = "In the near future",         //todo calculate this
+                    Cost = "Lotsa Moneeyyy",                    //todo calculate this
+                    Destination = order.DropOffAddress.RawInputAddress,
+                    UpdateType = OrderUpdateType.Shipping,
+                    UpdateDescription = "has shipped!",
+                    LogoId = Guid.Empty.ToString()
+                };
+
+                string subject = "Your Order Has Shipped!";
+
+                await SendOrderUpdateEmail(model, user.Email, subject);
+            }
+        }
+
+        public async Task SendOrderDeliveredEmail(OrderRequestInfo order, ApplicationUser user)
+        {
+            initTemplateKeys();
+            if (templateKeysInitialized)
+            {
+                OrderUpdateModel model = new OrderUpdateModel
+                {
+                    UserName = user.UserName,
+                    OrderId = order.OrderRequestInfoGuid,
+                    ArrivalDate = "In the near future",         //todo calculate this
+                    Cost = "Lotsa Moneeyyy",                    //todo calculate this
+                    Destination = order.DropOffAddress.RawInputAddress,
+                    UpdateType = OrderUpdateType.Delivery,
+                    UpdateDescription = "has been delivered!",
+                    LogoId = Guid.Empty.ToString()
+                };
+
+                string subject = "Your Order Has Been Delivered";
+
+                await SendOrderUpdateEmail(model, user.Email, subject);
+            }
+        }
+
+        private async Task SendOrderUpdateEmail(OrderUpdateModel model, string email, string subject, List<Tuple<string, string>> imageIds = null)
+        {
+            if (imageIds == null)
+            {
+                imageIds = new List<Tuple<string, string>>();
+            }
+
+            imageIds.Add(new Tuple<string, string>(System.Web.HttpContext.Current.Server.MapPath("~/favicon.ico"), Guid.Empty.ToString()));
+            var result = Engine.Razor.RunCompile("OrderUpdate", typeof(OrderUpdateModel), model);
+
+            int index = result.IndexOf("<!DOCTYPE html>");
+            result = result.Substring(index);
+
+            await SendAsync(email, subject, result, imageIds);
+        }
+
+        public async Task SendWorkOrderEmail(ApplicationUser contractor, OrderRequestInfo order)
+        {
+            initTemplateKeys();
+            if (templateKeysInitialized)
+            {
+                WorkOrderModel model = new WorkOrderModel
+                {
+                    ContractorUserName = contractor.UserName,
+                    DropOffAddress = order.DropOffAddress.RawInputAddress,
+                    PickUpAddress = order.PickUpAddress.RawInputAddress,
+                    LogoId = Guid.Empty.ToString()
+                };
+                string subject = "Work Order Request";
+
+                await SendWorkOrderEmail(model, contractor.Email, subject);
+            }
+        }
+
+        private async Task SendWorkOrderEmail(WorkOrderModel model, string email, string subject, List<Tuple<string, string>> imageIds = null)
+        {
+            if (imageIds == null)
+            {
+                imageIds = new List<Tuple<string, string>>();
+            }
+
+            imageIds.Add(new Tuple<string, string>(System.Web.HttpContext.Current.Server.MapPath("~/favicon.ico"), Guid.Empty.ToString()));
+            var result = Engine.Razor.RunCompile("WorkOrder", typeof(WorkOrderModel), model);
+
+            int index = result.IndexOf("<!DOCTYPE html>");
+            result = result.Substring(index);
+
+            await SendAsync(email, subject, result, imageIds);
+        }
+
     }
 
     public class SmsService : IIdentityMessageService

@@ -114,12 +114,8 @@ namespace PracticalWerewolf.Controllers
 
             UnitOfWork.SaveChanges();
 
+            //RoutePlannerService.BeginAssignOrderTask();
             await RoutePlannerService.AssignOrders();
-
-            //OrderService.AssignOrders();
-            UnitOfWork.SaveChanges();
-            //Task task = new Task(new Action(RoutePlannerService.AssignOrders));
-            //task.Start();
 
             return RedirectToAction("Index", new { message = OrderMessageId.OrderCreatedSuccess });
         }

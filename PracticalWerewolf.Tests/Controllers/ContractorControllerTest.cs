@@ -227,7 +227,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var contractorService = new Mock<IContractorService>();
             var orderService = new Mock<IOrderService>();
             var unitOfWork = new Mock<IUnitOfWork>();
-            var contractorController = new ContractorController(context.Object, orderService.Object, contractorService.Object, unitOfWork.Object);
+            var mockContext = context.Object;
+            var contractorController = new ContractorController(mockContext, orderService.Object, contractorService.Object, unitOfWork.Object);
             
             var result = contractorController.Approve(Guid.NewGuid(), true) as RedirectToRouteResult;
 
