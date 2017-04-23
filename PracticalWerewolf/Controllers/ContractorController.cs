@@ -204,9 +204,10 @@ namespace PracticalWerewolf.Controllers
 
                     var guid = new Guid(id);
                     var contractor = ContractorService.GetContractor(guid);
-                    var model = new ContractorIndexModel
+                    var model = new ContractorStatusModel
                     {
-                        ContractorInfo = contractor
+                        ContractorGuid = guid,
+                        ContractorStatus = contractor.IsAvailable
                     };
 
                     return PartialView("_UpdateStatus", model);
@@ -222,20 +223,20 @@ namespace PracticalWerewolf.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UpdateStatus(ContractorIndexModel model)
+        public async Task<ActionResult> UpdateStatus(ContractorStatusModel model)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    ContractorService.SetIsAvailable(model.ContractorInfo.ContractorInfoGuid, !model.ContractorInfo.IsAvailable);
+                    ContractorService.SetIsAvailable(model.ContractorGuid, !model.ContractorStatus);
                     UnitOfWork.SaveChanges();
-                    var queuedOrders = OrderService.GetQueuedOrders(model.ContractorInfo);
+                    var queuedOrders = OrderService.GetQueuedOrders(model.ContractorGuid);
                     if (queuedOrders != null)
                     {
                         foreach (var order in queuedOrders)
                         {
-                            OrderService.UnqueueOrder(order, model.ContractorInfo);
+                            OrderService.UnqueueOrder(order, model.ContractorGuid);
                         }
                         await RoutePlannerService.AssignOrders();
 
@@ -243,12 +244,12 @@ namespace PracticalWerewolf.Controllers
                     }
                     return RedirectToAction("UpdateStatus", "Contractor", new { Message = ContractorMessageId.StatusChangeSuccess });
                 }
-                catch
+                catch(Exception e)
                 {
                     return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.StatusError });
                 }
             }
-            return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.StatusError });
+            return RedirectToAction("Index", "Contractor", new { Message = "bad model" });
         }
 
         [Authorize(Roles = "Contractor")]

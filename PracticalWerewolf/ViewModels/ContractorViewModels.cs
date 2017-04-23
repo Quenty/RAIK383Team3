@@ -49,7 +49,15 @@ namespace PracticalWerewolf.ViewModels.Contractor
     {
         public ContractorInfo ContractorInfo { get; set; }
     }
-   
+
+    public class ContractorStatusModel
+    {
+        [Required]
+        public Guid ContractorGuid { get; set; }
+
+        public Boolean ContractorStatus { get; set; }
+    }
+
     public class PendingOrderViewModel
     {
         [Display(Name = "Pending Orders")]

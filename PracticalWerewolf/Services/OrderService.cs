@@ -69,8 +69,9 @@ namespace PracticalWerewolf.Services
             ContractorStore.Update(contractor);
         }
 
-        public void UnqueueOrder(Order order, ContractorInfo contractor)
+        public void UnqueueOrder(Order order, Guid contractorInfoGuid)
         {
+            ContractorInfo contractor = ContractorStore.Single(contractorInfo => contractorInfo.ContractorInfoGuid == contractorInfoGuid);
             contractor.AssignedOrders.Remove(order.TrackInfo);
             order.TrackInfo.Assignee = null;
             OrderStore.Update(order);

@@ -21,6 +21,6 @@ namespace PracticalWerewolf.Services.Interfaces
         object GetOrders(CustomerInfo customerInfo);
         void SetOrderAsComplete(Guid guid);
         void AssignOrders();
-        void UnqueueOrder(Order order, ContractorInfo contractor);
+        void UnqueueOrder(Order order, Guid contractorInfoGuid);
     }
 }
