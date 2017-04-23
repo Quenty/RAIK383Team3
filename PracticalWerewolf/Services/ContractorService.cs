@@ -68,7 +68,6 @@ namespace PracticalWerewolf.Services
                 .Include(c => c.Truck.UsedCapacity);
         }
 
-
         public void UpdateContractorTruck(Truck truck, ApplicationUser driver)
         {
             driver.ContractorInfo.Truck = truck;

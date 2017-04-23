@@ -79,7 +79,7 @@ namespace PracticalWerewolf.Services
 
             _AlreadyCalculated = true;
 
-            if (!IsWithinMaxCapacity(Order.RequestInfo.Size, Contractor.Truck.MaxCapacity))
+            if (!Order.RequestInfo.Size.FitsIn(Contractor.Truck.MaxCapacity))
             {
                 _WillWork = false;
                 return;
@@ -220,11 +220,11 @@ namespace PracticalWerewolf.Services
                 TruckCapacityUnit newCapacity;
                 if(stop.Type == StopType.PickUp)
                 {
-                    newCapacity = AddCapacities(current, stop.Order.RequestInfo.Size);
+                    newCapacity = current + stop.Order.RequestInfo.Size;
                 }
                 else
                 {
-                    newCapacity = RemoveCapacities(current, stop.Order.RequestInfo.Size);
+                    newCapacity = current - stop.Order.RequestInfo.Size;
                 }
 
                 _capacityUnits.Add(newCapacity);
@@ -238,14 +238,14 @@ namespace PracticalWerewolf.Services
         {
             List<Tuple<int, int>> sublists = new List<Tuple<int, int>>();
             int count = Route.Count;
-            TruckCapacityUnit pickUpSize = Order.RequestInfo.Size;
+            TruckCapacityUnit orderSize = Order.RequestInfo.Size;
             int lastFirstSublistStop = 0;
 
             for(int i = 0; i < count; i++)
             {
-                TruckCapacityUnit capacityWithPickUp = AddCapacities(_capacityUnits[i], pickUpSize);
+                TruckCapacityUnit capacityWithPickUp = _capacityUnits[i] + orderSize;
 
-                if (!IsWithinMaxCapacity(capacityWithPickUp, Contractor.Truck.MaxCapacity))
+                if (!capacityWithPickUp.FitsIn(Contractor.Truck.MaxCapacity))
                 {
                     var number = i - lastFirstSublistStop + 1;  //note: we include the last stop even though we can't drop it off after. we include it so that we can calculate the additional distance
                     if (number > 1)
@@ -355,13 +355,13 @@ namespace PracticalWerewolf.Services
 
         private int GetDistanceFromPickUp(RouteStop stop)
         {
-            CivicAddressDb address = null;
-
             if (stop.Equals(PickUp))
             {
                 return 0;
             }
-            else if (stop.Equals(DropOff))
+
+            CivicAddressDb address = null;
+            if (stop.Equals(DropOff))
             {
                 address = Order.RequestInfo.DropOffAddress;
             }
@@ -483,29 +483,6 @@ namespace PracticalWerewolf.Services
                 logger.Warn($"Failed to retrieve address {address.ToString()}");
                 return TimeSpan.MaxValue;
             }
-        }
-
-        private TruckCapacityUnit AddCapacities(TruckCapacityUnit capacity1, TruckCapacityUnit capacity2)
-        {
-            return new TruckCapacityUnit
-            {
-                Mass = capacity1.Mass + capacity2.Mass,
-                Volume = capacity1.Volume + capacity2.Volume
-            };
-        }
-
-        private TruckCapacityUnit RemoveCapacities(TruckCapacityUnit capacity1, TruckCapacityUnit capacity2)
-        {
-            return new TruckCapacityUnit
-            {
-                Mass = capacity1.Mass - capacity2.Mass,
-                Volume = capacity1.Volume - capacity2.Volume
-            };
-        }
-
-        private bool IsWithinMaxCapacity(TruckCapacityUnit capacity, TruckCapacityUnit max)
-        {
-            return (capacity.Mass <= max.Mass) && (capacity.Volume <= max.Volume);
         }
 
         private void OrderRouteStops()

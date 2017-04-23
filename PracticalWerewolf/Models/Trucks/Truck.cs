@@ -22,7 +22,32 @@ namespace PracticalWerewolf.Models.Trucks
         [Required]
         [Display(Name = "Volume (cubic ft)")]
         public double Volume { get; set; }
+
+        public static TruckCapacityUnit operator +(TruckCapacityUnit capacity1, TruckCapacityUnit capacity2)
+        {
+            return new TruckCapacityUnit
+            {
+                Mass = capacity1.Mass + capacity2.Mass,
+                Volume = capacity1.Volume + capacity2.Volume
+            };
+        }
+
+        public static TruckCapacityUnit operator -(TruckCapacityUnit capacity1, TruckCapacityUnit capacity2)
+        {
+            return new TruckCapacityUnit
+            {
+                Mass = capacity1.Mass - capacity2.Mass,
+                Volume = capacity1.Volume - capacity2.Volume
+            };
+        }
+
+        public bool FitsIn(TruckCapacityUnit max)
+        {
+            return (Mass <= max.Mass) && (Volume <= max.Volume);
+        }
     }
+
+    
 
     public class Truck
     {
