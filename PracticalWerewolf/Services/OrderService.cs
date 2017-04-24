@@ -130,7 +130,7 @@ namespace PracticalWerewolf.Services
                 var customerId = order.RequestInfo.Requester.CustomerInfoGuid;
                 var customer = UserManager.Users.Single(x => x.CustomerInfo.CustomerInfoGuid == customerId);
 
-                await EmailService.SendOrderShippedEmail(order.RequestInfo, customer);
+                await EmailService.SendOrderShippedEmail(order, customer);
             }
             else
             {
@@ -158,7 +158,7 @@ namespace PracticalWerewolf.Services
             var customerId = order.RequestInfo.Requester.CustomerInfoGuid;
             var customer = UserManager.Users.Single(x => x.CustomerInfo.CustomerInfoGuid == customerId);
 
-            await EmailService.SendOrderDeliveredEmail(order.RequestInfo, customer);
+            await EmailService.SendOrderDeliveredEmail(order, customer);
         }
 
         public IEnumerable<Order> GetOrderHistory(Guid customerInfoGuid)

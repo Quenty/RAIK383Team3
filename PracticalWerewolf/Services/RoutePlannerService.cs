@@ -103,7 +103,7 @@ namespace PracticalWerewolf.Services
             _orderService.AssignOrder(order.OrderGuid, optimalPlan.Contractor);
 
             ApplicationUser user = _contractorService.GetUserByContractorInfo(optimalPlan.Contractor);
-            _emailService.SendWorkOrderEmail(user, optimalPlan.Order.RequestInfo);
+            _emailService.SendWorkOrderEmail(user, optimalPlan.Order);
 
             _unitOfWork.SaveChanges();
         }

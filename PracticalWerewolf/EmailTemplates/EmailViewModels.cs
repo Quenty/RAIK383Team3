@@ -23,6 +23,7 @@ namespace PracticalWerewolf.EmailTemplates
         public string Destination { get; set; }
         public string Cost { get; set; }
         public string LogoId { get; set; }
+        public string DetailsUrl { get; set; }
     }
 
     public class WorkOrderModel
@@ -31,5 +32,6 @@ namespace PracticalWerewolf.EmailTemplates
         public string PickUpAddress { get; set; }
         public string DropOffAddress { get; set; }
         public string LogoId { get; set; }
+        public string DetailsUrl { get; set; }
     }
 }

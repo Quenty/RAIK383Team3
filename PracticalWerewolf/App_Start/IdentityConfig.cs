@@ -22,6 +22,7 @@ using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.EmailTemplates;
 using RazorEngine;
 using RazorEngine.Templating;
+using System.Web;
 
 namespace PracticalWerewolf
 {
@@ -30,6 +31,8 @@ namespace PracticalWerewolf
         private static readonly ILog logger = LogManager.GetLogger(typeof(EmailService));
         private static bool templateKeysInitialized = false;
         private static string faviconFilePath;
+        private static string url;
+        private static string detailsPageUrl = "/Order/Order/";
 
         public EmailService()
         {
@@ -50,6 +53,7 @@ namespace PracticalWerewolf
                 try
                 {
                     faviconFilePath = System.Web.HttpContext.Current.Server.MapPath(@"~/favicon.ico");
+                    url = HttpContext.Current.Request.Url.Authority;
                     foreach (var keys in templateKeys)
                     {
                         var filePath = keys.Item2;
@@ -164,7 +168,7 @@ namespace PracticalWerewolf
             }
         }
 
-        public async Task SendOrderConfirmEmail(OrderRequestInfo order, ApplicationUser user)
+        public async Task SendOrderConfirmEmail(Order order, ApplicationUser user)
         {
             initTemplateKeys();
             if (templateKeysInitialized)
@@ -172,13 +176,14 @@ namespace PracticalWerewolf
                 OrderUpdateModel model = new OrderUpdateModel
                 {
                     UserName = user.UserName,
-                    OrderId = order.OrderRequestInfoGuid,
+                    OrderId = order.RequestInfo.OrderRequestInfoGuid,
                     ArrivalDate = "In the near future",         //todo calculate this
                     Cost = "Lotsa Moneeyyy",                    //todo calculate this
-                    Destination = order.DropOffAddress.RawInputAddress,
+                    Destination = order.RequestInfo.DropOffAddress.RawInputAddress,
                     UpdateType = OrderUpdateType.Order,
                     UpdateDescription = "has been placed!",
-                    LogoId = Guid.Empty.ToString()
+                    LogoId = Guid.Empty.ToString(),
+                    DetailsUrl = GetOrderDetailsUrl(order)
                 };
 
                 string subject = "Order Confirmation";
@@ -187,7 +192,7 @@ namespace PracticalWerewolf
             }
         }
 
-        public async Task SendOrderShippedEmail(OrderRequestInfo order, ApplicationUser user)
+        public async Task SendOrderShippedEmail(Order order, ApplicationUser user)
         {
             initTemplateKeys();
             if (templateKeysInitialized)
@@ -195,13 +200,14 @@ namespace PracticalWerewolf
                 OrderUpdateModel model = new OrderUpdateModel
                 {
                     UserName = user.UserName,
-                    OrderId = order.OrderRequestInfoGuid,
+                    OrderId = order.RequestInfo.OrderRequestInfoGuid,
                     ArrivalDate = "In the near future",         //todo calculate this
                     Cost = "Lotsa Moneeyyy",                    //todo calculate this
-                    Destination = order.DropOffAddress.RawInputAddress,
+                    Destination = order.RequestInfo.DropOffAddress.RawInputAddress,
                     UpdateType = OrderUpdateType.Shipping,
                     UpdateDescription = "has shipped!",
-                    LogoId = Guid.Empty.ToString()
+                    LogoId = Guid.Empty.ToString(),
+                    DetailsUrl = GetOrderDetailsUrl(order)
                 };
 
                 string subject = "Your Order Has Shipped!";
@@ -210,7 +216,7 @@ namespace PracticalWerewolf
             }
         }
 
-        public async Task SendOrderDeliveredEmail(OrderRequestInfo order, ApplicationUser user)
+        public async Task SendOrderDeliveredEmail(Order order, ApplicationUser user)
         {
             initTemplateKeys();
             if (templateKeysInitialized)
@@ -218,13 +224,14 @@ namespace PracticalWerewolf
                 OrderUpdateModel model = new OrderUpdateModel
                 {
                     UserName = user.UserName,
-                    OrderId = order.OrderRequestInfoGuid,
+                    OrderId = order.RequestInfo.OrderRequestInfoGuid,
                     ArrivalDate = "In the near future",         //todo calculate this
                     Cost = "Lotsa Moneeyyy",                    //todo calculate this
-                    Destination = order.DropOffAddress.RawInputAddress,
+                    Destination = order.RequestInfo.DropOffAddress.RawInputAddress,
                     UpdateType = OrderUpdateType.Delivery,
                     UpdateDescription = "has been delivered!",
-                    LogoId = Guid.Empty.ToString()
+                    LogoId = Guid.Empty.ToString(),
+                    DetailsUrl = GetOrderDetailsUrl(order)
                 };
 
                 string subject = "Your Order Has Been Delivered";
@@ -249,7 +256,7 @@ namespace PracticalWerewolf
             await SendAsync(email, subject, result, imageIds);
         }
 
-        public void SendWorkOrderEmail(ApplicationUser contractor, OrderRequestInfo order)
+        public void SendWorkOrderEmail(ApplicationUser contractor, Order order)
         {
             initTemplateKeys();
             if (templateKeysInitialized)
@@ -257,9 +264,10 @@ namespace PracticalWerewolf
                 WorkOrderModel model = new WorkOrderModel
                 {
                     ContractorUserName = contractor.UserName,
-                    DropOffAddress = order.DropOffAddress.RawInputAddress,
-                    PickUpAddress = order.PickUpAddress.RawInputAddress,
-                    LogoId = Guid.Empty.ToString()
+                    DropOffAddress = order.RequestInfo.DropOffAddress.RawInputAddress,
+                    PickUpAddress = order.RequestInfo.PickUpAddress.RawInputAddress,
+                    LogoId = Guid.Empty.ToString(),
+                    DetailsUrl = GetOrderDetailsUrl(order)
                 };
                 string subject = "Work Order Request";
 
@@ -283,6 +291,10 @@ namespace PracticalWerewolf
             Send(email, subject, result, imageIds);
         }
 
+        private string GetOrderDetailsUrl(Order order)
+        {
+            return $"https://{url}{detailsPageUrl}{order.OrderGuid.ToString()}";
+        }
     }
 
     public class SmsService : IIdentityMessageService

@@ -120,11 +120,11 @@ namespace PracticalWerewolf.Controllers
                 Requester = Requester
             };
 
-            OrderRequestService.CreateOrderRequestInfo(request);
+            var order = OrderRequestService.CreateOrderRequestInfo(request);
 
             UnitOfWork.SaveChanges();
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            await EmailService.SendOrderConfirmEmail(request, user);
+            await EmailService.SendOrderConfirmEmail(order, user);
 
             BackgroundJob.Enqueue(() =>  RoutePlannerService.AssignOrders()  );
             

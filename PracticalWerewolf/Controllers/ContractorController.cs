@@ -173,7 +173,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         [Authorize(Roles = "Contractor")]
-        public async Task<ActionResult> _Pending()
+        public async Task<ActionResult> Pending()
         {
             var userId = User.Identity.GetUserId();
             if (userId != null)
@@ -243,7 +243,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         [Authorize(Roles = "Contractor")]
-        public async Task<ActionResult> _Current()
+        public async Task<ActionResult> Current()
         {
             var userId = User.Identity.GetUserId();
             if (userId != null)
@@ -267,7 +267,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         [Authorize(Roles = "Contractor")]
-        public async Task<ActionResult> _Delivered()
+        public async Task<ActionResult> Delivered()
         {
             var userId = User.Identity.GetUserId();
             if (userId != null)
