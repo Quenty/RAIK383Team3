@@ -185,25 +185,6 @@ namespace PracticalWerewolf.Controllers
             }
         }
 
-        // POST: Order/Edit/guid
-        [HttpPost]
-        [Authorize(Roles = "Customer, Employees")]
-        public ActionResult Edit(string id, FormCollection collection)
-        {
-            // Depends upon IOrderRequestService.UpdateRequest
-            // Save the updated information to the database
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
         // POST: Order/Cancel/guid
         [HttpPost]
         [Authorize(Roles = "Customer, Employees")]
