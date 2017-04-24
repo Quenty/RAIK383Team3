@@ -243,7 +243,7 @@ namespace PracticalWerewolf.Controllers
                 return RedirectToAction("Index", "Contractor", new { Message = OrderMessageId.Error });
         }
 
-        //[Authorize (Roles = "Employee")]
+        [Authorize (Roles = "Employee")]
         public ActionResult AllOrders()
         {
             var orders = OrderService.GetOrders();

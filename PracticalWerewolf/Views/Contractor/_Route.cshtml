@@ -11,7 +11,7 @@
 @if (Model.Route != null && Model.Route.Count() > 0)
 {
     <h3>
-        You have @Html.DisplayFor(model => model.Route.FirstOrDefault().DistanceToNextStop) miles until your next stop 
+        From your previous route stop, you have @Html.DisplayFor(model => model.Route.FirstOrDefault().DistanceToNextStop) meters until you reach your next destination. 
     </h3>
     <br />
 

@@ -29,8 +29,6 @@ namespace PracticalWerewolf.Controllers
             TruckLocationUpdatedSuccess
         }
 
-
-
         private static readonly ILog logger = LogManager.GetLogger(typeof(TruckController));
         ITruckService TruckService;
         IContractorService ContractorService;
