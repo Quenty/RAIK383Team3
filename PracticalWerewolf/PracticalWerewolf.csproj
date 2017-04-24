@@ -413,6 +413,8 @@
     <Content Include="Content\Images\igor-ovsyannykov-151127.jpg" />
     <Content Include="Content\Images\lukas-budimaier-131294-small.jpg" />
     <Content Include="Content\Images\lukas-budimaier-131294.jpg" />
+    <Content Include="Content\Images\truck.jpg" />
+    <Content Include="Content\Images\trucking.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
