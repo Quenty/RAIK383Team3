@@ -124,7 +124,9 @@ namespace PracticalWerewolf.Controllers
 
             UnitOfWork.SaveChanges();
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            await EmailService.SendOrderConfirmEmail(order, user);
+
+            var cost = OrderService.CalculateOrderCost(order);
+            await EmailService.SendOrderConfirmEmail(order, user, cost);
 
             BackgroundJob.Enqueue(() =>  RoutePlannerService.AssignOrders()  );
             

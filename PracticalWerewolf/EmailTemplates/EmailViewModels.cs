@@ -19,7 +19,7 @@ namespace PracticalWerewolf.EmailTemplates
         public OrderUpdateType UpdateType { get; set; }
         public string UpdateDescription { get; set; }
         public Guid OrderId { get; set; }
-        public string ArrivalDate { get; set; }
+        public string PickUpAddress { get; set; }
         public string Destination { get; set; }
         public string Cost { get; set; }
         public string LogoId { get; set; }

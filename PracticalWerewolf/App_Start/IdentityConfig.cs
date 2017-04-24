@@ -5,17 +5,11 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
 using Microsoft.AspNet.Identity.Owin;
-using PracticalWerewolf;
 using Microsoft.Owin.Security;
 using PracticalWerewolf.Models;
 using System.Net.Mail;
 using log4net;
 using System.Collections.Generic;
-using Twilio;
-using Twilio.Clients;
-using Twilio.Rest.Api.V2010.Account;
-using Twilio.Types;
-using Twilio.Base;
 using PracticalWerewolf.Helpers;
 using PracticalWerewolf.Application;
 using PracticalWerewolf.Models.Orders;
@@ -168,7 +162,7 @@ namespace PracticalWerewolf
             }
         }
 
-        public async Task SendOrderConfirmEmail(Order order, ApplicationUser user)
+        public async Task SendOrderConfirmEmail(Order order, ApplicationUser user, decimal cost)
         {
             initTemplateKeys();
             if (templateKeysInitialized)
@@ -177,8 +171,8 @@ namespace PracticalWerewolf
                 {
                     UserName = user.UserName,
                     OrderId = order.RequestInfo.OrderRequestInfoGuid,
-                    ArrivalDate = "In the near future",         //todo calculate this
-                    Cost = "Lotsa Moneeyyy",                    //todo calculate this
+                    Cost = string.Format("${0:0.00}", cost),
+                    PickUpAddress = order.RequestInfo.PickUpAddress.RawInputAddress,
                     Destination = order.RequestInfo.DropOffAddress.RawInputAddress,
                     UpdateType = OrderUpdateType.Order,
                     UpdateDescription = "has been placed!",
@@ -192,7 +186,7 @@ namespace PracticalWerewolf
             }
         }
 
-        public async Task SendOrderShippedEmail(Order order, ApplicationUser user)
+        public async Task SendOrderShippedEmail(Order order, ApplicationUser user, decimal cost)
         {
             initTemplateKeys();
             if (templateKeysInitialized)
@@ -201,8 +195,8 @@ namespace PracticalWerewolf
                 {
                     UserName = user.UserName,
                     OrderId = order.RequestInfo.OrderRequestInfoGuid,
-                    ArrivalDate = "In the near future",         //todo calculate this
-                    Cost = "Lotsa Moneeyyy",                    //todo calculate this
+                    Cost = string.Format("${0:0.00}", cost),
+                    PickUpAddress = order.RequestInfo.PickUpAddress.RawInputAddress,
                     Destination = order.RequestInfo.DropOffAddress.RawInputAddress,
                     UpdateType = OrderUpdateType.Shipping,
                     UpdateDescription = "has shipped!",
@@ -216,7 +210,7 @@ namespace PracticalWerewolf
             }
         }
 
-        public async Task SendOrderDeliveredEmail(Order order, ApplicationUser user)
+        public async Task SendOrderDeliveredEmail(Order order, ApplicationUser user, decimal cost)
         {
             initTemplateKeys();
             if (templateKeysInitialized)
@@ -225,8 +219,8 @@ namespace PracticalWerewolf
                 {
                     UserName = user.UserName,
                     OrderId = order.RequestInfo.OrderRequestInfoGuid,
-                    ArrivalDate = "In the near future",         //todo calculate this
-                    Cost = "Lotsa Moneeyyy",                    //todo calculate this
+                    Cost = string.Format("${0:0.00}", cost),
+                    PickUpAddress = order.RequestInfo.PickUpAddress.RawInputAddress,
                     Destination = order.RequestInfo.DropOffAddress.RawInputAddress,
                     UpdateType = OrderUpdateType.Delivery,
                     UpdateDescription = "has been delivered!",
