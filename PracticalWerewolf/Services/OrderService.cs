@@ -138,7 +138,7 @@ namespace PracticalWerewolf.Services
             }
         }
 
-        public object GetOrders()
+        public IEnumerable<Order> GetOrders()
         {
             return OrderStore.GetAll().ToList();
         }

@@ -16,7 +16,7 @@ namespace PracticalWerewolf.Services.Interfaces
         IEnumerable<Order> GetDeliveredOrders(ContractorInfo contractor);
         void AssignOrder(Guid orderGuid, ContractorInfo contractor);
         void CancelOrder(Guid orderGuid);
-        object GetOrders();
+        IEnumerable<Order> GetOrders();
         object GetOrders(CustomerInfo customerInfo);
         void SetOrderAsComplete(Guid guid);
         void AssignOrders();

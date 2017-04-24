@@ -247,7 +247,12 @@ namespace PracticalWerewolf.Controllers
         public ActionResult AllOrders()
         {
             var orders = OrderService.GetOrders();
-            return View("Order", orders);
+            var model = new PagedOrderListViewModel
+            {
+                Orders = OrderService.GetOrders(),
+                DisplayName = "All Orders"
+            };
+            return View("_PagedOrderListView", model);
         }
 
         public ActionResult Orders()
