@@ -7,9 +7,10 @@ using System.Collections.Generic;
 using System.Data.Entity.Spatial;
 using System.Device.Location;
 using System.Linq;
+using System.Text;
 using System.Web;
 
-namespace PracticalWerewolf.Controllers
+namespace PracticalWerewolf.Helpers
 {
     public class LocationHelper
     {
@@ -50,7 +51,11 @@ namespace PracticalWerewolf.Controllers
                 logger.Error("GetRouteBetweenLocations(CivicAddressDb, CivicAddressDb) - null argument");
                 throw new ArgumentNullException();
             }
-            return GetRouteBetweenLocations(origin.RawInputAddress, destination.RawInputAddress);
+
+            string originAddress = origin.ToString();
+            string destinationAddress = destination.ToString();
+
+            return GetRouteBetweenLocations(originAddress, destinationAddress);
         }
     }
 }

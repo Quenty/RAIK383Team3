@@ -9,7 +9,7 @@ using System.Web;
 
 namespace PracticalWerewolf.Stores
 {
-    public class OrderStore : EntityStore<Order>, IOrderStore 
+    public class OrderStore : EntityStore<Order>, IOrderStore
     {
         public OrderStore(IDbSetFactory context) : base(context)
         {
