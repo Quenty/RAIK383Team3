@@ -9,12 +9,14 @@ using PracticalWerewolf.Models.Trucks;
 using System.Linq;
 using PracticalWerewolf.Helpers;
 using log4net;
+using PracticalWerewolf.Helpers.Interfaces;
 
 namespace PracticalWerewolf.Services
 {
     public class ContractorRoutePlanner
     {
-        private static ILog logger = LogManager.GetLogger(typeof(ContractorRoutePlanner)); 
+        private static ILog logger = LogManager.GetLogger(typeof(ContractorRoutePlanner));
+        public static ILocationHelper LocationHelper = new LocationHelper();
         private bool _WillWork = true;
 
         private bool _AlreadyCalculated = false;
@@ -168,7 +170,7 @@ namespace PracticalWerewolf.Services
             }
             else
             {
-                logger.Warn($"Google Maps Api failed to load address {dropOffLocation}. Error is {pickUpToDropOff.Status}");
+                throw new ApplicationException($"Google Maps Api failed to load address {dropOffLocation}. Error is {pickUpToDropOff.Status}");
             }
            
             foreach(var subroute in sublists)
@@ -190,7 +192,7 @@ namespace PracticalWerewolf.Services
                         }
                         else
                         {
-                            logger.Warn($"Google Maps Api failed to load address {location}. Error is {response.Status}");
+                            throw new ApplicationException($"Google Maps Api failed to load address {dropOffLocation}. Error is {pickUpToDropOff.Status}");
                         }
                     }
 
@@ -204,7 +206,7 @@ namespace PracticalWerewolf.Services
                         }
                         else
                         {
-                            logger.Warn($"Google Maps Api failed to load address {location}. Error is {response.Status}");
+                            throw new ApplicationException($"Google Maps Api failed to load address {dropOffLocation}. Error is {pickUpToDropOff.Status}");
                         }
                     }
                 }
