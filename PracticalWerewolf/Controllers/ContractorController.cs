@@ -38,13 +38,16 @@ namespace PracticalWerewolf.Controllers
         private readonly IContractorService ContractorService;
         private readonly IUnitOfWork UnitOfWork;
         private readonly IOrderService OrderService;
+        private readonly IRouteStopService RouteStopService;
 
-        public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService, IUnitOfWork UnitOfWork)
+        public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService,
+            IUnitOfWork UnitOfWork, IRouteStopService RouteStopService)
         {
             this.UnitOfWork = UnitOfWork;
             this.UserManager = UserManager;
             this.ContractorService = ContractorService;
             this.OrderService = OrderService;
+            this.RouteStopService = RouteStopService;
         }
 
         private void GenerateErrorMessage(ContractorMessageId? message)
@@ -193,6 +196,25 @@ namespace PracticalWerewolf.Controllers
             {
                 return View();
             }
+        }
+
+        //Returns partial view with an order list of deliveries
+        public async Task<ActionResult> Route()
+        {
+            var userId = User.Identity.GetUserId();
+            if(userId != null)
+            {
+                var user = await UserManager.FindByIdAsync(userId);
+                var contractor = user.ContractorInfo;
+
+                var model = new OrderRouteViewModel()
+                {
+                    DisplayName = "Your Current Route",
+                    Route = RouteStopService.GetContractorRoute(contractor).ToList()
+                };
+                return PartialView("_Route", model);
+            }
+            return View("index", new { Message = ContractorMessageId.Error });
         }
 
 

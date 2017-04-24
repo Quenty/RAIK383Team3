@@ -1,5 +1,6 @@
 using PracticalWerewolf.Controllers.Validation;
 using PracticalWerewolf.Models.Orders;
+using PracticalWerewolf.Models.Routes;
 using PracticalWerewolf.Models.UserInfos;
 using System;
 using System.Collections.Generic;
@@ -57,11 +58,18 @@ namespace PracticalWerewolf.ViewModels.Contractor
 
         public Boolean ContractorStatus { get; set; }
     }
-   
+
     public class PagedOrderListViewModel
     {
         public String DisplayName { get; set; } = "Orders";
         public IEnumerable<Order> Orders { get; set; }
         public String OrderListCommand { get; set; } = "Details";
     }
+
+    public class OrderRouteViewModel
+    {
+        public String DisplayName { get; set; } = "Orders";
+        public IEnumerable<RouteStop> Route { get; set; }
+    }
+
 }
