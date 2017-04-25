@@ -57,5 +57,20 @@ namespace PracticalWerewolf.Helpers
 
             return GetRouteBetweenLocations(originAddress, destinationAddress);
         }
+
+        public static DirectionsResponse GetRouteBetweenLocations(DbGeography origin, CivicAddressDb destination)
+        {
+            if (origin == null || destination == null)
+            {
+                //TODO: add possibly valuable info
+                logger.Error("GetRouteBetweenLocations(DbGeography, CivicAddressDb) - null argument");
+                throw new ArgumentNullException();
+            }
+
+            string originAddress = $"{origin.Latitude}, {origin.Longitude}";
+            string destinationAddress = destination.ToString();
+
+            return GetRouteBetweenLocations(originAddress, destinationAddress);
+        }
     }
 }

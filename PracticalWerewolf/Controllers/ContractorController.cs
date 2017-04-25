@@ -204,6 +204,7 @@ namespace PracticalWerewolf.Controllers
 
                 var model = new OrderRouteViewModel()
                 {
+                    DistanceToNextStop = RouteStopService.GetDistanceToNextStopInMiles(contractor),
                     DisplayName = "Your Current Route",
                     Route = RouteStopService.GetContractorRoute(contractor).ToList()
                 };

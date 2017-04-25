@@ -37,6 +37,9 @@ namespace PracticalWerewolf.ViewModels.Orders
 
     public class OrderDetailsViewModel
     {
+        [Display(Name = "Order Id")]
+        public Guid OrderId { get; set; }
+
         [Display(Name = "Pick up address", Description = "Where to pick up your package")]
         public CivicAddressDb PickUpAddress { get; set; }
 

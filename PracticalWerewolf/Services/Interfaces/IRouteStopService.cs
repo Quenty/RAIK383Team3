@@ -14,6 +14,8 @@ namespace PracticalWerewolf.Services.Interfaces
 
         IEnumerable<RouteStop> GetContractorRoute(ContractorInfo contractor);
 
+        string GetDistanceToNextStopInMiles(ContractorInfo contractor);
+
         void Update(RouteStop entity);
 
         void Update(IEnumerable<RouteStop> entities);

@@ -68,6 +68,7 @@ namespace PracticalWerewolf.ViewModels.Contractor
 
     public class OrderRouteViewModel
     {
+        public String DistanceToNextStop { get; set; }
         public String DisplayName { get; set; } = "Orders";
         public IEnumerable<RouteStop> Route { get; set; }
     }

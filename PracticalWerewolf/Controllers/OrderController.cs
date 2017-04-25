@@ -169,6 +169,7 @@ namespace PracticalWerewolf.Controllers
 
                 var model = new OrderDetailsViewModel
                 {
+                    OrderId = order.OrderGuid,
                     DropOffAddress = order.RequestInfo.DropOffAddress,
                     PickUpAddress = order.RequestInfo.PickUpAddress,
                     Size = order.RequestInfo.Size,

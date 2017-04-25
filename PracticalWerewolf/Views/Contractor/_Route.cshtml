@@ -10,7 +10,14 @@
 
 @if (Model.Route != null && Model.Route.Count() > 0)
 {
-    
+    if (Model.DistanceToNextStop != null)
+    {
+        <h3>
+            From your previous route stop, you have @Html.DisplayFor(model => model.DistanceToNextStop) until you reach your next destination.
+        </h3>
+        <br />
+    }
+
     <table class="table table-hover">
         <thead>
             <tr>
