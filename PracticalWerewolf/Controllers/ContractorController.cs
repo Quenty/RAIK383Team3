@@ -13,6 +13,7 @@ using System.Web;
 using System.Data.Entity.Validation;
 using System.Web.Mvc;
 using Hangfire;
+using log4net;
 
 
 namespace PracticalWerewolf.Controllers
@@ -36,6 +37,7 @@ namespace PracticalWerewolf.Controllers
             TruckLocationUpdatedSuccess
         }
 
+        private static ILog logger = LogManager.GetLogger(typeof(ContractorController));
         private readonly ApplicationUserManager UserManager;
         private readonly IContractorService ContractorService;
         private readonly IUnitOfWork UnitOfWork;
@@ -237,12 +239,12 @@ namespace PracticalWerewolf.Controllers
                     ContractorService.SetIsAvailable(model.ContractorGuid, !model.ContractorStatus);
                     UnitOfWork.SaveChanges();
                     if (model.ContractorStatus) { 
-                        var queuedOrders = OrderService.GetInprogressOrdersNoTruck(model.ContractorGuid);
-                        if (queuedOrders.Count() != 0)
+                        var pendingOrders = OrderService.GetInprogressOrdersNoTruck(model.ContractorGuid);
+                        if (pendingOrders.Count() != 0)
                         {
-                            foreach (var order in queuedOrders)
+                            foreach (var order in pendingOrders)
                             {
-                                OrderService.RequeueOrder(order, model.ContractorGuid);
+                                OrderService.UnassignOrder(order, model.ContractorGuid);
                             }
                             UnitOfWork.SaveChanges();
                             BackgroundJob.Enqueue(() => RoutePlannerService.AssignOrders());
@@ -252,10 +254,11 @@ namespace PracticalWerewolf.Controllers
                 }
                 catch(Exception e)
                 {
+                    logger.Warn("Could not change contractor status", e);
                     return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusError }) + "#status");
                 }
             }
-            return RedirectToAction("Index", "Contractor", new { Message = "bad model" });
+            return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusError }) + "#status");
         }
 
         [Authorize(Roles = "Contractor")]
