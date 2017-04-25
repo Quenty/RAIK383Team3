@@ -43,6 +43,22 @@ namespace PracticalWerewolf.Services
             return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.InProgress).ToList();
         }
 
+        public IEnumerable<Order> GetInprogressOrdersNoTruck(ContractorInfo contractorinfo)
+        {
+            var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractorinfo.ContractorInfoGuid).ToList();
+            var assignee = ContractorStore.Single(o => o.ContractorInfoGuid == contractorinfo.ContractorInfoGuid);
+            return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.InProgress).ToList()
+            .Where(o => o.TrackInfo.CurrentTruck != assignee.Truck).ToList();
+        }
+
+        public IEnumerable<Order> GetInprogressOrdersNoTruck(Guid guid)
+        {
+            var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == guid).ToList();
+            var assignee = ContractorStore.Single(o => o.ContractorInfoGuid == guid);
+            return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.InProgress).ToList()
+            .Where(o => o.TrackInfo.CurrentTruck != assignee.Truck).ToList();
+        }
+
         public Order GetOrder(Guid orderGuid)
         {
             Order order = OrderStore.Single(o => o.OrderGuid == orderGuid);
