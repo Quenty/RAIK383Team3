@@ -172,8 +172,13 @@ namespace PracticalWerewolf.Controllers
 
         }
 
+        public ActionResult SetInTruck()
+        {
+            return RedirectToAction("Index", new { Message = ContractorMessageId.Error });
+        }
+
         [Authorize(Roles = "Contractor")]
-        public async Task<ActionResult> _Pending()
+        public async Task<ActionResult> Pending()
         {
             var userId = User.Identity.GetUserId();
             if (userId != null)
@@ -184,14 +189,15 @@ namespace PracticalWerewolf.Controllers
                 var model = new PagedOrderListViewModel()
                 {
                     DisplayName = "Pending orders",
-                    Orders = OrderService.GetQueuedOrders(contractor)
+                    Orders = OrderService.GetInprogressOrdersNoTruck(contractor),
+                    OrderListCommand = "Details"
                 };
 
                 return PartialView("_PagedOrderListPane", model);
             }
             else
             {
-                return View();
+                return RedirectToAction("Index", new { Message = ContractorMessageId.Error });
             }
         }
 
@@ -243,7 +249,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         [Authorize(Roles = "Contractor")]
-        public async Task<ActionResult> _Current()
+        public async Task<ActionResult> Current()
         {
             var userId = User.Identity.GetUserId();
             if (userId != null)
@@ -251,14 +257,22 @@ namespace PracticalWerewolf.Controllers
                 var user = await UserManager.FindByIdAsync(userId);
 
                 var contractor = user.ContractorInfo;
+                try { 
                 var model = new PagedOrderListViewModel()
                 {
                     DisplayName = "Current orders",
-                    Orders = OrderService.GetInprogressOrders(contractor),
+                    Orders = OrderService.GetInprogressOrdersInTruck(contractor),
                     OrderListCommand = "Confirmation"
                 };
-
+                
                 return PartialView("_PagedOrderListPane", model);
+                }
+                catch (Exception e)
+                {
+                    
+                    return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusError }) + "#status");
+                }
+
             }
             else
             {
@@ -267,7 +281,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         [Authorize(Roles = "Contractor")]
-        public async Task<ActionResult> _Delivered()
+        public async Task<ActionResult> Delivered()
         {
             var userId = User.Identity.GetUserId();
             if (userId != null)
