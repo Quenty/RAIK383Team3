@@ -64,7 +64,17 @@ namespace System.Device.Location
 
         public override int GetHashCode()
         {
-            return ToString().GetHashCode();
+            int hash = 17;
+
+            hash = 37 * hash + City.GetHashCode();
+            hash = 37 * hash + State.GetHashCode();
+            hash = 37 * hash + ZipCode.GetHashCode();
+            hash = 37 * hash + Country.GetHashCode();
+            hash = 37 * hash + StreetNumber.GetHashCode();
+            hash = 37 * hash + Route.GetHashCode();
+            hash = 37 * hash + Country.GetHashCode();
+
+            return hash;
         }
 
         public override bool Equals(object obj)
