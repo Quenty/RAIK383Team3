@@ -112,6 +112,7 @@ namespace PracticalWerewolf.App_Start
             
             kernel.Bind<DbContext, IdentityDbContext<ApplicationUser>>().To<ApplicationDbContext>().InNamedOrBackgroundJobScope(context => context.Kernel.Components.GetAll<INinjectHttpApplicationPlugin>().Select(c => c.GetRequestScope(context)).FirstOrDefault(s => s != null));
             kernel.Bind<IUnitOfWork, IDbSetFactory, ApplicationContextAdapter>().To<ApplicationContextAdapter>().InNamedOrBackgroundJobScope(context => context.Kernel.Components.GetAll<INinjectHttpApplicationPlugin>().Select(c => c.GetRequestScope(context)).FirstOrDefault(s => s != null));
+            kernel.Bind<SmsService>().To<SmsService>();
         }        
     }
 }

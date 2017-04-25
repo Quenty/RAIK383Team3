@@ -1,0 +1,86 @@
+﻿@model PracticalWerewolf.ViewModels.Orders.OrderDetailsViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Your Order Details</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.RequestDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RequestDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PickUpAddress)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PickUpAddress.ToString() )
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DropOffAddress)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DropOffAddress.ToString() )
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Size.Mass)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Size.Mass)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Size.Volume)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Size.Volume)
+        </dd>
+
+        <dt>
+            Customer @Html.DisplayNameFor(model => model.Customer.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Customer.Email)
+        </dd>
+
+        @if (Model.Customer.PhoneNumber != null)
+        {
+            <dt>
+                Customer @Html.DisplayNameFor(model => model.Customer.PhoneNumber)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Customer.PhoneNumber)
+            </dd>
+        }
+
+        <dt>
+            Contractor @Html.DisplayNameFor(model => model.Contractor.Email)
+        </dt>
+        @if (Model.Contractor != null)
+            {
+            <dd>
+                @Html.DisplayFor(model => model.Contractor.Email)
+            </dd>
+        }
+        else
+        {
+            <dd>
+                No contractor currently assigned.
+            </dd>
+        }
+
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>

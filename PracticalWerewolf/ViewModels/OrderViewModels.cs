@@ -1,4 +1,5 @@
-﻿using PracticalWerewolf.Models.Trucks;
+﻿using PracticalWerewolf.Models;
+using PracticalWerewolf.Models.Trucks;
 using PracticalWerewolf.ViewModels.Contractor;
 using PracticalWerewolf.ViewModels.Paged;
 using System;
@@ -33,4 +34,27 @@ namespace PracticalWerewolf.ViewModels.Orders
     {
         public Guid Guid { get; set; }
     }
+
+    public class OrderDetailsViewModel
+    {
+        [Display(Name = "Pick up address", Description = "Where to pick up your package")]
+        public CivicAddressDb PickUpAddress { get; set; }
+
+        [Display(Name = "Package size", Description = "Approximately how big is your package")]
+        public TruckCapacityUnit Size { get; set; }
+
+        [Display(Name = "Drop off address", Description = "Where your package going")]
+        public CivicAddressDb DropOffAddress { get; set; }
+
+        [Display(Name = "Date Requested")]
+        public DateTime RequestDate { get; set; }
+
+        [Display(Name = "Customer "  )]
+        public ApplicationUser Customer { get; set; }
+
+        [Display(Name = "Contractor ")]
+        public ApplicationUser Contractor { get; set; }
+
+    }
+
 }
