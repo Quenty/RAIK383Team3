@@ -188,6 +188,7 @@ namespace PracticalWerewolf.Controllers
                 var model = new PagedOrderListViewModel()
                 {
                     DisplayName = "Pending orders",
+                    Orders = OrderService.GetInprogressOrdersNoTruck(contractor)
                 };
 
                 return PartialView("_PagedOrderListPane", model);
@@ -236,10 +237,12 @@ namespace PracticalWerewolf.Controllers
                     ContractorService.SetIsAvailable(model.ContractorGuid, !model.ContractorStatus);
                     UnitOfWork.SaveChanges();
                     if (model.ContractorStatus) { 
+                        var queuedOrders = OrderService.GetInprogressOrdersNoTruck(model.ContractorGuid);
                         if (queuedOrders.Count() != 0)
                         {
                             foreach (var order in queuedOrders)
                             {
+                                OrderService.RequeueOrder(order, model.ContractorGuid);
                             }
                             UnitOfWork.SaveChanges();
                             BackgroundJob.Enqueue(() => RoutePlannerService.AssignOrders());
@@ -267,6 +270,7 @@ namespace PracticalWerewolf.Controllers
                 var model = new PagedOrderListViewModel()
                 {
                     DisplayName = "Current orders",
+                    Orders = OrderService.GetInprogressOrdersInTruck(contractor),
                     OrderListCommand = "Confirmation"
                 };
 
