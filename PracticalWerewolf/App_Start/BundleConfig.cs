@@ -38,6 +38,9 @@ namespace PracticalWerewolf
 
             bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
                       "~/Scripts/knockout-3.4.2.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/Chart.js").Include(
+                      "~/Scripts/Chart.js"));
         }
     }
 }
