@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using PracticalWerewolf.Models;
 using PracticalWerewolf.ViewModels;
+using PracticalWerewolf.Services;
 
 namespace PracticalWerewolf.Controllers
 {
@@ -20,8 +21,8 @@ namespace PracticalWerewolf.Controllers
 
         public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, SmsService smsService)
         {
-            UserManager = userManager;
-            SignInManager = signInManager;
+            _userManager = userManager;
+            _signInManager = signInManager;
             _smsService = smsService;
         }
 

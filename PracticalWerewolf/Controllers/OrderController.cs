@@ -4,6 +4,7 @@ using PracticalWerewolf.Controllers.UnitOfWork;
 using PracticalWerewolf.Models;
 using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.Models.UserInfos;
+using PracticalWerewolf.Services;
 using PracticalWerewolf.Services.Interfaces;
 using PracticalWerewolf.ViewModels.Contractor;
 using PracticalWerewolf.ViewModels.Orders;
@@ -33,6 +34,7 @@ namespace PracticalWerewolf.Controllers
             CancelOrderError,
             CouldNotUpdateStatus,
             CouldNotFindOrderError,
+            OrderCreatedError_NoPhoneNumber,
             Error
         }
 
@@ -71,6 +73,7 @@ namespace PracticalWerewolf.Controllers
                 : message == OrderMessageId.CancelOrderError ? "Internal error. Please try to cancel order again."
                 : message == OrderMessageId.CouldNotUpdateStatus ? "Internal error. Could not update order status, try again."
                 : message == OrderMessageId.CouldNotFindOrderError ? "System error. Could not find the order you were looking for."
+                : message == OrderMessageId.OrderCreatedError_NoPhoneNumber ? "You must have a verified number to place an order."
                 : "";
 
             var model = new PracticalWerewolf.ViewModels.Orders.OrderIndex();
@@ -100,11 +103,18 @@ namespace PracticalWerewolf.Controllers
                 return View(model);
             }
 
+            if (!UserManager.IsPhoneNumberConfirmed(User.Identity.GetUserId()))
+            {
+                return RedirectToAction("Index", new { message = OrderMessageId.OrderCreatedError_NoPhoneNumber });
+
+            }
             CustomerInfo Requester = UserInfoService.GetUserCustomerInfo(User.Identity.GetUserId());
             if (Requester == null)
             {
                 return RedirectToAction("Index", new { message = OrderMessageId.OrderCreatedError });
             }
+
+            
 
             model.DropOffAddress.CivicAddressGuid = Guid.NewGuid();
             model.PickUpAddress.CivicAddressGuid = Guid.NewGuid();
