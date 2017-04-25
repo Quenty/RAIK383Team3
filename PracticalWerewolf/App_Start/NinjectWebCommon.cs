@@ -104,18 +104,15 @@ namespace PracticalWerewolf.App_Start
             kernel.Bind<IUserStore<ApplicationUser>, UserStore<ApplicationUser>>().To<UserStore<ApplicationUser>>().InRequestScope();
             kernel.Bind<ApplicationSignInManager>().ToSelf().InRequestScope();
             kernel.Bind<ApplicationUserManager>().ToSelf().InRequestScope();
-            //kernel.Bind<DbContext, IdentityDbContext<ApplicationUser>>().To<ApplicationDbContext>().InRequestScope();
-            //kernel.Bind<IUnitOfWork, IDbSetFactory, ApplicationContextAdapter>().To<ApplicationContextAdapter>().InRequestScope();
             kernel.Bind<IAuthenticationManager>().ToMethod((context) =>
             {
                 var cbase = new HttpContextWrapper(HttpContext.Current);
                 return cbase.GetOwinContext().Authentication;
             }).InRequestScope();
-
-            //Might have to delete DbContext binding on line 107
-            //kernel.Bind<ApplicationDbContext>().ToSelf().InNamedOrBackgroundJobScope(context => context.Kernel.Components.GetAll<INinjectHttpApplicationPlugin>().Select(c => c.GetRequestScope(context)).FirstOrDefault(s => s != null));
+            
             kernel.Bind<DbContext, IdentityDbContext<ApplicationUser>>().To<ApplicationDbContext>().InNamedOrBackgroundJobScope(context => context.Kernel.Components.GetAll<INinjectHttpApplicationPlugin>().Select(c => c.GetRequestScope(context)).FirstOrDefault(s => s != null));
             kernel.Bind<IUnitOfWork, IDbSetFactory, ApplicationContextAdapter>().To<ApplicationContextAdapter>().InNamedOrBackgroundJobScope(context => context.Kernel.Components.GetAll<INinjectHttpApplicationPlugin>().Select(c => c.GetRequestScope(context)).FirstOrDefault(s => s != null));
+            kernel.Bind<SmsService>().To<SmsService>();
         }        
     }
 }

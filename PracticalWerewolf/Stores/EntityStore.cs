@@ -28,11 +28,6 @@ namespace PracticalWerewolf.Stores
             return _dbSet;
         }
 
-        public DbEntityEntry<T> GetEntry(T item)
-        {
-            return _dbSetFactory.GetEntry(ref item);
-        }
-
         public IQueryable<T> AsNoTracking()
         {
             return _dbSet.AsNoTracking();

@@ -19,7 +19,6 @@ namespace PracticalWerewolf.Stores.Interfaces
         void Delete(T entity);
         void Insert(T entity);
         void Update(T entity);
-        DbEntityEntry<T> GetEntry(T entity);
         void Attach(T entity);
         T Refresh(T entity);
     }
