@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Data.Entity.Validation;
 using System.Web.Mvc;
+using Hangfire;
 
 
 namespace PracticalWerewolf.Controllers
@@ -41,12 +42,13 @@ namespace PracticalWerewolf.Controllers
         private readonly IOrderService OrderService;
         private readonly IRoutePlannerService RoutePlannerService;
 
-        public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService, IUnitOfWork UnitOfWork)
+        public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService, IUnitOfWork UnitOfWork, IRoutePlannerService RoutePlannerService)
         {
             this.UnitOfWork = UnitOfWork;
             this.UserManager = UserManager;
             this.ContractorService = ContractorService;
             this.OrderService = OrderService;
+            this.RoutePlannerService = RoutePlannerService;
         }
 
         private void GenerateErrorMessage(ContractorMessageId? message)
@@ -186,7 +188,6 @@ namespace PracticalWerewolf.Controllers
                 var model = new PagedOrderListViewModel()
                 {
                     DisplayName = "Pending orders",
-                    Orders = OrderService.GetQueuedOrders(contractor)
                 };
 
                 return PartialView("_PagedOrderListPane", model);
@@ -226,7 +227,7 @@ namespace PracticalWerewolf.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UpdateStatus(ContractorStatusModel model)
+        public ActionResult UpdateStatus(ContractorStatusModel model)
         {
             if (ModelState.IsValid)
             {
@@ -234,18 +235,16 @@ namespace PracticalWerewolf.Controllers
                 {
                     ContractorService.SetIsAvailable(model.ContractorGuid, !model.ContractorStatus);
                     UnitOfWork.SaveChanges();
-                    var queuedOrders = OrderService.GetQueuedOrders(model.ContractorGuid);
-                    if (queuedOrders.Count() != 0)
-                    {
-                        foreach (var order in queuedOrders)
+                    if (model.ContractorStatus) { 
+                        if (queuedOrders.Count() != 0)
                         {
-                            OrderService.UnqueueOrder(order, model.ContractorGuid);
+                            foreach (var order in queuedOrders)
+                            {
+                            }
+                            UnitOfWork.SaveChanges();
+                            BackgroundJob.Enqueue(() => RoutePlannerService.AssignOrders());
                         }
-                        UnitOfWork.SaveChanges();
-                        await RoutePlannerService.AssignOrders();
-                        UnitOfWork.SaveChanges();
                     }
-
                     return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusChangeSuccess }) + "#status");
                 }
                 catch(Exception e)
@@ -268,7 +267,6 @@ namespace PracticalWerewolf.Controllers
                 var model = new PagedOrderListViewModel()
                 {
                     DisplayName = "Current orders",
-                    Orders = OrderService.GetInprogressOrders(contractor),
                     OrderListCommand = "Confirmation"
                 };
 

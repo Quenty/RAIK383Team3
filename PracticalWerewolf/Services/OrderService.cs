@@ -19,6 +19,7 @@ namespace PracticalWerewolf.Services
         private readonly IOrderStore OrderStore;
         private readonly IContractorStore ContractorStore;
         private readonly IOrderTrackInfoStore OrderTrackInfoStore;
+        private readonly ITruckStore TruckStore;
         private readonly ApplicationUserManager UserManager;
         private readonly EmailService EmailService;
 
@@ -41,6 +42,30 @@ namespace PracticalWerewolf.Services
         {
             var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid).ToList();
             return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.InProgress).ToList();
+        }
+
+        public IEnumerable<Order> GetInprogressOrdersNoTruck(ContractorInfo contractorinfo)
+        {
+            var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractorinfo.ContractorInfoGuid).ToList();
+            var assignee = ContractorStore.Single(o => o.ContractorInfoGuid == contractorinfo.ContractorInfoGuid);
+            return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.InProgress).ToList()
+            .Where(o => o.TrackInfo.CurrentTruck != assignee.Truck).ToList();
+        }
+
+        public IEnumerable<Order> GetInprogressOrdersNoTruck(Guid guid)
+        {
+            var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == guid).ToList();
+            var assignee = ContractorStore.Single(o => o.ContractorInfoGuid == guid);
+            return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.InProgress).ToList()
+            .Where(o => o.TrackInfo.CurrentTruck != assignee.Truck).ToList();
+        }
+
+        public IEnumerable<Order> GetInprogressOrdersInTruck(ContractorInfo contractor)
+        {
+            var allOrders = OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid).ToList();
+            return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.InProgress)
+                .Where(o => o.TrackInfo.CurrentTruck.TruckGuid == contractor.Truck.TruckGuid)
+                .ToList();
         }
 
         public Order GetOrder(Guid orderGuid)
@@ -88,11 +113,12 @@ namespace PracticalWerewolf.Services
             //OrderStore.GetEntry(order).CurrentValues.SetValues(order);
             //OrderTrackInfoStore.GetEntry(orderTrackInfo).CurrentValues.SetValues(orderTrackInfo);
 
-        public void UnqueueOrder(Order order, Guid contractorInfoGuid)
+        public void RequeueOrder(Order order, Guid contractorInfoGuid)
         {
             ContractorInfo contractor = ContractorStore.Single(contractorInfo => contractorInfo.ContractorInfoGuid == contractorInfoGuid);
             contractor.AssignedOrders.Remove(order.TrackInfo);
             order.TrackInfo.Assignee = null;
+            order.TrackInfo.OrderStatus = OrderStatus.Queued;
             OrderStore.Update(order);
             ContractorStore.Update(contractor);
         }
