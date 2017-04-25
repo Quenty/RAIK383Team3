@@ -32,6 +32,16 @@ namespace PracticalWerewolf.Models.Trucks
             };
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is TruckCapacityUnit)
+            {
+                return (obj as TruckCapacityUnit) == this;
+            }
+
+            return base.Equals(obj);
+        }
+
         public static TruckCapacityUnit operator -(TruckCapacityUnit capacity1, TruckCapacityUnit capacity2)
         {
             return new TruckCapacityUnit
@@ -40,6 +50,17 @@ namespace PracticalWerewolf.Models.Trucks
                 Volume = capacity1.Volume - capacity2.Volume
             };
         }
+
+        public static bool operator ==(TruckCapacityUnit capacity1, TruckCapacityUnit capacity2)
+        {
+            return capacity1.Mass == capacity2.Mass && capacity1.Volume == capacity2.Volume;
+        }
+
+        public static bool operator !=(TruckCapacityUnit capacity1, TruckCapacityUnit capacity2)
+        {
+            return capacity1.Mass != capacity2.Mass || capacity2.Volume != capacity2.Volume;
+        }
+
 
         public bool FitsIn(TruckCapacityUnit max)
         {
