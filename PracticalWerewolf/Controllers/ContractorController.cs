@@ -172,11 +172,6 @@ namespace PracticalWerewolf.Controllers
 
         }
 
-        public ActionResult SetInTruck()
-        {
-            return RedirectToAction("Index", new { Message = ContractorMessageId.Error });
-        }
-
         [Authorize(Roles = "Contractor")]
         public async Task<ActionResult> Pending()
         {
@@ -269,7 +264,7 @@ namespace PracticalWerewolf.Controllers
                 }
                 catch (Exception e)
                 {
-                    
+                    //change this
                     return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusError }) + "#status");
                 }
 

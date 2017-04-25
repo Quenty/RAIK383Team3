@@ -237,6 +237,26 @@ namespace PracticalWerewolf.Controllers
             return View(model);
         }
 
+        public ActionResult SetInTruck(Order order)
+        {
+
+            OrderStatusViewModel status = new OrderStatusViewModel
+            {
+                orderId = order.OrderGuid,
+                orderStatus = order.TrackInfo.OrderStatus,
+                inTruck = (order.TrackInfo.CurrentTruck == null)
+            };
+            return PartialView("_SetOrderInTruck", status);
+        }
+
+        [Authorize(Roles = "Contractor")]
+        [HttpPost]
+        public ActionResult SetInTruck(Guid orderId)
+        {
+            OrderService.SetOrderInTruck(orderId);
+            UnitOfWork.SaveChanges();
+            return View("_UpdateMessage");
+        }
 
         // POST: Order/Confirmation/guid
         [Authorize(Roles = "Contractor")]

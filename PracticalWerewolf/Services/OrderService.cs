@@ -162,6 +162,19 @@ namespace PracticalWerewolf.Services
             }
         }
 
+        public void SetOrderInTruck(Guid orderId)
+        {
+            var order = OrderStore.Find(orderId);
+            if (order != null)
+            {
+                order.TrackInfo.CurrentTruck = order.TrackInfo.Assignee.Truck;
+                OrderTrackInfoStore.Update(order.TrackInfo);
+            }else
+            {
+                logger.Error($"SetOrderInTruck() - No order with id {orderId.ToString()}");
+            }
+        }
+
         public object GetOrders()
         {
             return OrderStore.GetAll().ToList();
