@@ -7,18 +7,10 @@
 {
     <li class="">
         <a href="@Url.Action("Results", "Search", new { query = UserInfo.Email })">
-            @UserInfo.Email
-            @if (UserInfo.IsEmployee)
-            {
-                <span class="label label-success">Employee</span>
-            }
-            @if (UserInfo.IsContractor)
-            {
-                <span class="label label-primary">Contractor</span>
-            }
-            @if (UserInfo.BanTime.HasValue)
-            {
-                <span class="label label-danger">Banned for @UserInfo.BanTime.Value.Duration().Days days, @UserInfo.BanTime.Value.Duration().Hours hours</span>
+            @UserInfo.Email;
+
+            @{
+                Html.RenderPartial("_LabelHelper", UserInfo);
             }
         </a>
     </li>

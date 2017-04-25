@@ -251,6 +251,11 @@ namespace PracticalWerewolf
 
         public void SendWorkOrderEmail(ApplicationUser contractor, OrderRequestInfo order)
         {
+            if (contractor == null)
+            {
+                throw new Exception("Null contractor");
+            }
+
             initTemplateKeys();
             if (templateKeysInitialized)
             {

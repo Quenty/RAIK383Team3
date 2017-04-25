@@ -405,8 +405,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.flatly.css" />
-    <Content Include="Content\bootstrap.flatly.min.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.sandstone.css" />
     <Content Include="Content\bootstrap.sandstone.min.css" />
@@ -462,6 +460,7 @@
     <Content Include="Views\Shared\_PagedOrderListView.cshtml" />
     <Content Include="Views\Order\History.cshtml" />
     <Content Include="Views\Contractor\_PagedOrderListPane.cshtml" />
+    <Content Include="Views\Search\_LabelHelper.cshtml" />
     <Content Include="Views\Order\Order.cshtml" />
     <None Include="Views\Search\_PartialResults.cshtml" />
     <Content Include="Web.config" />
