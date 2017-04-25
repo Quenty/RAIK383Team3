@@ -35,11 +35,17 @@ namespace PracticalWerewolf.Models.Trucks
         [Display(Name = "License Plate Number")]
         public virtual String LicenseNumber { get; set; }
 
-                                                                
-        // Gets broken down into different props but stays in the truck table
-        public DbGeography Location { get; set; } 
 
-        public TruckCapacityUnit AvailableCapacity() {
+        // Gets broken down into different props but stays in the truck table
+        public DbGeography Location { get; set; }
+
+        public TruckCapacityUnit GetAvailableCapacity()
+        {
+            if (UsedCapacity == null)
+            {
+                return MaxCapacity;
+            }
+
             return new TruckCapacityUnit
             {
                 TruckCapacityUnitGuid = Guid.NewGuid(),

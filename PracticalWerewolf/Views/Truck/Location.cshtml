@@ -41,8 +41,8 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script>
             function initMap() {
-                var lat = parseInt(document.getElementById("Lat").value, 10);
-                var long = parseInt(document.getElementById("Long").value, 10);
+                var lat = parseFloat(document.getElementById("Lat").value);
+                var long = parseFloat(document.getElementById("Long").value);
                 var location = { lat: lat, lng: long }
                 var map = new google.maps.Map(document.getElementById('map'), {
                     zoom: 4,
@@ -73,7 +73,21 @@
 
                 google.maps.event.addListener(map, 'dblclick', function (event) {
                     clearTimeout(update_timeout);
+                });
 
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    $('#Lat').val(position.coords.latitude);
+                    $('#Long').val(position.coords.longitude);
+
+                    var newPoint = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                    if (marker) {
+                        marker.setPosition(newPoint);
+                        map.panTo(marker.position);
+                    }
+                    else
+                    {
+                        console.log("No marker to set location");
+                    }
                 });
             }
     </script>
