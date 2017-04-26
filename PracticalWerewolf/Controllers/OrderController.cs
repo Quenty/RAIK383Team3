@@ -54,7 +54,7 @@ namespace PracticalWerewolf.Controllers
         private PagedOrderListViewModel GetOrderHistoryPage()
         {
             ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
-            if (user.CustomerInfo == null)
+            if (user != null && user.CustomerInfo != null)
             {
                 var CustomerInfoGuid = user.CustomerInfo.CustomerInfoGuid;
 
@@ -95,7 +95,26 @@ namespace PracticalWerewolf.Controllers
         [Authorize(Roles = ("Customer"))]
         public ActionResult Create()
         {
-            return View();
+            var userId = User.Identity.GetUserId();
+            if (UserManager.FindById(userId) != null)
+            {
+                var model = new CreateOrderRequestViewModel()
+                {
+                    IsPhoneNumberConfirmed = UserManager.IsPhoneNumberConfirmed(userId),
+                    PhoneNumber= UserManager.GetPhoneNumber(userId)
+                };
+                return View(model);
+            }
+            else
+            {
+                var model = new CreateOrderRequestViewModel()
+                {
+                    IsPhoneNumberConfirmed = false,
+                    PhoneNumber = null
+                };
+
+                return View();
+            }
         }
 
 
