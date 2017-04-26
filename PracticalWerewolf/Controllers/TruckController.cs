@@ -195,6 +195,11 @@ namespace PracticalWerewolf.Controllers
                     logger.Error("Edit(id, ViewModel) - Error getting Truck, creating new TruckCapacityUnit, in TruckService.UpdateCapacity(), or TruckService.UpdateLicenseNumber()");
                 }
             }
+            else
+            {
+                return View(model);
+            }
+
             return View("index", new { Message = TruckMessageId.TruckUpdateError } );
         }
 
@@ -207,6 +212,7 @@ namespace PracticalWerewolf.Controllers
         // POST: Truck/Create/
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Contractor")]
         public ActionResult Create(TruckCreateViewModel returnedModel)
         {
             if (ModelState.IsValid)
@@ -227,7 +233,9 @@ namespace PracticalWerewolf.Controllers
                         LicenseNumber = returnedModel.LicenseNumber,
                         MaxCapacity = capacityUnit,
                         Location = LocationHelper.CreatePoint(returnedModel.Lat, returnedModel.Long),
-                        UsedCapacity = new TruckCapacityUnit()
+                        UsedCapacity = new TruckCapacityUnit(TruckCapacityUnit.Zero) {
+                            TruckCapacityUnitGuid = Guid.NewGuid(),
+                        }
                     };
                     TruckService.CreateTruck(model);
                     ContractorService.UpdateContractorTruck(model, user);
@@ -235,9 +243,9 @@ namespace PracticalWerewolf.Controllers
                     return RedirectToAction("Index", "Contractor");
 
                 }
-                catch
+                catch (Exception e)
                 {
-                    logger.Error("Create(ViewModel) - Error getting user, creating TruckCapacityUnit, creating Truck, or ContractorService.UpdateContractorTruck()");
+                    logger.Error("Create(ViewModel) - Error getting user, creating TruckCapacityUnit, creating Truck, or ContractorService.UpdateContractorTruck()", e);
                 }
             }
             else
