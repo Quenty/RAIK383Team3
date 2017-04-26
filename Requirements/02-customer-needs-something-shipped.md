@@ -5,7 +5,6 @@ A customer has an account and has an item to deliver. The customer knows when an
 **A description of the normal flow of events**
 1. The customer logs in
 2. Customer provides all the necessary information required to place an order
-  1. Financial information is remembered/selected from previous transactions
 3. Customer submits completed form
 4. The order is put into the system (see _The company needs to identify an ideal contractor_)
 5. System generates receipt, customer is notified of their order
