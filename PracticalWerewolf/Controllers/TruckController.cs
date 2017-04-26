@@ -244,6 +244,7 @@ namespace PracticalWerewolf.Controllers
             {
                 return View(returnedModel);
             }
+
             return RedirectToAction("Index", "Contractor",new { Message = TruckMessageId.TruckCreationError });
         }
 
