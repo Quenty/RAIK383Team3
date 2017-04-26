@@ -15,6 +15,5 @@ namespace PracticalWerewolf.Services.Interfaces
         // Depends upon IOrderStore.GetOrdersByCustomerInfoGuid
         IEnumerable<Order> GetCustomerOrders(Guid customerInfoGuid, OrderStatus orderStatus);
 
-        void CreateOrderRequestInfo(OrderRequestInfo requestInfo);
     }
 }

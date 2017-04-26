@@ -27,5 +27,8 @@ namespace PracticalWerewolf.Services.Interfaces
         void UnassignOrder(Order order);
         IEnumerable<Order> GetOrderHistory(Guid customerInfoGuid);
         Order GetOrder(Guid orderGuid);
+        void CreateOrder(Order order);
+        decimal CalculateOrderCost(Guid orderGuid);
+        decimal CalculateOrderCost(Order order);
     }
 }
