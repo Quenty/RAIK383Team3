@@ -5,7 +5,6 @@ An order has a contractor, but that contractor cannot take it.
 **A description of the normal flow of events**
 1. A contractor receives a work order and realizes they can't or that it won't be feasible
 2. The contractor rejects the work order
-  1. System may notify HR / administration
 4. Contractor is marked as unavailable
 5. Order is put back into system (See _System finds ideal contractor)_
 
