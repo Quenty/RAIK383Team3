@@ -62,11 +62,11 @@
                                         <td width="66%">
                                             <table width="100%" style="padding:20px">
                                                 <tr>
-                                                    <td width="50%">
-                                                        <p><b>Arriving</b></p>
+                                                    <td>
+                                                        <p><b>Pick Up</b></p>
                                                     </td>
                                                     <td>
-                                                        <p style="color:#41903f;font-size:medium;text-align:right">@Model.ArrivalDate</p>
+                                                        <p style="color:#41903f;font-size:medium;text-align:right">@Model.PickUpAddress</p>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -88,8 +88,8 @@
                                             </table>
                                         </td>
                                         <td align="center">
-                                            <button onsubmit="www.staggeringbeauty.com" style="background-color:#428bca;border-color:#428bca;color:#fff;border:1px solid transparent;border-radius:6px;padding:10px 0px;">
-                                                <a href="www.staggeringbeauty.com" style="padding:10px 16px;text-decoration:none;color:#fff;font-size:large;">Details »</a>
+                                            <button onsubmit=@Model.DetailsUrl style="background-color:#428bca;border-color:#428bca;color:#fff;border:1px solid transparent;border-radius:6px;padding:10px 0px;">
+                                                <a href=@Model.DetailsUrl style="padding:10px 16px;text-decoration:none;color:#fff;font-size:large;">Details »</a>
                                             </button>
                                         </td>
                                     </tr>

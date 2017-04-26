@@ -159,7 +159,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         // GET: /Manage/VerifyPhoneNumber
-        public async Task<ActionResult> VerifyPhoneNumber(string phoneNumber)
+        public ActionResult VerifyPhoneNumber(string phoneNumber)
         {
             return phoneNumber == null ? View("Error") : View(
                 new VerifyPhoneNumberViewModel { PhoneNumber = phoneNumber });

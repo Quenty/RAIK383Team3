@@ -2,6 +2,7 @@
 using PracticalWerewolf.Models.UserInfos;
 using System;
 using System.Collections.Generic;
+using PracticalWerewolf.Models.Orders;
 
 namespace PracticalWerewolf.Services.Interfaces
 {
@@ -16,6 +17,8 @@ namespace PracticalWerewolf.Services.Interfaces
         IEnumerable<RouteStop> GetContractorRoute(ContractorInfo contractor);
 
         string GetDistanceToNextStopInMiles(ContractorInfo contractor);
+     
+        void UnassignOrderFromRouteStop(Order order);
 
         void Update(RouteStop entity);
 

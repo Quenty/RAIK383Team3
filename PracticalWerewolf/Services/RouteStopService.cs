@@ -103,6 +103,23 @@ namespace PracticalWerewolf.Services
             }
         }
 
+        public void UnassignOrderFromRouteStop(Order order)
+        {
+            if(order == null)
+            {
+                logger.Warn("Unassign null order");
+                return;
+            }
+
+            var routeStops = _routeStopStore.AsQueryable()
+                .Where(x => x.Order.OrderGuid == order.OrderGuid).ToList();
+
+            foreach(var stop in routeStops)
+            {
+                _routeStopStore.Delete(stop);
+            }
+        }
+
         public void Update(RouteStop entity)
         {
             RouteStopStore.Update(entity);

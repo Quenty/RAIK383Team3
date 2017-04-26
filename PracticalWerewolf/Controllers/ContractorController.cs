@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using PracticalWerewolf.Controllers.UnitOfWork;
 using PracticalWerewolf.Models.UserInfos;
+using PracticalWerewolf.Services;
 using PracticalWerewolf.Services.Interfaces;
 using PracticalWerewolf.ViewModels;
 using PracticalWerewolf.ViewModels.Contractor;
@@ -14,6 +15,8 @@ using System.Web.Mvc;
 using PracticalWerewolf.Models.Routes;
 using PracticalWerewolf.Services;
 using PracticalWerewolf.Models.Orders;
+using Hangfire;
+using log4net;
 
 namespace PracticalWerewolf.Controllers
 {
@@ -34,15 +37,19 @@ namespace PracticalWerewolf.Controllers
             ConfirmationError
         }
 
+        private static ILog logger = LogManager.GetLogger(typeof(ContractorController));
         private readonly ApplicationUserManager UserManager;
         private readonly IContractorService ContractorService;
         private readonly IUnitOfWork UnitOfWork;
         private readonly IOrderService OrderService;
         private readonly IRouteStopService RouteStopService;
         private readonly ITruckService TruckService;
+        private readonly IRoutePlannerService RoutePlannerService;
 
         public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService,
-            IUnitOfWork UnitOfWork, IRouteStopService RouteStopService, ITruckService TruckService)
+            IUnitOfWork UnitOfWork, IRouteStopService RouteStopService, )
+
+        public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService, IUnitOfWork UnitOfWork, IRouteStopService RouteStopService, IRoutePlannerService RoutePlannerService, ITruckService TruckService)
         {
             this.UnitOfWork = UnitOfWork;
             this.UserManager = UserManager;
@@ -50,6 +57,7 @@ namespace PracticalWerewolf.Controllers
             this.OrderService = OrderService;
             this.RouteStopService = RouteStopService;
             this.TruckService = TruckService;
+            this.RoutePlannerService = RoutePlannerService;
         }
 
         private void GenerateErrorMessage(ContractorMessageId? message)
@@ -232,7 +240,7 @@ namespace PracticalWerewolf.Controllers
                     var model = new ContractorStatusModel
                     {
                         ContractorGuid = guid,
-                        ContractorStatus = contractor.IsAvailable
+                        IsAvailable = contractor.IsAvailable
                     };
 
                     return PartialView("_UpdateStatus", model);
@@ -248,18 +256,33 @@ namespace PracticalWerewolf.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult UpdateStatus(ContractorStatusModel returnedModel)
+        public ActionResult UpdateStatus(ContractorStatusModel model)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    ContractorService.SetIsAvailable(returnedModel.ContractorGuid, !returnedModel.ContractorStatus);
+                    ContractorService.SetIsAvailable(model.ContractorGuid, !model.IsAvailable);
+                    //after changing their status
+                    if (!model.IsAvailable) { 
+                        var pendingOrders = OrderService.GetInprogressOrdersNoTruck(model.ContractorGuid);
+                        if (!pendingOrders.Any())
+                        {
+                            foreach (var order in pendingOrders)
+                            {
+                                RouteStopService.UnassignOrderFromRouteStop(order);
+                                OrderService.UnassignOrder(order);
+                            }
+                        }
+                    }
                     UnitOfWork.SaveChanges();
+                    BackgroundJob.Enqueue(() => RoutePlannerService.AssignOrders());
+
                     return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusChangeSuccess }) + "#status");
                 }
-                catch
+                catch (Exception e)
                 {
+                    logger.Warn("Could not change contractor status", e);
                     return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusError }) + "#status");
                 }
             }
