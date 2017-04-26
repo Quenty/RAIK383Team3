@@ -43,8 +43,8 @@ else
             @foreach (var ApprovalModel in Model.Pending)
             {
                 <tr>
-                    <td>@ApprovalModel.PhoneNumber</td>
-                    <td><a href="mailto:@ApprovalModel.Email">@ApprovalModel.Email</a></td>
+                    <td>@(ApprovalModel.PhoneNumber ?? "None")</td>
+                    <td><a href="mailto:@ApprovalModel.EmailAddress">@(ApprovalModel.EmailAddress ?? "None")</a></td>
                     <td>
                         @Html.DisplayFor(modelItem => ApprovalModel.ContractorInfo.DriversLicenseId)
                     </td>
