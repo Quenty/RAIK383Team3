@@ -1,0 +1,81 @@
+﻿@model PracticalWerewolf.ViewModels.Search.UserSearchResult
+
+@using PracticalWerewolf.Models.UserInfos
+
+@helper GetColor(ContractorApprovalState state)
+{
+switch (state)
+{
+    case ContractorApprovalState.Approved:
+            @("success")
+        break;
+    case ContractorApprovalState.Pending:
+            @("warning")
+        break;
+    case ContractorApprovalState.Denied:
+            @("danger")
+        break;
+    default:
+            @("default")
+        break;
+}
+}
+
+@helper GetName(ContractorApprovalState state)
+{
+switch (state)
+{
+    case ContractorApprovalState.Approved:
+            @("Approved")
+        break;
+    case ContractorApprovalState.Pending:
+            @("Pending")
+        break;
+    case ContractorApprovalState.Denied:
+            @("Denied")
+        break;
+    default:
+            @("Unknown")
+        break;
+}
+}
+
+@helper DisplayApprovalState(ContractorApprovalState state)
+{
+switch (state)
+{
+    case ContractorApprovalState.Approved:
+            <span class="glyphicon glyphicon-ok glyphicon-white" title="Approved"></span>
+        break;
+    case ContractorApprovalState.Pending:
+            <span class="glyphicon glyphicon-refresh glyphicon-white" title="Pending"></span>
+        break;
+    case ContractorApprovalState.Denied:
+            <span class="glyphicon glyphicon-remove glyphicon-white" title="Denied"></span>
+        break;
+    default:
+            <span class="label label-default glyphicon-white" title="Status unknown">Unknown</span>
+        break;
+}
+}
+
+
+@if (Model.IsEmployee)
+{
+    <span class="glyphicon glyphicon-star text-success" data-toggle="tooltip" data-placement="top" title="Employee"></span>
+}
+@if (Model.IsContractor)
+{
+    <span class="label label-@(Model.ContractorApprovalState.HasValue ? GetColor(Model.ContractorApprovalState.Value).ToHtmlString() : "")" data-toggle="tooltip" data-placement="top" title="Contractor (@(Model.ContractorApprovalState.HasValue ? GetName(Model.ContractorApprovalState.Value).ToHtmlString() : ""))">
+        Contractor
+
+        @if (Model.ContractorApprovalState.HasValue)
+        {
+            @DisplayApprovalState(Model.ContractorApprovalState.Value);
+        }
+    </span>
+}
+@if (Model.BanTime.HasValue)
+{
+    <span class="label label-danger">Banned for @((int)(Model.BanTime.Value.Duration().Days / 365)) years, @(Model.BanTime.Value.Duration().Days % 365) days, @Model.BanTime.Value.Duration().Hours hours</span>
+}

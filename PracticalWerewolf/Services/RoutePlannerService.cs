@@ -52,6 +52,7 @@ namespace PracticalWerewolf.Services
             IEnumerable<ContractorInfo> contractors = null;
 
             contractors = _contractorService.GetAvailableContractorQuery().ToList();
+
             if (!contractors.Any())
             {
                 logger.Warn("AssignOrder() - No available contractors");
@@ -77,6 +78,16 @@ namespace PracticalWerewolf.Services
                     logger.Error($"AssignOrder() - Error with RoutePlannerDelegate with ContractorInfoGuid {contractor.ContractorInfoGuid.ToString()} - {e.ToString()}");
                 }
             } 
+
+            foreach(ContractorRoutePlanner option in options)
+            {
+                Debug.Assert(option.Contractor != null);
+                Debug.Assert(option.WillWork);
+                Debug.Assert(option.DistanceChanged > 0);
+                Debug.Assert(option.PickUp != null);
+                Debug.Assert(option.DropOff != null);
+                Debug.Assert(option.Order != null);
+            }
 
             if (!options.Any())
             {
