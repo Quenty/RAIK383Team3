@@ -21,7 +21,7 @@ An actor wants to begin working with Practical Werewolf. This user either wants 
   2. Save information
 3. Fake user
   1. Verify it&#39;s a real person
-  3. Verify certifications for drivers
+  2. Verify certifications for drivers
 
 **Information about other concurrent activities**
 
