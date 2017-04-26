@@ -201,7 +201,13 @@ namespace PracticalWerewolf.Controllers
         // GET: Truck/Create/
         public ActionResult Create()
         {
-            return View();
+            var model = new TruckCreateViewModel
+            {
+                Mass = 10000,
+                Volume = 10000
+            };
+
+            return View(model);
         }
 
         // POST: Truck/Create/
