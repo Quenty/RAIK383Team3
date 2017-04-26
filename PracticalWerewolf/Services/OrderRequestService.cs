@@ -28,22 +28,12 @@ namespace PracticalWerewolf.Services
             throw new NotImplementedException();
         }
 
-        public Order CreateOrderRequestInfo(OrderRequestInfo requestInfo)
+        public Order CreateOrder(Order order)
         {
-            if (requestInfo.OrderRequestInfoGuid == Guid.Empty)
+            if (order.OrderGuid == Guid.Empty)
             {
-                throw new ArgumentException("Empty GUID in OrderRequestInfo");
+                order.OrderGuid = Guid.NewGuid();
             }
-
-            var order = new Order
-            {
-                OrderGuid = Guid.NewGuid(),
-                RequestInfo = requestInfo,
-                TrackInfo = new OrderTrackInfo
-                {
-                    OrderTrackInfoGuid = Guid.NewGuid()
-                }
-            };
 
             OrderStore.Insert(order);
 

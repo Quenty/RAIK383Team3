@@ -173,6 +173,11 @@ namespace PracticalWerewolf.Services
                 .OrderByDescending(x => x.RequestInfo.RequestDate);
         }
 
+        public void CreateOrder(Order order)
+        {
+            OrderStore.Insert(order);
+        }
+
         public decimal CalculateOrderCost(Guid orderGuid)
         {
             Order order = GetOrder(orderGuid);
