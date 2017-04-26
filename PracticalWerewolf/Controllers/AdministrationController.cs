@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PracticalWerewolf.Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,10 +13,12 @@ namespace PracticalWerewolf.Controllers
     public class AdministrationController : Controller
     {
         private readonly ApplicationUserManager UserManager;
+        private readonly IContractorService ContractorService;
 
-        public AdministrationController(ApplicationUserManager UserManager)
+        public AdministrationController(ApplicationUserManager UserManager, IContractorService ContractorService)
         {
             this.UserManager = UserManager;
+            this.ContractorService = ContractorService;
         }
 
         public async Task<ActionResult> BanUser(string UserId)
@@ -27,6 +30,13 @@ namespace PracticalWerewolf.Controllers
 
             await UserManager.SetLockoutEnabledAsync(UserId, true);
             await UserManager.SetLockoutEndDateAsync(UserId, DateTime.Today.AddYears(10));
+
+           
+            var ContractorInfo = ContractorService.GetContractorInfo(UserId);
+            if (ContractorInfo != null)
+            {
+                ContractorService.SetIsAvailable(ContractorInfo.ContractorInfoGuid, false);
+            }
 
             return Redirect(Request.UrlReferrer.ToString());
         }

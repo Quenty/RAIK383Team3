@@ -150,7 +150,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         // GET: Order/Edit/guid
-        [Authorize(Roles = "Customer, Employees")]
+        [Authorize(Roles = "Customer, Employee")]
         public ActionResult Edit(string id)
         {
             // Allow for the information to be updated
@@ -197,7 +197,7 @@ namespace PracticalWerewolf.Controllers
 
         // POST: Order/Cancel/guid
         [HttpPost]
-        [Authorize(Roles = "Customer, Employees")]
+        [Authorize(Roles = "Customer, Employee")]
         public ActionResult Cancel(string id)
         {
             if (!String.IsNullOrEmpty(id))
