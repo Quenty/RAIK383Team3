@@ -331,7 +331,7 @@ namespace PracticalWerewolf.Controllers
                         Lat = truck.Location.Latitude,
                         Long = truck.Location.Longitude
                     };
-                    return PartialView(model);
+                    return PartialView("_Status", model);
                 }
                 else
                 {

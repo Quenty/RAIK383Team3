@@ -50,6 +50,9 @@ function createMap() {
         clickable: true
     });
 
+    $('#Lat').val(uluru.lat);
+    $('#Long').val(uluru.lng);
+
     var update_timeout = null;
 
     google.maps.event.addListener(map, 'click', function (event) {

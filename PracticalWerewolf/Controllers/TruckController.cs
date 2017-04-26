@@ -197,25 +197,30 @@ namespace PracticalWerewolf.Controllers
                         Mass = returnedModel.Mass,
                         Volume = returnedModel.Volume
                     };
-                    var model = new Truck
+                var model = new Truck
+                {
+                    TruckGuid = Guid.NewGuid(),
+                    LicenseNumber = returnedModel.LicenseNumber,
+                    MaxCapacity = capacityUnit,
+                    Location = LocationHelper.CreatePoint(returnedModel.Lat, returnedModel.Long),
+                    UsedCapacity = new TruckCapacityUnit()
                     {
-                        TruckGuid = Guid.NewGuid(),
-                        LicenseNumber = returnedModel.LicenseNumber,
-                        MaxCapacity = capacityUnit,
-                        Location = LocationHelper.CreatePoint(returnedModel.Lat, returnedModel.Long),
-                        UsedCapacity = new TruckCapacityUnit()
+                        TruckCapacityUnitGuid = Guid.NewGuid(),
+                        Mass = 0,
+                        Volume = 0
+                    }
                     };
                     TruckService.CreateTruck(model);
                     ContractorService.UpdateContractorTruck(model, user);
                     UnitOfWork.SaveChanges();
                     return RedirectToAction("Index", "Contractor");
 
-                }
-                catch
-                {
-                    logger.Error("Create(ViewModel) - Error getting user, creating TruckCapacityUnit, creating Truck, or ContractorService.UpdateContractorTruck()");
-                }
             }
+                catch
+            {
+                logger.Error("Create(ViewModel) - Error getting user, creating TruckCapacityUnit, creating Truck, or ContractorService.UpdateContractorTruck()");
+            }
+        }
             return RedirectToAction("Index", "Contractor",new { Message = ContractorController.ContractorMessageId.TruckCreationError });
         }
 

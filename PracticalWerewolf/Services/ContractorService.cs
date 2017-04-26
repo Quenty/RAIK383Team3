@@ -8,6 +8,7 @@ using PracticalWerewolf.Models;
 using PracticalWerewolf.Models.Trucks;
 using PracticalWerewolf.Models.Orders;
 using System.Data.Entity;
+using Microsoft.AspNet.Identity;
 
 namespace PracticalWerewolf.Services
 {
@@ -70,9 +71,10 @@ namespace PracticalWerewolf.Services
 
         public void UpdateContractorTruck(Truck truck, ApplicationUser driver)
         {
-            driver.ContractorInfo.Truck = truck;
-            var result = _userManager.UpdateAsync(driver);
-            result.Wait(); // TODO: Make this async
+            var contractor = driver.ContractorInfo;
+            contractor.Truck = truck;
+            contractor.HomeAddress = contractor.HomeAddress;
+            _contractorStore.Update(contractor);
         }
 
         public ApplicationUser GetUserByContractorInfo(ContractorInfo contractor)
