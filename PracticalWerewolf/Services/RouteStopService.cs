@@ -48,8 +48,9 @@ namespace PracticalWerewolf.Services
 
             return RouteStopStore.AsQueryable()
                 .Include(x => x.Order)
-                .Where(x => x.Order.TrackInfo.OrderStatus == OrderStatus.Queued || x.Order.TrackInfo.OrderStatus == OrderStatus.InProgress)
+                .Where(x => x.Order.TrackInfo.OrderStatus == OrderStatus.InProgress)
                 .Where(x => x.Order.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid)
+                .Where(x => x.Order.TrackInfo.CurrentTruck == null || x.Order.TrackInfo.CurrentTruck.TruckGuid != contractor.Truck.TruckGuid || x.Type == StopType.DropOff) // hasn't been picked up yet or is in truck
                 .OrderBy(x => x.StopOrder);
         }
 

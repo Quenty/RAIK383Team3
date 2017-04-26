@@ -57,15 +57,20 @@
                     <td>
                         @if (item.Type == PracticalWerewolf.Models.Routes.StopType.DropOff)
                         {
-                            @Html.DisplayFor(x => item.Order.RequestInfo.DropOffAddress.RawInputAddress )
+                            <a target="_blank" href="http://google.com/maps?saddr=My+Address&daddr=@item.Order.RequestInfo.DropOffAddress.RawInputAddress">
+                                @Html.DisplayFor(x => item.Order.RequestInfo.DropOffAddress.RawInputAddress)
+                            </a>
                         }
                         else
                         {
-                            @Html.DisplayFor(x => item.Order.RequestInfo.PickUpAddress.RawInputAddress )
+                            <a target ="_blank" href="http://google.com/maps?saddr=My+Address&daddr=@item.Order.RequestInfo.PickUpAddress.RawInputAddress">
+                                @Html.DisplayFor(x => item.Order.RequestInfo.PickUpAddress.RawInputAddress)
+                            </a>
+
                         }
-                    </td>
+</td>
                     <td>
-                        @Html.ActionLink("Confirm", "Confirmation", new { id = item.RouteStopGuid })
+                        @Html.ActionLink("Confirm", "Confirmation", new { id = item.RouteStopGuid}, new { @class = "btn btn-info" })
                     </td>
                     <td>
                         @Html.ActionLink("Details", "Order", "Order", new { id = item.Order.OrderGuid }, null)

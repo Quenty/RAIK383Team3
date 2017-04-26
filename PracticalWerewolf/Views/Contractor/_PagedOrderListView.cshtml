@@ -67,10 +67,6 @@ switch (status)
                         @OrderStatusBadge(item.TrackInfo.OrderStatus)
                     </td>
                     <td>
-                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#statusModal">Set order in truck</button>
-                        <div id="statusModal" class="modal fade" role="dialog">
-                            @Html.Action("UpdateOrderStatus", "Order", item)
-                        </div>
                     </td>
                     <td class="hidden-print">
                         @Html.ActionLink(Model.OrderListCommand == null ? "Details" : Model.OrderListCommand, "Order", new { id = item.OrderGuid, @class = "btn btn-xs btn-link" })

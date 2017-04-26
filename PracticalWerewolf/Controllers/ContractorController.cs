@@ -340,7 +340,7 @@ namespace PracticalWerewolf.Controllers
                         Lat = truck.Location.Latitude,
                         Long = truck.Location.Longitude
                     };
-                    return PartialView(model);
+                    return PartialView("_Status", model);
                 }
                 else
                 {
@@ -359,6 +359,10 @@ namespace PracticalWerewolf.Controllers
         [Authorize(Roles = "Contractor")]
         public ActionResult Confirmation(string id)
         {
+            if(id == null)
+            {
+                return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusError }) + "#status");
+            }
             var model = new ConfirmationViewModel
             {
                 RouteStopGuid = new Guid(id)
@@ -371,7 +375,7 @@ namespace PracticalWerewolf.Controllers
         [Authorize(Roles = "Contractor")]
         [HttpPost]
         [ActionName("Confirmation")]
-        public ActionResult ConfirmationPost(ConfirmationViewModel model)
+        public async Task<ActionResult> ConfirmationPost(ConfirmationViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -382,21 +386,21 @@ namespace PracticalWerewolf.Controllers
                     //RouteStopService.RemoveRouteStop(model.RouteStopGuid);
                     if (stop.Type == StopType.DropOff)
                     {
-                        OrderService.SetOrderAsComplete(order.OrderGuid);
-                        TruckService.RemoveItemFromTruck(order.TrackInfo.Assignee.Truck, order);
+                        await OrderService.SetOrderAsComplete(order.OrderGuid);
+                        //TruckService.RemoveItemFromTruck(order.TrackInfo.Assignee.Truck, order);
                         UnitOfWork.SaveChanges();
                     }
                     else
                     {
                         ContractorInfo contractor = order.TrackInfo.Assignee;
-                        OrderService.SetOrderAsInprogress(order.OrderGuid);
-                        TruckService.AddItemToTruck(contractor.Truck, order);
+                        OrderService.SetOrderInTruck(order.OrderGuid);
+                        //TruckService.AddItemToTruck(contractor.Truck, order);
                         UnitOfWork.SaveChanges();
                     }
 
                     return RedirectToAction("Index", "Contractor");
                 }
-                catch
+                catch(Exception e)
                 {
                     return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.ConfirmationError });
                 }

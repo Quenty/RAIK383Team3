@@ -9,7 +9,7 @@ using System.Text;
 using log4net;
 using PracticalWerewolf.Helpers;
 using PracticalWerewolf.Models.UserInfos;
-
+using System.Threading.Tasks;
 
 namespace PracticalWerewolf.Services
 {
@@ -183,7 +183,7 @@ namespace PracticalWerewolf.Services
             return OrderStore.Find(o => o.RequestInfo.Requester.CustomerInfoGuid == customerInfo.CustomerInfoGuid);
         }
 
-        public async void SetOrderAsComplete(Guid guid)
+        public async Task SetOrderAsComplete(Guid guid)
         {
             Order order = GetOrder(guid);
             OrderTrackInfo orderTrackInfo = order.TrackInfo;

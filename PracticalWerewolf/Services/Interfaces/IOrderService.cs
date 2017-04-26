@@ -21,7 +21,7 @@ namespace PracticalWerewolf.Services.Interfaces
         void CancelOrder(Guid orderGuid);
         IEnumerable<Order> GetOrders();
         object GetOrders(CustomerInfo customerInfo);
-        void SetOrderAsComplete(Guid guid);
+        Task SetOrderAsComplete(Guid guid);
         void SetOrderInTruck(Guid orderId);
         void AssignOrders();
         IEnumerable<Order> GetOrderHistory(Guid customerInfoGuid);

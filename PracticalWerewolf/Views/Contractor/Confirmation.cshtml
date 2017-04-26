@@ -6,6 +6,10 @@
 
 <h2>Order Confirmation</h2>
 
+<div class="alert alert-danger">
+    <p>Don't forget to update your location!</p>
+</div>
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -13,6 +17,8 @@
     <body onload="init()">
         <canvas id="can" width="800" height="200" style="position:center;border:2px solid;"></canvas>
     </body>
+
+
 
     <div class="form-horizontal">
         <h4>By signing the form above, you acknowledge that the requested shipment has been picked up or delivered.</h4>
@@ -31,9 +37,7 @@
                     <input type="button" value="Clear" id="clr" onclick="erase()" class="btn btn-default" />
                 </div>
             </div>
-
         }
-
     </div>
 }
 
