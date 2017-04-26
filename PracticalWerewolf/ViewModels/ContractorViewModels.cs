@@ -73,4 +73,10 @@ namespace PracticalWerewolf.ViewModels.Contractor
         public IEnumerable<RouteStop> Route { get; set; }
     }
 
+    public class ConfirmationViewModel
+    {
+        public Guid RouteStopGuid { get; set; }
+    }
+
+
 }

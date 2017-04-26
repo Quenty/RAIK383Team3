@@ -167,5 +167,11 @@ namespace PracticalWerewolf.Services
                 .Find(x => x.RequestInfo.Requester.CustomerInfoGuid == customerInfoGuid)
                 .OrderByDescending(x => x.RequestInfo.RequestDate);
         }
+
+        public void SetOrderAsInprogress(Guid orderGuid)
+        {
+            var order = GetOrder(orderGuid);
+            order.TrackInfo.OrderStatus = OrderStatus.InProgress;
+        }
     }
 }

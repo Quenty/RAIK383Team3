@@ -515,7 +515,7 @@
     <Content Include="Views\Order\Create.cshtml" />
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\TruckCapacityUnit.cshtml" />
-    <Content Include="Views\Order\Confirmation.cshtml" />
+    <Content Include="Views\Contractor\Confirmation.cshtml" />
     <Content Include="Views\Contractor\_UpdateStatus.cshtml" />
     <Content Include="Views\Shared\_SearchPartial.cshtml" />
     <Content Include="Views\Search\Results.cshtml" />

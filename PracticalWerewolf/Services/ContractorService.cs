@@ -81,5 +81,11 @@ namespace PracticalWerewolf.Services
         {
             return _userManager.Users.SingleOrDefault(x => x.ContractorInfo.ContractorInfoGuid == contractor.ContractorInfoGuid);
         }
+
+        public void RemoveOrderFromContractor(Order order, ContractorInfo contractor)
+        {
+            contractor.AssignedOrders.Remove(order.TrackInfo);
+            _contractorStore.Update(contractor);
+        }
     }
 }

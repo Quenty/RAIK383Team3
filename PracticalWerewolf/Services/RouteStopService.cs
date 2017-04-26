@@ -132,5 +132,10 @@ namespace PracticalWerewolf.Services
                 RouteStopStore.Attach(entity);
             }
         }
+
+        public RouteStop GetRouteStop(Guid guid)
+        {
+            return RouteStopStore.AsNoTracking().Where(x => x.RouteStopGuid == guid).FirstOrDefault();
+        }
     }
 }

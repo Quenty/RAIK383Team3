@@ -208,41 +208,6 @@ namespace PracticalWerewolf.Controllers
             return RedirectToAction("Index", new { message = OrderMessageId.CancelOrderError });
         }
 
-        // GET: Order/Confirmation/guid
-        [Authorize(Roles = "Contractor")]
-        public ActionResult Confirmation(string id)
-        {
-            var model = new ConfirmationViewModel
-            {
-                Guid = new Guid(id)
-            };
-            return View(model);
-        }
-
-
-        // POST: Order/Confirmation/guid
-        [Authorize(Roles = "Contractor")]
-        [HttpPost]
-        [ActionName("Confirmation")]
-        public ActionResult ConfirmationPost(ConfirmationViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    OrderService.SetOrderAsComplete(model.Guid);
-                    UnitOfWork.SaveChanges();
-
-                    return RedirectToAction("Index", "Contractor");
-                }
-                catch
-                {
-                    return RedirectToAction("Index", "Contractor", new { Message = OrderMessageId.CouldNotUpdateStatus });
-                }
-            }
-            else
-                return RedirectToAction("Index", "Contractor", new { Message = OrderMessageId.Error });
-        }
 
         [Authorize (Roles = "Employee")]
         public ActionResult AllOrders()

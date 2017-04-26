@@ -11,7 +11,9 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Data.Entity.Validation;
 using System.Web.Mvc;
-
+using PracticalWerewolf.Models.Routes;
+using PracticalWerewolf.Services;
+using PracticalWerewolf.Models.Orders;
 
 namespace PracticalWerewolf.Controllers
 {
@@ -29,7 +31,7 @@ namespace PracticalWerewolf.Controllers
             StatusChangeSuccess,
             StatusError,
             NoTruckCreated,
-
+            ConfirmationError
         }
 
         private readonly ApplicationUserManager UserManager;
@@ -37,15 +39,17 @@ namespace PracticalWerewolf.Controllers
         private readonly IUnitOfWork UnitOfWork;
         private readonly IOrderService OrderService;
         private readonly IRouteStopService RouteStopService;
+        private readonly ITruckService TruckService;
 
         public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService,
-            IUnitOfWork UnitOfWork, IRouteStopService RouteStopService)
+            IUnitOfWork UnitOfWork, IRouteStopService RouteStopService, ITruckService TruckService)
         {
             this.UnitOfWork = UnitOfWork;
             this.UserManager = UserManager;
             this.ContractorService = ContractorService;
             this.OrderService = OrderService;
             this.RouteStopService = RouteStopService;
+            this.TruckService = TruckService;
         }
 
         private void GenerateErrorMessage(ContractorMessageId? message)
@@ -59,6 +63,7 @@ namespace PracticalWerewolf.Controllers
                 : message == ContractorMessageId.StatusChangeSuccess ? "Status successfully changed"
                 : message == ContractorMessageId.NoTruckCreated ? "You must create a truck to access this page."
                 : message == ContractorMessageId.StatusError ? "Could not update status successfully."
+                : message == ContractorMessageId.ConfirmationError ? "Could not confirm pick up or drop off"
                 : "";
         }
 
@@ -339,5 +344,59 @@ namespace PracticalWerewolf.Controllers
                 return PartialView("_StatusMessage");
             }
         }
+
+        // GET: Order/Confirmation/guid
+        [Authorize(Roles = "Contractor")]
+        public ActionResult Confirmation(string id)
+        {
+            var model = new ConfirmationViewModel
+            {
+                RouteStopGuid = new Guid(id)
+            };
+            return View(model);
+        }
+
+
+        // POST: Order/Confirmation/guid
+        [Authorize(Roles = "Contractor")]
+        [HttpPost]
+        [ActionName("Confirmation")]
+        public ActionResult ConfirmationPost(ConfirmationViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    RouteStop stop = RouteStopService.GetRouteStop(model.RouteStopGuid);
+                    Order order = stop.Order;
+                    //RouteStopService.RemoveRouteStop(model.RouteStopGuid);
+                    if (stop.Type == StopType.DropOff)
+                    {
+                        OrderService.SetOrderAsComplete(order.OrderGuid);
+                        TruckService.RemoveItemFromTruck(order.TrackInfo.Assignee.Truck, order);
+                        UnitOfWork.SaveChanges();
+                    }
+                    else
+                    {
+                        ContractorInfo contractor = order.TrackInfo.Assignee;
+                        OrderService.SetOrderAsInprogress(order.OrderGuid);
+                        TruckService.AddItemToTruck(contractor.Truck, order);
+                        UnitOfWork.SaveChanges();
+                    }
+
+                    return RedirectToAction("Index", "Contractor");
+                }
+                catch
+                {
+                    return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.ConfirmationError });
+                }
+            }
+            else
+                return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.Error });
+        }
+
+
     }
+
+
 }

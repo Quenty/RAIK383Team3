@@ -45,7 +45,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var principal = GetMockUser(email);
             var context = GetMockControllerContext(principal);
             var unitOfWork = new Mock<IUnitOfWork>();
-            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object);
+            var truckService = new Mock<ITruckService>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object, truckService.Object);
             controller.ControllerContext = context;
 
 
@@ -69,7 +70,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var user = GetMockUserNullId();
             var context = GetMockControllerContext(user);
             var unitOfWork = new Mock<IUnitOfWork>();
-            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object);
+            var truckService = new Mock<ITruckService>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object, truckService.Object);
             controller.ControllerContext = context;
 
 
@@ -110,7 +112,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var context = GetMockControllerContext(principal);
             var unitOfWork = new Mock<IUnitOfWork>();
             var routeStopService = new Mock<IRouteStopService>();
-            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object);
+            var truckService = new Mock<ITruckService>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object, truckService.Object);
             controller.ControllerContext = context;
 
 
@@ -134,7 +137,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var context = GetMockControllerContext(principal);
             var unitOfWork = new Mock<IUnitOfWork>();
             var routeStopService = new Mock<IRouteStopService>();
-            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object);
+            var truckService = new Mock<ITruckService>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object, truckService.Object);
             controller.ControllerContext = context;
 
             var result = controller.Register() as ViewResult;
@@ -186,7 +190,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var userManager = GetMockApplicationUserManager();
             var unitOfWork = new Mock<IUnitOfWork>();
             var routeStopService = new Mock<IRouteStopService>();
-            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object);
+            var truckService = new Mock<ITruckService>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object, truckService.Object);
 
 
             var result = controller.Unapproved(null) as ViewResult;
@@ -213,7 +218,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var userManager = GetMockApplicationUserManager();
             var unitOfWork = new Mock<IUnitOfWork>();
             var routeStopService = new Mock<IRouteStopService>();
-            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object);
+            var truckService = new Mock<ITruckService>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object, truckService.Object);
 
 
             var result = controller.Unapproved(null) as ViewResult;
@@ -235,7 +241,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var unitOfWork = new Mock<IUnitOfWork>();
             var mockContext = context.Object;
             var routeStopService = new Mock<IRouteStopService>();
-            var contractorController = new ContractorController(mockContext, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object);
+            var truckService = new Mock<ITruckService>();
+            var contractorController = new ContractorController(mockContext, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object, truckService.Object);
             
             var result = contractorController.Approve(Guid.NewGuid(), true) as RedirectToRouteResult;
 
@@ -268,7 +275,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var orderService = new Mock<IOrderService>();
             var unitOfWork = new Mock<IUnitOfWork>();
             var routeStopService = new Mock<IRouteStopService>();
-            var controller = new ContractorController(context.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object);
+            var truckService = new Mock<ITruckService>();
+            var controller = new ContractorController(context.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object, truckService.Object);
             controller.ControllerContext = mockContext;
 
             var result = controller.Register(new ContractorRegisterModel()).Result as RedirectToRouteResult;
@@ -295,7 +303,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var unitOfWork = new Mock<IUnitOfWork>();
             var orderService = new Mock<IOrderService>();
             var routeStopService = new Mock<IRouteStopService>();
-            var controller = new ContractorController(context.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object);
+            var truckService = new Mock<ITruckService>();
+            var controller = new ContractorController(context.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object, truckService.Object);
             controller.ControllerContext = mockContext;
 
             var contractorRegisterModel = new ContractorRegisterModel()
@@ -330,7 +339,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var orderService = new Mock<IOrderService>();
             var unitOfWork = new Mock<IUnitOfWork>();
             var routeStopService = new Mock<IRouteStopService>();
-            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object);
+            var truckService = new Mock<ITruckService>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object, truckService.Object);
             controller.ControllerContext = mockContext;
 
             var contractorRegisterModel = new ContractorRegisterModel()
@@ -363,7 +373,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var routeStopService = new Mock<IRouteStopService>();
             orderService.Setup(x => x.GetQueuedOrders(It.IsAny<ContractorInfo>())).Returns(new List<Order>());
             var unitOfWork = new Mock<IUnitOfWork>();
-            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object);
+            var truckService = new Mock<ITruckService>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object, truckService.Object);
             controller.ControllerContext = mockContext;
 
 
@@ -397,7 +408,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var orderService = new Mock<IOrderService>();
             orderService.Setup(x => x.GetQueuedOrders(It.IsAny<ContractorInfo>())).Returns(orders);
             var unitOfWork = new Mock<IUnitOfWork>();
-            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object);
+            var truckService = new Mock<ITruckService>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object, truckService.Object);
             controller.ControllerContext = mockContext;
 
 
@@ -420,7 +432,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var orderService = new Mock<IOrderService>();
             var unitOfWork = new Mock<IUnitOfWork>();
             var routeStopService = new Mock<IRouteStopService>();
-            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object);
+            var truckService = new Mock<ITruckService>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object, truckService.Object);
             controller.ControllerContext = mockContext;
 
 
@@ -445,7 +458,8 @@ namespace PracticalWerewolf.Tests.Controllers
             orderService.Setup(x => x.GetInprogressOrders(It.IsAny<ContractorInfo>())).Returns(new List<Order>());
             var unitOfWork = new Mock<IUnitOfWork>();
             var routeStopService = new Mock<IRouteStopService>();
-            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object);
+            var truckService = new Mock<ITruckService>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object, truckService.Object);
             controller.ControllerContext = mockContext;
 
 
@@ -479,7 +493,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var routeStopService = new Mock<IRouteStopService>();
             orderService.Setup(x => x.GetInprogressOrders(It.IsAny<ContractorInfo>())).Returns(orders);
             var unitOfWork = new Mock<IUnitOfWork>();
-            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object);
+            var truckService = new Mock<ITruckService>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object, truckService.Object);
             controller.ControllerContext = mockContext;
 
 
@@ -502,7 +517,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var orderService = new Mock<IOrderService>();
             var unitOfWork = new Mock<IUnitOfWork>();
             var routeStopService = new Mock<IRouteStopService>();
-            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object);
+            var truckService = new Mock<ITruckService>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object, truckService.Object);
             controller.ControllerContext = mockContext;
 
 
@@ -527,7 +543,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var orderService = new Mock<IOrderService>();
             orderService.Setup(x => x.GetDeliveredOrders(It.IsAny<ContractorInfo>())).Returns(new List<Order>());
             var unitOfWork = new Mock<IUnitOfWork>();
-            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object);
+            var truckService = new Mock<ITruckService>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object, truckService.Object);
             controller.ControllerContext = mockContext;
 
 
@@ -561,7 +578,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var orderService = new Mock<IOrderService>();
             orderService.Setup(x => x.GetDeliveredOrders(It.IsAny<ContractorInfo>())).Returns(orders);
             var unitOfWork = new Mock<IUnitOfWork>();
-            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object);
+            var truckService = new Mock<ITruckService>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object, truckService.Object);
             controller.ControllerContext = mockContext;
 
 
@@ -584,7 +602,8 @@ namespace PracticalWerewolf.Tests.Controllers
             var contractorService = new Mock<IContractorService>();
             var orderService = new Mock<IOrderService>();
             var unitOfWork = new Mock<IUnitOfWork>();
-            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object);
+            var truckService = new Mock<ITruckService>();
+            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object, truckService.Object);
             controller.ControllerContext = mockContext;
 
 

@@ -34,6 +34,9 @@
                     Address
                 </th>
                 <th>
+                    Customer Confirmation
+                </th>
+                <th>
 
                 </th>
             </tr>
@@ -60,6 +63,9 @@
                         {
                             @Html.DisplayFor(x => item.Order.RequestInfo.PickUpAddress.RawInputAddress )
                         }
+                    </td>
+                    <td>
+                        @Html.ActionLink("Confirm", "Confirmation", new { id = item.RouteStopGuid })
                     </td>
                     <td>
                         @Html.ActionLink("Details", "Order", "Order", new { id = item.Order.OrderGuid }, null)
