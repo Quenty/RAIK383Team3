@@ -19,7 +19,6 @@ namespace PracticalWerewolf.Services
         private readonly IOrderStore OrderStore;
         private readonly IContractorStore ContractorStore;
         private readonly IOrderTrackInfoStore OrderTrackInfoStore;
-        private readonly ITruckStore TruckStore;
         private readonly ApplicationUserManager UserManager;
         private readonly EmailService EmailService;
 

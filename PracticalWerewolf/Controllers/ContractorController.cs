@@ -42,14 +42,16 @@ namespace PracticalWerewolf.Controllers
         private readonly IContractorService ContractorService;
         private readonly IUnitOfWork UnitOfWork;
         private readonly IOrderService OrderService;
+        private readonly IRouteStopService RouteStopService;
         private readonly IRoutePlannerService RoutePlannerService;
 
-        public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService, IUnitOfWork UnitOfWork, IRoutePlannerService RoutePlannerService)
+        public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService, IUnitOfWork UnitOfWork, IRouteStopService RouteStopService, IRoutePlannerService RoutePlannerService)
         {
             this.UnitOfWork = UnitOfWork;
             this.UserManager = UserManager;
             this.ContractorService = ContractorService;
             this.OrderService = OrderService;
+            this.RouteStopService = RouteStopService;
             this.RoutePlannerService = RoutePlannerService;
         }
 
@@ -214,7 +216,7 @@ namespace PracticalWerewolf.Controllers
                     var model = new ContractorStatusModel
                     {
                         ContractorGuid = guid,
-                        ContractorStatus = contractor.IsAvailable
+                        IsAvailable = contractor.IsAvailable
                     };
 
                     return PartialView("_UpdateStatus", model);
@@ -236,23 +238,25 @@ namespace PracticalWerewolf.Controllers
             {
                 try
                 {
-                    ContractorService.SetIsAvailable(model.ContractorGuid, !model.ContractorStatus);
-                    UnitOfWork.SaveChanges();
-                    if (model.ContractorStatus) { 
+                    ContractorService.SetIsAvailable(model.ContractorGuid, !model.IsAvailable);
+                    //after changing their status
+                    if (!model.IsAvailable) { 
                         var pendingOrders = OrderService.GetInprogressOrdersNoTruck(model.ContractorGuid);
-                        if (pendingOrders.Count() != 0)
+                        if (!pendingOrders.Any())
                         {
                             foreach (var order in pendingOrders)
                             {
+                                RouteStopService.UnassignOrderFromRouteStop(order);
                                 OrderService.UnassignOrder(order);
                             }
-                            UnitOfWork.SaveChanges();
-                            BackgroundJob.Enqueue(() => RoutePlannerService.AssignOrders());
                         }
                     }
+                    UnitOfWork.SaveChanges();
+                    BackgroundJob.Enqueue(() => RoutePlannerService.AssignOrders());
+
                     return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusChangeSuccess }) + "#status");
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     logger.Warn("Could not change contractor status", e);
                     return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusError }) + "#status");

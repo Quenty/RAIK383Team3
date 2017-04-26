@@ -1,6 +1,7 @@
 ﻿using PracticalWerewolf.Models.Routes;
 using PracticalWerewolf.Models.UserInfos;
 using System.Collections.Generic;
+using PracticalWerewolf.Models.Orders;
 
 namespace PracticalWerewolf.Services.Interfaces
 {
@@ -13,6 +14,8 @@ namespace PracticalWerewolf.Services.Interfaces
         RouteStop GetContractorCurrentAssignment(ContractorInfo contractor);
 
         IEnumerable<RouteStop> GetContractorRoute(ContractorInfo contractor);
+
+        void UnassignOrderFromRouteStop(Order order);
 
         void Update(RouteStop entity);
 
