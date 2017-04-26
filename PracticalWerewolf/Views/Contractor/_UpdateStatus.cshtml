@@ -13,19 +13,19 @@
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(m => m.ContractorGuid)
-            @Html.HiddenFor(m => m.ContractorStatus)
+            @Html.HiddenFor(m => m.IsAvailable)
 
             <div class="row">
                 <div class="col-md-6">
                     <h4>Change your status </h4>
-                    Current status: @(Model.ContractorStatus ? "Available" : "Not Available")
+                    Current status: @(Model.IsAvailable ? "Available" : "Not Available")
                 </div>
                 <div class="col-md-3 pull-right alert">
-                    <input type="submit" value="@(Model.ContractorStatus ? "Stop being available" : "Be available")" class="btn btn-default pull-right" />
+                    <input type="submit" value="@(Model.IsAvailable ? "Stop being available" : "Be available")" class="btn btn-default pull-right" />
                 </div>
             </div>
 
-            if (Model.ContractorStatus)
+            if (Model.IsAvailable)
             {
                 <div class="alert alert-warning">
                     <h4>Updating status to unavailable will cancel all pending orders.</h4>
