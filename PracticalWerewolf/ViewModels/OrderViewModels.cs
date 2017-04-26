@@ -18,6 +18,9 @@ namespace PracticalWerewolf.ViewModels.Orders
 
     public class CreateOrderRequestViewModel
     {
+        public bool IsPhoneNumberConfirmed { get; set; } = false;
+        public string PhoneNumber { get; set; } = null;
+
         [Required]
         [Display(Name = "Pick up address", Description = "Where to pick up your package")]
         public CivicAddressDb PickUpAddress { get; set; }
@@ -30,6 +33,8 @@ namespace PracticalWerewolf.ViewModels.Orders
         [Display(Name = "Drop off address", Description = "Where your package going")]
         public CivicAddressDb DropOffAddress { get; set; }
     }
+
+
     public class ConfirmationViewModel
     {
         public Guid Guid { get; set; }

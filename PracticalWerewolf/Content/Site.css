@@ -25,27 +25,34 @@ textarea {
 
 .splash-lead {
     margin-top:75px;
+    color: #ffffff;
 }
 
 
 @media screen and (max-width: 1000px) {
     .splash-lead {
-        margin-top:25px
+        margin-top:25px;
     }
 }
 
 .full-width-jumbotron {
     background: scroll;
-    background-image: url(Images/trucking.jpg);
     background-repeat: no-repeat;
     background-position: 0 0;
     background-size: cover;
-    height:600px;
-    margin-top: -30px;
-    filter: contrast(130%);
-
-
+    height:100vh;
     background-attachment: fixed;
+}
+
+.full-width-jumbotron-top {
+    margin-top: -30px;
+    background-image: url(Images/trucking.jpg);
+    margin-bottom: 50px;
+}
+
+.full-width-jumbotron-middle {
+    margin-top: 100px;
+    background-image: url(Images/igor-ovsyannykov-151127-small.jpg);
 }
 
 .navbar-brand-image {
@@ -56,3 +63,4 @@ textarea {
 .contractor-body-pane {
     min-height: 300px;
 }
+
