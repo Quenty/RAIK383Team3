@@ -18,7 +18,8 @@ namespace PracticalWerewolf.Models.Trucks
         };
 
         public TruckCapacityUnit()
-        { }
+        {
+        }
 
         public TruckCapacityUnit(TruckCapacityUnit copy)
         {
