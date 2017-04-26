@@ -179,7 +179,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         [Authorize(Roles = "Contractor")]
-        public async Task<ActionResult> _Pending()
+        public async Task<ActionResult> Pending()
         {
             var userId = User.Identity.GetUserId();
             if (userId != null)
@@ -244,7 +244,7 @@ namespace PracticalWerewolf.Controllers
                         {
                             foreach (var order in pendingOrders)
                             {
-                                OrderService.UnassignOrder(order, model.ContractorGuid);
+                                OrderService.UnassignOrder(order);
                             }
                             UnitOfWork.SaveChanges();
                             BackgroundJob.Enqueue(() => RoutePlannerService.AssignOrders());
@@ -262,7 +262,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         [Authorize(Roles = "Contractor")]
-        public async Task<ActionResult> _Current()
+        public async Task<ActionResult> Current()
         {
             var userId = User.Identity.GetUserId();
             if (userId != null)
@@ -286,7 +286,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         [Authorize(Roles = "Contractor")]
-        public async Task<ActionResult> _Delivered()
+        public async Task<ActionResult> Delivered()
         {
             var userId = User.Identity.GetUserId();
             if (userId != null)

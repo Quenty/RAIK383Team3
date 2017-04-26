@@ -106,7 +106,7 @@ namespace PracticalWerewolf.Services
         {
             order.TrackInfo.Assignee = null;
             order.TrackInfo.OrderStatus = OrderStatus.Queued;
-            OrderTrackInfoStore.Update(order.TrackInfo)
+            OrderTrackInfoStore.Update(order.TrackInfo);
         }
 
         public void AssignOrders()
