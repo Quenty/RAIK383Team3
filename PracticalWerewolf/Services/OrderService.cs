@@ -55,15 +55,14 @@ namespace PracticalWerewolf.Services
         public IEnumerable<Order> GetInprogressOrdersNoTruck(Guid guid)
         {
             var assignee = ContractorStore.Single(o => o.ContractorInfoGuid == guid);
-            return OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == guid).ToList()
-                                       .Where(o => o.TrackInfo.OrderStatus == OrderStatus.InProgress)
-                                       .Where(o => o.TrackInfo.CurrentTruck != assignee.Truck);
+            return GetInprogressOrdersNoTruck(assignee);
         }
 
         public IEnumerable<Order> GetInprogressOrdersInTruck(ContractorInfo contractor)
         {
             return OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid).ToList()
                 .Where(o => o.TrackInfo.OrderStatus == OrderStatus.InProgress)
+                .Where(o => o.TrackInfo.CurrentTruck != null)
                 .Where(o => o.TrackInfo.CurrentTruck.TruckGuid == contractor.Truck.TruckGuid);
         }
         public Order GetOrder(Guid orderGuid)
@@ -101,24 +100,13 @@ namespace PracticalWerewolf.Services
             OrderTrackInfo orderTrackInfo = order.TrackInfo;
             orderTrackInfo.OrderStatus = OrderStatus.InProgress;
             orderTrackInfo.Assignee = contractor;
-            //OrderStore.GetEntry(order).CurrentValues.SetValues(order);
-            //OrderTrackInfoStore.GetEntry(orderTrackInfo).CurrentValues.SetValues(orderTrackInfo);
-            //contractor.AssignedOrders.Add(orderTrackInfo);
-            //OrderStore.Update(order);
-            //ContractorStore.Update(contractor);
         }
 
-            //OrderStore.GetEntry(order).CurrentValues.SetValues(order);
-            //OrderTrackInfoStore.GetEntry(orderTrackInfo).CurrentValues.SetValues(orderTrackInfo);
-
-        public void UnassignOrder(Order order, Guid contractorInfoGuid)
+        public void UnassignOrder(Order order)
         {
-            ContractorInfo contractor = ContractorStore.Single(contractorInfo => contractorInfo.ContractorInfoGuid == contractorInfoGuid);
-            contractor.AssignedOrders.Remove(order.TrackInfo);
             order.TrackInfo.Assignee = null;
             order.TrackInfo.OrderStatus = OrderStatus.Queued;
-            OrderStore.Update(order);
-            ContractorStore.Update(contractor);
+            OrderTrackInfoStore.Update(order.TrackInfo)
         }
 
         public void AssignOrders()
