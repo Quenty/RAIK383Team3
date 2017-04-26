@@ -205,7 +205,7 @@ namespace PracticalWerewolf.Services
         {
             return OrderStore.Find(o => o.RequestInfo.Requester.CustomerInfoGuid == customerInfo.CustomerInfoGuid);
         }
-
+        
         public void SetOrderAsComplete(Guid guid)
         {
             Order order = GetOrder(guid);
@@ -218,8 +218,8 @@ namespace PracticalWerewolf.Services
 
             var cost = CalculateOrderCost(order);
 
-            // TODO: Reenable
-            // EmailService.SendOrderDeliveredEmail(order, customer, cost);
+            // TODO: Make async later
+            EmailService.SendOrderDeliveredEmail(order, customer, cost);
         }
 
         public IEnumerable<Order> GetOrderHistory(Guid customerInfoGuid)
