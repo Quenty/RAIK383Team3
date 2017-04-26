@@ -111,12 +111,12 @@ namespace PracticalWerewolf.Services
                 return;
             }
 
-            var routeStops = _routeStopStore.AsQueryable()
+            var routeStops = RouteStopStore.AsQueryable()
                 .Where(x => x.Order.OrderGuid == order.OrderGuid).ToList();
 
             foreach(var stop in routeStops)
             {
-                _routeStopStore.Delete(stop);
+                RouteStopStore.Delete(stop);
             }
         }
 
