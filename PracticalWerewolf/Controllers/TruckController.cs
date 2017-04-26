@@ -240,6 +240,10 @@ namespace PracticalWerewolf.Controllers
                     logger.Error("Create(ViewModel) - Error getting user, creating TruckCapacityUnit, creating Truck, or ContractorService.UpdateContractorTruck()");
                 }
             }
+            else
+            {
+                return View(returnedModel);
+            }
             return RedirectToAction("Index", "Contractor",new { Message = TruckMessageId.TruckCreationError });
         }
 

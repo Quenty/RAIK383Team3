@@ -46,9 +46,16 @@
             <div class="control-label col-md-2">
                 @Html.Label("Location")
             </div>
+            
 
             <div class="col-md-10">
                 <div id="map" style="height:400px; width:80%;"></div>
+            </div>
+
+            <div class="col-md-push-2 col-md-10">
+                @Html.ValidationMessageFor(model => model.Lat, "", new { @class = "text-danger" })
+                <br />
+                @Html.ValidationMessageFor(model => model.Long, "", new { @class = "text-danger" })
             </div>
         </div>
 
