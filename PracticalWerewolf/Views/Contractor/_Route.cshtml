@@ -36,9 +36,6 @@
                 <th>
                     Customer Confirmation
                 </th>
-                <th>
-
-                </th>
             </tr>
         </thead>
         <tbody>
@@ -70,10 +67,8 @@
                         }
 </td>
                     <td>
-                        @Html.ActionLink("Confirm", "Confirmation", new { id = item.RouteStopGuid}, new { @class = "btn btn-info" })
-                    </td>
-                    <td>
-                        @Html.ActionLink("Details", "Order", "Order", new { id = item.Order.OrderGuid }, null)
+                        @Html.ActionLink("Details", "Order", "Order", new { id = item.Order.OrderGuid }, new { @class = "btn btn-link" })
+                        @Html.ActionLink("Confirm", "Confirmation", new { id = item.RouteStopGuid }, new { @class = "btn btn-info" })
                     </td>
                 </tr>
             }

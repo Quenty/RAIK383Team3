@@ -200,18 +200,20 @@ namespace PracticalWerewolf.Services
             return OrderStore.Find(o => o.RequestInfo.Requester.CustomerInfoGuid == customerInfo.CustomerInfoGuid);
         }
 
-        public async Task SetOrderAsComplete(Guid guid)
+        public void SetOrderAsComplete(Guid guid)
         {
             Order order = GetOrder(guid);
             OrderTrackInfo orderTrackInfo = order.TrackInfo;
             orderTrackInfo.OrderStatus = OrderStatus.Complete;
             OrderStore.Update(order);
-
+        
             var customerId = order.RequestInfo.Requester.CustomerInfoGuid;
             var customer = UserManager.Users.Single(x => x.CustomerInfo.CustomerInfoGuid == customerId);
 
             var cost = CalculateOrderCost(order);
-            await EmailService.SendOrderDeliveredEmail(order, customer, cost);
+
+            // TODO: Reenable
+            // EmailService.SendOrderDeliveredEmail(order, customer, cost);
         }
 
         public IEnumerable<Order> GetOrderHistory(Guid customerInfoGuid)

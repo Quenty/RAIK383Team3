@@ -32,7 +32,7 @@ namespace PracticalWerewolf.Services
                 throw new ArgumentNullException();
             }
 
-            truck.CurrentOrders.Add(order.TrackInfo);
+            /*
             TruckCapacityUnit capacity;
             if (truck.UsedCapacity != null)
             {
@@ -51,9 +51,13 @@ namespace PracticalWerewolf.Services
                     Mass = order.RequestInfo.Size.Mass,
                     Volume = order.RequestInfo.Size.Volume
                 };
-            }
-            truck.MaxCapacity = truck.MaxCapacity;
-            truck.UsedCapacity = capacity;
+                truck.UsedCapacity = capacity;
+            }*/
+
+            TruckCapacityUnit newUsedCapacity = ((truck.UsedCapacity ?? TruckCapacityUnit.Zero) + order.RequestInfo.Size);
+            newUsedCapacity.TruckCapacityUnitGuid = Guid.NewGuid();
+            truck.UsedCapacity = newUsedCapacity;
+
             TruckStore.Update(truck);
         }
 
@@ -66,13 +70,20 @@ namespace PracticalWerewolf.Services
             }
             truck.CurrentOrders.Remove(order.TrackInfo);
 
+            /*
             var capacity = new TruckCapacityUnit
             {
                 TruckCapacityUnitGuid = truck.UsedCapacity.TruckCapacityUnitGuid,
                 Mass = (truck.UsedCapacity.Mass - order.RequestInfo.Size.Mass),
                 Volume = (truck.UsedCapacity.Volume - order.RequestInfo.Size.Volume)
             };
-            truck.UsedCapacity = capacity;
+            UpdateUsedCapacity(truck.TruckGuid, capacity);*/
+
+            TruckCapacityUnit newUsedCapacity = ((truck.UsedCapacity ?? TruckCapacityUnit.Zero) - order.RequestInfo.Size);
+            newUsedCapacity.TruckCapacityUnitGuid = Guid.NewGuid();
+            truck.UsedCapacity = newUsedCapacity;
+
+
             TruckStore.Update(truck);
         }
 
@@ -114,7 +125,21 @@ namespace PracticalWerewolf.Services
             var truck = GetTruck(truckGuid);
             if (truck != null)
             {
-                truck.MaxCapacity = capacity;
+                if (truck.MaxCapacity == null)
+                {
+                    if (capacity.TruckCapacityUnitGuid == null || capacity.TruckCapacityUnitGuid == Guid.Empty)
+                    {
+                        throw new Exception("No guid");
+                    }
+
+                    truck.MaxCapacity = capacity;
+                }
+                else
+                {
+                    truck.MaxCapacity.Mass = capacity.Mass;
+                    truck.MaxCapacity.Volume = capacity.Volume;
+                }
+               
                 TruckStore.Update(truck);
             }
             else
@@ -123,17 +148,32 @@ namespace PracticalWerewolf.Services
             }
         }
 
+        /*
         public void UpdateUsedCapacity(Guid truckGuid, TruckCapacityUnit capacity)
         {
             if (capacity == null)
             {
-                logger.Error("UpdateUsedCapacity() - null TruckCapacityUnit passed in");
+                logger.Error("UpdateCapacity() - null TruckCapacityUnit passed in");
                 throw new ArgumentNullException("TruckCapacityUnit is null");
             }
             var truck = GetTruck(truckGuid);
             if (truck != null)
             {
-                truck.UsedCapacity = capacity;
+                if (truck.UsedCapacity == null)
+                {
+                    if (capacity.TruckCapacityUnitGuid == null || capacity.TruckCapacityUnitGuid == Guid.Empty)
+                    {
+                        throw new Exception("No guid");
+                    }
+
+                    truck.UsedCapacity = capacity;
+                }
+                else
+                {
+                    truck.UsedCapacity.Mass = capacity.Mass;
+                    truck.UsedCapacity.Volume = capacity.Volume;
+                }
+
                 TruckStore.Update(truck);
             }
             else
@@ -141,7 +181,7 @@ namespace PracticalWerewolf.Services
                 throw new Exception("Truck does not exist in database!");
             }
         }
-
+        */
 
 
         public void UpdateLicenseNumber(Guid truckGuid, string licenseNumber)

@@ -22,7 +22,7 @@ namespace PracticalWerewolf.Services.Interfaces
         void CancelOrder(Guid orderGuid);
         IEnumerable<Order> GetOrders();
         object GetOrders(CustomerInfo customerInfo);
-        Task SetOrderAsComplete(Guid guid);
+        void SetOrderAsComplete(Guid guid);
         void SetOrderInTruck(Guid orderId);
         void AssignOrders();
         void UnassignOrder(Order order);

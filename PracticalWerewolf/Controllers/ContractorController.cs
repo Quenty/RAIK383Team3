@@ -405,27 +405,31 @@ namespace PracticalWerewolf.Controllers
                     //RouteStopService.RemoveRouteStop(model.RouteStopGuid);
                     if (stop.Type == StopType.DropOff)
                     {
-                        await OrderService.SetOrderAsComplete(order.OrderGuid);
-                        //TruckService.RemoveItemFromTruck(order.TrackInfo.Assignee.Truck, order);
+                        OrderService.SetOrderAsComplete(order.OrderGuid);
+                        TruckService.RemoveItemFromTruck(order.TrackInfo.Assignee.Truck, order);
                         UnitOfWork.SaveChanges();
                     }
                     else
                     {
                         ContractorInfo contractor = order.TrackInfo.Assignee;
                         OrderService.SetOrderInTruck(order.OrderGuid);
-                        //TruckService.AddItemToTruck(contractor.Truck, order);
+                        TruckService.AddItemToTruck(contractor.Truck, order);
                         UnitOfWork.SaveChanges();
                     }
 
                     return RedirectToAction("Index", "Contractor");
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
+                    logger.Error(e);
+                    Console.Write(e);
                     return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.ConfirmationError });
                 }
             }
             else
+            {
                 return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.Error });
+            }
         }
 
 
