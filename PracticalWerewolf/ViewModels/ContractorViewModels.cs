@@ -55,7 +55,7 @@ namespace PracticalWerewolf.ViewModels.Contractor
         [Required]
         public Guid ContractorGuid { get; set; }
 
-        public Boolean ContractorStatus { get; set; }
+        public Boolean IsAvailable { get; set; }
     }
    
     public class PagedOrderListViewModel
