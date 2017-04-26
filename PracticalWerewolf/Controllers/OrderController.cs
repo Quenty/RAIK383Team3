@@ -237,7 +237,7 @@ namespace PracticalWerewolf.Controllers
             return View(model);
         }
 
-        public ActionResult SetInTruck(Order order)
+        public ActionResult UpdateOrderStatus(Order order)
         {
 
             OrderStatusViewModel status = new OrderStatusViewModel
@@ -256,6 +256,12 @@ namespace PracticalWerewolf.Controllers
             OrderService.SetOrderInTruck(orderId);
             UnitOfWork.SaveChanges();
             return View("_UpdateMessage");
+        }
+
+        public async Task<ActionResult> SetOrderAsComplete(Guid orderId)
+        {
+            OrderService.SetOrderAsComplete(orderId);
+            return View();
         }
 
         // POST: Order/Confirmation/guid

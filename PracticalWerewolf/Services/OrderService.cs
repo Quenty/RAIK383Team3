@@ -54,9 +54,7 @@ namespace PracticalWerewolf.Services
         public IEnumerable<Order> GetInprogressOrdersNoTruck(Guid guid)
         {
             var assignee = ContractorStore.Single(o => o.ContractorInfoGuid == guid);
-            return OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == guid).ToList()
-                                       .Where(o => o.TrackInfo.OrderStatus == OrderStatus.InProgress)
-                                       .Where(o => o.TrackInfo.CurrentTruck != assignee.Truck);
+            return GetInprogressOrdersNoTruck(assignee);
         }
 
         public IEnumerable<Order> GetInprogressOrdersInTruck(ContractorInfo contractor)
