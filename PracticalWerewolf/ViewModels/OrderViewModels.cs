@@ -1,5 +1,6 @@
 ﻿using PracticalWerewolf.Models;
 using PracticalWerewolf.Models.Trucks;
+using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.ViewModels.Contractor;
 using PracticalWerewolf.ViewModels.Paged;
 using System;
@@ -54,6 +55,14 @@ namespace PracticalWerewolf.ViewModels.Orders
         [Display(Name = "Contractor ")]
         public ApplicationUser Contractor { get; set; }
 
+    }
+
+    public class OrderStatusViewModel
+    {
+        public Guid orderId { get; set; }
+        public OrderStatus orderStatus { get; set; }
+        public Boolean inTruck { get; set; }
+        public string message { get; set; }
     }
 
 }

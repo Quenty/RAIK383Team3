@@ -208,6 +208,43 @@ namespace PracticalWerewolf.Controllers
             return RedirectToAction("Index", new { message = OrderMessageId.CancelOrderError });
         }
 
+        // GET: Order/Confirmation/guid
+        [Authorize(Roles = "Contractor")]
+        public ActionResult Confirmation(string id)
+        {
+            var model = new ConfirmationViewModel
+            {
+                Guid = new Guid(id)
+            };
+            return View(model);
+        }
+
+        public ActionResult UpdateOrderStatus(Order order)
+        {
+
+            OrderStatusViewModel status = new OrderStatusViewModel
+            {
+                orderId = order.OrderGuid,
+                orderStatus = order.TrackInfo.OrderStatus,
+                inTruck = (order.TrackInfo.CurrentTruck == null)
+            };
+            return PartialView("_SetOrderInTruck", status);
+        }
+
+        [Authorize(Roles = "Contractor")]
+        [HttpPost]
+        public ActionResult SetInTruck(Guid orderId)
+        {
+            OrderService.SetOrderInTruck(orderId);
+            UnitOfWork.SaveChanges();
+            return View("_UpdateMessage");
+        }
+
+        public async Task<ActionResult> SetOrderAsComplete(Guid orderId)
+        {
+            OrderService.SetOrderAsComplete(orderId);
+            return View();
+        }
 
         [Authorize (Roles = "Employee")]
         public ActionResult AllOrders()

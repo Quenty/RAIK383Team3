@@ -463,6 +463,9 @@
     <Content Include="Views\Contractor\_Route.cshtml" />
     <Content Include="Views\Search\_LabelHelper.cshtml" />
     <Content Include="Views\Order\Order.cshtml" />
+    <Content Include="Views\Contractor\_PagedOrderListView.cshtml" />
+    <Content Include="Views\Order\_SetOrderInTruck.cshtml" />
+    <Content Include="Views\Order\_UpdateMessage.cshtml" />
     <None Include="Views\Search\_PartialResults.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

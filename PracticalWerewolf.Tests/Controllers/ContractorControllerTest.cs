@@ -463,7 +463,7 @@ namespace PracticalWerewolf.Tests.Controllers
             controller.ControllerContext = mockContext;
 
 
-            var result = controller._Current().Result as PartialViewResult;
+            var result = controller.Current().Result as PartialViewResult;
             var viewModel = result.Model as PagedOrderListViewModel;
 
 
@@ -498,7 +498,7 @@ namespace PracticalWerewolf.Tests.Controllers
             controller.ControllerContext = mockContext;
 
 
-            var result = controller._Current().Result as PartialViewResult;
+            var result = controller.Current().Result as PartialViewResult;
             var viewModel = result.Model as PagedOrderListViewModel;
 
 
@@ -522,7 +522,7 @@ namespace PracticalWerewolf.Tests.Controllers
             controller.ControllerContext = mockContext;
 
 
-            var result = controller._Current().Result as ViewResult;
+            var result = controller.Current().Result as ViewResult;
 
 
             Assert.IsNull(result.Model);

@@ -43,6 +43,28 @@ namespace PracticalWerewolf.Services
             return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.InProgress).ToList();
         }
 
+        public IEnumerable<Order> GetInprogressOrdersNoTruck(ContractorInfo contractorinfo)
+        {
+            var assignee = ContractorStore.Single(o => o.ContractorInfoGuid == contractorinfo.ContractorInfoGuid);
+            return OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractorinfo.ContractorInfoGuid).ToList()
+            .Where(o => o.TrackInfo.OrderStatus == OrderStatus.InProgress)
+            .Where(o => o.TrackInfo.CurrentTruck != assignee.Truck);
+        }
+
+        public IEnumerable<Order> GetInprogressOrdersNoTruck(Guid guid)
+        {
+            var assignee = ContractorStore.Single(o => o.ContractorInfoGuid == guid);
+            return GetInprogressOrdersNoTruck(assignee);
+        }
+
+        public IEnumerable<Order> GetInprogressOrdersInTruck(ContractorInfo contractor)
+        {
+            return OrderStore.Find(o => o.TrackInfo.Assignee.ContractorInfoGuid == contractor.ContractorInfoGuid).ToList()
+                .Where(o => o.TrackInfo.OrderStatus == OrderStatus.InProgress)
+                .Where(o => o.TrackInfo.CurrentTruck != null)
+                .Where(o => o.TrackInfo.CurrentTruck.TruckGuid == contractor.Truck.TruckGuid);
+        }
+
         public Order GetOrder(Guid orderGuid)
         {
             Order order = OrderStore.Single(o => o.OrderGuid == orderGuid);
@@ -135,6 +157,19 @@ namespace PracticalWerewolf.Services
             else
             {
                 logger.Error($"SetOrderAsInProgress() - No order with id {orderId.ToString()}");
+            }
+        }
+
+        public void SetOrderInTruck(Guid orderId)
+        {
+            var order = OrderStore.Find(orderId);
+            if (order != null)
+            {
+                order.TrackInfo.CurrentTruck = order.TrackInfo.Assignee.Truck;
+                OrderTrackInfoStore.Update(order.TrackInfo);
+            }else
+            {
+                logger.Error($"SetOrderInTruck() - No order with id {orderId.ToString()}");
             }
         }
 
