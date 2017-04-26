@@ -120,6 +120,7 @@
     <Compile Include="Controllers\ControllerTest.cs" />
     <Compile Include="Controllers\TruckControllerTest.cs" />
     <Compile Include="Controllers\ContractorControllerTest.cs" />
+    <Compile Include="Helpers\CivicAddressDbTest.cs" />
     <Compile Include="Helpers\LocationHelperTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="Stores\DbContext\MockUserDbSet.cs" />
     <Compile Include="Stores\TruckStoreTest.cs" />
     <Compile Include="Stores\ContractorStoreTest.cs" />
+    <Compile Include="TruckCapacityUnitTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\packages\Microsoft.SqlServer.Types.11.0.1\nativeBinaries\x64\msvcr100.dll">

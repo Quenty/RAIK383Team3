@@ -173,7 +173,7 @@ namespace PracticalWerewolf.Services
             }
         }
 
-        public object GetOrders()
+        public IEnumerable<Order> GetOrders()
         {
             return OrderStore.GetAll().ToList();
         }
@@ -201,6 +201,12 @@ namespace PracticalWerewolf.Services
             return OrderStore
                 .Find(x => x.RequestInfo.Requester.CustomerInfoGuid == customerInfoGuid)
                 .OrderByDescending(x => x.RequestInfo.RequestDate);
+        }
+
+        public void SetOrderAsInprogress(Guid orderGuid)
+        {
+            var order = GetOrder(orderGuid);
+            order.TrackInfo.OrderStatus = OrderStatus.InProgress;
         }
     }
 }

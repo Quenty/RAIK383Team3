@@ -11,7 +11,9 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Data.Entity.Validation;
 using System.Web.Mvc;
-
+using PracticalWerewolf.Models.Routes;
+using PracticalWerewolf.Services;
+using PracticalWerewolf.Models.Orders;
 
 namespace PracticalWerewolf.Controllers
 {
@@ -29,22 +31,25 @@ namespace PracticalWerewolf.Controllers
             StatusChangeSuccess,
             StatusError,
             NoTruckCreated,
-            TruckCreationError,
-            TruckLocationUpdateError,
-            TruckLocationUpdatedSuccess
+            ConfirmationError
         }
 
         private readonly ApplicationUserManager UserManager;
         private readonly IContractorService ContractorService;
         private readonly IUnitOfWork UnitOfWork;
         private readonly IOrderService OrderService;
+        private readonly IRouteStopService RouteStopService;
+        private readonly ITruckService TruckService;
 
-        public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService, IUnitOfWork UnitOfWork)
+        public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService,
+            IUnitOfWork UnitOfWork, IRouteStopService RouteStopService, ITruckService TruckService)
         {
             this.UnitOfWork = UnitOfWork;
             this.UserManager = UserManager;
             this.ContractorService = ContractorService;
             this.OrderService = OrderService;
+            this.RouteStopService = RouteStopService;
+            this.TruckService = TruckService;
         }
 
         private void GenerateErrorMessage(ContractorMessageId? message)
@@ -58,9 +63,7 @@ namespace PracticalWerewolf.Controllers
                 : message == ContractorMessageId.StatusChangeSuccess ? "Status successfully changed"
                 : message == ContractorMessageId.NoTruckCreated ? "You must create a truck to access this page."
                 : message == ContractorMessageId.StatusError ? "Could not update status successfully."
-                : message == ContractorMessageId.TruckCreationError ? "Could not create truck successfully."
-                : message == ContractorMessageId.TruckLocationUpdateError ? "Could not update truck location successfully"
-                : message == ContractorMessageId.TruckLocationUpdatedSuccess ? "Truck location updated successfully"
+                : message == ContractorMessageId.ConfirmationError ? "Could not confirm pick up or drop off"
                 : "";
         }
 
@@ -196,6 +199,26 @@ namespace PracticalWerewolf.Controllers
             }
         }
 
+        //Returns partial view with an order list of deliveries
+        public async Task<ActionResult> Route()
+        {
+            var userId = User.Identity.GetUserId();
+            if(userId != null)
+            {
+                var user = await UserManager.FindByIdAsync(userId);
+                var contractor = user.ContractorInfo;
+
+                var model = new OrderRouteViewModel()
+                {
+                    DistanceToNextStop = RouteStopService.GetDistanceToNextStopInMiles(contractor),
+                    DisplayName = "Your Current Route",
+                    Route = RouteStopService.GetContractorRoute(contractor).ToList()
+                };
+                return PartialView("_Route", model);
+            }
+            return View("index", new { Message = ContractorMessageId.Error });
+        }
+
 
         public ActionResult UpdateStatus(string id)
         {
@@ -298,7 +321,7 @@ namespace PracticalWerewolf.Controllers
             }
         }
 
-        public async Task<ActionResult> _Status()
+        public async Task<ActionResult> Status()
         {
             var userId = User.Identity.GetUserId();
             if (userId != null)
@@ -313,6 +336,7 @@ namespace PracticalWerewolf.Controllers
                         Guid = truck.TruckGuid,
                         LicenseNumber = truck.LicenseNumber,
                         MaxCapacity = truck.MaxCapacity,
+                        AvailableCapacity = truck.GetAvailableCapacity(),
                         Lat = truck.Location.Latitude,
                         Long = truck.Location.Longitude
                     };
@@ -330,5 +354,59 @@ namespace PracticalWerewolf.Controllers
                 return PartialView("_StatusMessage");
             }
         }
+
+        // GET: Order/Confirmation/guid
+        [Authorize(Roles = "Contractor")]
+        public ActionResult Confirmation(string id)
+        {
+            var model = new ConfirmationViewModel
+            {
+                RouteStopGuid = new Guid(id)
+            };
+            return View(model);
+        }
+
+
+        // POST: Order/Confirmation/guid
+        [Authorize(Roles = "Contractor")]
+        [HttpPost]
+        [ActionName("Confirmation")]
+        public ActionResult ConfirmationPost(ConfirmationViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    RouteStop stop = RouteStopService.GetRouteStop(model.RouteStopGuid);
+                    Order order = stop.Order;
+                    //RouteStopService.RemoveRouteStop(model.RouteStopGuid);
+                    if (stop.Type == StopType.DropOff)
+                    {
+                        OrderService.SetOrderAsComplete(order.OrderGuid);
+                        TruckService.RemoveItemFromTruck(order.TrackInfo.Assignee.Truck, order);
+                        UnitOfWork.SaveChanges();
+                    }
+                    else
+                    {
+                        ContractorInfo contractor = order.TrackInfo.Assignee;
+                        OrderService.SetOrderAsInprogress(order.OrderGuid);
+                        TruckService.AddItemToTruck(contractor.Truck, order);
+                        UnitOfWork.SaveChanges();
+                    }
+
+                    return RedirectToAction("Index", "Contractor");
+                }
+                catch
+                {
+                    return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.ConfirmationError });
+                }
+            }
+            else
+                return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.Error });
+        }
+
+
     }
+
+
 }

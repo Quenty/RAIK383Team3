@@ -31,13 +31,12 @@ namespace PracticalWerewolf.ViewModels.Orders
         [Display(Name = "Drop off address", Description = "Where your package going")]
         public CivicAddressDb DropOffAddress { get; set; }
     }
-    public class ConfirmationViewModel
-    {
-        public Guid Guid { get; set; }
-    }
 
     public class OrderDetailsViewModel
     {
+        [Display(Name = "Order Id")]
+        public Guid OrderId { get; set; }
+
         [Display(Name = "Pick up address", Description = "Where to pick up your package")]
         public CivicAddressDb PickUpAddress { get; set; }
 

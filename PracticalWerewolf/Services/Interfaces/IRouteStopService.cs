@@ -1,5 +1,6 @@
 ﻿using PracticalWerewolf.Models.Routes;
 using PracticalWerewolf.Models.UserInfos;
+using System;
 using System.Collections.Generic;
 
 namespace PracticalWerewolf.Services.Interfaces
@@ -14,6 +15,8 @@ namespace PracticalWerewolf.Services.Interfaces
 
         IEnumerable<RouteStop> GetContractorRoute(ContractorInfo contractor);
 
+        string GetDistanceToNextStopInMiles(ContractorInfo contractor);
+
         void Update(RouteStop entity);
 
         void Update(IEnumerable<RouteStop> entities);
@@ -23,5 +26,7 @@ namespace PracticalWerewolf.Services.Interfaces
         void Attach(RouteStop entity);
 
         void Attach(IEnumerable<RouteStop> entities);
+
+        RouteStop GetRouteStop(Guid guid);
     }
 }

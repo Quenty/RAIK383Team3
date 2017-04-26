@@ -169,6 +169,7 @@ namespace PracticalWerewolf.Controllers
 
                 var model = new OrderDetailsViewModel
                 {
+                    OrderId = order.OrderGuid,
                     DropOffAddress = order.RequestInfo.DropOffAddress,
                     PickUpAddress = order.RequestInfo.PickUpAddress,
                     Size = order.RequestInfo.Size,
@@ -182,25 +183,6 @@ namespace PracticalWerewolf.Controllers
             else
             {
                 return RedirectToAction("Index", new { Message = OrderMessageId.Error });
-            }
-        }
-
-        // POST: Order/Edit/guid
-        [HttpPost]
-        [Authorize(Roles = "Customer, Employees")]
-        public ActionResult Edit(string id, FormCollection collection)
-        {
-            // Depends upon IOrderRequestService.UpdateRequest
-            // Save the updated information to the database
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
             }
         }
 
@@ -264,35 +246,16 @@ namespace PracticalWerewolf.Controllers
             return View();
         }
 
-        // POST: Order/Confirmation/guid
-        [Authorize(Roles = "Contractor")]
-        [HttpPost]
-        [ActionName("Confirmation")]
-        public ActionResult ConfirmationPost(ConfirmationViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    OrderService.SetOrderAsComplete(model.Guid);
-                    UnitOfWork.SaveChanges();
-
-                    return RedirectToAction("Index", "Contractor");
-                }
-                catch
-                {
-                    return RedirectToAction("Index", "Contractor", new { Message = OrderMessageId.CouldNotUpdateStatus });
-                }
-            }
-            else
-                return RedirectToAction("Index", "Contractor", new { Message = OrderMessageId.Error });
-        }
-
-        //[Authorize (Roles = "Employee")]
+        [Authorize (Roles = "Employee")]
         public ActionResult AllOrders()
         {
             var orders = OrderService.GetOrders();
-            return View("Order", orders);
+            var model = new PagedOrderListViewModel
+            {
+                Orders = OrderService.GetOrders(),
+                DisplayName = "All Orders"
+            };
+            return View("_PagedOrderListView", model);
         }
 
         public ActionResult Orders()

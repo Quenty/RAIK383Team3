@@ -1,4 +1,4 @@
-﻿@model PracticalWerewolf.ViewModels.Orders.ConfirmationViewModel
+﻿@model PracticalWerewolf.ViewModels.Contractor.ConfirmationViewModel
 
 @{
     ViewBag.Title = "Confirmation";
@@ -15,15 +15,15 @@
     </body>
 
     <div class="form-horizontal">
-        <h4>By signing the form above, you acknowledge that the requested shipment has been delivered.</h4>
+        <h4>By signing the form above, you acknowledge that the requested shipment has been picked up or delivered.</h4>
         <hr />
 
-        @using (Html.BeginForm("Confirmation", "Order", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        @using (Html.BeginForm("Confirmation", "Contractor", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            @Html.HiddenFor(m => m.Guid)
+            @Html.HiddenFor(m => m.RouteStopGuid )
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">

@@ -27,14 +27,30 @@ namespace PracticalWerewolf.Controllers
             List<UserSearchResult> userResults = new List<UserSearchResult>();
             SearchResult result = UserInfoService.Search(query, page);
 
-            userResults.AddRange(result.Users.Select(user => new UserSearchResult
+            foreach(var User in result.Users)
             {
-                Id = user.Id,
-                Email = user.Email,
-                IsContractor = user.ContractorInfo != null,
-                IsEmployee = user.EmployeeInfo != null,
-                BanTime = (user.LockoutEnabled && user.LockoutEndDateUtc > DateTime.UtcNow) ? (user.LockoutEndDateUtc - DateTime.UtcNow) : null
-            }));
+                UserSearchResult searchResult = new UserSearchResult
+                {
+                    Id = User.Id,
+                    Email = User.Email,
+                    IsContractor = User.ContractorInfo != null,
+                    IsEmployee = User.EmployeeInfo != null,
+                    BanTime = (User.LockoutEnabled && User.LockoutEndDateUtc > DateTime.UtcNow) ? (User.LockoutEndDateUtc - DateTime.UtcNow) : null
+                };
+
+
+                if (User.ContractorInfo != null)
+                {
+                    if (User.ContractorInfo.Truck != null)
+                    {
+                        searchResult.TruckGuid = User.ContractorInfo.Truck.TruckGuid;
+                    }
+                    searchResult.ContractorApprovalState = User.ContractorInfo.ApprovalState;
+                }
+                
+
+                userResults.Add(searchResult);
+            }
 
 
             SearchResultViewModel model = new SearchResultViewModel

@@ -11,6 +11,13 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
+            @Html.DisplayNameFor(model => model.OrderId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OrderId)
+        </dd>
+
+        <dt>
             @Html.DisplayNameFor(model => model.RequestDate)
         </dt>
         <dd>
@@ -21,14 +28,15 @@
             @Html.DisplayNameFor(model => model.PickUpAddress)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.PickUpAddress)
+            @Html.DisplayFor(model => model.PickUpAddress.RawInputAddress )
         </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.DropOffAddress)
         </dt>
+        
         <dd>
-            @Html.DisplayFor(model => model.DropOffAddress)
+            @Html.DisplayFor(model => model.DropOffAddress.RawInputAddress )
         </dd>
 
         <dt>
@@ -81,6 +89,4 @@
 
     </dl>
 </div>
-<p>
-    @Html.ActionLink("Back to List", "Index")
-</p>
+
