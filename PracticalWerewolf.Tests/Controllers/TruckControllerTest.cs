@@ -14,6 +14,7 @@ using PracticalWerewolf.Tests.Stores.DbContext;
 using PracticalWerewolf.Models;
 using PracticalWerewolf.Models.UserInfos;
 using PracticalWerewolf.Helpers;
+using System.Security.Claims;
 
 namespace PracticalWerewolf.Tests.Controllers
 {
@@ -235,9 +236,20 @@ namespace PracticalWerewolf.Tests.Controllers
             var contractorService = new Mock<IContractorService>();
             var unitOfWork = new Mock<IUnitOfWork>();
             var userManager = GetMockApplicationUserManager();
-            var controller = new TruckController(truckService.Object, contractorService.Object, unitOfWork.Object, userManager.Object);
 
-            var result = controller.Edit(guid.ToString()) as ViewResult;
+
+            var controller = new TruckController(truckService.Object, contractorService.Object, unitOfWork.Object, userManager.Object);
+            var principal = GetMockUser("nope@nawp.com", new List<Claim>() { new Claim(ClaimTypes.Role, "Employee") });
+            var context = GetMockControllerContext(principal);
+            controller.ControllerContext = context;
+
+            var baseResult = controller.Edit(guid.ToString());
+            Assert.IsNotNull(baseResult);
+            Assert.IsInstanceOfType(baseResult, typeof(ViewResult));
+
+            var result = baseResult as ViewResult;
+            Assert.IsNotNull(result);
+
             var model = result.Model as TruckUpdateViewModel;
 
             Assert.IsNotNull(model);

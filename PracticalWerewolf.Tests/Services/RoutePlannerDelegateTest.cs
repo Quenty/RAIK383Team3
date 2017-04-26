@@ -25,7 +25,8 @@ namespace PracticalWerewolf.Tests.Services
             Route = "S 1st Ave",
             City = "Sioux Falls",
             State = "SD",
-            ZipCode = "57105"
+            ZipCode = "57105",
+            Country = "US"
         };
 
         private static CivicAddressDb buildertrend = new CivicAddressDb
@@ -35,7 +36,8 @@ namespace PracticalWerewolf.Tests.Services
             Route = "Nicholas St",
             City = "Omaha",
             State = "NE",
-            ZipCode = "68154"
+            ZipCode = "68154",
+            Country = "US"
         };
 
         private static CivicAddressDb sms = new CivicAddressDb
@@ -45,7 +47,8 @@ namespace PracticalWerewolf.Tests.Services
             Route = "W 107th St",
             City = "Overland Park",
             State = "KS",
-            ZipCode = "66207"
+            ZipCode = "66207",
+            Country = "US"
         };
 
         private static CivicAddressDb knoxville = new CivicAddressDb
@@ -55,16 +58,19 @@ namespace PracticalWerewolf.Tests.Services
             Route = "Island Home Ave",
             City = "Knoxville",
             State = "Tn",
-            ZipCode = "37920"
+            ZipCode = "37920",
+            Country = "US"
         };
 
         private static CivicAddressDb disney = new CivicAddressDb
         {
             RawInputAddress = "Walt Disney World Resort, Orlando, FL 32830",
+            Route = "1",
             StreetNumber = "Walt Disney World Resort",
             City = "Orlando",
             State = "FL",
-            ZipCode = "32830"
+            ZipCode = "32830",
+            Country = "US"
         };
 
         private static CivicAddressDb microsoft = new CivicAddressDb
@@ -74,7 +80,8 @@ namespace PracticalWerewolf.Tests.Services
             Route = "Microsoft Way",
             City = "Redmond",
             State = "WA",
-            ZipCode = "98052"
+            ZipCode = "98052",
+            Country = "US"
         };
 
         private static CivicAddressDb roblox = new CivicAddressDb
@@ -84,7 +91,8 @@ namespace PracticalWerewolf.Tests.Services
             Route = "E 3rd Ave",
             City = "San Mateo",
             State = "CA",
-            ZipCode = "94401"
+            ZipCode = "94401",
+            Country = "US"
         };
 
         private static CivicAddressDb mormonChurch = new CivicAddressDb
@@ -94,7 +102,8 @@ namespace PracticalWerewolf.Tests.Services
             Route = "N 300 W",
             City = "Salt Lake City",
             State = "UT",
-            ZipCode = "84103"
+            ZipCode = "84103",
+            Country = "US"
         };
 
         [TestMethod]

@@ -126,21 +126,32 @@ namespace PracticalWerewolf.Controllers
             model.PickUpAddress.CivicAddressGuid = Guid.NewGuid();
             model.Size.TruckCapacityUnitGuid = Guid.NewGuid();
 
-            var request = new OrderRequestInfo
+            Order order = new Order
             {
-                OrderRequestInfoGuid = Guid.NewGuid(),
-                DropOffAddress = model.DropOffAddress,
-                PickUpAddress = model.PickUpAddress,
-                Size = model.Size,
-                RequestDate = DateTime.Now,
-                Requester = Requester
+                OrderGuid = Guid.NewGuid(),
+                RequestInfo = new OrderRequestInfo
+                {
+                    OrderRequestInfoGuid = Guid.NewGuid(),
+                    DropOffAddress = model.DropOffAddress,
+                    PickUpAddress = model.PickUpAddress,
+                    Size = model.Size,
+                    RequestDate = DateTime.Now,
+                    Requester = Requester
+                },
+                TrackInfo = new OrderTrackInfo
+                {
+                    OrderTrackInfoGuid = Guid.NewGuid()
+                }
             };
+            
 
-            OrderRequestService.CreateOrderRequestInfo(request);
+            OrderService.CreateOrder(order);
 
             UnitOfWork.SaveChanges();
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            await EmailService.SendOrderConfirmEmail(request, user);
+
+            var cost = OrderService.CalculateOrderCost(order);
+            await EmailService.SendOrderConfirmEmail(order, user, cost);
 
             BackgroundJob.Enqueue(() =>  RoutePlannerService.AssignOrders()  );
             

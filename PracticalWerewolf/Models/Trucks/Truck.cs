@@ -36,7 +36,8 @@ namespace PracticalWerewolf.Models.Trucks
         {
             if (obj is TruckCapacityUnit)
             {
-                return (obj as TruckCapacityUnit) == this;
+                TruckCapacityUnit capacity2 = obj as TruckCapacityUnit;
+                return Mass == capacity2.Mass && Volume == capacity2.Volume;
             }
 
             return base.Equals(obj);
@@ -53,12 +54,22 @@ namespace PracticalWerewolf.Models.Trucks
 
         public static bool operator ==(TruckCapacityUnit capacity1, TruckCapacityUnit capacity2)
         {
-            return capacity1.Mass == capacity2.Mass && capacity1.Volume == capacity2.Volume;
+            if (object.ReferenceEquals(capacity1, null))
+            {
+                return object.ReferenceEquals(capacity2, null);
+            }
+            
+            return capacity1.Equals(capacity2);
         }
 
         public static bool operator !=(TruckCapacityUnit capacity1, TruckCapacityUnit capacity2)
         {
-            return capacity1.Mass != capacity2.Mass || capacity2.Volume != capacity2.Volume;
+            if (object.ReferenceEquals(capacity1, null))
+            {
+                return !object.ReferenceEquals(capacity2, null);
+            }
+
+            return !capacity1.Equals(capacity2);
         }
 
 

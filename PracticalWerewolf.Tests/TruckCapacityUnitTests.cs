@@ -134,8 +134,8 @@ namespace PracticalWerewolf.Tests
         [TestMethod]
         public void TestEquality()
         {
-            Assert.Equals(Zero, Zero);
-            Assert.Equals(Zero, ZeroDifferentGuid);
+            Assert.AreEqual(Zero, Zero);
+            Assert.AreEqual(Zero, ZeroDifferentGuid);
 
             Assert.AreNotEqual(OneVolume, OneMass);
             Assert.AreEqual(OneVolume, OneVolume);
@@ -159,13 +159,13 @@ namespace PracticalWerewolf.Tests
         [TestMethod]
         public void TestAddition()
         {
-            Assert.Equals(One + One, Two);
-            Assert.Equals(OneMass + OneVolume, Two);
+            Assert.AreEqual(One + One, Two);
+            Assert.AreEqual(OneMass + OneVolume, One);
 
             foreach (var item in new List<TruckCapacityUnit>() { Zero, One, OneMass, OneVolume, Two, TwoMass, TwoVolume, OneHundred, OneHundredMass, OneHundredVolume })
             {
-                Assert.Equals(item + Zero, item);
-                Assert.Equals(Zero + item, item);
+                Assert.AreEqual(item + Zero, item);
+                Assert.AreEqual(Zero + item, item);
                 Assert.AreNotEqual(item + One, item);
                 Assert.AreNotEqual(One + item, item);
             }
@@ -175,15 +175,15 @@ namespace PracticalWerewolf.Tests
         [TestMethod]
         public void TestSubtraction()
         {
-            Assert.Equals(One - OneVolume, OneMass);
-            Assert.Equals(One - OneMass, OneVolume);
+            Assert.AreEqual(One - OneVolume, OneMass);
+            Assert.AreEqual(One - OneMass, OneVolume);
             Assert.AreNotEqual(One - OneHundred, OneMass);
             Assert.AreNotEqual(One - OneHundred, OneHundred);
             Assert.AreNotEqual(One - OneHundred, One);
 
             foreach (var item in new List<TruckCapacityUnit>() { Zero, One, OneMass, OneVolume, Two, TwoMass, TwoVolume, OneHundred, OneHundredMass, OneHundredVolume })
             {
-                Assert.Equals(item - Zero, item);
+                Assert.AreEqual(item - Zero, item);
                 Assert.AreNotEqual(item - One, item);
             }
         }

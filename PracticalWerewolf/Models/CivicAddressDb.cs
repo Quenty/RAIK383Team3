@@ -81,19 +81,28 @@ namespace System.Device.Location
         {
             if (obj is CivicAddressDb)
             {
-                return (obj as CivicAddressDb) == this;
+                CivicAddressDb address2 = obj as CivicAddressDb;
+                return GetHashCode() == address2.GetHashCode(); 
             }
             return base.Equals(obj);
         }
 
         public static bool operator ==(CivicAddressDb address1, CivicAddressDb address2)
         {
-            return address1.GetHashCode() == address2.GetHashCode();
+            if (object.ReferenceEquals(address1, null))
+            {
+                return object.ReferenceEquals(address2, null);
+            }
+            return address1.Equals(address2);
         }
 
         public static bool operator !=(CivicAddressDb address1, CivicAddressDb address2)
         {
-            return !(address1 == address2);
+            if (object.ReferenceEquals(address1, null))
+            {
+                return !object.ReferenceEquals(address2, null);
+            }
+            return !address1.Equals(address2);
         }
     }
 }

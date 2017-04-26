@@ -74,8 +74,8 @@ namespace PracticalWerewolf.Tests.Helpers
 
             Assert.IsTrue(set.Contains(AddressA));
             Assert.IsFalse(set.Contains(AddressB));
-            Assert.Equals(set.Count(), 1);
-            Assert.Equals(set.First(), AddressA);
+            Assert.AreEqual(set.Count(), 1);
+            Assert.AreEqual(set.First(), AddressA);
 
             for (int i=0; i < 5; i++)
             {
@@ -85,8 +85,8 @@ namespace PracticalWerewolf.Tests.Helpers
 
             Assert.IsTrue(set.Contains(AddressA));
             Assert.IsFalse(set.Contains(AddressB));
-            Assert.Equals(set.Count(), 1);
-            Assert.Equals(set.First(), AddressA);
+            Assert.AreEqual(set.Count(), 1);
+            Assert.AreEqual(set.First(), AddressA);
 
             for (int i = 0; i < 5; i++)
             {
@@ -96,13 +96,13 @@ namespace PracticalWerewolf.Tests.Helpers
 
             Assert.IsTrue(set.Contains(AddressA));
             Assert.IsFalse(set.Contains(AddressB));
-            Assert.Equals(set.Count(), 1);
-            Assert.Equals(set.First(), AddressA);
+            Assert.AreEqual(set.Count(), 1);
+            Assert.AreEqual(set.First(), AddressA);
 
             set.Add(AddressB);
             Assert.IsTrue(set.Contains(AddressB));
             Assert.IsTrue(set.Contains(AddressB));
-            Assert.Equals(set.Count(), 2);
+            Assert.AreEqual(set.Count(), 2);
 
             for (int i = 0; i < 5; i++)
             {
@@ -112,7 +112,7 @@ namespace PracticalWerewolf.Tests.Helpers
 
             Assert.IsTrue(set.Contains(AddressB));
             Assert.IsTrue(set.Contains(AddressB));
-            Assert.Equals(set.Count(), 2);
+            Assert.AreEqual(set.Count(), 2);
 
             for (int i = 0; i < 5; i++)
             {
@@ -122,13 +122,13 @@ namespace PracticalWerewolf.Tests.Helpers
 
             Assert.IsTrue(set.Contains(AddressB));
             Assert.IsTrue(set.Contains(AddressB));
-            Assert.Equals(set.Count(), 2);
+            Assert.AreEqual(set.Count(), 2);
         }
 
         [TestMethod]
         public void GetHashCode_TestEquality()
         {
-            Assert.Equals(AddressA, AddressA);
+            Assert.AreEqual(AddressA, AddressA);
             Assert.IsTrue(AddressA == AddressADifferentGuid);
             Assert.IsTrue(AddressA.GetHashCode() == AddressA.GetHashCode());
             Assert.IsTrue(AddressA.Equals(AddressA));
@@ -139,7 +139,7 @@ namespace PracticalWerewolf.Tests.Helpers
         {
             CivicAddressDb copy = new CivicAddressDb(AddressA);
             Assert.IsTrue(AddressA.Equals(copy));
-            Assert.Equals(AddressA, AddressADifferentGuid);
+            Assert.AreEqual(AddressA, AddressADifferentGuid);
             Assert.AreNotEqual(AddressA, AddressBDifferentGuid);
         }
     }

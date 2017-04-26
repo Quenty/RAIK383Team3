@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using PracticalWerewolf.Controllers.UnitOfWork;
 using PracticalWerewolf.Models.UserInfos;
+using PracticalWerewolf.Services;
 using PracticalWerewolf.Services.Interfaces;
 using PracticalWerewolf.ViewModels;
 using PracticalWerewolf.ViewModels.Contractor;
@@ -11,6 +12,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Data.Entity.Validation;
 using System.Web.Mvc;
+using Hangfire;
+using log4net;
 
 
 namespace PracticalWerewolf.Controllers
@@ -34,17 +37,22 @@ namespace PracticalWerewolf.Controllers
             TruckLocationUpdatedSuccess
         }
 
+        private static ILog logger = LogManager.GetLogger(typeof(ContractorController));
         private readonly ApplicationUserManager UserManager;
         private readonly IContractorService ContractorService;
         private readonly IUnitOfWork UnitOfWork;
         private readonly IOrderService OrderService;
+        private readonly IRouteStopService RouteStopService;
+        private readonly IRoutePlannerService RoutePlannerService;
 
-        public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService, IUnitOfWork UnitOfWork)
+        public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService, IUnitOfWork UnitOfWork, IRouteStopService RouteStopService, IRoutePlannerService RoutePlannerService)
         {
             this.UnitOfWork = UnitOfWork;
             this.UserManager = UserManager;
             this.ContractorService = ContractorService;
             this.OrderService = OrderService;
+            this.RouteStopService = RouteStopService;
+            this.RoutePlannerService = RoutePlannerService;
         }
 
         private void GenerateErrorMessage(ContractorMessageId? message)
@@ -184,7 +192,7 @@ namespace PracticalWerewolf.Controllers
                 var model = new PagedOrderListViewModel()
                 {
                     DisplayName = "Pending orders",
-                    Orders = OrderService.GetQueuedOrders(contractor)
+                    Orders = OrderService.GetInprogressOrdersNoTruck(contractor)
                 };
 
                 return PartialView("_PagedOrderListPane", model);
@@ -208,7 +216,7 @@ namespace PracticalWerewolf.Controllers
                     var model = new ContractorStatusModel
                     {
                         ContractorGuid = guid,
-                        ContractorStatus = contractor.IsAvailable
+                        IsAvailable = contractor.IsAvailable
                     };
 
                     return PartialView("_UpdateStatus", model);
@@ -224,18 +232,33 @@ namespace PracticalWerewolf.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult UpdateStatus(ContractorStatusModel returnedModel)
+        public ActionResult UpdateStatus(ContractorStatusModel model)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    ContractorService.SetIsAvailable(returnedModel.ContractorGuid, !returnedModel.ContractorStatus);
+                    ContractorService.SetIsAvailable(model.ContractorGuid, !model.IsAvailable);
+                    //after changing their status
+                    if (!model.IsAvailable) { 
+                        var pendingOrders = OrderService.GetInprogressOrdersNoTruck(model.ContractorGuid);
+                        if (!pendingOrders.Any())
+                        {
+                            foreach (var order in pendingOrders)
+                            {
+                                RouteStopService.UnassignOrderFromRouteStop(order);
+                                OrderService.UnassignOrder(order);
+                            }
+                        }
+                    }
                     UnitOfWork.SaveChanges();
+                    BackgroundJob.Enqueue(() => RoutePlannerService.AssignOrders());
+
                     return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusChangeSuccess }) + "#status");
                 }
-                catch
+                catch (Exception e)
                 {
+                    logger.Warn("Could not change contractor status", e);
                     return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusError }) + "#status");
                 }
             }
@@ -243,7 +266,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         [Authorize(Roles = "Contractor")]
-        public async Task<ActionResult> _Current()
+        public async Task<ActionResult> Current()
         {
             var userId = User.Identity.GetUserId();
             if (userId != null)
@@ -254,7 +277,7 @@ namespace PracticalWerewolf.Controllers
                 var model = new PagedOrderListViewModel()
                 {
                     DisplayName = "Current orders",
-                    Orders = OrderService.GetInprogressOrders(contractor),
+                    Orders = OrderService.GetInprogressOrdersInTruck(contractor),
                     OrderListCommand = "Confirmation"
                 };
 
