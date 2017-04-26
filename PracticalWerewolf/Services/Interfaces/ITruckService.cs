@@ -31,9 +31,9 @@ namespace PracticalWerewolf.Services.Interfaces
 
         void UpdateLicenseNumber(Guid truckGuid, string licenseNumber);
 
-        void AddItemToTruck(Truck truck, Order order);
+        void AddItemToTruck(Guid truckGuid, Order order);
 
-        void RemoveItemFromTruck(Truck truck, Order order);
+        void RemoveItemFromTruck(Guid truckGuid, Order order);
 
     }
 }

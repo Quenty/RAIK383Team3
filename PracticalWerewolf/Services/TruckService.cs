@@ -24,8 +24,9 @@ namespace PracticalWerewolf.Services
             this.OrderService = OrderService;
         }
 
-        public void AddItemToTruck(Truck truck, Order order)
+        public void AddItemToTruck(Guid truckGuid, Order order)
         {
+            Truck truck = GetTruck(truckGuid);
             if (truck == null || order == null)
             {
                 logger.Error("Could not add item to truck becasue item or truck was null");
@@ -61,8 +62,9 @@ namespace PracticalWerewolf.Services
             TruckStore.Update(truck);
         }
 
-        public void RemoveItemFromTruck(Truck truck, Order order)
+        public void RemoveItemFromTruck(Guid truckGuid, Order order)
         {
+            Truck truck = GetTruck(truckGuid);
             if (truck == null || order == null)
             {
                 logger.Error("Could not add item to truck becasue item or truck guid was null");

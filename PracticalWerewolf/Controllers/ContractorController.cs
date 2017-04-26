@@ -19,6 +19,7 @@ using Hangfire;
 using log4net;
 using System.Security.Claims;
 using System.Threading;
+using System.Diagnostics;
 
 namespace PracticalWerewolf.Controllers
 {
@@ -72,7 +73,7 @@ namespace PracticalWerewolf.Controllers
                 : message == ContractorMessageId.StatusChangeSuccess ? "Status successfully changed"
                 : message == ContractorMessageId.NoTruckCreated ? "You must create a truck to access this page."
                 : message == ContractorMessageId.StatusError ? "Could not update status successfully."
-                : message == ContractorMessageId.ConfirmationError ? "Could not confirm pick up or drop off"
+                : message == ContractorMessageId.ConfirmationError ? "Internal Error. Could not confirm pick up or drop off"
                 : message == ContractorMessageId.TruckCreationError ? "Failed to create truck"
                 : "";
         }
@@ -417,27 +418,62 @@ namespace PracticalWerewolf.Controllers
             {
                 try
                 {
+                    var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                    var contractorInfo = user.ContractorInfo;
+
+                    if (contractorInfo == null)
+                    {
+                        Debug.Fail("No contractor");
+                        return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.Error });
+                    }
+
                     RouteStop stop = RouteStopService.GetRouteStop(model.RouteStopGuid);
                     Order order = stop.Order;
-                    //RouteStopService.RemoveRouteStop(model.RouteStopGuid);
-                    if (stop.Type == StopType.DropOff)
+                    if (order == null)
                     {
-                        OrderService.SetOrderAsComplete(order.OrderGuid);
-                        TruckService.RemoveItemFromTruck(order.TrackInfo.Assignee.Truck, order);
-                        UnitOfWork.SaveChanges();
+                        Debug.Fail("Null order");
+                        logger.Error("Null order");
+                        return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.Error });
                     }
-                    else
+
+                    Debug.Assert(order.TrackInfo != null);
+                    Debug.Assert(order.TrackInfo.Assignee != null);
+
+                    if (order.TrackInfo.Assignee.ContractorInfoGuid != contractorInfo.ContractorInfoGuid)
                     {
-                        ContractorInfo contractor = order.TrackInfo.Assignee;
-                        OrderService.SetOrderInTruck(order.OrderGuid);
-                        TruckService.AddItemToTruck(contractor.Truck, order);
-                        UnitOfWork.SaveChanges();
+                        Debug.Fail("Assigned to wrong user");
+                        logger.Warn("TrackInfo.Assignee !+ ContractorInfo, invalid attempt");
+                        return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.Error });
+                    }
+
+                    Debug.Assert(order.TrackInfo.Assignee.Truck != null);
+                    Debug.Assert(order.TrackInfo.Assignee.Truck.TruckGuid != Guid.Empty);
+                    
+                    //RouteStopService.RemoveRouteStop(model.RouteStopGuid);
+                    switch (stop.Type)
+                    {
+                        case StopType.DropOff:
+                            OrderService.SetOrderAsComplete(order.OrderGuid);
+                            TruckService.RemoveItemFromTruck(order.TrackInfo.Assignee.Truck.TruckGuid, order);
+                            UnitOfWork.SaveChanges();
+                            break;
+                        case StopType.PickUp:
+                            ContractorInfo contractor = order.TrackInfo.Assignee;
+                            OrderService.SetOrderInTruck(order.OrderGuid);
+                            TruckService.AddItemToTruck(contractor.Truck.TruckGuid, order);
+                            UnitOfWork.SaveChanges();
+                            break;
+                        default:
+                            Debug.Fail("Unknown stop type!");
+                            logger.Error("Unknown stop type");
+                            return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.Error });
                     }
 
                     return RedirectToAction("Index", "Contractor");
                 }
                 catch (Exception e)
                 {
+                    Debug.Fail("Failed to pick up");
                     logger.Error(e);
                     Console.Write(e);
                     return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.ConfirmationError });
@@ -445,7 +481,7 @@ namespace PracticalWerewolf.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.Error });
+                return View(model);
             }
         }
 

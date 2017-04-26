@@ -75,7 +75,13 @@ namespace PracticalWerewolf.ViewModels.Contractor
 
     public class ConfirmationViewModel
     {
+
+        [Required]
         public Guid RouteStopGuid { get; set; }
+
+        [Required]
+        [MustBeTrue(ErrorMessage = "You must sign")]
+        public bool Signed { get; set; } = false;
     }
 
 

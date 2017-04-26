@@ -30,7 +30,9 @@
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
             @Html.HiddenFor(m => m.RouteStopGuid )
+            @Html.HiddenFor(m => m.Signed, new { id = "signed-input" })
 
+            
             <div class="form-group">
                 <div class="col-md-10">
                     <input type="submit" value="Save" class="btn btn-default" />
