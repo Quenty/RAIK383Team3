@@ -5,7 +5,6 @@ An order has a contractor, but that contractor cannot take it.
 **A description of the normal flow of events**
 1. A contractor receives a work order and realizes they can't or that it won't be feasible
 2. The contractor rejects the work order
-3. They will then be prompted for a reason
   1. System may notify HR / administration
 4. Contractor is marked as unavailable
 5. Order is put back into system (See _System finds ideal contractor)_
@@ -13,9 +12,9 @@ An order has a contractor, but that contractor cannot take it.
 **A description of what can go wrong**
 
 1. The contractor has accidentally rejects it
-  1. They will then be prompted with an "are you sure/give a reason" dialog
+  1. They will then be prompted with an "are you sure" dialog
 2. The contractor realizes they can take it
-  1. Unless the order has been redistributed and a work order has been sent out, there is an undo feature
+  1. The contractor can update their status and will start recieve a new job
 
 
 **Information about other concurrent activities**
