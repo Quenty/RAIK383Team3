@@ -60,15 +60,13 @@ namespace PracticalWerewolf.Services
 
         public IQueryable<ContractorInfo> GetAvailableContractorQuery()
         {
-            return _contractorStore.Find(c => c.ApprovalState == ContractorApprovalState.Approved).AsQueryable()
+            return _userManager.Users.Select(c => c.ContractorInfo)
+                .Where(c => c.ApprovalState == ContractorApprovalState.Approved).AsQueryable()
                 .Where(c => c.IsAvailable)
                 .Where(c => c.Truck != null)
                 .Include(c => c.Truck)
                 .Include(c => c.Truck.UsedCapacity);
-//                .Where(c => c.Truck.UsedCapacity.Volume < c.Truck.MaxCapacity.Volume)
-//                .Where(c => c.Truck.UsedCapacity.Mass < c.Truck.MaxCapacity.Mass);
         }
-
 
         public void UpdateContractorTruck(Truck truck, ApplicationUser driver)
         {

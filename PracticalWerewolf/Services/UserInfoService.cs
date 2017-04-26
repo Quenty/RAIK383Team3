@@ -71,6 +71,12 @@ namespace PracticalWerewolf.Services
                         x => x.ContractorInfo.HomeAddress.RawInputAddress,
                         x => (x.EmployeeInfo == null) ? "" : "employee",
                         x => (x.ContractorInfo == null) ? "" : "contractor",
+                        x => (x.ContractorInfo == null) ? "" : (x.ContractorInfo.Truck == null) ? "" : "has:truck",
+                        x => (x.ContractorInfo == null) ? ""
+                            : x.ContractorInfo.ApprovalState == ContractorApprovalState.Approved ? "status:approved"
+                            : x.ContractorInfo.ApprovalState == ContractorApprovalState.Denied ? "status:denied"
+                            : x.ContractorInfo.ApprovalState == ContractorApprovalState.Pending ? "status:pending status:pending-approval pending approval"
+                            : "",
                         x => (x.LockoutEnabled && x.LockoutEndDateUtc > DateTime.UtcNow) ? "banned" : "",
                         x => x.ContractorInfo.DriversLicenseId)
                     .Containing(query.Split(' ', ':', '!', '@', '.', ','))

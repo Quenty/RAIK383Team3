@@ -176,7 +176,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         [Authorize(Roles = "Contractor")]
-        public async Task<ActionResult> _Pending()
+        public async Task<ActionResult> Pending()
         {
             var userId = User.Identity.GetUserId();
             if (userId != null)
@@ -290,7 +290,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         [Authorize(Roles = "Contractor")]
-        public async Task<ActionResult> _Delivered()
+        public async Task<ActionResult> Delivered()
         {
             var userId = User.Identity.GetUserId();
             if (userId != null)
@@ -312,7 +312,7 @@ namespace PracticalWerewolf.Controllers
             }
         }
 
-        public async Task<ActionResult> _Status()
+        public async Task<ActionResult> Status()
         {
             var userId = User.Identity.GetUserId();
             if (userId != null)
@@ -327,6 +327,7 @@ namespace PracticalWerewolf.Controllers
                         Guid = truck.TruckGuid,
                         LicenseNumber = truck.LicenseNumber,
                         MaxCapacity = truck.MaxCapacity,
+                        AvailableCapacity = truck.GetAvailableCapacity(),
                         Lat = truck.Location.Latitude,
                         Long = truck.Location.Longitude
                     };

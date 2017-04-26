@@ -37,7 +37,7 @@
             </li>
             <li role="presentation">
                 <a class="" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#ajax-contractor-pane" data-tab-name="status" href="@Url.Action("UpdateStatus", "Contractor",  new { id = Model.ContractorInfo.ContractorInfoGuid.ToString() })">
-                    Current status <span class="label label-default pull-right">@(Model.ContractorInfo.IsAvailable ? "Available" : "Not available")</span>
+                    Current status <span class="label label-default pull-right" style="margin-top:5px">@(Model.ContractorInfo.IsAvailable ? "Available" : "Not available")</span>
                 </a>
             </li>
             <li role="presentation">
