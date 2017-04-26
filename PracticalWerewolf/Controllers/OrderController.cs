@@ -54,15 +54,21 @@ namespace PracticalWerewolf.Controllers
         private PagedOrderListViewModel GetOrderHistoryPage()
         {
             ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
-            var CustomerInfoGuid = user.CustomerInfo.CustomerInfoGuid;
-
-            var model = new PagedOrderListViewModel
+            if (user.CustomerInfo == null)
             {
-                DisplayName = "Order history",
-                Orders = OrderService.GetOrderHistory(CustomerInfoGuid)
-            };
+                var CustomerInfoGuid = user.CustomerInfo.CustomerInfoGuid;
 
-            return model;
+                var model = new PagedOrderListViewModel
+                {
+                    DisplayName = "Order history",
+                    Orders = OrderService.GetOrderHistory(CustomerInfoGuid)
+                };
+                return model;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public ActionResult Index(OrderMessageId? message)
@@ -145,8 +151,6 @@ namespace PracticalWerewolf.Controllers
         [Authorize(Roles = "Customer")]
         public ActionResult History()
         {
-
-
             return View(GetOrderHistoryPage());
         }
 
