@@ -46,8 +46,6 @@ namespace PracticalWerewolf.Controllers
         private readonly ITruckService TruckService;
         private readonly IRoutePlannerService RoutePlannerService;
 
-        public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService,
-            IUnitOfWork UnitOfWork, IRouteStopService RouteStopService, )
 
         public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService, IUnitOfWork UnitOfWork, IRouteStopService RouteStopService, IRoutePlannerService RoutePlannerService, ITruckService TruckService)
         {
@@ -195,8 +193,7 @@ namespace PracticalWerewolf.Controllers
                 var model = new PagedOrderListViewModel()
                 {
                     DisplayName = "Pending orders",
-                    Orders = OrderService.GetInprogressOrdersNoTruck(contractor),
-                    OrderListCommand = "Details"
+                    Orders = OrderService.GetInprogressOrdersNoTruck(contractor)
                 };
 
                 return PartialView("_PagedOrderListPane", model);
@@ -302,8 +299,7 @@ namespace PracticalWerewolf.Controllers
                 var model = new PagedOrderListViewModel()
                 {
                     DisplayName = "Current orders",
-                    Orders = OrderService.GetInprogressOrdersInTruck(contractor),
-                    OrderListCommand = "Confirmation"
+                    Orders = OrderService.GetInprogressOrdersInTruck(contractor)
                 };
                 
                 return PartialView("_PagedOrderListPane", model);
