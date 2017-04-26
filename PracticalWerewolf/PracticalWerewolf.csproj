@@ -348,11 +348,13 @@
     <Compile Include="Services\CustomerService.cs" />
     <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\EmployeeService.cs" />
+    <Compile Include="Services\Interfaces\IOrderPricingService.cs" />
     <Compile Include="Services\Interfaces\IOrderRequestService.cs" />
     <Compile Include="Services\Interfaces\IOrderTrackService.cs" />
     <Compile Include="Services\Interfaces\IRoutePlannerService.cs" />
     <Compile Include="Services\Interfaces\IUserInfoService.cs" />
     <Compile Include="Services\Interfaces\IRouteStopService.cs" />
+    <Compile Include="Services\OrderPricingService.cs" />
     <Compile Include="Services\OrderRequestService.cs" />
     <Compile Include="Services\OrderService.cs" />
     <Compile Include="Services\OrderTrackService.cs" />
