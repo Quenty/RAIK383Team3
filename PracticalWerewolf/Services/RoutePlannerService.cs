@@ -2,6 +2,7 @@
 using PracticalWerewolf.Application;
 using PracticalWerewolf.Controllers.UnitOfWork;
 using PracticalWerewolf.Helpers;
+using PracticalWerewolf.Helpers.Interfaces;
 using PracticalWerewolf.Models;
 using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.Models.Routes;
@@ -21,19 +22,21 @@ namespace PracticalWerewolf.Services
     {
         private static readonly ILog logger = LogManager.GetLogger(typeof(RoutePlannerService));
 
+        private readonly ILocationHelper _locationHelper;
         private readonly IOrderService _orderService;
         private readonly IRouteStopService _routeStopService;
         private readonly IContractorService _contractorService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly EmailService _emailService;
 
-        public RoutePlannerService(IOrderService orderService, IRouteStopService routeStopService, IContractorService contractorService, IUnitOfWork unitOfWork, EmailService emailService)
+        public RoutePlannerService(IOrderService orderService, IRouteStopService routeStopService, IContractorService contractorService, IUnitOfWork unitOfWork, EmailService emailService, ILocationHelper locationHelper)
         {
             _orderService = orderService;
             _routeStopService = routeStopService;
             _contractorService = contractorService;
             _unitOfWork = unitOfWork;
             _emailService = emailService;
+            _locationHelper = locationHelper;
         }
 
         public void AssignOrders()
@@ -66,7 +69,7 @@ namespace PracticalWerewolf.Services
                 try
                 {
                     List<RouteStop> route = _routeStopService.GetContractorRouteAsNoTracking(contractor).ToList();
-                    var planner = new ContractorRoutePlanner(contractor, order, route);
+                    var planner = new ContractorRoutePlanner(contractor, order, route, _locationHelper);
                     planner.CalculateOptimalRoute();
                     if (planner.WillWork)
                     {
@@ -78,7 +81,7 @@ namespace PracticalWerewolf.Services
                     logger.Error($"AssignOrder() - Error with RoutePlannerDelegate with ContractorInfoGuid {contractor.ContractorInfoGuid.ToString()} - {e.ToString()}");
                 }
             } 
-
+            
             foreach(ContractorRoutePlanner option in options)
             {
                 Debug.Assert(option.Contractor != null);
@@ -117,6 +120,7 @@ namespace PracticalWerewolf.Services
             _emailService.SendWorkOrderEmail(user, optimalPlan.Order.RequestInfo);
 
             _unitOfWork.SaveChanges();
+            _locationHelper.Refresh();
         }
 
         private ContractorRoutePlanner GetOptimalPlan(IEnumerable<ContractorRoutePlanner> options)

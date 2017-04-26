@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PracticalWerewolf.Controllers;
 using PracticalWerewolf.Helpers;
+using PracticalWerewolf.Helpers.Interfaces;
 using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.Models.Routes;
 using PracticalWerewolf.Models.Trucks;
@@ -15,7 +16,7 @@ namespace PracticalWerewolf.Tests.Services
     [TestClass]
     public class RoutePlannerDelegateTest
     {
-
+        private static ILocationHelper locationHelper = new LocationHelper();
         private static string email = "jesseelzhang@gmail.com";
 
         private static CivicAddressDb home = new CivicAddressDb
@@ -121,10 +122,11 @@ namespace PracticalWerewolf.Tests.Services
             Order order = ServiceTestUtils.CreateOrder(user, Models.Orders.OrderStatus.Queued, pickUpAddress, dropOffAddress, orderSize);
 
             List<RouteStop> route = new List<RouteStop>();
-            ContractorRoutePlanner routePlanner = new ContractorRoutePlanner(user.ContractorInfo, order, route);
+            ContractorRoutePlanner routePlanner = new ContractorRoutePlanner(user.ContractorInfo, order, route, locationHelper);
 
 
             routePlanner.CalculateOptimalRoute();
+            locationHelper.Refresh();
 
 
             Assert.IsTrue(routePlanner.WillWork);
@@ -181,10 +183,11 @@ namespace PracticalWerewolf.Tests.Services
                 new RouteStop {Order = order1, Type = StopType.DropOff,  DistanceToNextStop = 1752026, EstimatedTimeToNextStop = new TimeSpan(15, 55, 0), StopOrder = 2},
                 new RouteStop {Order = order2, Type = StopType.DropOff,  DistanceToNextStop = 0, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 3}
             };
-            ContractorRoutePlanner routePlanner = new ContractorRoutePlanner(user.ContractorInfo, order, route);
+            ContractorRoutePlanner routePlanner = new ContractorRoutePlanner(user.ContractorInfo, order, route, locationHelper);
 
 
             routePlanner.CalculateOptimalRoute();
+            locationHelper.Refresh();
 
 
             Assert.IsTrue(routePlanner.WillWork);
@@ -223,10 +226,11 @@ namespace PracticalWerewolf.Tests.Services
             Order order = ServiceTestUtils.CreateOrder(user, Models.Orders.OrderStatus.Queued, pickUpAddress, dropOffAddress, orderSize);
 
             List<RouteStop> route = new List<RouteStop>();
-            ContractorRoutePlanner routePlanner = new ContractorRoutePlanner(user.ContractorInfo, order, route);
+            ContractorRoutePlanner routePlanner = new ContractorRoutePlanner(user.ContractorInfo, order, route, locationHelper);
 
 
             routePlanner.CalculateOptimalRoute();
+            locationHelper.Refresh();
 
 
             Assert.IsFalse(routePlanner.WillWork);
@@ -273,10 +277,11 @@ namespace PracticalWerewolf.Tests.Services
                 new RouteStop {Order = order1, Type = StopType.DropOff,  DistanceToNextStop = 1198211, EstimatedTimeToNextStop = new TimeSpan(10, 49, 0), StopOrder = 2},
                 new RouteStop {Order = order2, Type = StopType.DropOff,  DistanceToNextStop = 0, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 3}
             };
-            ContractorRoutePlanner routePlanner = new ContractorRoutePlanner(user.ContractorInfo, order, route);
+            ContractorRoutePlanner routePlanner = new ContractorRoutePlanner(user.ContractorInfo, order, route, locationHelper);
 
 
             routePlanner.CalculateOptimalRoute();
+            locationHelper.Refresh();
 
 
             Assert.IsTrue(routePlanner.WillWork);
@@ -343,10 +348,11 @@ namespace PracticalWerewolf.Tests.Services
                 new RouteStop {Order = order1, Type = StopType.DropOff,  DistanceToNextStop = 1059572, EstimatedTimeToNextStop = new TimeSpan(9, 20, 0), StopOrder = 2},
                 new RouteStop {Order = order2, Type = StopType.DropOff,  DistanceToNextStop = 0, EstimatedTimeToNextStop = TimeSpan.Zero, StopOrder = 3}
             };
-            ContractorRoutePlanner routePlanner = new ContractorRoutePlanner(user.ContractorInfo, order, route);
+            ContractorRoutePlanner routePlanner = new ContractorRoutePlanner(user.ContractorInfo, order, route, locationHelper);
 
 
             routePlanner.CalculateOptimalRoute();
+            locationHelper.Refresh();
 
 
             Assert.IsTrue(routePlanner.WillWork);
