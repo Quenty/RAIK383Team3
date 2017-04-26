@@ -52,6 +52,7 @@ namespace PracticalWerewolf.ViewModels.Contractor
     public class ContractorIndexModel
     {
         public ContractorInfo ContractorInfo { get; set; }
+        public int? UnapprovedContractorCount { get; set; }
     }
 
     public class ContractorStatusModel

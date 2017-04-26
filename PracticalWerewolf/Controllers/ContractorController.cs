@@ -20,6 +20,7 @@ using log4net;
 using System.Security.Claims;
 using System.Threading;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace PracticalWerewolf.Controllers
 {
@@ -93,6 +94,11 @@ namespace PracticalWerewolf.Controllers
                     ContractorInfo = user.ContractorInfo,
                 };
 
+                if (User.IsInRole("Employee"))
+                {
+                    model.UnapprovedContractorCount = ContractorService.GetUnapprovedContractors().Count();
+                }
+
                 return View(model);
 
             }
@@ -119,14 +125,31 @@ namespace PracticalWerewolf.Controllers
         {
             GenerateErrorMessage(message);
 
+            var pending = new List<ContractorApprovalModel>();
+            foreach(var x in ContractorService.GetUnapprovedContractors().ToList())
+            {
+                var innerModel = new ContractorApprovalModel
+                {
+                    ContractorInfo = x.ContractorInfo
+                };
+
+
+                if (x.Email != null)
+                {
+                    innerModel.EmailAddress = x.Email;
+                }
+                
+                if (x.PhoneNumber != null)
+                {
+                    innerModel.PhoneNumber = x.PhoneNumber;
+                }
+                
+
+                pending.Add(innerModel);
+            }
             PendingContractorsModel model = new PendingContractorsModel()
             {
-                Pending = ContractorService.GetUnapprovedContractors().Select(m => new ContractorApprovalModel
-                {
-                    ContractorInfo = m.ContractorInfo,
-                    EmailAddress = m.Email,
-                    PhoneNumber = m.PhoneNumber
-                }).ToList(),
+                Pending = pending
             };
 
             return View(model);

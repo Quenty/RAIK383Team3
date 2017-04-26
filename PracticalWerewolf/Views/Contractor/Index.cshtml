@@ -1,13 +1,30 @@
 @using PracticalWerewolf.Models.UserInfos
 @model PracticalWerewolf.ViewModels.Contractor.ContractorIndexModel
 @{
-    ViewBag.Title = "Contract";
+    ViewBag.Title = "Contract with us!";
 }
 
 <head></head>
 
 @Html.Partial("_StatusMessage")
 
+@if (Model.UnapprovedContractorCount.HasValue && Model.UnapprovedContractorCount.Value > 0)
+{
+    <div class="alert alert-info" role="alert">
+        @Html.ActionLink("See pending", "Unapproved", "Contractor", null, new { @class = "btn btn-primary pull-right" })
+        
+        @if (@Model.UnapprovedContractorCount == 1)
+        {
+            <h4>Unapproved contractor pending your approval</h4>
+            <p>There is one unapproved contractor</p>
+        }
+        else
+        {
+            <h4>Unapproved contractors pending your approval</h4>
+            <p>There are @Model.UnapprovedContractorCount unapproved contractor</p>
+        }
+    </div>
+}
 
 @if (Model.ContractorInfo != null && Model.ContractorInfo.ApprovalState != ContractorApprovalState.Denied && Model.ContractorInfo.Truck == null)
 {
@@ -15,8 +32,6 @@
         @Html.ActionLink("Register", "Create", "Truck", null, new { @class = "btn btn-primary pull-right" })
         <h4>No truck on record</h4> 
         <p>Please @Html.ActionLink("register your truck", "Create", "Truck", null, new { @class = "alert-link" }). You will not be considered for jobs until this is complete.</p>
-
-
     </div>
 }
 

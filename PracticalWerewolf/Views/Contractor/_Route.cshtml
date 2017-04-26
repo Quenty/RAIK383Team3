@@ -95,13 +95,13 @@
                                     @switch (item.Type)
                                     {
                                         case PracticalWerewolf.Models.Routes.StopType.PickUp:
-                                            @Html.ActionLink("Pick up", "Confirm", "Confirmation", new { id = item.RouteStopGuid }, new { @class = "btn btn-info" });
+                                            @Html.ActionLink("Pick up", "Confirmation", "Contractor", new { id = item.RouteStopGuid }, new { @class = "btn btn-info" });
                                             break;
                                         case PracticalWerewolf.Models.Routes.StopType.DropOff:
-                                            @Html.ActionLink("Drop off", "Confirm", "Confirmation", new { id = item.RouteStopGuid }, new { @class = "btn btn-success" });
+                                            @Html.ActionLink("Drop off", "Confirmation", "Contractor", new { id = item.RouteStopGuid }, new { @class = "btn btn-success" });
                                             break;
                                         default:
-                                            @Html.ActionLink("Unknown", "Confirm", "Confirmation", new { id = item.RouteStopGuid }, new { @class = "btn btn-info disabled" });
+                                            @Html.ActionLink("Unknown", "Confirmation", "Contractor", new { id = item.RouteStopGuid }, new { @class = "btn btn-info disabled" });
                                             break;
                                     }
                                 </div>
