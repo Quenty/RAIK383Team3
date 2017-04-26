@@ -17,6 +17,8 @@ using PracticalWerewolf.Services;
 using PracticalWerewolf.Models.Orders;
 using Hangfire;
 using log4net;
+using System.Security.Claims;
+using System.Threading;
 
 namespace PracticalWerewolf.Controllers
 {
@@ -34,6 +36,7 @@ namespace PracticalWerewolf.Controllers
             StatusChangeSuccess,
             StatusError,
             NoTruckCreated,
+            TruckCreationError,
             ConfirmationError
         }
 
@@ -70,6 +73,7 @@ namespace PracticalWerewolf.Controllers
                 : message == ContractorMessageId.NoTruckCreated ? "You must create a truck to access this page."
                 : message == ContractorMessageId.StatusError ? "Could not update status successfully."
                 : message == ContractorMessageId.ConfirmationError ? "Could not confirm pick up or drop off"
+                : message == ContractorMessageId.TruckCreationError ? "Failed to create truck"
                 : "";
         }
 
@@ -133,7 +137,6 @@ namespace PracticalWerewolf.Controllers
                 return RedirectToAction("Unapproved", new { Message = ContractorMessageId.Error });
             }
 
-            // Is this another instance where we want an IdentityResult?
             ContractorService.SetApproval(guid, IsApproved ? ContractorApprovalState.Approved : ContractorApprovalState.Denied);
             UnitOfWork.SaveChanges();
 
@@ -169,9 +172,22 @@ namespace PracticalWerewolf.Controllers
             };
 
             var result = await UserManager.UpdateAsync(user);
+            
 
             if (result.Succeeded)
             {
+                // http://stackoverflow.com/questions/35446038/asp-net-identity-change-user-role-while-logged-in
+
+                //Get the authentication manager
+                var authenticationManager = HttpContext.GetOwinContext().Authentication;
+
+                //Log the user out
+                authenticationManager.SignOut();
+
+                //Log the user back in
+                var identity = await user.GenerateUserIdentityAsync(UserManager);
+                authenticationManager.SignIn(new Microsoft.Owin.Security.AuthenticationProperties() { IsPersistent = true }, identity);
+
                 return RedirectToAction("Index", new { Message = ContractorMessageId.RegisterSuccess });
             }
             else
@@ -200,7 +216,8 @@ namespace PracticalWerewolf.Controllers
             }
             else
             {
-                return RedirectToAction("Index", new { Message = ContractorMessageId.Error });
+                ViewBag.Message = "No user identity?";
+                return PartialView("_StatusMessage");
             }
         }
 
