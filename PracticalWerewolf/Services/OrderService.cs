@@ -15,9 +15,6 @@ namespace PracticalWerewolf.Services
 {
     public class OrderService : IOrderService
     {
-        private static readonly decimal COST_PER_POUND_MILE = 0.05m;
-        private static readonly decimal METERS_PER_MILE = 1609.344m;
-
         private static ILog logger = LogManager.GetLogger(typeof(OrderService));
         private readonly IOrderStore OrderStore;
         private readonly IContractorStore ContractorStore;
@@ -161,19 +158,13 @@ namespace PracticalWerewolf.Services
             return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.Queued).ToList();
         }
 
-        public async void SetOrderAsInProgress(Guid orderId)
+        public void SetOrderAsInProgress(Guid orderId)
         {
             var order = OrderStore.Find(orderId);
             if (order != null)
             {
                 order.TrackInfo.OrderStatus = OrderStatus.InProgress;
                 OrderStore.Update(order);
-
-                var customerId = order.RequestInfo.Requester.CustomerInfoGuid;
-                var customer = UserManager.Users.Single(x => x.CustomerInfo.CustomerInfoGuid == customerId);
-
-                var cost = CalculateOrderCost(order);
-                await EmailService.SendOrderShippedEmail(order, customer, cost);
             }
             else
             {
@@ -217,20 +208,5 @@ namespace PracticalWerewolf.Services
             OrderStore.Insert(order);
         }
 
-        public decimal CalculateOrderCost(Guid orderGuid)
-        {
-            Order order = GetOrder(orderGuid);
-
-            return CalculateOrderCost(order);
-        }
-
-        public decimal CalculateOrderCost(Order order)
-        {
-            var directions = LocationHelper.GetRouteBetweenLocations(order.RequestInfo.PickUpAddress, order.RequestInfo.DropOffAddress);
-
-            var miles = directions.Routes.First().Legs.First().Distance.Value / METERS_PER_MILE;
-
-            return (decimal)order.RequestInfo.Size.Mass * miles * COST_PER_POUND_MILE;
-        }
     }
 }

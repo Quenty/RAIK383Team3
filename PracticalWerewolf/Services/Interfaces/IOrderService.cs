@@ -1,9 +1,6 @@
 ﻿using System;
 using PracticalWerewolf.Models.Orders;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using PracticalWerewolf.Models.UserInfos;
 using System.Linq.Expressions;
 
@@ -30,7 +27,5 @@ namespace PracticalWerewolf.Services.Interfaces
         Order GetOrder(Guid orderGuid);
         int QueryCount(Expression<Func<Order, bool>> where);
         void CreateOrder(Order order);
-        decimal CalculateOrderCost(Guid orderGuid);
-        decimal CalculateOrderCost(Order order);
     }
 }
