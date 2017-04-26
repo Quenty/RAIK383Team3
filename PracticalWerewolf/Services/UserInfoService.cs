@@ -9,6 +9,7 @@ using PracticalWerewolf.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using PracticalWerewolf.Utility;
 using NinjaNye.SearchExtensions;
+using System.Linq.Expressions;
 
 namespace PracticalWerewolf.Services
 {
@@ -92,6 +93,11 @@ namespace PracticalWerewolf.Services
                     Users = users.Skip(PAGE_SIZE * page).Take(PAGE_SIZE).ToList(),
                 };
             }
+        }
+
+        public int QueryCount(Expression<Func<ApplicationUser, bool>> where)
+        {
+            return UserStore.Users.Where(where).Count();
         }
     }
 }

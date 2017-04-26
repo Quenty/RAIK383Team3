@@ -2,12 +2,35 @@
 
 @{
     ViewBag.Title = "Place a new order";
+    var CanPlaceOrder = false;
+}
+
+@if (Model != null && String.IsNullOrEmpty(Model.PhoneNumber))
+{
+    <div class="alert alert-warning">
+        @Html.ActionLink("Add phone number", "AddPhoneNumber", "Manage", null, new { @class = "btn btn-warning pull-right" })
+        <h4>Add a phone number</h4>
+        <p>You must add a <a href="@Url.Action("AddPhoneNumber", "Manage")" class="alert-link">phone number</a> before you can place an order</p>
+    </div>
+}
+else if (Model != null && Model.IsPhoneNumberConfirmed != true) // May also be null, so we == true
+{
+    <div class="alert alert-warning">
+        @Html.ActionLink("Verify phone number", "VerifyPhoneNumber", "Manage", null, new { @class = "btn btn-warning pull-right" })
+        <h4>Verify your phone number</h4>
+        <p>You must verify your <a href="@Url.Action("VerifyPhoneNumber", "Manage")" class="alert-link">phone number</a> before you can place an order</p>
+    </div>
+}
+else
+{
+    CanPlaceOrder = true;
 }
 
 <h2>Create <small>Place a new order</small></h2>
 
-@using (Html.BeginForm("Create", "Order", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("Create", "Order", FormMethod.Post, new { @class = "form-horizontal form-order", role = "form" }))
 {
+
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -18,7 +41,16 @@
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Place" />
+            @if (CanPlaceOrder)
+            {
+                <input type="submit" class="btn btn-default" value="Place" />
+            }
+            else
+            {
+                <input type="submit" class="btn btn-default disabled" value="Place" />
+            }
+
+            @Html.ActionLink("Cancel", "Index", "Order", null, new { @class = "btn btn-link" })
         </div>
     </div>
 }
@@ -26,5 +58,18 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/mapautocomplete")
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZ7pBFhPlZvw9Hm2CDAL7gFoI7s5WsPpc&libraries=places&callback=initAutocompleteCallback" async defer></script>
+
+    @if(!CanPlaceOrder)
+    {
+    <script>
+        $(function()
+        {
+            $(".form-order input").attr("disabled", true)
+        })
+    </script>
+    }
+    else
+    {
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZ7pBFhPlZvw9Hm2CDAL7gFoI7s5WsPpc&libraries=places&callback=initAutocompleteCallback" async defer></script>
+    }
 }
