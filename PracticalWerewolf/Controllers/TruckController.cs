@@ -35,30 +35,31 @@ namespace PracticalWerewolf.Controllers
 
         // TODO: Only show active trucks to employees
         [OverrideAuthorization]
-        [Authorize(Roles = "Employee")]
+        //[Authorize(Roles = "Employee")]
         public ActionResult Index()
         {
-            String userName = User.Identity.Name;
-            ApplicationUser user = UserManager.FindByName(userName);
-
-            IEnumerable<Truck> trucks = TruckService.GetAllTrucks();
+             IEnumerable<Truck> trucks = TruckService.GetAllTrucks();
             List<TruckDetailsViewModel> truckModels = new List<TruckDetailsViewModel>();
 
             foreach (Truck item in trucks)
             {
                 ContractorInfo contractor = ContractorService.GetContractorByTruckGuid(item.TruckGuid);
-                var owner = contractor == null ? null : UserManager.Users.Single(u => u.ContractorInfo.ContractorInfoGuid == contractor.ContractorInfoGuid);
-                var toAdd = new TruckDetailsViewModel
+                if( contractor != null && contractor.IsAvailable )
                 {
-                    Guid = item.TruckGuid,
-                    LicenseNumber = item.LicenseNumber,
-                    Lat = item.Location.Latitude,
-                    Long = item.Location.Longitude,
-                    MaxCapacity = item.MaxCapacity,
-                    AvailableCapacity = item.GetAvailableCapacity(),
-                    Owner = owner
-                };
-                truckModels.Add(toAdd);
+                    var owner = UserManager.Users.FirstOrDefault(u => u.ContractorInfo.ContractorInfoGuid == contractor.ContractorInfoGuid);
+                    var toAdd = new TruckDetailsViewModel
+                    {
+                        Guid = item.TruckGuid,
+                        LicenseNumber = item.LicenseNumber,
+                        Lat = item.Location.Latitude,
+                        Long = item.Location.Longitude,
+                        MaxCapacity = item.MaxCapacity,
+                        AvailableCapacity = item.GetAvailableCapacity(),
+                        Owner = owner
+                    };
+                    truckModels.Add(toAdd);
+                }
+                
             }
 
             var model = new TruckIndexViewModel
