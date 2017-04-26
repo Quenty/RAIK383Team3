@@ -32,9 +32,9 @@ namespace PracticalWerewolf.Services
             return _contractorStore.Find(c => c.Truck.TruckGuid == guid).FirstOrDefault();
         }
 
-        public IEnumerable<ContractorInfo> GetUnapprovedContractors()
+        public IEnumerable<ApplicationUser> GetUnapprovedContractors()
         {
-            return _contractorStore.Find(c => c.ApprovalState == ContractorApprovalState.Pending);
+            return UserManager.Users.Where(x => x.ContractorInfo.ApprovalState == ContractorApprovalState.Pending);
         }
 
         public void SetApproval(Guid contractorInfoGuid, ContractorApprovalState ApprovalState)

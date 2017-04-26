@@ -33,28 +33,6 @@ namespace PracticalWerewolf.Services
                 throw new ArgumentNullException();
             }
 
-            /*
-            TruckCapacityUnit capacity;
-            if (truck.UsedCapacity != null)
-            {
-                capacity = new TruckCapacityUnit
-                {
-                    TruckCapacityUnitGuid = Guid.NewGuid(),
-                    Mass = (truck.UsedCapacity.Mass + order.RequestInfo.Size.Mass),
-                    Volume = (truck.UsedCapacity.Volume + order.RequestInfo.Size.Volume)
-                };
-            }
-            else
-            {
-                capacity = new TruckCapacityUnit
-                {
-                    TruckCapacityUnitGuid = Guid.NewGuid(),
-                    Mass = order.RequestInfo.Size.Mass,
-                    Volume = order.RequestInfo.Size.Volume
-                };
-                truck.UsedCapacity = capacity;
-            }*/
-
             TruckCapacityUnit newUsedCapacity = ((truck.UsedCapacity ?? TruckCapacityUnit.Zero) + order.RequestInfo.Size);
             newUsedCapacity.TruckCapacityUnitGuid = Guid.NewGuid();
             truck.UsedCapacity = newUsedCapacity;
@@ -71,15 +49,6 @@ namespace PracticalWerewolf.Services
                 throw new ArgumentNullException();
             }
             truck.CurrentOrders.Remove(order.TrackInfo);
-
-            /*
-            var capacity = new TruckCapacityUnit
-            {
-                TruckCapacityUnitGuid = truck.UsedCapacity.TruckCapacityUnitGuid,
-                Mass = (truck.UsedCapacity.Mass - order.RequestInfo.Size.Mass),
-                Volume = (truck.UsedCapacity.Volume - order.RequestInfo.Size.Volume)
-            };
-            UpdateUsedCapacity(truck.TruckGuid, capacity);*/
 
             TruckCapacityUnit newUsedCapacity = ((truck.UsedCapacity ?? TruckCapacityUnit.Zero) - order.RequestInfo.Size);
             newUsedCapacity.TruckCapacityUnitGuid = Guid.NewGuid();

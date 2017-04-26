@@ -39,6 +39,9 @@ namespace PracticalWerewolf.ViewModels.Contractor
 
         [Required]
         public ContractorApprovalState NewState { get; set; }
+
+        public string PhoneNumber { get; set; }
+        public string EmailAddress { get; set; }
     }
 
     public class PendingContractorsModel

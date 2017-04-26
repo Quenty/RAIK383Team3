@@ -22,7 +22,7 @@ else
         <thead>
             <tr>
                 <th>
-                    Name
+                    Phone number
                 </th>
                 <th>
                     Email
@@ -43,8 +43,8 @@ else
             @foreach (var ApprovalModel in Model.Pending)
             {
                 <tr>
-                    <td>Harry Hardcoded</td>
-                    <td><a href="mailto:weneedthisinfo@info.com">weneedthisinfo@info.com</a></td>
+                    <td>@ApprovalModel.PhoneNumber</td>
+                    <td><a href="mailto:@ApprovalModel.Email">@ApprovalModel.Email</a></td>
                     <td>
                         @Html.DisplayFor(modelItem => ApprovalModel.ContractorInfo.DriversLicenseId)
                     </td>

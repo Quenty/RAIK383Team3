@@ -123,7 +123,9 @@ namespace PracticalWerewolf.Controllers
             {
                 Pending = ContractorService.GetUnapprovedContractors().Select(m => new ContractorApprovalModel
                 {
-                    ContractorInfo = m,
+                    ContractorInfo = m.ContractorInfo,
+                    EmailAddress = m.Email,
+                    PhoneNumber = m.PhoneNumber
                 }).ToList(),
             };
 
