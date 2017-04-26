@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PracticalWerewolf.Models.UserInfos;
+using System.Linq.Expressions;
 
 namespace PracticalWerewolf.Services.Interfaces
 {
@@ -28,6 +29,7 @@ namespace PracticalWerewolf.Services.Interfaces
         void UnassignOrder(Order order);
         IEnumerable<Order> GetOrderHistory(Guid customerInfoGuid);
         Order GetOrder(Guid orderGuid);
+        int QueryCount(Expression<Func<Order, bool>> where);
         void CreateOrder(Order order);
         decimal CalculateOrderCost(Guid orderGuid);
         decimal CalculateOrderCost(Order order);

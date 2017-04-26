@@ -3,6 +3,7 @@ using PracticalWerewolf.Models.UserInfos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,6 +26,7 @@ namespace PracticalWerewolf.Services.Interfaces
 
         CustomerInfo GetUserCustomerInfo(string id);
         ContractorInfo GetUserContractorInfo(string id);
+        int QueryCount(Expression<Func<ApplicationUser, bool>> where);
     }
 
 }

@@ -342,9 +342,11 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CivicAddressDb.cs" />
+    <Compile Include="Models\Home\HomeViewModel.cs" />
     <Compile Include="Models\Routes\RouteStop.cs" />
     <Compile Include="Services\ContractorService.cs" />
     <Compile Include="Services\CustomerService.cs" />
+    <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\EmployeeService.cs" />
     <Compile Include="Services\Interfaces\IOrderRequestService.cs" />
     <Compile Include="Services\Interfaces\IOrderTrackService.cs" />
@@ -357,6 +359,7 @@
     <Compile Include="Services\ContractorRoutePlanner.cs" />
     <Compile Include="Services\RoutePlannerService.cs" />
     <Compile Include="Services\RouteStopService.cs" />
+    <Compile Include="Services\SmsService.cs" />
     <Compile Include="Services\TruckService.cs" />
     <Compile Include="Services\UserInfoService.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
@@ -404,6 +407,8 @@
     <Compile Include="ViewModels\TruckViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.sandstone.css" />
@@ -417,11 +422,21 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Scripts\ContractorPartials.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\Chart.js" />
+    <Content Include="Scripts\Chart.min.js" />
+    <Content Include="Scripts\ContractorPartials.js" />
     <Content Include="EmailTemplates\OrderUpdate.cshtml" />
     <Content Include="EmailTemplates\WorkOrder.cshtml" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\Esignature.js" />
     <Content Include="Scripts\GoogleMapAPI.js" />
@@ -531,9 +546,6 @@
     <Folder Include="Views\UserInfo\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />

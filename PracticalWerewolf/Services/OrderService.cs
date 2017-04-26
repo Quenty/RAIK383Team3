@@ -10,6 +10,7 @@ using log4net;
 using PracticalWerewolf.Helpers;
 using PracticalWerewolf.Models.UserInfos;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace PracticalWerewolf.Services
 {
@@ -32,6 +33,11 @@ namespace PracticalWerewolf.Services
             this.OrderTrackInfoStore = orderTrackInfoStore;
             this.UserManager = userManager;
             this.EmailService = emailService;
+        }
+
+        public int QueryCount(Expression<Func<Order, bool>> where)
+        {
+            return this.OrderStore.AsQueryable().Where(where).Count();
         }
 
         public IEnumerable<Order> GetDeliveredOrders(ContractorInfo contractor)
