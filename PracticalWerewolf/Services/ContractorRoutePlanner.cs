@@ -44,11 +44,9 @@ namespace PracticalWerewolf.Services
         public RouteStop DropOff { get; }
         public int DistanceChanged { get; set; }
 
-        private Dictionary<string, DirectionsResponse> _pickUpToStop = new Dictionary<string, DirectionsResponse>();
-        private Dictionary<string, DirectionsResponse> _dropOffToStop = new Dictionary<string, DirectionsResponse>();
+        private Dictionary<CivicAddressDb, DirectionsResponse> _pickUpToStop = new Dictionary<CivicAddressDb, DirectionsResponse>();
+        private Dictionary<CivicAddressDb, DirectionsResponse> _dropOffToStop = new Dictionary<CivicAddressDb, DirectionsResponse>();
         private List<TruckCapacityUnit> _capacityUnits = new List<TruckCapacityUnit>(); //these will be the capacities immediately after the stop corresponding to the index
-
-
 
         public ContractorRoutePlanner(ContractorInfo contractor, Order order, List<RouteStop> route)
         {
@@ -67,8 +65,6 @@ namespace PracticalWerewolf.Services
                 RouteStopGuid = Guid.NewGuid(),
                 Type = StopType.DropOff
             };
-
-            
         }
 
         public void CalculateOptimalRoute()
@@ -81,12 +77,11 @@ namespace PracticalWerewolf.Services
 
             _AlreadyCalculated = true;
 
-            if (!IsWithinMaxCapacity(Order.RequestInfo.Size, Contractor.Truck.MaxCapacity))
+            if (!Order.RequestInfo.Size.FitsIn(Contractor.Truck.MaxCapacity))
             {
                 _WillWork = false;
                 return;
             }
-
 
             if (!Route.Any())
             {
@@ -150,7 +145,7 @@ namespace PracticalWerewolf.Services
                 DropOff.EstimatedTimeToNextStop = GetTimeFromDropOff(next);
             }
 
-            OrderRouteStops();
+            SetRouteStopOrderIndex();
         }
 
 
@@ -165,8 +160,8 @@ namespace PracticalWerewolf.Services
             var pickUpToDropOff = LocationHelper.GetRouteBetweenLocations(pickUpLocation, dropOffLocation);
             if (pickUpToDropOff.Status == DirectionsStatusCodes.OK)
             {
-                _pickUpToStop.Add(dropOffLocation.ToString(), pickUpToDropOff);
-                _dropOffToStop.Add(pickUpLocation.ToString(), pickUpToDropOff);
+                _pickUpToStop.Add(dropOffLocation, pickUpToDropOff);
+                _dropOffToStop.Add(pickUpLocation, pickUpToDropOff);
             }
             else
             {
@@ -183,12 +178,12 @@ namespace PracticalWerewolf.Services
                     var location = (stop.Type == StopType.PickUp) ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
 
                     //Add PickUp to location
-                    if (!_pickUpToStop.ContainsKey(location.ToString()))
+                    if (!_pickUpToStop.ContainsKey(location))
                     {
                         var response = LocationHelper.GetRouteBetweenLocations(pickUpLocation, location);
                         if (response.Status == DirectionsStatusCodes.OK)
                         {
-                            _pickUpToStop.Add(location.ToString(), response);
+                            _pickUpToStop.Add(location, response);
                         }
                         else
                         {
@@ -197,12 +192,12 @@ namespace PracticalWerewolf.Services
                     }
 
                     //Add DropOffToLocation
-                    if (!_dropOffToStop.ContainsKey(location.ToString()))
+                    if (!_dropOffToStop.ContainsKey(location))
                     {
                         var response = LocationHelper.GetRouteBetweenLocations(dropOffLocation, location);
                         if (response.Status == DirectionsStatusCodes.OK)
                         {
-                            _dropOffToStop.Add(location.ToString(), response);
+                            _dropOffToStop.Add(location, response);
                         }
                         else
                         {
@@ -222,11 +217,11 @@ namespace PracticalWerewolf.Services
                 TruckCapacityUnit newCapacity;
                 if(stop.Type == StopType.PickUp)
                 {
-                    newCapacity = AddCapacities(current, stop.Order.RequestInfo.Size);
+                    newCapacity = current + stop.Order.RequestInfo.Size;
                 }
                 else
                 {
-                    newCapacity = RemoveCapacities(current, stop.Order.RequestInfo.Size);
+                    newCapacity = current - stop.Order.RequestInfo.Size;
                 }
 
                 _capacityUnits.Add(newCapacity);
@@ -240,14 +235,14 @@ namespace PracticalWerewolf.Services
         {
             List<Tuple<int, int>> sublists = new List<Tuple<int, int>>();
             int count = Route.Count;
-            TruckCapacityUnit pickUpSize = Order.RequestInfo.Size;
+            TruckCapacityUnit orderSize = Order.RequestInfo.Size;
             int lastFirstSublistStop = 0;
 
             for(int i = 0; i < count; i++)
             {
-                TruckCapacityUnit capacityWithPickUp = AddCapacities(_capacityUnits[i], pickUpSize);
+                TruckCapacityUnit capacityWithPickUp = _capacityUnits[i] + orderSize;
 
-                if (!IsWithinMaxCapacity(capacityWithPickUp, Contractor.Truck.MaxCapacity))
+                if (!capacityWithPickUp.FitsIn(Contractor.Truck.MaxCapacity))
                 {
                     var number = i - lastFirstSublistStop + 1;  //note: we include the last stop even though we can't drop it off after. we include it so that we can calculate the additional distance
                     if (number > 1)
@@ -352,18 +347,18 @@ namespace PracticalWerewolf.Services
             Route.Add(PickUp);
             Route.Add(DropOff);
 
-            OrderRouteStops();
+            SetRouteStopOrderIndex();
         }
 
         private int GetDistanceFromPickUp(RouteStop stop)
         {
-            CivicAddressDb address = null;
-
             if (stop.Equals(PickUp))
             {
                 return 0;
             }
-            else if (stop.Equals(DropOff))
+
+            CivicAddressDb address = null;
+            if (stop.Equals(DropOff))
             {
                 address = Order.RequestInfo.DropOffAddress;
             }
@@ -372,11 +367,11 @@ namespace PracticalWerewolf.Services
                 address = stop.Type == StopType.PickUp ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
             }
 
-            if (_pickUpToStop.ContainsKey(address.ToString()))
+            if (_pickUpToStop.ContainsKey(address))
             {
-                return _pickUpToStop[address.ToString()].Routes.First().Legs.First().Distance.Value;
+                return _pickUpToStop[address].Routes.First().Legs.First().Distance.Value;
             }
-            else if (address.ToString().Equals(Order.RequestInfo.PickUpAddress.ToString()))
+            else if (address == Order.RequestInfo.PickUpAddress)
             {
                 return 0;
             }
@@ -405,11 +400,11 @@ namespace PracticalWerewolf.Services
                 address = stop.Type == StopType.PickUp ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
             }
 
-            if (_dropOffToStop.ContainsKey(address.ToString()))
+            if (_dropOffToStop.ContainsKey(address))
             {
-                return _dropOffToStop[address.ToString()].Routes.First().Legs.First().Distance.Value;
+                return _dropOffToStop[address].Routes.First().Legs.First().Distance.Value;
             }
-            else if (address.ToString().Equals(Order.RequestInfo.DropOffAddress.ToString()))
+            else if (address == Order.RequestInfo.DropOffAddress)
             {
                 return 0;
             }
@@ -438,11 +433,11 @@ namespace PracticalWerewolf.Services
             }
 
 
-            if (_dropOffToStop.ContainsKey(address.ToString()))
+            if (_dropOffToStop.ContainsKey(address))
             {
-                return _dropOffToStop[address.ToString()].Routes.First().Legs.First().Duration.Value;
+                return _dropOffToStop[address].Routes.First().Legs.First().Duration.Value;
             }
-            else if (address.ToString().Equals(Order.RequestInfo.DropOffAddress.ToString()))
+            else if (address == Order.RequestInfo.DropOffAddress)
             {
                 return TimeSpan.Zero;
             }
@@ -471,10 +466,9 @@ namespace PracticalWerewolf.Services
                 address = stop.Type == StopType.PickUp ? stop.Order.RequestInfo.PickUpAddress : stop.Order.RequestInfo.DropOffAddress;
             }
 
-
-            if (_pickUpToStop.ContainsKey(address.ToString()))
+            if (_pickUpToStop.ContainsKey(address))
             {
-                return _pickUpToStop[address.ToString()].Routes.First().Legs.First().Duration.Value;
+                return _pickUpToStop[address].Routes.First().Legs.First().Duration.Value;
             }
             else if (address.ToString().Equals(Order.RequestInfo.PickUpAddress.ToString()))
             {
@@ -487,30 +481,7 @@ namespace PracticalWerewolf.Services
             }
         }
 
-        private TruckCapacityUnit AddCapacities(TruckCapacityUnit capacity1, TruckCapacityUnit capacity2)
-        {
-            return new TruckCapacityUnit
-            {
-                Mass = capacity1.Mass + capacity2.Mass,
-                Volume = capacity1.Volume + capacity2.Volume
-            };
-        }
-
-        private TruckCapacityUnit RemoveCapacities(TruckCapacityUnit capacity1, TruckCapacityUnit capacity2)
-        {
-            return new TruckCapacityUnit
-            {
-                Mass = capacity1.Mass - capacity2.Mass,
-                Volume = capacity1.Volume - capacity2.Volume
-            };
-        }
-
-        private bool IsWithinMaxCapacity(TruckCapacityUnit capacity, TruckCapacityUnit max)
-        {
-            return (capacity.Mass <= max.Mass) && (capacity.Volume <= max.Volume);
-        }
-
-        private void OrderRouteStops()
+        private void SetRouteStopOrderIndex()
         {
             for(int i = 0; i < Route.Count; i++)
             {
