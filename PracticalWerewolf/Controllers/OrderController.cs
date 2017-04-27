@@ -9,6 +9,7 @@ using PracticalWerewolf.Services.Interfaces;
 using PracticalWerewolf.ViewModels.Contractor;
 using PracticalWerewolf.ViewModels.Orders;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -204,11 +205,20 @@ namespace PracticalWerewolf.Controllers
                 {
                     return RedirectToAction("Index", new { Message = OrderMessageId.CouldNotFindOrderError });
                 }
-                ApplicationUser customer = UserManager.Users.Single(u => u.CustomerInfo.CustomerInfoGuid == order.RequestInfo.Requester.CustomerInfoGuid);
+
+                ApplicationUser customer = null;
+                if (order.RequestInfo != null && order.RequestInfo.Requester != null)
+                {
+                    Guid customerInfoGuid = order.RequestInfo.Requester.CustomerInfoGuid;
+                    Debug.Assert(customerInfoGuid != Guid.Empty);
+
+                    customer = UserManager.Users.FirstOrDefault(u => u.CustomerInfo.CustomerInfoGuid == customerInfoGuid);
+                }
+
                 ApplicationUser driver = null;
                 if (order.TrackInfo.Assignee != null)
                 {
-                    driver = UserManager.Users.Single(u => u.ContractorInfo.ContractorInfoGuid == order.TrackInfo.Assignee.ContractorInfoGuid);
+                    driver = UserManager.Users.FirstOrDefault(u => u.ContractorInfo.ContractorInfoGuid == order.TrackInfo.Assignee.ContractorInfoGuid);
                 }
 
                 var model = new OrderDetailsViewModel

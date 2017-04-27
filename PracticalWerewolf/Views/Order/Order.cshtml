@@ -54,13 +54,20 @@
         </dd>
 
         <dt>
-            Customer @Html.DisplayNameFor(model => model.Customer.Email)
+            Customer Email
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Customer.Email)
+            @if (Model.Customer != null)
+            {
+                @Html.DisplayFor(model => model.Customer.Email)
+            }
+            else
+            { 
+                <p>None</p>
+            }
         </dd>
 
-        @if (Model.Customer.PhoneNumber != null)
+        @if (Model.Customer != null && Model.Customer.PhoneNumber != null)
         {
             <dt>
                 Customer @Html.DisplayNameFor(model => model.Customer.PhoneNumber)
@@ -85,10 +92,6 @@
                 No contractor currently assigned.
             </dd>
         }
-
-        <p>
-                @Html.ActionLink("Back to List", "Index")
-        </p>
     </dl>
 </div>
 

@@ -478,7 +478,7 @@ namespace PracticalWerewolf.Controllers
                     switch (stop.Type)
                     {
                         case StopType.DropOff:
-                            OrderService.SetOrderAsComplete(order.OrderGuid);
+                            await OrderService.SetOrderAsComplete(order.OrderGuid);
                             TruckService.RemoveItemFromTruck(order.TrackInfo.Assignee.Truck.TruckGuid, order);
                             UnitOfWork.SaveChanges();
                             break;
