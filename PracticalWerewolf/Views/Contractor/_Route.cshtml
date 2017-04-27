@@ -1,0 +1,119 @@
+﻿@model PracticalWerewolf.ViewModels.Contractor.OrderRouteViewModel
+
+@using System.Device.Location
+
+<div class="panel panel-default contractor-body-pane">
+    <div class="panel-heading">
+        @if (Model.Route != null && Model.Route.Count() > 0)
+        {
+            @("Current route");
+        }
+        else
+        {
+            @("No route");
+        }
+    </div>
+
+    <div class="panel-body">
+        @if (Model.Route != null && Model.Route.Count() > 0)
+        {
+            if (Model.DistanceToNextStop != null)
+            {
+                <h3 class="lead">
+                    From your previous route stop, you have @Html.DisplayFor(model => model.DistanceToNextStop) until you reach your next destination.
+                </h3>
+            }
+            <table class="table table-hover table-responsive">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Route.FirstOrDefault().Order.RequestInfo.Size.Mass)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Route.FirstOrDefault().Order.RequestInfo.Size.Volume)
+                        </th>
+                        @*<th>
+                            @Html.DisplayNameFor(model => model.Route.FirstOrDefault().Type)
+                        </th>*@
+                        <th>
+                            Address
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Route)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(x => item.Order.RequestInfo.Size.Mass)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(x => item.Order.RequestInfo.Size.Volume)
+                            </td>
+                            @*<td>
+                                    @switch (item.Type)
+                                    {
+                                        case PracticalWerewolf.Models.Routes.StopType.PickUp:
+                                            <span class="label label-info">Drop off</span>
+                                            break;
+                                        case PracticalWerewolf.Models.Routes.StopType.DropOff:
+                                            <span class="label label-success">Pick up</span>
+                                            break;
+                                        default:
+                                            <span class="label label-default">Unknown</span>
+                                            break;
+                                    }
+                                </td>*@
+
+
+                            <td>
+                                @{
+                                    CivicAddressDb address;
+                                    switch (item.Type)
+                                    {
+                                        case PracticalWerewolf.Models.Routes.StopType.PickUp:
+                                            address = item.Order.RequestInfo.PickUpAddress;
+                                            break;
+                                        case PracticalWerewolf.Models.Routes.StopType.DropOff:
+                                            address = item.Order.RequestInfo.DropOffAddress;
+                                            break;
+                                        default:
+                                            address = new CivicAddressDb();
+                                            break;
+                                    }
+
+                                    @Html.DisplayFor(x => address);
+                                    string link = "http://google.com/maps?saddr=My+Address&daddr=" + Url.Encode(address.ToString());
+                                }
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="...">
+                                    <a href="@link" class="btn btn-default"><span class="glyphicon glyphicon-map-marker"></span> Directions</a>
+                                    @Html.ActionLink("Details", "Order", "Order", new { id = item.Order.OrderGuid }, new { @class = "btn btn-default" })
+                                    @switch (item.Type)
+                                    {
+                                        case PracticalWerewolf.Models.Routes.StopType.PickUp:
+                                            @Html.ActionLink("Pick up", "Confirmation", "Contractor", new { id = item.RouteStopGuid }, new { @class = "btn btn-info" });
+                                            break;
+                                        case PracticalWerewolf.Models.Routes.StopType.DropOff:
+                                            @Html.ActionLink("Drop off", "Confirmation", "Contractor", new { id = item.RouteStopGuid }, new { @class = "btn btn-success" });
+                                            break;
+                                        default:
+                                            @Html.ActionLink("Unknown", "Confirmation", "Contractor", new { id = item.RouteStopGuid }, new { @class = "btn btn-info disabled" });
+                                            break;
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                                    }
+                </tbody>
+            </table>
+                                    }
+                                    else
+                                    {
+                                        <p>If you want to be considered for new orders, please <a href="#status">update your status</a>. You must be available to be assigned an order.</p>
+                                    }
+    </div>
+</div>

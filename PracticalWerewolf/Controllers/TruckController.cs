@@ -18,6 +18,16 @@ namespace PracticalWerewolf.Controllers
     [RequireHttps]
     public class TruckController : Controller
     {
+        public enum TruckMessageId
+        {
+            Error,
+            TruckNotFoundError,
+            TruckUpdateSuccess,
+            TruckUpdateError,
+            TruckCreationError,
+            TruckLocationUpdateError,
+            TruckLocationUpdatedSuccess
+        }
 
         private static readonly ILog logger = LogManager.GetLogger(typeof(TruckController));
         ITruckService TruckService;
@@ -33,7 +43,21 @@ namespace PracticalWerewolf.Controllers
             this.UserManager = userManager;
         }
 
-        // TODO: Only show active trucks to employees
+        private void GenerateErrorMessage(TruckMessageId? message)
+        {
+            ViewBag.StatusMessage =
+                message == TruckMessageId.Error ? "Internal error. Please try again."
+                : message == TruckMessageId.TruckNotFoundError ? "Internal error, could not find truck."
+                : message == TruckMessageId.TruckUpdateSuccess ? "Your truck was updated successfully."
+                : message == TruckMessageId.TruckUpdateError ? "Could not update truck, please try again."
+                : message == TruckMessageId.TruckCreationError ? "Could not create truck successfully."
+                : message == TruckMessageId.TruckLocationUpdateError ? "Could not update truck location successfully"
+                : message == TruckMessageId.TruckLocationUpdatedSuccess ? "Truck location updated successfully"
+                : "";
+        }
+
+
+
         [OverrideAuthorization]
         //[Authorize(Roles = "Employee")]
         public ActionResult Index()
@@ -93,11 +117,11 @@ namespace PracticalWerewolf.Controllers
                     return View(model);
                 }
 
-                return HttpNotFound(); // TODO: Use StatusMessage template and an Error enum
+                return View(new { Message = TruckMessageId.TruckNotFoundError }); 
             }
             else
             {
-                return HttpNotFound(); // TODO: Use StatusMessage template and an Error enum
+                return View(new { Message = TruckMessageId.Error }); 
             }
         }
 
@@ -139,7 +163,7 @@ namespace PracticalWerewolf.Controllers
                     logger.Error("Edit() - error getting truck or creating ViewModel");
                 }
             }
-            return HttpNotFound();
+            return View(new { Message = TruckMessageId.TruckNotFoundError });
         }
 
         // POST: Truck/Update/guid
@@ -164,7 +188,7 @@ namespace PracticalWerewolf.Controllers
 
                     UnitOfWork.SaveChanges();
 
-                    return RedirectToAction("Index", "Contractor");
+                    return RedirectToAction("Index", "Contractor", new { Message = TruckMessageId.TruckUpdateSuccess });
 
                 }
                 catch
@@ -172,7 +196,12 @@ namespace PracticalWerewolf.Controllers
                     logger.Error("Edit(id, ViewModel) - Error getting Truck, creating new TruckCapacityUnit, in TruckService.UpdateCapacity(), or TruckService.UpdateLicenseNumber()");
                 }
             }
-            return View(model);
+            else
+            {
+                return View(model);
+            }
+
+            return View("index", new { Message = TruckMessageId.TruckUpdateError } );
         }
 
         // GET: Truck/Create/
@@ -184,6 +213,7 @@ namespace PracticalWerewolf.Controllers
         // POST: Truck/Create/
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Contractor")]
         public ActionResult Create(TruckCreateViewModel returnedModel)
         {
             if (ModelState.IsValid)
@@ -198,31 +228,33 @@ namespace PracticalWerewolf.Controllers
                         Mass = returnedModel.Mass,
                         Volume = returnedModel.Volume
                     };
-                var model = new Truck
-                {
-                    TruckGuid = Guid.NewGuid(),
-                    LicenseNumber = returnedModel.LicenseNumber,
-                    MaxCapacity = capacityUnit,
-                    Location = LocationHelper.CreatePoint(returnedModel.Lat, returnedModel.Long),
-                    UsedCapacity = new TruckCapacityUnit()
+                    var model = new Truck
                     {
-                        TruckCapacityUnitGuid = Guid.NewGuid(),
-                        Mass = 0,
-                        Volume = 0
-                    }
+                        TruckGuid = Guid.NewGuid(),
+                        LicenseNumber = returnedModel.LicenseNumber,
+                        MaxCapacity = capacityUnit,
+                        Location = LocationHelper.CreatePoint(returnedModel.Lat, returnedModel.Long),
+                        UsedCapacity = new TruckCapacityUnit(TruckCapacityUnit.Zero) {
+                            TruckCapacityUnitGuid = Guid.NewGuid(),
+                        }
                     };
                     TruckService.CreateTruck(model);
                     ContractorService.UpdateContractorTruck(model, user);
                     UnitOfWork.SaveChanges();
                     return RedirectToAction("Index", "Contractor");
 
+                }
+                catch (Exception e)
+                {
+                    logger.Error("Create(ViewModel) - Error getting user, creating TruckCapacityUnit, creating Truck, or ContractorService.UpdateContractorTruck()", e);
+                }
             }
-                catch
+            else
             {
-                logger.Error("Create(ViewModel) - Error getting user, creating TruckCapacityUnit, creating Truck, or ContractorService.UpdateContractorTruck()");
+                return View(returnedModel);
             }
-        }
-            return RedirectToAction("Index", "Contractor",new { Message = ContractorController.ContractorMessageId.TruckCreationError });
+
+            return RedirectToAction("Index", "Contractor",new { Message = TruckMessageId.TruckCreationError });
         }
 
         public ActionResult Location(string id)
@@ -249,7 +281,7 @@ namespace PracticalWerewolf.Controllers
                     logger.Error("Edit() - error getting truck or creating ViewModel");
                 }
             }
-            return HttpNotFound();
+            return View("Index", new { Message = TruckMessageId.Error } );
         }
 
         [HttpPost]
@@ -264,17 +296,17 @@ namespace PracticalWerewolf.Controllers
 
                     TruckService.UpdateTruckLocation(returnedModel.Guid, location);
                     UnitOfWork.SaveChanges();
-                    return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorController.ContractorMessageId.TruckLocationUpdatedSuccess }) + "#truck");
+                    return Redirect(Url.Action("Index", "Contractor", new { Message = TruckMessageId.TruckLocationUpdatedSuccess }) + "#truck");
                 }
                 catch
                 {
                     logger.Error("UpdateLocation - Error in UpdateTruckLocation");
-                    return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorController.ContractorMessageId.TruckLocationUpdateError }) + "#truck");
+                    return Redirect(Url.Action("Index", "Contractor", new { Message = TruckMessageId.TruckLocationUpdateError }) + "#truck");
                 }
             }
             else
             {
-                return View(returnedModel);
+                return View("Index", new { Message = TruckMessageId.Error });
             }
         }
 
