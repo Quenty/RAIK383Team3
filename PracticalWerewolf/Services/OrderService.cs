@@ -207,7 +207,7 @@ namespace PracticalWerewolf.Services
             var customerId = order.RequestInfo.Requester.CustomerInfoGuid;
             var customer = UserManager.Users.Single(x => x.CustomerInfo.CustomerInfoGuid == customerId);
 
-            var cost = CostCalculationHelper.CalculateOrderCost(order);
+            var cost = CostCalculationHelper.CalculateOrderCost(order.RequestInfo);
 
             // TODO: Make async later
             await EmailService.SendOrderDeliveredEmail(order, customer, cost);
