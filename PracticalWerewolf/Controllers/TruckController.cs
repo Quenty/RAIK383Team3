@@ -35,7 +35,7 @@ namespace PracticalWerewolf.Controllers
 
         // TODO: Only show active trucks to employees
         [OverrideAuthorization]
-        //[Authorize(Roles = "Employee")]
+        [Authorize(Roles = "Employee")]
         public ActionResult Index()
         {
              IEnumerable<Truck> trucks = TruckService.GetAllTrucks();
