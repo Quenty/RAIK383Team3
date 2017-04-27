@@ -103,6 +103,7 @@ namespace PracticalWerewolf.App_Start
 
             //Helpers
             kernel.Bind<ILocationHelper>().To<LocationHelper>();
+            kernel.Bind<ICostCalculationHelper>().To<CostCalculationHelper>();
 
             kernel.Bind<IUserStore<ApplicationUser>, UserStore<ApplicationUser>>().To<UserStore<ApplicationUser>>().InRequestScope();
             kernel.Bind<ApplicationSignInManager>().ToSelf().InRequestScope();
