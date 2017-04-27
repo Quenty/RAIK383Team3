@@ -68,7 +68,7 @@ namespace PracticalWerewolf.Controllers
             foreach (Truck item in trucks)
             {
                 ContractorInfo contractor = ContractorService.GetContractorByTruckGuid(item.TruckGuid);
-                if( contractor != null && contractor.IsAvailable )
+                if( contractor != null )
                 {
                     var owner = UserManager.Users.FirstOrDefault(u => u.ContractorInfo.ContractorInfoGuid == contractor.ContractorInfoGuid);
                     var toAdd = new TruckDetailsViewModel
