@@ -33,6 +33,32 @@ namespace PracticalWerewolf.Helpers
             return DbGeography.PointFromText(wkt, srid);
         }
 
+        public DirectionsResult GetDirections(DbGeography origin, CivicAddressDb destination)
+        {
+            if (origin == null || destination == null)
+            {
+                logger.Error("GetDirections() - null argument");
+                throw new ArgumentNullException();
+            }
+
+            var firstAddress = $"{origin.Latitude}, {origin.Longitude}";
+
+            var response = GetRouteBetweenLocations(firstAddress.ToString(), destination.ToString());
+            if (response != null && response.Status == DirectionsStatusCodes.OK)
+            {
+                return new DirectionsResult
+                {
+                    Distance = response.Routes.First().Legs.First().Distance.Value,
+                    Duration = response.Routes.First().Legs.First().Duration.Value
+                };
+            }
+            else
+            {
+                logger.Error($"Google Maps Api failed to find route from {origin} to {destination}. Error is {response.StatusStr}");
+                throw new ApplicationException();
+            }
+        }
+
         public DirectionsResult GetDirections(CivicAddressDb address1, CivicAddressDb address2)
         {
             if(address1 == null || address2 == null)
@@ -80,16 +106,9 @@ namespace PracticalWerewolf.Helpers
                 logger.Error("GetRouteBetweenLocations(CivicAddressDb, CivicAddressDb) - null argument");
                 throw new ArgumentNullException();
             }
-            
-            DirectionsRequest directionsRequest = new DirectionsRequest()
-            {
-                Origin = origin.ToString(),
-                Destination = destination.ToString()
-            };
 
-            var response = GoogleMaps.Directions.Query(directionsRequest);
-
-            if (response.Status == DirectionsStatusCodes.OK)
+            var response = GetRouteBetweenLocations(origin.ToString(), destination.ToString());
+            if (response != null &&  response.Status == DirectionsStatusCodes.OK)
             {
                 return new DirectionsResult
                 {
@@ -106,6 +125,33 @@ namespace PracticalWerewolf.Helpers
             }
         }
 
+        private DirectionsResponse GetRouteBetweenLocations(string origin, string destination)
+        {
+            if (origin == null || destination == null)
+            {
+                //TODO: add possibly valuable info
+                logger.Error("GetRouteBetweenLocations(CivicAddressDb, CivicAddressDb) - null argument");
+                throw new ArgumentNullException();
+            }
+
+            DirectionsRequest directionsRequest = new DirectionsRequest()
+            {
+                Origin = origin,
+                Destination = destination
+            };
+
+            var response = GoogleMaps.Directions.Query(directionsRequest);
+
+            if (response.Status == DirectionsStatusCodes.OK)
+            {
+                return response;
+            }
+            else
+            {
+                logger.Error($"Google Maps Api failed to find route from {origin} to {destination}. Error is {response.StatusStr}");
+                return null;
+            }
+        }
 
         private void AddDirectionsToLookUpTable(DirectionsResult directions)
         {
@@ -205,21 +251,6 @@ namespace PracticalWerewolf.Helpers
         public void Refresh()
         {
             WriteToFile(DirectionsLookUp);
-        }
-
-        public static DirectionsResponse GetRouteBetweenLocations(DbGeography origin, CivicAddressDb destination)
-        {
-            if (origin == null || destination == null)
-            {
-                //TODO: add possibly valuable info
-                logger.Error("GetRouteBetweenLocations(DbGeography, CivicAddressDb) - null argument");
-                throw new ArgumentNullException();
-            }
-
-            string originAddress = $"{origin.Latitude}, {origin.Longitude}";
-            string destinationAddress = destination.ToString();
-
-            return GetRouteBetweenLocations(originAddress, destinationAddress);
         }
     }
 }

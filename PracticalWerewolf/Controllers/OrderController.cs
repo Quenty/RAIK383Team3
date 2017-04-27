@@ -28,6 +28,7 @@ namespace PracticalWerewolf.Controllers
         private readonly IRoutePlannerService RoutePlannerService;
         private readonly ApplicationUserManager UserManager;
         private readonly EmailService EmailService;
+        private readonly CostCalculationHelper CostCalculationHelper;
 
         public enum OrderMessageId
         {
@@ -41,7 +42,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         public OrderController(IOrderRequestService OrderRequestService, IOrderTrackService OrderTrackService, 
-            IUserInfoService UserInfoService, IUnitOfWork UnitOfWork, ApplicationUserManager UserManager, IOrderService OrderService, IRoutePlannerService RoutePlannerService, EmailService EmailService)
+            IUserInfoService UserInfoService, IUnitOfWork UnitOfWork, ApplicationUserManager UserManager, IOrderService OrderService, IRoutePlannerService RoutePlannerService, EmailService EmailService, CostCalculationHelper CostCalculationHelper)
         {
             this.OrderRequestService = OrderRequestService;
             this.OrderTrackService = OrderTrackService;
@@ -51,6 +52,7 @@ namespace PracticalWerewolf.Controllers
             this.OrderService = OrderService;
             this.RoutePlannerService = RoutePlannerService;
             this.EmailService = EmailService;
+            this.CostCalculationHelper = CostCalculationHelper;
         }
 
         private PagedOrderListViewModel GetOrderHistoryPage()

@@ -1,4 +1,5 @@
 ﻿using log4net;
+using PracticalWerewolf.Helpers.Interfaces;
 using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.Models.Routes;
 using System;
@@ -14,15 +15,22 @@ namespace PracticalWerewolf.Helpers
         private static readonly decimal METERS_PER_MILE = 1609.344m;
         private static readonly decimal FIXED_MILES = 50;
 
-        public static decimal CalculateOrderCost(OrderRequestInfo requestInfo)
+        private readonly ILocationHelper LocationHelper;
+
+        public CostCalculationHelper(ILocationHelper locationHelper)
         {
-            var directions = LocationHelper.GetRouteBetweenLocations(requestInfo.PickUpAddress, requestInfo.DropOffAddress);
-            decimal miles = directions.Routes.First().Legs.First().Distance.Value / METERS_PER_MILE;
+            LocationHelper = locationHelper;
+        }
+
+        public decimal CalculateOrderCost(OrderRequestInfo requestInfo)
+        {
+            var directions = LocationHelper.GetDirections(requestInfo.PickUpAddress, requestInfo.DropOffAddress);
+            decimal miles = directions.Distance / METERS_PER_MILE;
 
             return requestInfo.Size.CostMultiplier * (FIXED_MILES + miles);
         }
 
-        public static decimal CalculateContractorPayment(IEnumerable<RouteStop> allStops)
+        public decimal CalculateContractorPayment(IEnumerable<RouteStop> allStops)
         {
             //We are paying them $1 per mile
             decimal totalMeters = allStops.Sum(x => x.DistanceToNextStop);
