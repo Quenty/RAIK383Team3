@@ -249,6 +249,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Helpers\CostCalculationHelper.cs" />
     <Compile Include="Helpers\DirectionsResult.cs" />
+    <Compile Include="Helpers\Interfaces\ICostCalculationHelper.cs" />
     <Compile Include="Helpers\Interfaces\ILocationHelper.cs" />
     <Compile Include="Helpers\LocationHelper.cs" />
     <Compile Include="Controllers\ManageController.cs" />

@@ -11,6 +11,7 @@ using PracticalWerewolf.Helpers;
 using PracticalWerewolf.Models.UserInfos;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using PracticalWerewolf.Helpers.Interfaces;
 
 namespace PracticalWerewolf.Services
 {
@@ -22,9 +23,9 @@ namespace PracticalWerewolf.Services
         private readonly IOrderTrackInfoStore OrderTrackInfoStore;
         private readonly ApplicationUserManager UserManager;
         private readonly EmailService EmailService;
-        private readonly CostCalculationHelper CostCalculationHelper;
+        private readonly ICostCalculationHelper CostCalculationHelper;
 
-        public OrderService (IOrderStore orderStore, IContractorStore contractorStore, IOrderTrackInfoStore orderTrackInfoStore, ApplicationUserManager userManager, EmailService emailService, CostCalculationHelper costCalculationHelper)
+        public OrderService (IOrderStore orderStore, IContractorStore contractorStore, IOrderTrackInfoStore orderTrackInfoStore, ApplicationUserManager userManager, EmailService emailService, ICostCalculationHelper costCalculationHelper)
         {
             this.OrderStore = orderStore;
             this.ContractorStore = contractorStore;

@@ -16,6 +16,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using PracticalWerewolf.Models;
 using Microsoft.AspNet.Identity;
 using PracticalWerewolf.Helpers;
+using PracticalWerewolf.Helpers.Interfaces;
 
 namespace PracticalWerewolf.Tests.Services
 {
@@ -127,7 +128,7 @@ namespace PracticalWerewolf.Tests.Services
             var contractorStore = new ContractorStore(mockContractorContext.Object);
 
 
-            var costCalculator = new Mock<CostCalculationHelper>();
+            var costCalculator = new Mock<ICostCalculationHelper>();
             var userStore = new Mock<IUserStore<ApplicationUser>>();
             var userManager = new Mock<ApplicationUserManager>(userStore.Object);
             var orderTrackStore = new Mock<IOrderTrackInfoStore>();
