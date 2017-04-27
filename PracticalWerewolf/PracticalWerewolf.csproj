@@ -475,8 +475,10 @@
     <Content Include="Views\Shared\_PagedOrderListView.cshtml" />
     <Content Include="Views\Order\History.cshtml" />
     <Content Include="Views\Contractor\_PagedOrderListPane.cshtml" />
+    <Content Include="Views\Contractor\_Route.cshtml" />
     <Content Include="Views\Search\_LabelHelper.cshtml" />
     <Content Include="Views\Order\Order.cshtml" />
+    <Content Include="Views\Contractor\_PagedOrderListView.cshtml" />
     <None Include="Views\Search\_PartialResults.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -530,7 +532,7 @@
     <Content Include="Views\Order\Create.cshtml" />
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\TruckCapacityUnit.cshtml" />
-    <Content Include="Views\Order\Confirmation.cshtml" />
+    <Content Include="Views\Contractor\Confirmation.cshtml" />
     <Content Include="Views\Contractor\_UpdateStatus.cshtml" />
     <Content Include="Views\Shared\_SearchPartial.cshtml" />
     <Content Include="Views\Search\Results.cshtml" />

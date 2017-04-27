@@ -65,13 +65,15 @@ function draw() {
     ctx.lineWidth = y;
     ctx.stroke();
     ctx.closePath();
+    $("#signed-input").val(true);
 }
 
 function erase() {
     var m = confirm("Want to clear");
     if (m) {
         ctx.clearRect(0, 0, w, h);
-        document.getElementById("canvasimg").style.display = "none";
+        // document.getElementById("canvasimg").style.display = "none";
+        $("#signed-input").val(false);
     }
 }
 

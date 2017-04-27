@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PracticalWerewolf.Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,10 +13,12 @@ namespace PracticalWerewolf.Controllers
     public class AdministrationController : Controller
     {
         private readonly ApplicationUserManager UserManager;
+        private readonly IContractorService ContractorService;
 
-        public AdministrationController(ApplicationUserManager UserManager)
+        public AdministrationController(ApplicationUserManager UserManager, IContractorService ContractorService)
         {
             this.UserManager = UserManager;
+            this.ContractorService = ContractorService;
         }
 
         public async Task<ActionResult> BanUser(string UserId)
@@ -25,8 +28,20 @@ namespace PracticalWerewolf.Controllers
                 throw new ArgumentNullException();
             }
 
-            await UserManager.SetLockoutEnabledAsync(UserId, true);
-            await UserManager.SetLockoutEndDateAsync(UserId, DateTime.Today.AddYears(10));
+            var lockoutRequest = await UserManager.SetLockoutEnabledAsync(UserId, true);
+            var enddateRequest = await UserManager.SetLockoutEndDateAsync(UserId, DateTime.Today.AddYears(10));
+
+           
+            var ContractorInfo = ContractorService.GetContractorInfo(UserId);
+            if (ContractorInfo != null)
+            {
+                ContractorService.SetIsAvailable(ContractorInfo.ContractorInfoGuid, false);
+            }
+
+            if (lockoutRequest.Succeeded && enddateRequest.Succeeded)
+            {
+                await UserManager.UpdateSecurityStampAsync(UserId);
+            }
 
             return Redirect(Request.UrlReferrer.ToString());
         }
@@ -38,48 +53,63 @@ namespace PracticalWerewolf.Controllers
                 throw new ArgumentNullException();
             }
 
-            await UserManager.SetLockoutEnabledAsync(UserId, false);
-
+            var lockoutRequest = await UserManager.SetLockoutEnabledAsync(UserId, false);
+            if (lockoutRequest.Succeeded)
+            {
+                await UserManager.UpdateSecurityStampAsync(UserId);
+            }
+            
+            
             return Redirect(Request.UrlReferrer.ToString());
         }
 
-        public ActionResult RemoveEmployee(string UserId)
+        public async Task<ActionResult> RemoveEmployee(string UserId)
         {
             if (UserId == null)
             {
                 throw new ArgumentNullException();
             }
 
-            var User = UserManager.FindByIdAsync(UserId).Result;
-            var ForceLoad = User.EmployeeInfo;
+            var user = UserManager.FindByIdAsync(UserId).Result;
+            var ForceLoad = user.EmployeeInfo;
 
-            User.EmployeeInfo = null;
+            user.EmployeeInfo = null;
 
-            var result = UserManager.UpdateAsync(User).Result;
+            var result = UserManager.UpdateAsync(user).Result;
+
+            if (result.Succeeded)
+            {
+                await UserManager.UpdateSecurityStampAsync(user.Id);
+            }
 
             return Redirect(Request.UrlReferrer.ToString());
         }
 
-        public ActionResult SetEmployee(string UserId)
+        public async Task<ActionResult> SetEmployee(string UserId)
         {
             if (UserId == null)
             {
                 throw new ArgumentNullException();
             }
 
-            var User = UserManager.FindByIdAsync(UserId).Result;
+            var user = UserManager.FindByIdAsync(UserId).Result;
 
-            if (User.EmployeeInfo != null)
+            if (user.EmployeeInfo != null)
             {
                 throw new ArgumentException("User already is employee");
             }
 
-            User.EmployeeInfo = new Models.UserInfos.EmployeeInfo
+            user.EmployeeInfo = new Models.UserInfos.EmployeeInfo
             {
                 EmployeeInfoGuid = Guid.NewGuid()
             };
 
-            var result = UserManager.UpdateAsync(User).Result;
+            var result = UserManager.UpdateAsync(user).Result;
+
+            if (result.Succeeded)
+            {
+                await UserManager.UpdateSecurityStampAsync(user.Id);
+            }
 
             return Redirect(Request.UrlReferrer.ToString());
         }

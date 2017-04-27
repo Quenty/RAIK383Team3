@@ -35,12 +35,14 @@ namespace PracticalWerewolf.Controllers
                     Email = User.Email,
                     IsContractor = User.ContractorInfo != null,
                     IsEmployee = User.EmployeeInfo != null,
-                    BanTime = (User.LockoutEnabled && User.LockoutEndDateUtc > DateTime.UtcNow) ? (User.LockoutEndDateUtc - DateTime.UtcNow) : null
+                    BanTime = (User.LockoutEnabled && User.LockoutEndDateUtc > DateTime.UtcNow) ? (User.LockoutEndDateUtc - DateTime.UtcNow) : null,
                 };
 
 
                 if (User.ContractorInfo != null)
                 {
+                    searchResult.ContractorInfoGuid = User.ContractorInfo.ContractorInfoGuid;
+
                     if (User.ContractorInfo.Truck != null)
                     {
                         searchResult.TruckGuid = User.ContractorInfo.Truck.TruckGuid;
