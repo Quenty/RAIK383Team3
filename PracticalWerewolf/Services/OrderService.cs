@@ -9,6 +9,7 @@ using System.Text;
 using log4net;
 using PracticalWerewolf.Helpers;
 using PracticalWerewolf.Models.UserInfos;
+using System.Threading.Tasks;
 using System.Linq.Expressions;
 
 namespace PracticalWerewolf.Services
@@ -69,6 +70,7 @@ namespace PracticalWerewolf.Services
                 .Where(o => o.TrackInfo.CurrentTruck != null)
                 .Where(o => o.TrackInfo.CurrentTruck.TruckGuid == contractor.Truck.TruckGuid);
         }
+
         public Order GetOrder(Guid orderGuid)
         {
             Order order = OrderStore.Single(o => o.OrderGuid == orderGuid);
@@ -172,7 +174,20 @@ namespace PracticalWerewolf.Services
             }
         }
 
-        public object GetOrders()
+        public void SetOrderInTruck(Guid orderId)
+        {
+            var order = OrderStore.Find(orderId);
+            if (order != null)
+            {
+                order.TrackInfo.CurrentTruck = order.TrackInfo.Assignee.Truck;
+                OrderTrackInfoStore.Update(order.TrackInfo);
+            }else
+            {
+                logger.Error($"SetOrderInTruck() - No order with id {orderId.ToString()}");
+            }
+        }
+
+        public IEnumerable<Order> GetOrders()
         {
             return OrderStore.GetAll().ToList();
         }
@@ -181,13 +196,21 @@ namespace PracticalWerewolf.Services
         {
             return OrderStore.Find(o => o.RequestInfo.Requester.CustomerInfoGuid == customerInfo.CustomerInfoGuid);
         }
-
-        public void SetOrderAsComplete(Guid guid)
+        
+        public async Task SetOrderAsComplete(Guid guid)
         {
             Order order = GetOrder(guid);
             OrderTrackInfo orderTrackInfo = order.TrackInfo;
             orderTrackInfo.OrderStatus = OrderStatus.Complete;
             OrderStore.Update(order);
+        
+            var customerId = order.RequestInfo.Requester.CustomerInfoGuid;
+            var customer = UserManager.Users.Single(x => x.CustomerInfo.CustomerInfoGuid == customerId);
+
+            var cost = CostCalculationHelper.CalculateOrderCost(order);
+
+            // TODO: Make async later
+            await EmailService.SendOrderDeliveredEmail(order, customer, cost);
         }
 
         public IEnumerable<Order> GetOrderHistory(Guid customerInfoGuid)

@@ -3,6 +3,7 @@ using PracticalWerewolf.Models.Orders;
 using System.Collections.Generic;
 using PracticalWerewolf.Models.UserInfos;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace PracticalWerewolf.Services.Interfaces
 {
@@ -18,9 +19,10 @@ namespace PracticalWerewolf.Services.Interfaces
         IEnumerable<Order> GetDeliveredOrders(ContractorInfo contractor);
         void AssignOrder(Guid orderGuid, ContractorInfo contractor);
         void CancelOrder(Guid orderGuid);
-        object GetOrders();
+        IEnumerable<Order> GetOrders();
         object GetOrders(CustomerInfo customerInfo);
-        void SetOrderAsComplete(Guid guid);
+        Task SetOrderAsComplete(Guid guid);
+        void SetOrderInTruck(Guid orderId);
         void AssignOrders();
         void UnassignOrder(Order order);
         IEnumerable<Order> GetOrderHistory(Guid customerInfoGuid);

@@ -12,9 +12,15 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Data.Entity.Validation;
 using System.Web.Mvc;
+using PracticalWerewolf.Models.Routes;
+using PracticalWerewolf.Services;
+using PracticalWerewolf.Models.Orders;
 using Hangfire;
 using log4net;
-
+using System.Security.Claims;
+using System.Threading;
+using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace PracticalWerewolf.Controllers
 {
@@ -33,8 +39,7 @@ namespace PracticalWerewolf.Controllers
             StatusError,
             NoTruckCreated,
             TruckCreationError,
-            TruckLocationUpdateError,
-            TruckLocationUpdatedSuccess
+            ConfirmationError
         }
 
         private static ILog logger = LogManager.GetLogger(typeof(ContractorController));
@@ -43,15 +48,18 @@ namespace PracticalWerewolf.Controllers
         private readonly IUnitOfWork UnitOfWork;
         private readonly IOrderService OrderService;
         private readonly IRouteStopService RouteStopService;
+        private readonly ITruckService TruckService;
         private readonly IRoutePlannerService RoutePlannerService;
 
-        public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService, IUnitOfWork UnitOfWork, IRouteStopService RouteStopService, IRoutePlannerService RoutePlannerService)
+
+        public ContractorController(ApplicationUserManager UserManager, IOrderService OrderService, IContractorService ContractorService, IUnitOfWork UnitOfWork, IRouteStopService RouteStopService, IRoutePlannerService RoutePlannerService, ITruckService TruckService)
         {
             this.UnitOfWork = UnitOfWork;
             this.UserManager = UserManager;
             this.ContractorService = ContractorService;
             this.OrderService = OrderService;
             this.RouteStopService = RouteStopService;
+            this.TruckService = TruckService;
             this.RoutePlannerService = RoutePlannerService;
         }
 
@@ -66,9 +74,8 @@ namespace PracticalWerewolf.Controllers
                 : message == ContractorMessageId.StatusChangeSuccess ? "Status successfully changed"
                 : message == ContractorMessageId.NoTruckCreated ? "You must create a truck to access this page."
                 : message == ContractorMessageId.StatusError ? "Could not update status successfully."
-                : message == ContractorMessageId.TruckCreationError ? "Could not create truck successfully."
-                : message == ContractorMessageId.TruckLocationUpdateError ? "Could not update truck location successfully"
-                : message == ContractorMessageId.TruckLocationUpdatedSuccess ? "Truck location updated successfully"
+                : message == ContractorMessageId.ConfirmationError ? "Internal Error. Could not confirm pick up or drop off"
+                : message == ContractorMessageId.TruckCreationError ? "Failed to create truck"
                 : "";
         }
 
@@ -86,6 +93,11 @@ namespace PracticalWerewolf.Controllers
                 {
                     ContractorInfo = user.ContractorInfo,
                 };
+
+                if (User.IsInRole("Employee"))
+                {
+                    model.UnapprovedContractorCount = ContractorService.GetUnapprovedContractors().Count();
+                }
 
                 return View(model);
 
@@ -113,12 +125,31 @@ namespace PracticalWerewolf.Controllers
         {
             GenerateErrorMessage(message);
 
+            var pending = new List<ContractorApprovalModel>();
+            foreach(var x in ContractorService.GetUnapprovedContractors().ToList())
+            {
+                var innerModel = new ContractorApprovalModel
+                {
+                    ContractorInfo = x.ContractorInfo
+                };
+
+
+                if (x.Email != null)
+                {
+                    innerModel.EmailAddress = x.Email;
+                }
+                
+                if (x.PhoneNumber != null)
+                {
+                    innerModel.PhoneNumber = x.PhoneNumber;
+                }
+                
+
+                pending.Add(innerModel);
+            }
             PendingContractorsModel model = new PendingContractorsModel()
             {
-                Pending = ContractorService.GetUnapprovedContractors().Select(m => new ContractorApprovalModel
-                {
-                    ContractorInfo = m,
-                }).ToList(),
+                Pending = pending
             };
 
             return View(model);
@@ -132,7 +163,6 @@ namespace PracticalWerewolf.Controllers
                 return RedirectToAction("Unapproved", new { Message = ContractorMessageId.Error });
             }
 
-            // Is this another instance where we want an IdentityResult?
             ContractorService.SetApproval(guid, IsApproved ? ContractorApprovalState.Approved : ContractorApprovalState.Denied);
             UnitOfWork.SaveChanges();
 
@@ -168,9 +198,22 @@ namespace PracticalWerewolf.Controllers
             };
 
             var result = await UserManager.UpdateAsync(user);
+            
 
             if (result.Succeeded)
             {
+                // http://stackoverflow.com/questions/35446038/asp-net-identity-change-user-role-while-logged-in
+
+                //Get the authentication manager
+                var authenticationManager = HttpContext.GetOwinContext().Authentication;
+
+                //Log the user out
+                authenticationManager.SignOut();
+
+                //Log the user back in
+                var identity = await user.GenerateUserIdentityAsync(UserManager);
+                authenticationManager.SignIn(new Microsoft.Owin.Security.AuthenticationProperties() { IsPersistent = true }, identity);
+
                 return RedirectToAction("Index", new { Message = ContractorMessageId.RegisterSuccess });
             }
             else
@@ -199,8 +242,29 @@ namespace PracticalWerewolf.Controllers
             }
             else
             {
-                return View();
+                ViewBag.Message = "No user identity?";
+                return PartialView("_StatusMessage");
             }
+        }
+
+        //Returns partial view with an order list of deliveries
+        public async Task<ActionResult> Route()
+        {
+            var userId = User.Identity.GetUserId();
+            if(userId != null)
+            {
+                var user = await UserManager.FindByIdAsync(userId);
+                var contractor = user.ContractorInfo;
+
+                var model = new OrderRouteViewModel()
+                {
+                    DistanceToNextStop = RouteStopService.GetDistanceToNextStopInMiles(contractor),
+                    DisplayName = "Your Current Route",
+                    Route = RouteStopService.GetContractorRoute(contractor).ToList()
+                };
+                return PartialView("_Route", model);
+            }
+            return View("index", new { Message = ContractorMessageId.Error });
         }
 
 
@@ -274,14 +338,21 @@ namespace PracticalWerewolf.Controllers
                 var user = await UserManager.FindByIdAsync(userId);
 
                 var contractor = user.ContractorInfo;
+                try { 
                 var model = new PagedOrderListViewModel()
                 {
                     DisplayName = "Current orders",
-                    Orders = OrderService.GetInprogressOrdersInTruck(contractor),
-                    OrderListCommand = "Confirmation"
+                    Orders = OrderService.GetInprogressOrdersInTruck(contractor)
                 };
-
+                
                 return PartialView("_PagedOrderListPane", model);
+                }
+                catch (Exception e)
+                {
+                    //change this
+                    return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusError }) + "#status");
+                }
+
             }
             else
             {
@@ -331,7 +402,7 @@ namespace PracticalWerewolf.Controllers
                         Lat = truck.Location.Latitude,
                         Long = truck.Location.Longitude
                     };
-                    return PartialView(model);
+                    return PartialView("_Status", model);
                 }
                 else
                 {
@@ -345,5 +416,102 @@ namespace PracticalWerewolf.Controllers
                 return PartialView("_StatusMessage");
             }
         }
+
+        // GET: Order/Confirmation/guid
+        [Authorize(Roles = "Contractor")]
+        public ActionResult Confirmation(string id)
+        {
+            if(id == null)
+            {
+                return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusError }) + "#status");
+            }
+            var model = new ConfirmationViewModel
+            {
+                RouteStopGuid = new Guid(id)
+            };
+            return View(model);
+        }
+
+
+        // POST: Order/Confirmation/guid
+        [Authorize(Roles = "Contractor")]
+        [HttpPost]
+        [ActionName("Confirmation")]
+        public async Task<ActionResult> ConfirmationPost(ConfirmationViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                    var contractorInfo = user.ContractorInfo;
+
+                    if (contractorInfo == null)
+                    {
+                        Debug.Fail("No contractor");
+                        return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.Error });
+                    }
+
+                    RouteStop stop = RouteStopService.GetRouteStop(model.RouteStopGuid);
+                    Order order = stop.Order;
+                    if (order == null)
+                    {
+                        Debug.Fail("Null order");
+                        logger.Error("Null order");
+                        return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.Error });
+                    }
+
+                    Debug.Assert(order.TrackInfo != null);
+                    Debug.Assert(order.TrackInfo.Assignee != null);
+
+                    if (order.TrackInfo.Assignee.ContractorInfoGuid != contractorInfo.ContractorInfoGuid)
+                    {
+                        Debug.Fail("Assigned to wrong user");
+                        logger.Warn("TrackInfo.Assignee !+ ContractorInfo, invalid attempt");
+                        return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.Error });
+                    }
+
+                    Debug.Assert(order.TrackInfo.Assignee.Truck != null);
+                    Debug.Assert(order.TrackInfo.Assignee.Truck.TruckGuid != Guid.Empty);
+                    
+                    //RouteStopService.RemoveRouteStop(model.RouteStopGuid);
+                    switch (stop.Type)
+                    {
+                        case StopType.DropOff:
+                            await OrderService.SetOrderAsComplete(order.OrderGuid);
+                            TruckService.RemoveItemFromTruck(order.TrackInfo.Assignee.Truck.TruckGuid, order);
+                            UnitOfWork.SaveChanges();
+                            break;
+                        case StopType.PickUp:
+                            ContractorInfo contractor = order.TrackInfo.Assignee;
+                            OrderService.SetOrderInTruck(order.OrderGuid);
+                            TruckService.AddItemToTruck(contractor.Truck.TruckGuid, order);
+                            UnitOfWork.SaveChanges();
+                            break;
+                        default:
+                            Debug.Fail("Unknown stop type!");
+                            logger.Error("Unknown stop type");
+                            return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.Error });
+                    }
+
+                    return RedirectToAction("Index", "Contractor");
+                }
+                catch (Exception e)
+                {
+                    Debug.Fail("Failed to pick up");
+                    logger.Error(e);
+                    Console.Write(e);
+                    return RedirectToAction("Index", "Contractor", new { Message = ContractorMessageId.ConfirmationError });
+                }
+            }
+            else
+            {
+                return View(model);
+            }
+        }
+
+
     }
+
+
 }
