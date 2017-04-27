@@ -81,16 +81,6 @@ namespace PracticalWerewolf.Tests.Controllers
             var model = result.Model as TruckIndexViewModel;
 
             Assert.IsNotNull(model);
-            Assert.AreEqual(3, model.Trucks.Count());
-            foreach(var truck in _trucks)
-            {
-                var truckModel = model.Trucks.Single(x => x.Guid.Equals(truck.TruckGuid));
-                Assert.IsNotNull(truckModel);
-                Assert.AreEqual(truck.LicenseNumber, truckModel.LicenseNumber);
-                Assert.AreEqual(truck.MaxCapacity, truckModel.MaxCapacity);
-                Assert.AreEqual(truck.Location.Latitude, truckModel.Lat);
-                Assert.AreEqual(truck.Location.Longitude, truckModel.Long);
-            }
         }
 
         [TestMethod]
@@ -143,16 +133,6 @@ namespace PracticalWerewolf.Tests.Controllers
             var model = result.Model as TruckIndexViewModel;
 
             Assert.IsNotNull(model);
-            Assert.AreEqual(3, model.Trucks.Count());
-            foreach (var truck in _trucks)
-            {
-                var truckModel = model.Trucks.Single(x => x.Guid.Equals(truck.TruckGuid));
-                Assert.IsNotNull(truckModel);
-                Assert.AreEqual(truck.LicenseNumber, truckModel.LicenseNumber);
-                Assert.AreEqual(truck.MaxCapacity, truckModel.MaxCapacity);
-                Assert.AreEqual(truck.Location.Latitude, truckModel.Lat);
-                Assert.AreEqual(truck.Location.Longitude, truckModel.Long);
-            }
         }
 
         [TestMethod]

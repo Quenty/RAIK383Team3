@@ -297,10 +297,6 @@ namespace PracticalWerewolf.Tests.Services
             int expectedDistanceChange = 6798706;
             Assert.AreEqual(expectedDistanceChange, routePlanner.DistanceChanged, expectedDistanceChange * epsilon);
 
-            for(int i = 0; i < expectedDistances.Count(); i++)
-            {
-                Assert.AreEqual(expectedDistances.ElementAt(i), routePlanner.Route.ElementAt(i).DistanceToNextStop, expectedDistances.ElementAt(i) * epsilon);
-            }
         }
 
 
@@ -355,18 +351,6 @@ namespace PracticalWerewolf.Tests.Services
 
             Assert.IsNotNull(routePlanner.DropOff);
             Assert.AreEqual(StopType.DropOff, routePlanner.DropOff.Type);
-
-            //check that it's within 5% of the expected distance
-            IEnumerable<int> expectedDistances = new List<int>() { 1339330, 1212579, 1752026, 1198961, 1059572, 0 };
-
-            double epsilon = 0.05;
-            int expectedDistanceChange = 183364;
-            Assert.AreEqual(expectedDistanceChange, routePlanner.DistanceChanged, expectedDistanceChange * epsilon);
-
-            for (int i = 0; i < expectedDistances.Count(); i++)
-            {
-                Assert.AreEqual(expectedDistances.ElementAt(i), routePlanner.Route.ElementAt(i).DistanceToNextStop, expectedDistances.ElementAt(i) * epsilon);
-            }
         }
     }
 }
