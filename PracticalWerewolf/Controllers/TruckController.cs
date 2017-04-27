@@ -103,7 +103,7 @@ namespace PracticalWerewolf.Controllers
                 if (truck != null)
                 {
                     ContractorInfo contractor = ContractorService.GetContractorByTruckGuid(guid);
-                    ApplicationUser owner = contractor == null ? null : UserManager.Users.Single(u => u.ContractorInfo.ContractorInfoGuid == contractor.ContractorInfoGuid);
+                    ApplicationUser owner = contractor == null ? null : UserManager.Users.FirstOrDefault(u => u.ContractorInfo.ContractorInfoGuid == contractor.ContractorInfoGuid);
                     var model = new TruckDetailsViewModel
                     {
                         Guid = new Guid(id),

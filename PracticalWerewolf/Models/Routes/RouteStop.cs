@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Device.Location;
 using System.Linq;
 using System.Web;
 
@@ -40,5 +41,21 @@ namespace PracticalWerewolf.Models.Routes
 
         [Required]
         public long StopOrder { get; set; }
+
+        public CivicAddressDb Address
+        {
+            get
+            {
+                switch (Type)
+                {
+                    case StopType.PickUp:
+                        return Order.RequestInfo.PickUpAddress;
+                    case StopType.DropOff:
+                        return Order.RequestInfo.DropOffAddress;
+                    default:
+                        return null;
+                }
+            }
+        }
     }
 }

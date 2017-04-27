@@ -22,7 +22,7 @@
 @if (User.IsInRole("Employee"))
 {
     <div class="alert alert-info">
-        <a href="@Url.Action("History", "Order")" class="btn btn-primary pull-right">See all orders</a>
+        <a href="@Url.Action("AllOrders", "Order")" class="btn btn-primary pull-right">See all orders</a>
         <h4>Order history</h4>
         <p>As an employee, you can review order history here</p>
     </div>

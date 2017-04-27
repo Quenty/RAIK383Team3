@@ -88,11 +88,13 @@ namespace PracticalWerewolf.Controllers
             if (userId != null)
             {
                 var user = await UserManager.FindByIdAsync(userId);
+                ContractorIndexModel model = new ContractorIndexModel();
 
-                var model = new ContractorIndexModel
+                if (user != null && user.ContractorInfo != null)
                 {
-                    ContractorInfo = user.ContractorInfo,
-                };
+                    model.ContractorInfo = user.ContractorInfo;
+                }
+                
 
                 if (User.IsInRole("Employee"))
                 {
@@ -100,7 +102,6 @@ namespace PracticalWerewolf.Controllers
                 }
 
                 return View(model);
-
             }
             else
             {
@@ -126,7 +127,7 @@ namespace PracticalWerewolf.Controllers
             GenerateErrorMessage(message);
 
             var pending = new List<ContractorApprovalModel>();
-            foreach(var x in ContractorService.GetUnapprovedContractors().ToList())
+            foreach (var x in ContractorService.GetUnapprovedContractors().ToList())
             {
                 var innerModel = new ContractorApprovalModel
                 {
@@ -138,12 +139,12 @@ namespace PracticalWerewolf.Controllers
                 {
                     innerModel.EmailAddress = x.Email;
                 }
-                
+
                 if (x.PhoneNumber != null)
                 {
                     innerModel.PhoneNumber = x.PhoneNumber;
                 }
-                
+
 
                 pending.Add(innerModel);
             }
@@ -198,7 +199,7 @@ namespace PracticalWerewolf.Controllers
             };
 
             var result = await UserManager.UpdateAsync(user);
-            
+
 
             if (result.Succeeded)
             {
@@ -251,7 +252,7 @@ namespace PracticalWerewolf.Controllers
         public async Task<ActionResult> Route()
         {
             var userId = User.Identity.GetUserId();
-            if(userId != null)
+            if (userId != null)
             {
                 var user = await UserManager.FindByIdAsync(userId);
                 var contractor = user.ContractorInfo;
@@ -304,7 +305,8 @@ namespace PracticalWerewolf.Controllers
                 {
                     ContractorService.SetIsAvailable(model.ContractorGuid, !model.IsAvailable);
                     //after changing their status
-                    if (!model.IsAvailable) { 
+                    if (!model.IsAvailable)
+                    {
                         var pendingOrders = OrderService.GetInprogressOrdersNoTruck(model.ContractorGuid);
                         if (!pendingOrders.Any())
                         {
@@ -338,14 +340,16 @@ namespace PracticalWerewolf.Controllers
                 var user = await UserManager.FindByIdAsync(userId);
 
                 var contractor = user.ContractorInfo;
-                try { 
-                var model = new PagedOrderListViewModel()
+
+                try
                 {
-                    DisplayName = "Current orders",
-                    Orders = OrderService.GetInprogressOrdersInTruck(contractor)
-                };
-                
-                return PartialView("_PagedOrderListPane", model);
+                    var model = new PagedOrderListViewModel()
+                    {
+                        DisplayName = "Current orders",
+                        Orders = OrderService.GetInprogressOrdersInTruck(contractor)
+                    };
+
+                    return PartialView("_PagedOrderListPane", model);
                 }
                 catch (Exception e)
                 {
@@ -421,7 +425,7 @@ namespace PracticalWerewolf.Controllers
         [Authorize(Roles = "Contractor")]
         public ActionResult Confirmation(string id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return Redirect(Url.Action("Index", "Contractor", new { Message = ContractorMessageId.StatusError }) + "#status");
             }
@@ -473,7 +477,7 @@ namespace PracticalWerewolf.Controllers
 
                     Debug.Assert(order.TrackInfo.Assignee.Truck != null);
                     Debug.Assert(order.TrackInfo.Assignee.Truck.TruckGuid != Guid.Empty);
-                    
+
                     //RouteStopService.RemoveRouteStop(model.RouteStopGuid);
                     switch (stop.Type)
                     {
