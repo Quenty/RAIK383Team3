@@ -79,6 +79,16 @@ namespace PracticalWerewolf.Services
             }
         }
 
+        public IEnumerable<RouteStop> GetCompletedStops(ContractorInfo contractor)
+        {
+            Guid contractorGuid = contractor.ContractorInfoGuid;
+            Guid truckGuid = contractor.Truck.TruckGuid;
+
+            return _routeStopStore.AsQueryable().Where(x => x.Order.TrackInfo.Assignee.ContractorInfoGuid == contractorGuid)
+                .Where(x => x.Order.TrackInfo.OrderStatus == OrderStatus.Complete || (x.Type == StopType.PickUp && x.Order.TrackInfo.CurrentTruck.TruckGuid == truckGuid))
+                .ToList();
+        }
+
         public void Update(RouteStop entity)
         {
             _routeStopStore.Update(entity);
