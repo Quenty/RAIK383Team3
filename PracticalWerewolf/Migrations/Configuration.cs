@@ -198,6 +198,62 @@ namespace PracticalWerewolf.Migrations
 
                 MakeUser(userStore, userManager, user, DEFAULT_PASSWORD);
             }
+
+            {
+                CivicAddressDb addresss = new CivicAddressDb()
+                {
+                    Route = "3025",
+                    State = "NE",
+                    ZipCode = "68116",
+                    StreetNumber = "North 169th Avenue",
+                    City = "Omaha",
+                    Country = "USA",
+                    CivicAddressGuid = Guid.NewGuid(),
+                    RawInputAddress = "3025 North 169th Avenue, Omaha, NE 68116"
+                };
+
+                var user = MakeBaseUserData("darkness_edgy@darkknight.com");
+                user.EmployeeInfo = null;
+                user.ContractorInfo = new ContractorInfo
+                {
+                    ApprovalState = ContractorApprovalState.Pending,
+                    ContractorInfoGuid = Guid.NewGuid(),
+                    DriversLicenseId = "BRUCE",
+                    HomeAddress = address,
+                    IsAvailable = false,
+                    Truck = truck2
+                };
+
+                MakeUser(userStore, userManager, user, DEFAULT_PASSWORD);
+            }
+
+            {
+                CivicAddressDb addresss = new CivicAddressDb()
+                {
+                    Route = "3025",
+                    State = "NE",
+                    ZipCode = "68116",
+                    StreetNumber = "North 169th Avenue",
+                    City = "Omaha",
+                    Country = "USA",
+                    CivicAddressGuid = Guid.NewGuid(),
+                    RawInputAddress = "3025 North 169th Avenue, Omaha, NE 68116"
+                };
+
+                var user = MakeBaseUserData("xXx_DARKNESS_xXx@darkknight.com");
+                user.EmployeeInfo = null;
+                user.ContractorInfo = new ContractorInfo
+                {
+                    ApprovalState = ContractorApprovalState.Denied,
+                    ContractorInfoGuid = Guid.NewGuid(),
+                    DriversLicenseId = "BATMAN",
+                    HomeAddress = address,
+                    IsAvailable = false,
+                    Truck = truck3
+                };
+
+                MakeUser(userStore, userManager, user, DEFAULT_PASSWORD);
+            }
         }
     }
 }
