@@ -141,11 +141,6 @@ namespace PracticalWerewolf.Controllers
                 return View(model);
             }
 
-            if(!model.EstimatedCost.HasValue)
-            {
-                model.EstimatedCost = CostCalculationHelper
-                return View(model);
-            }
 
             if (!UserManager.IsPhoneNumberConfirmed(User.Identity.GetUserId()))
             {
@@ -158,24 +153,35 @@ namespace PracticalWerewolf.Controllers
                 return RedirectToAction("Index", new { message = OrderMessageId.OrderCreatedError });
             }
 
-            
 
             model.DropOffAddress.CivicAddressGuid = Guid.NewGuid();
             model.PickUpAddress.CivicAddressGuid = Guid.NewGuid();
             model.Size.TruckCapacityUnitGuid = Guid.NewGuid();
 
+            var requestInfo = new OrderRequestInfo
+            {
+                OrderRequestInfoGuid = Guid.NewGuid(),
+                DropOffAddress = model.DropOffAddress,
+                PickUpAddress = model.PickUpAddress,
+                Size = model.Size,
+                RequestDate = DateTime.Now,
+                Requester = Requester
+            };
+
+
+            if (!model.EstimatedCost.HasValue)
+            {
+                model.EstimatedCost = CostCalculationHelper.CalculateOrderCost(requestInfo);
+                return View(model);
+            }
+
+
+
+
             Order order = new Order
             {
                 OrderGuid = Guid.NewGuid(),
-                RequestInfo = new OrderRequestInfo
-                {
-                    OrderRequestInfoGuid = Guid.NewGuid(),
-                    DropOffAddress = model.DropOffAddress,
-                    PickUpAddress = model.PickUpAddress,
-                    Size = model.Size,
-                    RequestDate = DateTime.Now,
-                    Requester = Requester
-                },
+                RequestInfo = requestInfo,
                 TrackInfo = new OrderTrackInfo
                 {
                     OrderTrackInfoGuid = Guid.NewGuid()
@@ -188,7 +194,7 @@ namespace PracticalWerewolf.Controllers
             UnitOfWork.SaveChanges();
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
 
-            var cost = CostCalculationHelper.CalculateOrderCost(order);
+            var cost = CostCalculationHelper.CalculateOrderCost(order.RequestInfo);
             await EmailService.SendOrderConfirmEmail(order, user, cost);
 
             BackgroundJob.Enqueue(() =>  RoutePlannerService.AssignOrders()  );
