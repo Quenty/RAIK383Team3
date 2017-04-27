@@ -1,34 +1,155 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@model PracticalWerewolf.Models.Home.Statistics
+
+@using PracticalWerewolf.Models.Home
+
+@{
+    ViewBag.Title = "Home";
 }
 
+@helper GetChart(string name, string displayName, DonutChart<int> chartData)
+{
+    <div class="col-md-4">
+        <div class="col-md-8 col-md-offset-2">
+            <canvas id="@name" data-chart-data="@Json.Encode(chartData.Data)" data-chart-labels="@Json.Encode(chartData.Labels)" data-chart-middle-label="@chartData.MiddleLabel"></canvas>
+        </div>
+        <div class="clearfix" style="margin-bottom:10px"></div>
+        <h4 class="text-center">@displayName</h4>
+    </div>
+}
 
 
 @section FullScreenJumbotron
 {
-    <div class="jumbotron full-width-jumbotron" style="margin-bottom:0px">
+    <div class="jumbotron full-width-jumbotron full-width-jumbotron-top">
         <div class="container">
             <div class="splash-lead text-center">
                 <h1>Let's Ship</h1>
-                <p class="lead">Practical Werewolf is your practical solution to shipping</p>
+                <p class="lead">Practical Werewolf is your practical solution to shipping in style</p>
             </div>
         </div>
     </div>
 
     <div class="container-fluid">
         <div class="container body-content">
-            <div class="page-header">
-                <h2>Contracting with Practical Werewolf</h2>
-                <p class="lead">The best job on the market</p>
-                <p>Lorem ipsum</p>
+            <div class="row">
+                @GetChart("chart-package", "Packages Handled", Model.PackageStateChart)
+                @GetChart("chart-users", "Users", Model.UsersChart)
+                @GetChart("chart-contractors", "Packages Handled", Model.PackageStateChart)
             </div>
+            <div class="clearfix"></div>
         </div>
     </div>
-    
 
-    <div class="jumbotron full-width-jumbotron">
+    <div class="jumbotron full-width-jumbotron full-width-jumbotron-middle">
         <div class="container">
-            
+
         </div>
     </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/Chart.js")
+    <script>
+
+        // https://github.com/chartjs/Chart.js/issues/78
+        Chart.pluginService.register({
+            beforeDraw: function (chart) {
+                if (chart.config.options.elements.center) {
+                    //Get ctx from string
+                    var ctx = chart.chart.ctx;
+
+                    //Get options from the center object in options
+                    var centerConfig = chart.config.options.elements.center;
+                    var fontStyle = centerConfig.fontStyle || 'Arial';
+                    var txt = centerConfig.text;
+                    var color = centerConfig.color || '#000';
+                    var sidePadding = centerConfig.sidePadding || 20;
+                    var sidePaddingCalculated = (sidePadding / 100) * (chart.innerRadius * 2)
+                    //Start with a base font of 30px
+                    ctx.font = "30px " + fontStyle;
+
+                    //Get the width of the string and also the width of the element minus 10 to give it 5px side padding
+                    var stringWidth = ctx.measureText(txt).width;
+                    var elementWidth = (chart.innerRadius * 2) - sidePaddingCalculated;
+
+                    // Find out how much the font can grow in width.
+                    var widthRatio = elementWidth / stringWidth;
+                    var newFontSize = Math.floor(30 * widthRatio);
+                    var elementHeight = (chart.innerRadius * 2);
+
+                    // Pick a new font size so it will not be larger than the height of label.
+                    var fontSizeToUse = Math.min(newFontSize, elementHeight);
+
+                    //Set font settings to draw it correctly.
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    var centerX = ((chart.chartArea.left + chart.chartArea.right) / 2);
+                    var centerY = ((chart.chartArea.top + chart.chartArea.bottom) / 2);
+                    ctx.font = fontSizeToUse + "px " + fontStyle;
+                    ctx.fillStyle = color;
+
+                    //Draw text in center
+                    ctx.fillText(txt, centerX, centerY);
+                }
+            }
+        });
+
+
+
+        function initChart(ctx) {
+            if (ctx == null)
+            {
+                console.error("Failed to get chart, bad id");
+                return false;
+            }
+
+            var data = JSON.parse(ctx.getAttribute("data-chart-data"));
+            if (data == null)
+            {
+                console.error("Failed to get data");
+                return false;
+            }
+
+            var labels = JSON.parse(ctx.getAttribute("data-chart-labels"));
+            if (labels == null) {
+                console.error("Failed to get labels");
+                return false;
+            }
+
+            var middlelabel = ctx.getAttribute("data-chart-middle-label");
+
+            var myDoughnutChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            data: data,
+                            backgroundColor: [
+                                "#29abe0",
+                                "#f47c3c",
+                                "#81b33a"
+                            ]
+                        }]
+                },
+                options: {
+                    cutoutPercentage: 80,
+                    legend: {
+                        display: false
+                    },
+                    elements: {
+                        center: {
+                            text: middlelabel || "",
+                            color: null, //Default black
+                            fontStyle: 'Roboto', //Default Arial
+                            sidePadding: 40 //Default 20 (as a percentage)
+                        }
+                    }
+                }
+            });
+        }
+        initChart(document.getElementById("chart-package"));
+        initChart(document.getElementById("chart-contractors"));
+        initChart(document.getElementById("chart-users"));
+    </script>
 }

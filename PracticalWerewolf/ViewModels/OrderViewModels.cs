@@ -1,4 +1,6 @@
-﻿using PracticalWerewolf.Models.Trucks;
+﻿using PracticalWerewolf.Models;
+using PracticalWerewolf.Models.Trucks;
+using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.ViewModels.Contractor;
 using PracticalWerewolf.ViewModels.Paged;
 using System;
@@ -17,6 +19,9 @@ namespace PracticalWerewolf.ViewModels.Orders
 
     public class CreateOrderRequestViewModel
     {
+        public bool IsPhoneNumberConfirmed { get; set; } = false;
+        public string PhoneNumber { get; set; } = null;
+
         [Required]
         [Display(Name = "Pick up address", Description = "Where to pick up your package")]
         public CivicAddressDb PickUpAddress { get; set; }
@@ -28,9 +33,41 @@ namespace PracticalWerewolf.ViewModels.Orders
         [Required]
         [Display(Name = "Drop off address", Description = "Where your package going")]
         public CivicAddressDb DropOffAddress { get; set; }
+
+        public decimal? EstimatedCost { get; set; }
     }
-    public class ConfirmationViewModel
+
+    public class OrderDetailsViewModel
     {
-        public Guid Guid { get; set; }
+        [Display(Name = "Order Id")]
+        public Guid OrderId { get; set; }
+
+        [Display(Name = "Pick up address", Description = "Where to pick up your package")]
+        public CivicAddressDb PickUpAddress { get; set; }
+
+        [Display(Name = "Package size", Description = "Approximately how big is your package")]
+        public TruckCapacityUnit Size { get; set; }
+
+        [Display(Name = "Drop off address", Description = "Where your package going")]
+        public CivicAddressDb DropOffAddress { get; set; }
+
+        [Display(Name = "Date Requested")]
+        public DateTime RequestDate { get; set; }
+
+        [Display(Name = "Customer "  )]
+        public ApplicationUser Customer { get; set; }
+
+        [Display(Name = "Contractor ")]
+        public ApplicationUser Contractor { get; set; }
+
     }
+
+    public class OrderStatusViewModel
+    {
+        public Guid orderId { get; set; }
+        public OrderStatus orderStatus { get; set; }
+        public Boolean inTruck { get; set; }
+        public string message { get; set; }
+    }
+
 }

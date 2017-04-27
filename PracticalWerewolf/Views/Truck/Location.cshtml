@@ -1,64 +1,96 @@
 ﻿@model PracticalWerewolf.ViewModels.TruckUpdateLocation
 
 @{
-    ViewBag.Title = "Location";
+    ViewBag.Title = "Update Truck Location";
 }
-@using (Html.BeginForm())
+
+<h4>Update Truck Location</h4>
+<hr />
+
+@using (Html.BeginForm(null, null, null, FormMethod.Post, new { }))
 {
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Long)
+    @Html.HiddenFor(m => m.Lat)
+    @Html.HiddenFor(m => m.Guid)
 
-    <h4>Choose Your Location</h4>
-        <hr />
-        @Html.HiddenFor(m => m.Long)
-        @Html.HiddenFor(m => m.Lat)
-        @Html.HiddenFor(m => m.Guid)
-        <div class="col-md-10" id="map" style="height:400px;" ></div>
-
+    <div class="form-horizontal">
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Update" class="btn btn-default"  />
+            <div class="col-md-10">
+                <div id="map" style="height:400px;"></div>
             </div>
         </div>
+
+        <div class="form-group">
+            <div class="col-md-10">
+                @Html.ValidationMessageFor(model => model.Long, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.Lat, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-10">
+                <input type="submit" value="Update" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+
 }
-
-<script>
-    function initMap() {
-        var lat = parseInt(document.getElementById("Lat").value, 10);
-        var long = parseInt(document.getElementById("Long").value, 10);
-        var location = { lat: lat, lng: long }
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 4,
-            center: location
-        });
-        var marker = new google.maps.Marker({
-            position: location,
-            map: map,
-            clickable: true,
-            draggable: true
-        });
-
-        var update_timeout = null;
-
-        google.maps.event.addListener(map, 'click', function (event) {
-            update_timeout = setTimeout(function () {
-                $('#Lat').val(event.latLng.lat());
-                $('#Long').val(event.latLng.lng());
-                var newPoint = new google.maps.LatLng(event.latLng.lat(), event.latLng.lng());
-                if (marker) {
-                    marker.setPosition(newPoint);
-                }
-            }, 200);
-        });
-
-        google.maps.event.addListener(map, 'dblclick', function (event) {
-            clearTimeout(update_timeout);
-
-        });
-    }
-</script>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+            function initMap() {
+                var lat = parseFloat(document.getElementById("Lat").value);
+                var long = parseFloat(document.getElementById("Long").value);
+                var location = { lat: lat, lng: long }
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 4,
+                    center: location
+                });
+                var marker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    clickable: true,
+                    draggable: true
+                });
+
+                map.setZoom(10);
+                map.panTo(marker.position);
+
+                var update_timeout = null;
+
+                google.maps.event.addListener(map, 'click', function (event) {
+                    update_timeout = setTimeout(function () {
+                        $('#Lat').val(event.latLng.lat());
+                        $('#Long').val(event.latLng.lng());
+                        var newPoint = new google.maps.LatLng(event.latLng.lat(), event.latLng.lng());
+                        if (marker) {
+                            marker.setPosition(newPoint);
+                        }
+                    }, 200);
+                });
+
+                google.maps.event.addListener(map, 'dblclick', function (event) {
+                    clearTimeout(update_timeout);
+                });
+
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    $('#Lat').val(position.coords.latitude);
+                    $('#Long').val(position.coords.longitude);
+
+                    var newPoint = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                    if (marker) {
+                        marker.setPosition(newPoint);
+                        map.panTo(marker.position);
+                    }
+                    else
+                    {
+                        console.log("No marker to set location");
+                    }
+                });
+            }
+    </script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZ7pBFhPlZvw9Hm2CDAL7gFoI7s5WsPpc&callback=initMap"></script>
 }
 

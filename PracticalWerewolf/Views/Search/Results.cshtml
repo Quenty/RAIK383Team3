@@ -17,23 +17,43 @@
         @foreach (UserSearchResult UserInfo in Model.Users)
         {
         <li class="list-group-item">
-            @if (UserInfo.IsEmployee)
-            {
-                <span class="label label-success">Employee</span>
-            }
-            @if (UserInfo.IsContractor)
-            {
-                <span class="label label-primary">Contractor</span>
-            }
-            @if (UserInfo.BanTime.HasValue)
-            {
-                <span class="label label-danger">Banned for @((int)(UserInfo.BanTime.Value.Duration().Days / 365)) years, @(UserInfo.BanTime.Value.Duration().Days % 365) days, @UserInfo.BanTime.Value.Duration().Hours hours</span>
-            }
+
             @UserInfo.Email
 
+            @{
+                Html.RenderPartial("_LabelHelper", UserInfo);
+            }
+
+            
+
             <div class="pull-right btn-group btn-group-xs" role="group">
+                @if (Request.IsAuthenticated)
+                {
+                    if (UserInfo.TruckGuid.HasValue)
+                    {
+                        @Html.ActionLink("See Truck", "Details", "Truck", new { id = UserInfo.TruckGuid.Value.ToString() }, new { @class = "btn btn-xs btn-link" })
+                    }
+                    else if (UserInfo.IsContractor)
+                    {
+                        <a href="#" class="btn btn-xs btn-link disabled">No truck</a>
+                    }
+                }
+
+                
+
                 @if (Request.IsAuthenticated && User.IsInRole("Employee"))
                 {
+                    if (UserInfo.IsContractor)
+                    {
+                        if (UserInfo.ContractorApprovalState == PracticalWerewolf.Models.UserInfos.ContractorApprovalState.Pending)
+                        {
+                            if (UserInfo.ContractorInfoGuid.HasValue)
+                            {
+                                @Html.ActionLink("Approve", "Approve", "Contractor", new { Guid = UserInfo.ContractorInfoGuid.Value, IsApproved = true }, new { @class = "btn btn-xs btn-link" })
+                                @Html.ActionLink("Deny", "Approve", "Contractor", new { Guid = UserInfo.ContractorInfoGuid.Value, IsApproved = false }, new { @class = "btn btn-xs btn-link" })
+                            }
+                        }
+                    }
                     if (!UserInfo.IsEmployee)
                     {
                         @Html.ActionLink("Make employee", "SetEmployee", "Administration", new { UserId = UserInfo.Id }, new { @class = "btn btn-xs btn-link" })
@@ -62,3 +82,10 @@
 
 }
 
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}

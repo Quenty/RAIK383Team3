@@ -9,6 +9,7 @@ using PracticalWerewolf.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using PracticalWerewolf.Utility;
 using NinjaNye.SearchExtensions;
+using System.Linq.Expressions;
 
 namespace PracticalWerewolf.Services
 {
@@ -71,6 +72,12 @@ namespace PracticalWerewolf.Services
                         x => x.ContractorInfo.HomeAddress.RawInputAddress,
                         x => (x.EmployeeInfo == null) ? "" : "employee",
                         x => (x.ContractorInfo == null) ? "" : "contractor",
+                        x => (x.ContractorInfo == null) ? "" : (x.ContractorInfo.Truck == null) ? "" : "has:truck",
+                        x => (x.ContractorInfo == null) ? ""
+                            : x.ContractorInfo.ApprovalState == ContractorApprovalState.Approved ? "status:approved"
+                            : x.ContractorInfo.ApprovalState == ContractorApprovalState.Denied ? "status:denied unapproved"
+                            : x.ContractorInfo.ApprovalState == ContractorApprovalState.Pending ? "status:pending status:pending-approval pending approval unapproved"
+                            : "",
                         x => (x.LockoutEnabled && x.LockoutEndDateUtc > DateTime.UtcNow) ? "banned" : "",
                         x => x.ContractorInfo.DriversLicenseId)
                     .Containing(query.Split(' ', ':', '!', '@', '.', ','))
@@ -86,6 +93,11 @@ namespace PracticalWerewolf.Services
                     Users = users.Skip(PAGE_SIZE * page).Take(PAGE_SIZE).ToList(),
                 };
             }
+        }
+
+        public int QueryCount(Expression<Func<ApplicationUser, bool>> where)
+        {
+            return UserStore.Users.Where(where).Count();
         }
     }
 }

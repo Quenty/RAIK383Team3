@@ -1,92 +1,72 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PracticalWerewolf.Controllers;
 using GoogleMapsApi.Entities.Directions.Response;
 using System.Linq;
 using System.Device.Location;
+using PracticalWerewolf.Helpers;
+using PracticalWerewolf.Helpers.Interfaces;
 
 namespace PracticalWerewolf.Tests.Helpers
 {
     [TestClass]
     public class LocationHelperTest
     {
+        private ILocationHelper locationHelper = new LocationHelper();
+
+        private CivicAddressDb origin = new CivicAddressDb
+        {
+            RawInputAddress = "3025 North 169th Avenue, Omaha, NE 68116",
+            Route = "3025",
+            StreetNumber = "North 169th Avenue",
+            City = "Omaha",
+            State = "NE",
+            ZipCode = "68116",
+            Country = "USA"
+        };
+
+        CivicAddressDb destination = new CivicAddressDb()
+        {
+            RawInputAddress = "630 North 14th Street, Kauffman Hall, Lincoln, NE 68508",
+            Route = "630",
+            StreetNumber = "North 14th Street, Kauffman Hall",
+            City = "Lincoln",
+            State = "NE",
+            ZipCode = "68508",
+            Country = "USA"
+        };
+
+        private int expectedDistance = 83642;
+        private TimeSpan expectedDuration = new TimeSpan(0, 58, 0);
+        private double epsilon = 0.1;
+
+
         [TestMethod]
         public void GetRouteBetweenLocations_TestDistanceBewteenJesseesHomes()
         {
-            string origin = "3025 North 169th Avenue, Omaha, NE 68116";
-            string destination = "630 North 14th Street, Kauffman Hall, Lincoln, NE 68508";
+            DirectionsResult result = null;
 
-            DirectionsResponse result = LocationHelper.GetRouteBetweenLocations(origin, destination);
-
-            if(result.Status != DirectionsStatusCodes.OVER_QUERY_LIMIT)
+            try
             {
-                Assert.AreEqual(DirectionsStatusCodes.OK, result.Status);
-                Assert.AreEqual("53.1 mi", result.Routes.ElementAt(0).Legs.ElementAt(0).Distance.Text);
-                Assert.AreEqual(85456, result.Routes.ElementAt(0).Legs.ElementAt(0).Distance.Value, 100);
+                result = locationHelper.GetDirections(origin, destination);
             }
+            catch (Exception e)
+            {
+                Assert.Inconclusive(e.Message);
+            }
+
+            Assert.AreEqual(origin, result.Origin);
+            Assert.AreEqual(destination, result.Destination);
+            Assert.AreEqual(expectedDistance, result.Distance, expectedDistance * epsilon);
+            Assert.AreEqual(expectedDuration.Ticks, result.Duration.Ticks, expectedDuration.Ticks * epsilon);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void GetRouteBetweenLocations_NullArgument_TestDistanceBewteenJesseesHomes()
         {
-            string origin = null;
-            string destination = "630 North 14th Street, Kauffman Hall, Lincoln, NE 68508";
+            CivicAddressDb nullOrigin = null;
 
-            DirectionsResponse result = LocationHelper.GetRouteBetweenLocations(origin, destination);
-
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void GetRouteBetweenLocations_CivicAddressDb_TestDistanceBewteenJesseesHomes()
-        {
-            CivicAddressDb origin = new CivicAddressDb()
-            {
-                RawInputAddress = "3025 North 169th Avenue, Omaha, NE 68116",
-                StreetNumber = "3025 North 169th Avenue",
-                City = "Omaha",
-                State = "NE",
-                ZipCode = "68116",
-                Country = "USA"
-            };
-
-            CivicAddressDb destination = new CivicAddressDb()
-            {
-                RawInputAddress = "630 North 14th Street, Kauffman Hall, Lincoln, NE 68508",
-                StreetNumber = "630 North 14th Street, Kauffman Hall",
-                City = "Lincoln",
-                State = "NE",
-                ZipCode = "68508",
-                Country = "USA"
-            };
-            DirectionsResponse result = LocationHelper.GetRouteBetweenLocations(origin, destination);
-
-            if (result.Status != DirectionsStatusCodes.OVER_QUERY_LIMIT)
-            {
-                Assert.AreEqual(DirectionsStatusCodes.OK, result.Status);
-                Assert.AreEqual("53.1 mi", result.Routes.ElementAt(0).Legs.ElementAt(0).Distance.Text);
-                Assert.AreEqual(85456, result.Routes.ElementAt(0).Legs.ElementAt(0).Distance.Value, 100);
-            }
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void GetRouteBetweenLocations_NullCivicAddressDb_TestDistanceBewteenJesseesHomes()
-        {
-            CivicAddressDb origin = new CivicAddressDb()
-            {
-                RawInputAddress = "3025 North 169th Avenue, Omaha, NE 68116",
-                StreetNumber = "3025 North 169th Avenue",
-                City = "Omaha",
-                State = "NE",
-                ZipCode = "68116",
-                Country = "USA"
-            };
-
-            CivicAddressDb destination = null;
-
-            DirectionsResponse result = LocationHelper.GetRouteBetweenLocations(origin, destination);
+            DirectionsResult result = locationHelper.GetDirections(nullOrigin, destination);
 
             Assert.Fail();
         }

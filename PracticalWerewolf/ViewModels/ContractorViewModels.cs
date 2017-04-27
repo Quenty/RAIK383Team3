@@ -1,5 +1,6 @@
 using PracticalWerewolf.Controllers.Validation;
 using PracticalWerewolf.Models.Orders;
+using PracticalWerewolf.Models.Routes;
 using PracticalWerewolf.Models.UserInfos;
 using System;
 using System.Collections.Generic;
@@ -38,6 +39,9 @@ namespace PracticalWerewolf.ViewModels.Contractor
 
         [Required]
         public ContractorApprovalState NewState { get; set; }
+
+        public string PhoneNumber { get; set; }
+        public string EmailAddress { get; set; }
     }
 
     public class PendingContractorsModel
@@ -48,6 +52,7 @@ namespace PracticalWerewolf.ViewModels.Contractor
     public class ContractorIndexModel
     {
         public ContractorInfo ContractorInfo { get; set; }
+        public int? UnapprovedContractorCount { get; set; }
     }
 
     public class ContractorStatusModel
@@ -55,13 +60,33 @@ namespace PracticalWerewolf.ViewModels.Contractor
         [Required]
         public Guid ContractorGuid { get; set; }
 
-        public Boolean ContractorStatus { get; set; }
+        public Boolean IsAvailable { get; set; }
     }
-   
+
     public class PagedOrderListViewModel
     {
         public String DisplayName { get; set; } = "Orders";
         public IEnumerable<Order> Orders { get; set; }
         public String OrderListCommand { get; set; } = "Details";
     }
+
+    public class OrderRouteViewModel
+    {
+        public String DistanceToNextStop { get; set; }
+        public String DisplayName { get; set; } = "Orders";
+        public IEnumerable<RouteStop> Route { get; set; }
+    }
+
+    public class ConfirmationViewModel
+    {
+
+        [Required]
+        public Guid RouteStopGuid { get; set; }
+
+        [Required]
+        [MustBeTrue(ErrorMessage = "You must sign")]
+        public bool Signed { get; set; } = false;
+    }
+
+
 }

@@ -1,0 +1,84 @@
+﻿@model PracticalWerewolf.ViewModels.Contractor.PagedOrderListViewModel
+
+@using PracticalWerewolf.Models.Orders;
+
+@helper OrderStatusBadge(OrderStatus status)
+{
+switch (status)
+{
+    case OrderStatus.Cancelled:
+            <span class="label label-warning">Cancelled</span>
+        break;
+    case OrderStatus.Queued:
+            <span class="label label-info">Queued</span>
+        break;
+    case OrderStatus.InProgress:
+            <span class="label label-info">In progress</span>
+        break;
+    case OrderStatus.Complete:
+            <span class="label label-success">Delivered</span>
+        break;
+    default:
+            <span class="label label-default">Unknown</span>
+        break;
+}
+}
+
+
+@if (Model.Orders != null && Model.Orders.Count() > 0)
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(m => m.Orders.FirstOrDefault().RequestInfo.RequestDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => m.Orders.FirstOrDefault().RequestInfo.PickUpAddress)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => m.Orders.FirstOrDefault().RequestInfo.DropOffAddress)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => m.Orders.FirstOrDefault().RequestInfo.Size.Volume)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => m.Orders.FirstOrDefault().RequestInfo.Size.Mass)
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model.Orders)
+            {
+                <tr>
+                    <td>@item.RequestInfo.RequestDate.Month/@item.RequestInfo.RequestDate.Day/@item.RequestInfo.RequestDate.Year</td>
+                    <td>@Html.DisplayFor(x => item.RequestInfo.PickUpAddress)</td>
+                    <td>@Html.DisplayFor(x => item.RequestInfo.DropOffAddress)</td>
+                    <td>@Html.DisplayFor(x => item.RequestInfo.Size.Volume)</td>
+                    <td>@Html.DisplayFor(x => item.RequestInfo.Size.Mass)</td>
+                    <td>
+                        @OrderStatusBadge(item.TrackInfo.OrderStatus)
+                    </td>
+                    <td>
+                    </td>
+                    <td class="hidden-print">
+                        @Html.ActionLink("Details", "Order", "Order", new { id = item.OrderGuid }, null)
+                    </td>
+                </tr>
+                        
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <em>No orders</em>
+}
+

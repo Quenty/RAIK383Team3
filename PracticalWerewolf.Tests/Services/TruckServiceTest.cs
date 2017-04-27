@@ -10,7 +10,8 @@ using PracticalWerewolf.Tests.Stores.DbContext;
 using PracticalWerewolf.Stores;
 using System.Data.Entity.Spatial;
 using System.Data.Entity;
-using PracticalWerewolf.Controllers;
+using PracticalWerewolf.Helpers;
+using PracticalWerewolf.Services.Interfaces;
 
 namespace PracticalWerewolf.Tests.Services
 {
@@ -33,7 +34,8 @@ namespace PracticalWerewolf.Tests.Services
         {
             var truckStore = new Mock<ITruckStore>();
             truckStore.Setup(x => x.GetAllTrucks()).Returns(new List<Truck>());
-            var truckService = new TruckService(truckStore.Object);
+            var orderService = new Mock<IOrderService>();
+            var truckService = new TruckService(truckStore.Object, orderService.Object);
 
             var trucks = truckService.GetAllTrucks();
 
@@ -45,7 +47,8 @@ namespace PracticalWerewolf.Tests.Services
         {
             var truckStore = new Mock<ITruckStore>();
             truckStore.Setup(x => x.GetAllTrucks()).Returns(_trucks);
-            var truckService = new TruckService(truckStore.Object);
+            var orderService = new Mock<IOrderService>();
+            var truckService = new TruckService(truckStore.Object, orderService.Object);
 
             var trucks = truckService.GetAllTrucks();
 
@@ -121,7 +124,17 @@ namespace PracticalWerewolf.Tests.Services
 
             var newGuid = Guid.NewGuid();
             var newTruck = new Truck() { TruckGuid = newGuid };
-            truckService.UpdateCapacity(newGuid, newCapacity);
+
+            try
+            {
+                truckService.UpdateCapacity(newGuid, newCapacity);
+                Assert.Fail();
+            }
+            catch (Exception e)
+            {
+                Assert.AreEqual(e.Message, "Truck does not exist in database!");
+            }
+            
 
             var truck = truckService.GetTruck(guid);
             Assert.AreEqual(guid, truck.TruckGuid);
@@ -181,7 +194,8 @@ namespace PracticalWerewolf.Tests.Services
             var mockContext = new Mock<IDbSetFactory>();
             mockContext.Setup(x => x.CreateDbSet<Truck>()).Returns(dbSet);
             var store = new TruckStore(mockContext.Object);
-            var truckService = new TruckService(store);
+            var orderService = new Mock<IOrderService>();
+            var truckService = new TruckService(store, orderService.Object);
 
             return truckService;
         }

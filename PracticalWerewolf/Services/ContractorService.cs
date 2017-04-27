@@ -7,17 +7,19 @@ using PracticalWerewolf.Stores.Interfaces;
 using PracticalWerewolf.Models;
 using PracticalWerewolf.Models.Trucks;
 using PracticalWerewolf.Models.Orders;
+using System.Data.Entity;
+using Microsoft.AspNet.Identity;
 
 namespace PracticalWerewolf.Services
 {
     public class ContractorService : IContractorService
     {
         private readonly IContractorStore _contractorStore;
-        private readonly ApplicationUserManager _userManager;
+        private readonly ApplicationUserManager UserManager;
 
         public ContractorService(IContractorStore store, ApplicationUserManager userManager)
         {
-            _userManager = userManager;
+            UserManager = userManager;
             _contractorStore = store;
         }
 
@@ -31,9 +33,9 @@ namespace PracticalWerewolf.Services
             return _contractorStore.Find(c => c.Truck.TruckGuid == guid).FirstOrDefault();
         }
 
-        public IEnumerable<ContractorInfo> GetUnapprovedContractors()
+        public IEnumerable<ApplicationUser> GetUnapprovedContractors()
         {
-            return _contractorStore.Find(c => c.ApprovalState == ContractorApprovalState.Pending);
+            return UserManager.Users.Where(x => x.ContractorInfo.ApprovalState == ContractorApprovalState.Pending);
         }
 
         public void SetApproval(Guid contractorInfoGuid, ContractorApprovalState ApprovalState)
@@ -57,20 +59,38 @@ namespace PracticalWerewolf.Services
             }
         }
 
-        public IQueryable<ContractorInfo> getAvailableContractorQuery()
+        public IQueryable<ContractorInfo> GetAvailableContractorQuery()
         {
-            return _contractorStore.Find(c => c.ApprovalState == ContractorApprovalState.Approved).AsQueryable()
+            return UserManager.Users.Select(c => c.ContractorInfo)
+                .Where(c => c.ApprovalState == ContractorApprovalState.Approved).AsQueryable()
                 .Where(c => c.IsAvailable)
-                .Where(c => c.Truck.AvailableCapacity.Volume > 0)
-                .Where(c => c.Truck.AvailableCapacity.Mass > 0);
+                .Where(c => c.Truck != null)
+                .Include(c => c.Truck)
+                .Include(c => c.Truck.UsedCapacity);
         }
-
 
         public void UpdateContractorTruck(Truck truck, ApplicationUser driver)
         {
-            driver.ContractorInfo.Truck = truck;
-            var result = _userManager.UpdateAsync(driver);
-            result.Wait(); // TODO: Make this async
+            var contractor = driver.ContractorInfo;
+            contractor.Truck = truck;
+            contractor.HomeAddress = contractor.HomeAddress;
+            _contractorStore.Update(contractor);
+        }
+
+        public ApplicationUser GetUserByContractorInfo(ContractorInfo contractor)
+        {
+            return UserManager.Users.SingleOrDefault(x => x.ContractorInfo.ContractorInfoGuid == contractor.ContractorInfoGuid);
+        }
+
+        public ContractorInfo GetContractorInfo(string userId)
+        {
+            return UserManager.Users.Where(x => x.Id == userId).Select(x => x.ContractorInfo).FirstOrDefault();
+        }
+
+        public void RemoveOrderFromContractor(Order order, ContractorInfo contractor)
+        {
+            contractor.AssignedOrders.Remove(order.TrackInfo);
+            _contractorStore.Update(contractor);
         }
     }
 }

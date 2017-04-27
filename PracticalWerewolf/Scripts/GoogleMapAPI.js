@@ -14,8 +14,8 @@ var map;
 
 function initMap() {
     if (!map) {
-        var lat = parseInt(document.getElementById("Lat").value, 10);
-        var long = parseInt(document.getElementById("Long").value, 10);
+        var lat = parseFloat(document.getElementById("Lat").value);
+        var long = parseFloat(document.getElementById("Long").value);
         var location = { lat: lat, lng: long }
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 4,
@@ -27,6 +27,9 @@ function initMap() {
             map: map,
             clickable: true
         });
+
+        map.setZoom(10);
+        map.panTo(marker.position);
 
         google.maps.event.trigger(map, 'resize')
     } else {
@@ -46,6 +49,9 @@ function createMap() {
         map: map,
         clickable: true
     });
+
+    $('#Lat').val(uluru.lat);
+    $('#Long').val(uluru.lng);
 
     var update_timeout = null;
 

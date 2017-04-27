@@ -4,41 +4,20 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         @Html.DisplayName("Your Truck")
+        <span class="label label-info" title="Your truck's license number'" style="margin-left:10px">@Model.LicenseNumber</span>
         @Html.ActionLink("Edit Your Truck", "Edit", "Truck", new { id = Model.Guid }, new { @class = "btn btn-xs btn-default pull-right" })
     </div>
     <div class="panel-body">
-        <dl>
-            @Html.HiddenFor(Model => Model.Lat, new { id = "Lat" })
-            @Html.HiddenFor(Model => Model.Long, new { id = "Long" })
-            <dt>
-                @Html.DisplayNameFor(model => model.LicenseNumber)
-            </dt>
+        @Html.HiddenFor(Model => Model.Lat, new { id = "Lat" })
+        @Html.HiddenFor(Model => Model.Long, new { id = "Long" })
+        
+        <p>Your truck can hold an estimated @Model.MaxCapacity.Mass lbs and @Model.MaxCapacity.Volume cubic ft in total. </p>
+        <p>Of that capacity, @Model.AvailableCapacity.Mass lbs and @Model.AvailableCapacity.Volume cubic ft are available. </p>
+        <div class="pull-right">
+            @Html.ActionLink("Update Location", "Location", "Truck", new { id = Model.Guid }, new { @class = "btn btn-xs btn-default pull-right" })
+        </div>
+        <h4>Last known truck location</h4>
 
-            <dd>
-                @Html.DisplayFor(model => model.LicenseNumber)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.MaxCapacity.Mass)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.MaxCapacity.Mass)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.MaxCapacity.Volume)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.MaxCapacity.Volume)
-            </dd>
-
-            <dt>
-                @Html.DisplayName("Your Location")
-                @Html.ActionLink("Update Location", "Location", "Truck", new { id = Model.Guid }, null)
-            </dt>
-        </dl>
         <div id="map" style="height:400px"></div>
         <script>loadAPI()</script>
     </div>

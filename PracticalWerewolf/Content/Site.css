@@ -25,30 +25,42 @@ textarea {
 
 .splash-lead {
     margin-top:75px;
+    color: #ffffff;
 }
 
 
 @media screen and (max-width: 1000px) {
     .splash-lead {
-        margin-top:25px
+        margin-top:25px;
     }
 }
 
 .full-width-jumbotron {
     background: scroll;
-    background-image: url(Images/lukas-budimaier-131294-small.jpg);
     background-repeat: no-repeat;
     background-position: 0 0;
     background-size: cover;
-    height:500px;
-    margin-top: -20px;
-    filter: contrast(120%);
-
-
+    height:100vh;
     background-attachment: fixed;
+}
+
+.full-width-jumbotron-top {
+    margin-top: -30px;
+    background-image: url(Images/trucking.jpg);
+    margin-bottom: 50px;
+}
+
+.full-width-jumbotron-middle {
+    margin-top: 100px;
+    background-image: url(Images/igor-ovsyannykov-151127-small.jpg);
 }
 
 .navbar-brand-image {
     padding-top:10px; 
     padding-bottom:10px;
 }
+
+.contractor-body-pane {
+    min-height: 300px;
+}
+

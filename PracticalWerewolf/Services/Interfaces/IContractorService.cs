@@ -14,12 +14,14 @@ namespace PracticalWerewolf.Services.Interfaces
     {
         void SetIsAvailable(Guid contractorInfoGuid, bool isAvailable);
         void SetApproval(Guid contractorInfoGuid, ContractorApprovalState isApproved);
-        IEnumerable<ContractorInfo> GetUnapprovedContractors();
+        IEnumerable<ApplicationUser> GetUnapprovedContractors();
         ContractorInfo GetContractorByTruckGuid(Guid guid);
-        IQueryable<ContractorInfo> getAvailableContractorQuery();
+        IQueryable<ContractorInfo> GetAvailableContractorQuery();
 
         void UpdateContractorTruck(Truck truck, ApplicationUser user);
 
+        ApplicationUser GetUserByContractorInfo(ContractorInfo contractor);
+        ContractorInfo GetContractorInfo(string userId);
         ContractorInfo GetContractor(Guid guid);
     }
 }

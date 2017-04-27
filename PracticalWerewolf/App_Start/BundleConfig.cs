@@ -14,6 +14,9 @@ namespace PracticalWerewolf
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
 
+            bundles.Add(new ScriptBundle("~/bundles/js-cookie").Include(
+                        "~/Scripts/js-cookie/js.cookie.js"));
+
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
@@ -35,6 +38,9 @@ namespace PracticalWerewolf
 
             bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
                       "~/Scripts/knockout-3.4.2.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/Chart.js").Include(
+                      "~/Scripts/Chart.js"));
         }
     }
 }

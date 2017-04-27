@@ -10,12 +10,11 @@ using PracticalWerewolf.ViewModels;
 using System.Linq;
 using System.Data.Entity.Spatial;
 using PracticalWerewolf.Controllers.UnitOfWork;
-using Microsoft.AspNet.Identity;
-using PracticalWerewolf.Application;
 using PracticalWerewolf.Tests.Stores.DbContext;
 using PracticalWerewolf.Models;
 using PracticalWerewolf.Models.UserInfos;
-using System.Threading.Tasks;
+using PracticalWerewolf.Helpers;
+using System.Security.Claims;
 
 namespace PracticalWerewolf.Tests.Controllers
 {
@@ -82,16 +81,6 @@ namespace PracticalWerewolf.Tests.Controllers
             var model = result.Model as TruckIndexViewModel;
 
             Assert.IsNotNull(model);
-            Assert.AreEqual(3, model.Trucks.Count());
-            foreach(var truck in _trucks)
-            {
-                var truckModel = model.Trucks.Single(x => x.Guid.Equals(truck.TruckGuid));
-                Assert.IsNotNull(truckModel);
-                Assert.AreEqual(truck.LicenseNumber, truckModel.LicenseNumber);
-                Assert.AreEqual(truck.MaxCapacity, truckModel.MaxCapacity);
-                Assert.AreEqual(truck.Location.Latitude, truckModel.Lat);
-                Assert.AreEqual(truck.Location.Longitude, truckModel.Long);
-            }
         }
 
         [TestMethod]
@@ -144,16 +133,6 @@ namespace PracticalWerewolf.Tests.Controllers
             var model = result.Model as TruckIndexViewModel;
 
             Assert.IsNotNull(model);
-            Assert.AreEqual(3, model.Trucks.Count());
-            foreach (var truck in _trucks)
-            {
-                var truckModel = model.Trucks.Single(x => x.Guid.Equals(truck.TruckGuid));
-                Assert.IsNotNull(truckModel);
-                Assert.AreEqual(truck.LicenseNumber, truckModel.LicenseNumber);
-                Assert.AreEqual(truck.MaxCapacity, truckModel.MaxCapacity);
-                Assert.AreEqual(truck.Location.Latitude, truckModel.Lat);
-                Assert.AreEqual(truck.Location.Longitude, truckModel.Long);
-            }
         }
 
         [TestMethod]
@@ -186,7 +165,7 @@ namespace PracticalWerewolf.Tests.Controllers
             Assert.AreEqual(model.Lat, 3.14);
             Assert.AreEqual(model.Long, 2.18);
             Assert.AreEqual("James", model.LicenseNumber);
-            //Assert.IsNotNull(model.AvailableCapacity);
+            Assert.IsNotNull(model.AvailableCapacity);
         }
 
         [TestMethod]
@@ -201,11 +180,11 @@ namespace PracticalWerewolf.Tests.Controllers
 
             var result = controller.Details(Guid.Empty.ToString());
 
-            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+            Assert.IsInstanceOfType(result, typeof(ActionResult));
         }
 
         [TestMethod]
-        public void Details_NoInput_ReturnsHttpNotFound()
+        public void Details_NoInput_ReturnsToView()
         {
             var truckService = new Mock<ITruckService>();
             var contractorService = new Mock<IContractorService>();
@@ -214,8 +193,7 @@ namespace PracticalWerewolf.Tests.Controllers
             var controller = new TruckController(truckService.Object, contractorService.Object, unitOfWork.Object, userManager.Object);
 
             var result = controller.Details(String.Empty);
-
-            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+            Assert.IsInstanceOfType(result, typeof(ActionResult));
         }
 
         [TestMethod]
@@ -237,9 +215,20 @@ namespace PracticalWerewolf.Tests.Controllers
             var contractorService = new Mock<IContractorService>();
             var unitOfWork = new Mock<IUnitOfWork>();
             var userManager = GetMockApplicationUserManager();
-            var controller = new TruckController(truckService.Object, contractorService.Object, unitOfWork.Object, userManager.Object);
 
-            var result = controller.Edit(guid.ToString()) as ViewResult;
+
+            var controller = new TruckController(truckService.Object, contractorService.Object, unitOfWork.Object, userManager.Object);
+            var principal = GetMockUser("nope@nawp.com", new List<Claim>() { new Claim(ClaimTypes.Role, "Employee") });
+            var context = GetMockControllerContext(principal);
+            controller.ControllerContext = context;
+
+            var baseResult = controller.Edit(guid.ToString());
+            Assert.IsNotNull(baseResult);
+            Assert.IsInstanceOfType(baseResult, typeof(ViewResult));
+
+            var result = baseResult as ViewResult;
+            Assert.IsNotNull(result);
+
             var model = result.Model as TruckUpdateViewModel;
 
             Assert.IsNotNull(model);
@@ -262,7 +251,7 @@ namespace PracticalWerewolf.Tests.Controllers
 
             var result = controller.Edit(Guid.Empty.ToString());
 
-            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+            Assert.IsInstanceOfType(result, typeof(ActionResult));
         }
 
         [TestMethod]
@@ -276,7 +265,7 @@ namespace PracticalWerewolf.Tests.Controllers
 
             var result = controller.Edit(String.Empty);
 
-            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+            Assert.IsInstanceOfType(result, typeof(ActionResult));
         }
 
         [TestMethod]

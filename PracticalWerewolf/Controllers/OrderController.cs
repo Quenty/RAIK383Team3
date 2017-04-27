@@ -1,11 +1,18 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using Hangfire;
+using Microsoft.AspNet.Identity;
 using PracticalWerewolf.Controllers.UnitOfWork;
+using PracticalWerewolf.Helpers;
+using PracticalWerewolf.Models;
 using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.Models.UserInfos;
+using PracticalWerewolf.Services;
 using PracticalWerewolf.Services.Interfaces;
 using PracticalWerewolf.ViewModels.Contractor;
 using PracticalWerewolf.ViewModels.Orders;
 using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace PracticalWerewolf.Controllers
@@ -18,7 +25,10 @@ namespace PracticalWerewolf.Controllers
         private readonly IOrderService OrderService;
         private readonly IUserInfoService UserInfoService;
         private readonly IUnitOfWork UnitOfWork;
+        private readonly IRoutePlannerService RoutePlannerService;
         private readonly ApplicationUserManager UserManager;
+        private readonly EmailService EmailService;
+        private readonly CostCalculationHelper CostCalculationHelper;
 
         public enum OrderMessageId
         {
@@ -26,11 +36,13 @@ namespace PracticalWerewolf.Controllers
             OrderCreatedError,
             CancelOrderError,
             CouldNotUpdateStatus,
+            CouldNotFindOrderError,
+            OrderCreatedError_NoPhoneNumber,
             Error
         }
 
-        public OrderController(IOrderRequestService OrderRequestService, IOrderTrackService OrderTrackService,
-            IUserInfoService UserInfoService, IUnitOfWork UnitOfWork, ApplicationUserManager UserManager, IOrderService OrderService)
+        public OrderController(IOrderRequestService OrderRequestService, IOrderTrackService OrderTrackService, 
+            IUserInfoService UserInfoService, IUnitOfWork UnitOfWork, ApplicationUserManager UserManager, IOrderService OrderService, IRoutePlannerService RoutePlannerService, EmailService EmailService, CostCalculationHelper CostCalculationHelper)
         {
             this.OrderRequestService = OrderRequestService;
             this.OrderTrackService = OrderTrackService;
@@ -38,19 +50,29 @@ namespace PracticalWerewolf.Controllers
             this.UnitOfWork = UnitOfWork;
             this.UserManager = UserManager;
             this.OrderService = OrderService;
+            this.RoutePlannerService = RoutePlannerService;
+            this.EmailService = EmailService;
+            this.CostCalculationHelper = CostCalculationHelper;
         }
 
         private PagedOrderListViewModel GetOrderHistoryPage()
         {
-            var CustomerInfoGuid = UserManager.FindById(User.Identity.GetUserId()).CustomerInfo.CustomerInfoGuid;
-
-            var model = new PagedOrderListViewModel
+            ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
+            if (user != null && user.CustomerInfo != null)
             {
-                DisplayName = "Order history",
-                Orders = OrderService.GetOrderHistory(CustomerInfoGuid)
-            };
+                var CustomerInfoGuid = user.CustomerInfo.CustomerInfoGuid;
 
-            return model;
+                var model = new PagedOrderListViewModel
+                {
+                    DisplayName = "Order history",
+                    Orders = OrderService.GetOrderHistory(CustomerInfoGuid)
+                };
+                return model;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public ActionResult Index(OrderMessageId? message)
@@ -60,6 +82,8 @@ namespace PracticalWerewolf.Controllers
                 : message == OrderMessageId.Error ? "Something went wrong, please try again!"
                 : message == OrderMessageId.CancelOrderError ? "Internal error. Please try to cancel order again."
                 : message == OrderMessageId.CouldNotUpdateStatus ? "Internal error. Could not update order status, try again."
+                : message == OrderMessageId.CouldNotFindOrderError ? "System error. Could not find the order you were looking for."
+                : message == OrderMessageId.OrderCreatedError_NoPhoneNumber ? "You must have a verified number to place an order."
                 : "";
 
             var model = new PracticalWerewolf.ViewModels.Orders.OrderIndex();
@@ -75,31 +99,56 @@ namespace PracticalWerewolf.Controllers
         [Authorize(Roles = ("Customer"))]
         public ActionResult Create()
         {
-            return View();
-        }
+            var userId = User.Identity.GetUserId();
+            if (UserManager.FindById(userId) != null)
+            {
+                var model = new CreateOrderRequestViewModel()
+                {
+                    IsPhoneNumberConfirmed = UserManager.IsPhoneNumberConfirmed(userId),
+                    PhoneNumber= UserManager.GetPhoneNumber(userId)
+                };
+                return View(model);
+            }
+            else
+            {
+                var model = new CreateOrderRequestViewModel()
+                {
+                    IsPhoneNumberConfirmed = false,
+                    PhoneNumber = null
+                };
 
+                return View();
+            }
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = ("Customer"))]
-        public ActionResult Create(CreateOrderRequestViewModel model)
+        public async Task<ActionResult> Create(CreateOrderRequestViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
+
+            if (!UserManager.IsPhoneNumberConfirmed(User.Identity.GetUserId()))
+            {
+                return RedirectToAction("Index", new { message = OrderMessageId.OrderCreatedError_NoPhoneNumber });
+
+            }
             CustomerInfo Requester = UserInfoService.GetUserCustomerInfo(User.Identity.GetUserId());
             if (Requester == null)
             {
                 return RedirectToAction("Index", new { message = OrderMessageId.OrderCreatedError });
             }
 
+
             model.DropOffAddress.CivicAddressGuid = Guid.NewGuid();
             model.PickUpAddress.CivicAddressGuid = Guid.NewGuid();
             model.Size.TruckCapacityUnitGuid = Guid.NewGuid();
 
-            OrderRequestService.CreateOrderRequestInfo(new OrderRequestInfo
+            var requestInfo = new OrderRequestInfo
             {
                 OrderRequestInfoGuid = Guid.NewGuid(),
                 DropOffAddress = model.DropOffAddress,
@@ -107,10 +156,39 @@ namespace PracticalWerewolf.Controllers
                 Size = model.Size,
                 RequestDate = DateTime.Now,
                 Requester = Requester
-            });
+            };
 
-            OrderService.AssignOrders();
+
+            if (!model.EstimatedCost.HasValue)
+            {
+                model.EstimatedCost = CostCalculationHelper.CalculateOrderCost(requestInfo);
+                return View(model);
+            }
+
+
+
+
+            Order order = new Order
+            {
+                OrderGuid = Guid.NewGuid(),
+                RequestInfo = requestInfo,
+                TrackInfo = new OrderTrackInfo
+                {
+                    OrderTrackInfoGuid = Guid.NewGuid()
+                }
+            };
+            
+
+            OrderService.CreateOrder(order);
+
             UnitOfWork.SaveChanges();
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+
+            var cost = CostCalculationHelper.CalculateOrderCost(order.RequestInfo);
+            await EmailService.SendOrderConfirmEmail(order, user, cost);
+
+            BackgroundJob.Enqueue(() =>  RoutePlannerService.AssignOrders()  );
+            
 
             return RedirectToAction("Index", new { message = OrderMessageId.OrderCreatedSuccess });
         }
@@ -118,42 +196,67 @@ namespace PracticalWerewolf.Controllers
         [Authorize(Roles = "Customer")]
         public ActionResult History()
         {
-           
-
             return View(GetOrderHistoryPage());
         }
 
         // GET: Order/Edit/guid
-        [Authorize(Roles = "Customer, Employees")]
-        public ActionResult Edit(string guid)
+        [Authorize(Roles = "Customer, Employee")]
+        public ActionResult Edit(string id)
         {
             // Allow for the information to be updated
             // Depends upon IOrderService.Create
             return View();
         }
 
-        // POST: Order/Edit/guid
-        [HttpPost]
-        [Authorize(Roles = "Customer, Employees")]
-        public ActionResult Edit(string guid, FormCollection collection)
+        //GET: /Order/Order/id
+        public ActionResult Order(string id)
         {
-            // Depends upon IOrderRequestService.UpdateRequest
-            // Save the updated information to the database
-            try
+            if (id != null)
             {
-                // TODO: Add update logic here
+                Guid guid = new Guid(id);
+                Order order = OrderService.GetOrder(guid);
+                if (order == null)
+                {
+                    return RedirectToAction("Index", new { Message = OrderMessageId.CouldNotFindOrderError });
+                }
 
-                return RedirectToAction("Index");
+                ApplicationUser customer = null;
+                if (order.RequestInfo != null && order.RequestInfo.Requester != null)
+                {
+                    Guid customerInfoGuid = order.RequestInfo.Requester.CustomerInfoGuid;
+                    Debug.Assert(customerInfoGuid != Guid.Empty);
+
+                    customer = UserManager.Users.FirstOrDefault(u => u.CustomerInfo.CustomerInfoGuid == customerInfoGuid);
+                }
+
+                ApplicationUser driver = null;
+                if (order.TrackInfo.Assignee != null)
+                {
+                    driver = UserManager.Users.FirstOrDefault(u => u.ContractorInfo.ContractorInfoGuid == order.TrackInfo.Assignee.ContractorInfoGuid);
+                }
+
+                var model = new OrderDetailsViewModel
+                {
+                    OrderId = order.OrderGuid,
+                    DropOffAddress = order.RequestInfo.DropOffAddress,
+                    PickUpAddress = order.RequestInfo.PickUpAddress,
+                    Size = order.RequestInfo.Size,
+                    RequestDate = order.RequestInfo.RequestDate,
+                    Customer = customer,
+                    Contractor = driver
+                };
+
+                return View(model);
             }
-            catch
+            else
             {
-                return View();
+                return RedirectToAction("Index", new { Message = OrderMessageId.Error });
             }
         }
 
         // POST: Order/Cancel/guid
         [HttpPost]
-        [Authorize(Roles = "Customer, Employees")]
+        [Authorize(Roles = "Customer, Employee")]
         public ActionResult Cancel(string id)
         {
             if (!String.IsNullOrEmpty(id))
@@ -173,57 +276,16 @@ namespace PracticalWerewolf.Controllers
             return RedirectToAction("Index", new { message = OrderMessageId.CancelOrderError });
         }
 
-        // POST: Order/Reject/guid
-        [HttpPost]
-        [Authorize(Roles = "Contractor")]
-        public ActionResult Reject(string guid)
-        {
-            // Contractor has rejected offer and now we must find a new person
-            // Depends upon IOrderTrackService.UpdateOrderStatus, IOrderTrackService.UpdateOrderAssignee, IContractorService.UpdateContractorIsAvailable
-            return View();
-        }
-
-        // GET: Order/Confirmation/guid
-        [Authorize(Roles = "Contractor")]
-        public ActionResult Confirmation(string id)
-        {
-            var model = new ConfirmationViewModel
-            {
-                Guid = new Guid(id)
-            };
-            return View(model);
-        }
-
-        
-        // POST: Order/Confirmation/guid
-        [Authorize(Roles = "Contractor")]
-        [HttpPost]
-        [ActionName("Confirmation")]
-        public ActionResult ConfirmationPost(ConfirmationViewModel model )
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    OrderService.SetOrderAsComplete(model.Guid);
-                    UnitOfWork.SaveChanges();
-
-                    return RedirectToAction("Index", "Contractor");
-                }
-                catch
-                {
-                    return RedirectToAction("Index", "Contractor", new { Message = OrderMessageId.CouldNotUpdateStatus });
-                }
-            }
-            else
-                return RedirectToAction("Index", "Contractor", new { Message = OrderMessageId.Error });
-        }
-
-        //[Authorize (Roles = "Employee")]
+        [Authorize (Roles = "Employee")]
         public ActionResult AllOrders()
         {
             var orders = OrderService.GetOrders();
-            return View("Order", orders);
+            var model = new PagedOrderListViewModel
+            {
+                Orders = OrderService.GetOrders(),
+                DisplayName = "All Orders"
+            };
+            return View("_PagedOrderListView", model);
         }
 
         public ActionResult Orders()
@@ -233,7 +295,7 @@ namespace PracticalWerewolf.Controllers
             {
                 var orders = OrderService.GetOrders(customerInfo);
                 return View("Order", orders);
-            } 
+            }
             catch
             {
                 return RedirectToAction("Index", new { message = OrderMessageId.Error });

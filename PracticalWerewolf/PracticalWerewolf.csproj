@@ -49,6 +49,18 @@
       <HintPath>..\packages\GoogleMapsApi.0.64.0\lib\net45\GoogleMapsApi.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Hangfire.Core, Version=1.6.12.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.Core.1.6.12\lib\net45\Hangfire.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Hangfire.Ninject, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.Ninject.1.2.0\lib\net45\Hangfire.Ninject.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Hangfire.SqlServer, Version=1.6.12.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.SqlServer.1.6.12\lib\net45\Hangfire.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
@@ -62,8 +74,20 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.IdentityModel.Logging, Version=1.1.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Logging.1.1.2\lib\net451\Microsoft.IdentityModel.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Tokens, Version=5.1.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Tokens.5.1.2\lib\net451\Microsoft.IdentityModel.Tokens.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.SqlServer.Types.11.0.1\lib\net20\Microsoft.SqlServer.Types.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NinjaNye.SearchExtensions, Version=2.0.6149.33145, Culture=neutral, processorArchitecture=MSIL">
@@ -96,6 +120,10 @@
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=5.1.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.5.1.2\lib\net451\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Spatial, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -147,6 +175,10 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="Twilio, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Twilio.5.3.0\lib\net451\Twilio.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
       <HintPath>..\packages\WebActivatorEx.2.0\lib\net40\WebActivatorEx.dll</HintPath>
       <Private>True</Private>
@@ -161,9 +193,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -218,7 +247,10 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ContractorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\LocationHelper.cs" />
+    <Compile Include="Helpers\CostCalculationHelper.cs" />
+    <Compile Include="Helpers\DirectionsResult.cs" />
+    <Compile Include="Helpers\Interfaces\ILocationHelper.cs" />
+    <Compile Include="Helpers\LocationHelper.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
@@ -230,7 +262,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\EmailHelper.cs" />
+    <Compile Include="Helpers\Twilio.cs" />
     <Compile Include="Migrations\201701292303341_InitialCreate.cs" />
     <Compile Include="Migrations\201701292303341_InitialCreate.Designer.cs">
       <DependentUpon>201701292303341_InitialCreate.cs</DependentUpon>
@@ -313,18 +345,24 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CivicAddressDb.cs" />
+    <Compile Include="Models\Home\HomeViewModel.cs" />
     <Compile Include="Models\Routes\RouteStop.cs" />
     <Compile Include="Services\ContractorService.cs" />
     <Compile Include="Services\CustomerService.cs" />
+    <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\EmployeeService.cs" />
     <Compile Include="Services\Interfaces\IOrderRequestService.cs" />
     <Compile Include="Services\Interfaces\IOrderTrackService.cs" />
+    <Compile Include="Services\Interfaces\IRoutePlannerService.cs" />
     <Compile Include="Services\Interfaces\IUserInfoService.cs" />
     <Compile Include="Services\Interfaces\IRouteStopService.cs" />
     <Compile Include="Services\OrderRequestService.cs" />
     <Compile Include="Services\OrderService.cs" />
     <Compile Include="Services\OrderTrackService.cs" />
+    <Compile Include="Services\ContractorRoutePlanner.cs" />
+    <Compile Include="Services\RoutePlannerService.cs" />
     <Compile Include="Services\RouteStopService.cs" />
+    <Compile Include="Services\SmsService.cs" />
     <Compile Include="Services\TruckService.cs" />
     <Compile Include="Services\UserInfoService.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
@@ -334,9 +372,11 @@
     <Compile Include="Stores\CustomerStore.cs" />
     <Compile Include="Stores\EmployeeStore.cs" />
     <Compile Include="Stores\Interfaces\IEntityStore.cs" />
+    <Compile Include="Stores\Interfaces\IOrderTrackInfoStore.cs" />
     <Compile Include="Stores\Interfaces\IRouteStopStore.cs" />
     <Compile Include="Stores\Interfaces\RouteStopStore.cs" />
     <Compile Include="Stores\OrderStore.cs" />
+    <Compile Include="Stores\OrderTrackInfoStore.cs" />
     <Compile Include="Stores\TruckStore.cs" />
     <Compile Include="Utility\Levenshtein.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
@@ -370,29 +410,43 @@
     <Compile Include="ViewModels\TruckViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.flatly.css" />
-    <Content Include="Content\bootstrap.flatly.min.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.sandstone.css" />
     <Content Include="Content\bootstrap.sandstone.min.css" />
     <Content Include="Content\Images\igor-ovsyannykov-151127.jpg" />
     <Content Include="Content\Images\lukas-budimaier-131294-small.jpg" />
     <Content Include="Content\Images\lukas-budimaier-131294.jpg" />
+    <Content Include="Content\Images\truck.jpg" />
+    <Content Include="Content\Images\trucking.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Scripts\ContractorPartials.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\Chart.js" />
+    <Content Include="Scripts\Chart.min.js" />
+    <Content Include="Scripts\ContractorPartials.js" />
     <Content Include="EmailTemplates\OrderUpdate.cshtml" />
     <Content Include="EmailTemplates\WorkOrder.cshtml" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\Esignature.js" />
     <Content Include="Scripts\GoogleMapAPI.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\js-cookie\js.cookie-2.1.4.min.js" />
+    <Content Include="Scripts\js-cookie\js.cookie.js" />
     <Content Include="Scripts\knockout-3.4.2.debug.js" />
     <Content Include="Scripts\knockout-3.4.2.js" />
     <Content Include="Scripts\mapautocomplete.js" />
@@ -424,6 +478,10 @@
     <Content Include="Views\Shared\_PagedOrderListView.cshtml" />
     <Content Include="Views\Order\History.cshtml" />
     <Content Include="Views\Contractor\_PagedOrderListPane.cshtml" />
+    <Content Include="Views\Contractor\_Route.cshtml" />
+    <Content Include="Views\Search\_LabelHelper.cshtml" />
+    <Content Include="Views\Order\Order.cshtml" />
+    <Content Include="Views\Contractor\_PagedOrderListView.cshtml" />
     <None Include="Views\Search\_PartialResults.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -432,7 +490,9 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
@@ -475,7 +535,7 @@
     <Content Include="Views\Order\Create.cshtml" />
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\TruckCapacityUnit.cshtml" />
-    <Content Include="Views\Order\Confirmation.cshtml" />
+    <Content Include="Views\Contractor\Confirmation.cshtml" />
     <Content Include="Views\Contractor\_UpdateStatus.cshtml" />
     <Content Include="Views\Shared\_SearchPartial.cshtml" />
     <Content Include="Views\Search\Results.cshtml" />
@@ -486,13 +546,9 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Scripts\ViewModels\Contractor\" />
-    <Folder Include="Views\Order\" />
     <Folder Include="Views\UserInfo\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />

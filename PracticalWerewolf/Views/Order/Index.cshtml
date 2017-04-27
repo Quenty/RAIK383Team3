@@ -8,7 +8,7 @@
 
 @section FullScreenJumbotron
 {
-    <div class="jumbotron full-width-jumbotron">
+    <div class="jumbotron full-width-jumbotron full-width-jumbotron-top">
         <div class="container">
             <div class="splash-lead text-center">
                 <h1>Order</h1>
@@ -19,9 +19,19 @@
     </div>
 }
 
+@if (User.IsInRole("Employee"))
+{
+    <div class="alert alert-info">
+        <a href="@Url.Action("AllOrders", "Order")" class="btn btn-primary pull-right">See all orders</a>
+        <h4>Order history</h4>
+        <p>As an employee, you can review order history here</p>
+    </div>
+}
+
 @if (Model.PagedOrderListViewModel != null && Model.PagedOrderListViewModel.Orders.Count() > 0)
 {
     <h2>Order history</h2>
     Html.RenderPartial("_PagedOrderListView", Model.PagedOrderListViewModel);
     <p><a href="@Url.Action("History", "Order")" class="btn btn-primary btn-lg">See more &raquo;</a></p>
 }
+
