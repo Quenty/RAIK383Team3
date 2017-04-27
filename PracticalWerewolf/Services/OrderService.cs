@@ -22,14 +22,16 @@ namespace PracticalWerewolf.Services
         private readonly IOrderTrackInfoStore OrderTrackInfoStore;
         private readonly ApplicationUserManager UserManager;
         private readonly EmailService EmailService;
+        private readonly CostCalculationHelper CostCalculationHelper;
 
-        public OrderService (IOrderStore orderStore, IContractorStore contractorStore, IOrderTrackInfoStore orderTrackInfoStore, ApplicationUserManager userManager, EmailService emailService)
+        public OrderService (IOrderStore orderStore, IContractorStore contractorStore, IOrderTrackInfoStore orderTrackInfoStore, ApplicationUserManager userManager, EmailService emailService, CostCalculationHelper costCalculationHelper)
         {
             this.OrderStore = orderStore;
             this.ContractorStore = contractorStore;
             this.OrderTrackInfoStore = orderTrackInfoStore;
             this.UserManager = userManager;
             this.EmailService = emailService;
+            this.CostCalculationHelper = costCalculationHelper;
         }
 
         public int QueryCount(Expression<Func<Order, bool>> where)

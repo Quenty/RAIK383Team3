@@ -14,6 +14,7 @@ using PracticalWerewolf.Tests.Stores.DbContext;
 using Moq;
 using PracticalWerewolf.Stores.Interfaces;
 using PracticalWerewolf.Services;
+using PracticalWerewolf.Helpers.Interfaces;
 
 namespace PracticalWerewolf.Tests.Services
 {
@@ -33,7 +34,8 @@ namespace PracticalWerewolf.Tests.Services
             var dbContext = new Mock<IDbSetFactory>();
             dbContext.Setup(x => x.CreateDbSet<RouteStop>()).Returns(dbSet);
             var routeStopStore = new RouteStopStore(dbContext.Object);
-            var routeStopService = new RouteStopService(routeStopStore);
+            var locationHelper = new Mock<ILocationHelper>();
+            var routeStopService = new RouteStopService(routeStopStore, locationHelper.Object);
 
             var result = routeStopService.GetContractorRouteAsNoTracking(user.ContractorInfo);
 
@@ -53,7 +55,8 @@ namespace PracticalWerewolf.Tests.Services
             var dbContext = new Mock<IDbSetFactory>();
             dbContext.Setup(x => x.CreateDbSet<RouteStop>()).Returns(dbSet);
             var routeStopStore = new RouteStopStore(dbContext.Object);
-            var routeStopService = new RouteStopService(routeStopStore);
+            var locationHelper = new Mock<ILocationHelper>();
+            var routeStopService = new RouteStopService(routeStopStore, locationHelper.Object);
 
             var result = routeStopService.GetContractorRouteAsNoTracking(user.ContractorInfo);
 
@@ -78,7 +81,8 @@ namespace PracticalWerewolf.Tests.Services
             var dbContext = new Mock<IDbSetFactory>();
             dbContext.Setup(x => x.CreateDbSet<RouteStop>()).Returns(dbSet);
             var routeStopStore = new RouteStopStore(dbContext.Object);
-            var routeStopService = new RouteStopService(routeStopStore);
+            var locationHelper = new Mock<ILocationHelper>();
+            var routeStopService = new RouteStopService(routeStopStore, locationHelper.Object);
 
             var result = routeStopService.GetContractorRouteAsNoTracking(otherUser.ContractorInfo);
 
@@ -94,7 +98,9 @@ namespace PracticalWerewolf.Tests.Services
             var dbContext = new Mock<IDbSetFactory>();
             dbContext.Setup(x => x.CreateDbSet<RouteStop>()).Returns(dbSet);
             var routeStopStore = new RouteStopStore(dbContext.Object);
-            var routeStopService = new RouteStopService(routeStopStore);
+            var locationHelper = new Mock<ILocationHelper>();
+            var routeStopService = new RouteStopService(routeStopStore, locationHelper.Object);
+
             ContractorInfo info = null;
 
             var result = routeStopService.GetContractorRouteAsNoTracking(info);
@@ -112,7 +118,9 @@ namespace PracticalWerewolf.Tests.Services
             var dbContext = new Mock<IDbSetFactory>();
             dbContext.Setup(x => x.CreateDbSet<RouteStop>()).Returns(dbSet);
             var routeStopStore = new RouteStopStore(dbContext.Object);
-            var routeStopService = new RouteStopService(routeStopStore);
+            var locationHelper = new Mock<ILocationHelper>();
+            var routeStopService = new RouteStopService(routeStopStore, locationHelper.Object);
+
 
             var result = routeStopService.GetContractorCurrentAssignment(user.ContractorInfo);
 
@@ -131,7 +139,9 @@ namespace PracticalWerewolf.Tests.Services
             var dbContext = new Mock<IDbSetFactory>();
             dbContext.Setup(x => x.CreateDbSet<RouteStop>()).Returns(dbSet);
             var routeStopStore = new RouteStopStore(dbContext.Object);
-            var routeStopService = new RouteStopService(routeStopStore);
+            var locationHelper = new Mock<ILocationHelper>();
+            var routeStopService = new RouteStopService(routeStopStore, locationHelper.Object);
+
 
             var result = routeStopService.GetContractorCurrentAssignment(user.ContractorInfo);
 
@@ -151,7 +161,9 @@ namespace PracticalWerewolf.Tests.Services
             var dbContext = new Mock<IDbSetFactory>();
             dbContext.Setup(x => x.CreateDbSet<RouteStop>()).Returns(dbSet);
             var routeStopStore = new RouteStopStore(dbContext.Object);
-            var routeStopService = new RouteStopService(routeStopStore);
+            var locationHelper = new Mock<ILocationHelper>();
+            var routeStopService = new RouteStopService(routeStopStore, locationHelper.Object);
+
 
             var result = routeStopService.GetContractorCurrentAssignment(otherUser.ContractorInfo);
 
@@ -166,7 +178,9 @@ namespace PracticalWerewolf.Tests.Services
             var dbContext = new Mock<IDbSetFactory>();
             dbContext.Setup(x => x.CreateDbSet<RouteStop>()).Returns(dbSet);
             var routeStopStore = new RouteStopStore(dbContext.Object);
-            var routeStopService = new RouteStopService(routeStopStore);
+            var locationHelper = new Mock<ILocationHelper>();
+            var routeStopService = new RouteStopService(routeStopStore, locationHelper.Object);
+
             ContractorInfo info = null;
 
             var result = routeStopService.GetContractorCurrentAssignment(info);
