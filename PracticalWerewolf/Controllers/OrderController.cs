@@ -2,6 +2,7 @@
 using Microsoft.AspNet.Identity;
 using PracticalWerewolf.Controllers.UnitOfWork;
 using PracticalWerewolf.Helpers;
+using PracticalWerewolf.Helpers.Interfaces;
 using PracticalWerewolf.Models;
 using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.Models.UserInfos;
@@ -28,7 +29,7 @@ namespace PracticalWerewolf.Controllers
         private readonly IRoutePlannerService RoutePlannerService;
         private readonly ApplicationUserManager UserManager;
         private readonly EmailService EmailService;
-        private readonly CostCalculationHelper CostCalculationHelper;
+        private readonly ICostCalculationHelper CostCalculationHelper;
 
         public enum OrderMessageId
         {
@@ -42,7 +43,7 @@ namespace PracticalWerewolf.Controllers
         }
 
         public OrderController(IOrderRequestService OrderRequestService, IOrderTrackService OrderTrackService, 
-            IUserInfoService UserInfoService, IUnitOfWork UnitOfWork, ApplicationUserManager UserManager, IOrderService OrderService, IRoutePlannerService RoutePlannerService, EmailService EmailService, CostCalculationHelper CostCalculationHelper)
+            IUserInfoService UserInfoService, IUnitOfWork UnitOfWork, ApplicationUserManager UserManager, IOrderService OrderService, IRoutePlannerService RoutePlannerService, EmailService EmailService, ICostCalculationHelper CostCalculationHelper)
         {
             this.OrderRequestService = OrderRequestService;
             this.OrderTrackService = OrderTrackService;
