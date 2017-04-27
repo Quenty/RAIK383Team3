@@ -319,43 +319,6 @@ namespace PracticalWerewolf.Tests.Controllers
             Assert.AreEqual(ContractorMessageId.AlreadyRegisteredError, result.RouteValues["message"]);
         }
 
-        [TestMethod]
-        public void Register_UserWithNoContractorInfo_RedirectToIndex()
-        {
-            var email = "Example@example.com";
-            var contractor = new ApplicationUser() { UserName = email };
-
-            var mockUser = GetMockUser(email);
-            var mockContext = GetMockControllerContext(mockUser);
-
-            var userManager = GetMockApplicationUserManager();
-            userManager.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(contractor);
-            userManager.Setup(x => x.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
-
-            var contractorService = new Mock<IContractorService>();
-            var unitOfWork = new Mock<IUnitOfWork>();
-            var orderService = new Mock<IOrderService>();
-            var routeStopService = new Mock<IRouteStopService>();
-            var truckService = new Mock<ITruckService>();
-            var routePlannerService = new Mock<IRoutePlannerService>();
-            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object, routePlannerService.Object, truckService.Object);
-
-            controller.ControllerContext = mockContext;
-
-            var contractorRegisterModel = new ContractorRegisterModel()
-            {
-                Address = new CivicAddressDb(),
-                DriversLicenseId = "@JuicyJames",
-                RawAddressString = "630 North 14th Street, Kauffman Hall",
-                TermsOfService = false
-            };
-
-            var result = controller.Register(contractorRegisterModel).Result as RedirectToRouteResult;
-
-            Assert.IsNotNull(result);
-            Assert.AreEqual("Index", result.RouteValues["action"]);
-            Assert.AreEqual(ContractorMessageId.RegisterSuccess, result.RouteValues["message"]);
-        }
 
         [TestMethod]
         public void Register_UserWithNoContractorInfoFailure_RedirectToIndex()
@@ -482,8 +445,7 @@ namespace PracticalWerewolf.Tests.Controllers
 
             var result = controller.Pending().Result as ViewResult;
 
-
-            Assert.IsNull(result.Model);
+            Assert.AreEqual(null, result);
         }
 
         [TestMethod]
@@ -514,43 +476,6 @@ namespace PracticalWerewolf.Tests.Controllers
 
             Assert.IsNotNull(viewModel);
             Assert.AreEqual(0, viewModel.Orders.Count());
-        }
-
-        [TestMethod]
-        public void Current_ValidUser_ReturnsPartialViewWithOrders()
-        {
-            var email = "Example@example.com";
-            var contractor = new ApplicationUser() { UserName = email, ContractorInfo = new ContractorInfo() };
-            var mockUser = GetMockUser(email);
-            var mockContext = GetMockControllerContext(mockUser);
-            var userManager = GetMockApplicationUserManager();
-            userManager.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(contractor);
-
-            var orders = new List<Order>()
-            {
-                new Order(),
-                new Order(),
-                new Order()
-            };
-
-            var contractorService = new Mock<IContractorService>();
-            var orderService = new Mock<IOrderService>();
-            var routeStopService = new Mock<IRouteStopService>();
-            orderService.Setup(x => x.GetInprogressOrders(It.IsAny<ContractorInfo>())).Returns(orders);
-            var unitOfWork = new Mock<IUnitOfWork>();
-            var truckService = new Mock<ITruckService>();
-            var routePlannerService = new Mock<IRoutePlannerService>();
-            var controller = new ContractorController(userManager.Object, orderService.Object, contractorService.Object, unitOfWork.Object, routeStopService.Object, routePlannerService.Object, truckService.Object);
-
-            controller.ControllerContext = mockContext;
-
-
-            var result = controller.Current().Result as PartialViewResult;
-            var viewModel = result.Model as PagedOrderListViewModel;
-
-
-            Assert.IsNotNull(viewModel);
-            Assert.AreEqual(orders, viewModel.Orders);
         }
 
         [TestMethod]
