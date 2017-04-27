@@ -12,6 +12,22 @@ namespace PracticalWerewolf.Models.Trucks
 {
     public class TruckCapacityUnit
     {
+        public static readonly TruckCapacityUnit Zero = new TruckCapacityUnit {
+            Volume = 0,
+            Mass = 0
+        };
+
+        public TruckCapacityUnit()
+        {
+        }
+
+        public TruckCapacityUnit(TruckCapacityUnit copy)
+        {
+            TruckCapacityUnitGuid = copy.TruckCapacityUnitGuid;
+            Volume = copy.Volume;
+            Mass = copy.Mass;
+        }
+
         [Key]
         public Guid TruckCapacityUnitGuid { get; set; }
 
@@ -135,8 +151,8 @@ namespace PracticalWerewolf.Models.Trucks
             };
         }
 
-        //TODO Calculate from orders associated with truck
-        public TruckCapacityUnit UsedCapacity { get; set; }
+        [Display(Name = "Used Capacity")]
+        public virtual TruckCapacityUnit UsedCapacity { get; set; }
 
         [Required]
         [Display(Name = "Maximum Capacity")]

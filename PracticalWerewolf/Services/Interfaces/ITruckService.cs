@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System;
 using System.Data.Entity.Spatial;
+using PracticalWerewolf.Models.Orders;
 
 namespace PracticalWerewolf.Services.Interfaces
 {
@@ -29,5 +30,10 @@ namespace PracticalWerewolf.Services.Interfaces
         void UpdateCapacity(Guid truckGuid, TruckCapacityUnit capacity);
 
         void UpdateLicenseNumber(Guid truckGuid, string licenseNumber);
+
+        void AddItemToTruck(Guid truckGuid, Order order);
+
+        void RemoveItemFromTruck(Guid truckGuid, Order order);
+
     }
 }

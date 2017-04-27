@@ -1,5 +1,6 @@
 ﻿using PracticalWerewolf.Models;
 using PracticalWerewolf.Models.Trucks;
+using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.ViewModels.Contractor;
 using PracticalWerewolf.ViewModels.Paged;
 using System;
@@ -36,14 +37,11 @@ namespace PracticalWerewolf.ViewModels.Orders
         public decimal? EstimatedCost { get; set; }
     }
 
-
-    public class ConfirmationViewModel
-    {
-        public Guid Guid { get; set; }
-    }
-
     public class OrderDetailsViewModel
     {
+        [Display(Name = "Order Id")]
+        public Guid OrderId { get; set; }
+
         [Display(Name = "Pick up address", Description = "Where to pick up your package")]
         public CivicAddressDb PickUpAddress { get; set; }
 
@@ -62,6 +60,14 @@ namespace PracticalWerewolf.ViewModels.Orders
         [Display(Name = "Contractor ")]
         public ApplicationUser Contractor { get; set; }
 
+    }
+
+    public class OrderStatusViewModel
+    {
+        public Guid orderId { get; set; }
+        public OrderStatus orderStatus { get; set; }
+        public Boolean inTruck { get; set; }
+        public string message { get; set; }
     }
 
 }
