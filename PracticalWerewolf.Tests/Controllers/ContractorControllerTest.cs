@@ -132,7 +132,7 @@ namespace PracticalWerewolf.Tests.Controllers
         public void Register_UserWithNoContractorInfo_View()
         {
             var email = "Example@example.com";
-            var contractor = new ApplicationUser() { UserName = email};
+            var contractor = new ApplicationUser() { UserName = email };
             var userManager = GetMockApplicationUserManager();
             userManager.Setup(x => x.FindByIdAsync(It.IsAny<String>())).ReturnsAsync(contractor);
 
@@ -169,6 +169,13 @@ namespace PracticalWerewolf.Tests.Controllers
                 Truck = new Truck()
             };
 
+            var applicationUser1 = new ApplicationUser
+            {
+                UserName = "User1",
+                Email = "User1@User.com",
+                ContractorInfo = contractorInfo1
+            };
+
             var contractorInfo2 = new ContractorInfo()
             {
                 ContractorInfoGuid = Guid.NewGuid(),
@@ -177,6 +184,12 @@ namespace PracticalWerewolf.Tests.Controllers
                 HomeAddress = new CivicAddressDb(),
                 IsAvailable = true,
                 Truck = new Truck()
+            };
+            var applicationUser2 = new ApplicationUser
+            {
+                UserName = "User2",
+                Email = "User2@User.com",
+                ContractorInfo = contractorInfo2
             };
 
             var contractorInfo3 = new ContractorInfo()
@@ -189,7 +202,14 @@ namespace PracticalWerewolf.Tests.Controllers
                 Truck = new Truck()
             };
 
-            var contractorList = new List<ContractorInfo>() { contractorInfo1, contractorInfo2, contractorInfo3 };
+            var applicationUser3 = new ApplicationUser
+            {
+                UserName = "User3",
+                Email = "User3@User.com",
+                ContractorInfo = contractorInfo3
+            };
+
+            var contractorList = new List<ApplicationUser>() { applicationUser1, applicationUser2, applicationUser3 };
 
             var contractorService = new Mock<IContractorService>();
             var orderService = new Mock<IOrderService>();
@@ -219,7 +239,7 @@ namespace PracticalWerewolf.Tests.Controllers
         [TestMethod]
         public void Unapproved_NoUnapprovedContractors_ReturnViewModel()
         {
-            var contractorList = new List<ContractorInfo>();
+            var contractorList = new List<ApplicationUser>();
 
             var contractorService = new Mock<IContractorService>();
             var orderService = new Mock<IOrderService>();
@@ -276,7 +296,7 @@ namespace PracticalWerewolf.Tests.Controllers
                 Truck = new Truck()
             };
             var contractor = new ApplicationUser() { UserName = email, ContractorInfo = contractorInfo };
-            
+
             var mockUser = GetMockUser(email);
             var mockContext = GetMockControllerContext(mockUser);
 
@@ -374,12 +394,12 @@ namespace PracticalWerewolf.Tests.Controllers
             Assert.AreEqual("Index", result.RouteValues["action"]);
             Assert.AreEqual(ContractorMessageId.Error, result.RouteValues["message"]);
         }
-        
+
         [TestMethod]
         public void Pending_ValidUser_ReturnsPartialView()
         {
             var email = "Example@example.com";
-            var contractor = new ApplicationUser() { UserName = email , ContractorInfo = new ContractorInfo() };
+            var contractor = new ApplicationUser() { UserName = email, ContractorInfo = new ContractorInfo() };
             var mockUser = GetMockUser(email);
             var mockContext = GetMockControllerContext(mockUser);
             var userManager = GetMockApplicationUserManager();
