@@ -1,6 +1,7 @@
 ﻿using GoogleMapsApi.Entities.Directions.Response;
 using log4net;
 using PracticalWerewolf.Helpers;
+using PracticalWerewolf.Helpers.Interfaces;
 using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.Models.Routes;
 using PracticalWerewolf.Models.UserInfos;
@@ -15,12 +16,15 @@ namespace PracticalWerewolf.Services
 {
     public class RouteStopService : IRouteStopService
     {
+        private static readonly double METERS_PER_MILE = 1609.344;
         private static ILog logger = LogManager.GetLogger(typeof(RouteStopService));
         private readonly IRouteStopStore RouteStopStore;
+        private readonly ILocationHelper LocationHelper;
 
-        public RouteStopService(IRouteStopStore store)
+        public RouteStopService(IRouteStopStore store, ILocationHelper locationHelper)
         {
             RouteStopStore = store;
+            LocationHelper = locationHelper;
         }
 
         public IEnumerable<RouteStop> GetContractorRouteAsNoTracking(ContractorInfo contractor)
@@ -73,33 +77,35 @@ namespace PracticalWerewolf.Services
                 throw new ArgumentNullException();
             }
 
-            DirectionsResponse directions;
+            try
+            {
+                DirectionsResult directions;
 
-            var nextStop = GetContractorCurrentAssignment(contractor);
-            if(nextStop == null)
-            {
-                return null;
-            }
+                var nextStop = GetContractorCurrentAssignment(contractor);
+                if (nextStop == null)
+                {
+                    return null;
+                }
 
-            var address = nextStop.Type == StopType.PickUp ? nextStop.Order.RequestInfo.PickUpAddress : nextStop.Order.RequestInfo.DropOffAddress;
+                var address = nextStop.Type == StopType.PickUp ? nextStop.Order.RequestInfo.PickUpAddress : nextStop.Order.RequestInfo.DropOffAddress;
 
-            if (contractor.Truck.Location != null)
-            {
-                directions = LocationHelper.GetRouteBetweenLocations(contractor.Truck.Location, address);
-            }
-            else
-            {
-                directions = LocationHelper.GetRouteBetweenLocations(contractor.HomeAddress, address);
-            }
+                if (contractor.Truck.Location != null)
+                {
+                    directions = LocationHelper.GetDirections(contractor.Truck.Location, address);
+                }
+                else
+                {
+                    directions = LocationHelper.GetDirections(contractor.HomeAddress, address);
+                }
 
-            if (directions.Status == DirectionsStatusCodes.OK)
-            {
-                return directions.Routes.First().Legs.First().Distance.Text;
+                double miles = directions.Distance / METERS_PER_MILE;
+
+                return miles == 1.0 ? $"{miles} mile" : $"{miles} miles";
             }
-            else
+            catch
             {
-                logger.Error($"GetDistanceToNextStopInMiles() - Failed to load distance to next stop : {directions.ErrorMessage}");
-                return null;
+                logger.Error($"GetDistanceToNextStopInMiles() - Failed to load distance to next stop");
+                return $"unknown";
             }
         }
 

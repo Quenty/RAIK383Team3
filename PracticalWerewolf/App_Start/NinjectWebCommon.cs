@@ -26,6 +26,8 @@ namespace PracticalWerewolf.App_Start
     using Microsoft.Owin.Security.DataProtection;
     using Hangfire;
     using System.Linq;
+    using Helpers.Interfaces;
+    using Helpers;
     public static class NinjectWebCommon 
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
@@ -99,7 +101,8 @@ namespace PracticalWerewolf.App_Start
             kernel.Bind<IRouteStopService>().To<RouteStopService>();
             kernel.Bind<IRoutePlannerService, RoutePlannerService>().To<RoutePlannerService>();
 
-
+            //Helpers
+            kernel.Bind<ILocationHelper>().To<LocationHelper>();
 
             kernel.Bind<IUserStore<ApplicationUser>, UserStore<ApplicationUser>>().To<UserStore<ApplicationUser>>().InRequestScope();
             kernel.Bind<ApplicationSignInManager>().ToSelf().InRequestScope();
