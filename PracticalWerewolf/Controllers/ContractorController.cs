@@ -88,11 +88,13 @@ namespace PracticalWerewolf.Controllers
             if (userId != null)
             {
                 var user = await UserManager.FindByIdAsync(userId);
+                ContractorIndexModel model = new ContractorIndexModel();
 
-                var model = new ContractorIndexModel
+                if (user != null && user.ContractorInfo != null)
                 {
-                    ContractorInfo = user.ContractorInfo,
-                };
+                    model.ContractorInfo = user.ContractorInfo;
+                }
+                
 
                 if (User.IsInRole("Employee"))
                 {
@@ -100,7 +102,6 @@ namespace PracticalWerewolf.Controllers
                 }
 
                 return View(model);
-
             }
             else
             {
