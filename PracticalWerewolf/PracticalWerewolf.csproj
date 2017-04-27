@@ -247,6 +247,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ContractorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Helpers\CostCalculationHelper.cs" />
     <Compile Include="Helpers\LocationHelper.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\OrderController.cs" />

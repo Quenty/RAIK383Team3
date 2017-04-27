@@ -39,6 +39,30 @@ namespace PracticalWerewolf.Models.Trucks
         [Display(Name = "Volume (cubic ft)")]
         public double Volume { get; set; }
 
+        public decimal CostMultiplier
+        {
+            get
+            {
+                if (Mass >= 1000 || Volume >= 1000)
+                {
+                    return 10m;
+                }
+                else if (Mass >= 500 || Volume >= 500)
+                {
+                    return 5.0m;
+                }
+                else if (Mass >= 50 || Volume >= 50)
+                {
+                    return 1.0m;
+                }
+                else
+                {
+                    return 0.50m;
+                }
+            }
+        }
+
+
         public static TruckCapacityUnit operator +(TruckCapacityUnit capacity1, TruckCapacityUnit capacity2)
         {
             return new TruckCapacityUnit

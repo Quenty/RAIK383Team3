@@ -1,6 +1,7 @@
 ﻿using Hangfire;
 using Microsoft.AspNet.Identity;
 using PracticalWerewolf.Controllers.UnitOfWork;
+using PracticalWerewolf.Helpers;
 using PracticalWerewolf.Models;
 using PracticalWerewolf.Models.Orders;
 using PracticalWerewolf.Models.UserInfos;
@@ -170,7 +171,7 @@ namespace PracticalWerewolf.Controllers
             UnitOfWork.SaveChanges();
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
 
-            var cost = OrderService.CalculateOrderCost(order);
+            var cost = CostCalculationHelper.CalculateOrderCost(order);
             await EmailService.SendOrderConfirmEmail(order, user, cost);
 
             BackgroundJob.Enqueue(() =>  RoutePlannerService.AssignOrders()  );
