@@ -63,7 +63,7 @@ namespace PracticalWerewolf.Tests.Controllers
         {
             var email = "Example@example.com";
             var guid = Guid.NewGuid();
-            var user = new ApplicationUser() { Id = guid.ToString(), ContractorInfo = new ContractorInfo() { Truck = new Truck()}, UserName = email, };
+            var user = new ApplicationUser() { Id = guid.ToString(), ContractorInfo = new ContractorInfo() { Truck = new Truck()}, UserName = email };
             var userDbSet = new MockUserDbSet();
             userDbSet.Add(user);
 
