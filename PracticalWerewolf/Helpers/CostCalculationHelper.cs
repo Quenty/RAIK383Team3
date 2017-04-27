@@ -9,7 +9,7 @@ using System.Web;
 
 namespace PracticalWerewolf.Helpers
 {
-    public class CostCalculationHelper
+    public class CostCalculationHelper : ICostCalculationHelper
     {
         private static readonly ILog logger = LogManager.GetLogger(typeof(CostCalculationHelper));
         private static readonly decimal METERS_PER_MILE = 1609.344m;
