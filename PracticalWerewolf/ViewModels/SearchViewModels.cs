@@ -16,6 +16,8 @@ namespace PracticalWerewolf.ViewModels.Search
         public TimeSpan? BanTime { get; set; } = null;
 
         public Boolean IsContractor { get; set; }
+        public Guid? ContractorInfoGuid { get; set; }
+
         public Guid? TruckGuid { get; set; }
         public ContractorApprovalState? ContractorApprovalState { get; set; }
     }

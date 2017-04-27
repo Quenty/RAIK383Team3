@@ -26,13 +26,29 @@ else
     CanPlaceOrder = true;
 }
 
+
+
 <h2>Create <small>Place a new order</small></h2>
 
 @using (Html.BeginForm("Create", "Order", FormMethod.Post, new { @class = "form-horizontal form-order", role = "form" }))
 {
+    if (Model.EstimatedCost.HasValue)
+    {
+        @Html.HiddenFor(m => m.EstimatedCost)
+
+        <div class="alert alert-info">
+            <input type="submit" class="btn btn-default pull-right btn-confirm" value="Confirm" />
+            <h4>Estimated cost</h4>
+            <p>We estimate your cost at @String.Format("{0:C2}", Model.EstimatedCost.Value) </p>
+        </div>
+    }
 
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+   
+    @Html.HiddenFor(m => m.IsPhoneNumberConfirmed)
+    @Html.HiddenFor(m => m.PhoneNumber)
 
     @Html.EditorFor(m => m.PickUpAddress)
     @Html.EditorFor(m => m.DropOffAddress)
@@ -50,21 +66,25 @@ else
                 <input type="submit" class="btn btn-default disabled" value="Place" />
             }
 
-            @Html.ActionLink("Cancel", "Index", "Order", null, new { @class = "btn btn-link" })
+            @Html.ActionLink("Cancel", "Index", "Order", null, new { @class = "btn btn-link btn-submit" })
         </div>
     </div>
+
+
 }
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/mapautocomplete")
 
-    @if(!CanPlaceOrder)
+    @if(!CanPlaceOrder || Model.EstimatedCost.HasValue)
     {
     <script>
         $(function()
         {
-            $(".form-order input").attr("disabled", true)
+            $(".form-order input:not(.btn-confirm)").attr("readonly", "readonly").attr("disabled", false);
+
+            // $(".form-order input.btn-submit:not(.btn-confirm)").attr("disabled", true);
         })
     </script>
     }

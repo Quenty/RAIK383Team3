@@ -16,6 +16,11 @@
     <div class="col-md-3">
         <ul class="nav nav-pills nav-stacked" id="ajax-nav-controls">
             <li role="presentation" class="active">
+                <a data-ajax="true" data-ajax-mode="replace" data-ajax-update="#ajax-contractor-pane" data-tab-name="route" href="@Url.Action("Route")">
+                    Your Route <span class="badge pull-right"></span>
+                </a>
+            </li>
+            <li role="presentation">
                 <a data-ajax="true" data-ajax-mode="replace" data-ajax-update="#ajax-contractor-pane" data-tab-name="pending" href="@Url.Action("Pending")">
                     Pending Orders <span class="badge pull-right"></span>
                 </a>
@@ -36,7 +41,7 @@
                 </a>
             </li>
             <li role="presentation">
-                <a class="" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#ajax-contractor-pane" data-tab-name="truck" href="@Url.Action("_Status", "Contractor",  new { id = Model.ContractorInfo.ContractorInfoGuid.ToString() })">
+                <a class="" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#ajax-contractor-pane" data-tab-name="truck" href="@Url.Action("Status", "Contractor")">
                     Truck and Location
                 </a>
             </li>

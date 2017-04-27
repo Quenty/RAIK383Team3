@@ -9,15 +9,13 @@ using System.Text;
 using log4net;
 using PracticalWerewolf.Helpers;
 using PracticalWerewolf.Models.UserInfos;
+using System.Threading.Tasks;
 using System.Linq.Expressions;
 
 namespace PracticalWerewolf.Services
 {
     public class OrderService : IOrderService
     {
-        private static readonly decimal COST_PER_POUND_MILE = 0.05m;
-        private static readonly decimal METERS_PER_MILE = 1609.344m;
-
         private static ILog logger = LogManager.GetLogger(typeof(OrderService));
         private readonly IOrderStore OrderStore;
         private readonly IContractorStore ContractorStore;
@@ -72,6 +70,7 @@ namespace PracticalWerewolf.Services
                 .Where(o => o.TrackInfo.CurrentTruck != null)
                 .Where(o => o.TrackInfo.CurrentTruck.TruckGuid == contractor.Truck.TruckGuid);
         }
+
         public Order GetOrder(Guid orderGuid)
         {
             Order order = OrderStore.Single(o => o.OrderGuid == orderGuid);
@@ -161,19 +160,13 @@ namespace PracticalWerewolf.Services
             return allOrders.Where(o => o.TrackInfo.OrderStatus == OrderStatus.Queued).ToList();
         }
 
-        public async void SetOrderAsInProgress(Guid orderId)
+        public void SetOrderAsInProgress(Guid orderId)
         {
             var order = OrderStore.Find(orderId);
             if (order != null)
             {
                 order.TrackInfo.OrderStatus = OrderStatus.InProgress;
                 OrderStore.Update(order);
-
-                var customerId = order.RequestInfo.Requester.CustomerInfoGuid;
-                var customer = UserManager.Users.Single(x => x.CustomerInfo.CustomerInfoGuid == customerId);
-
-                var cost = CalculateOrderCost(order);
-                await EmailService.SendOrderShippedEmail(order, customer, cost);
             }
             else
             {
@@ -181,7 +174,20 @@ namespace PracticalWerewolf.Services
             }
         }
 
-        public object GetOrders()
+        public void SetOrderInTruck(Guid orderId)
+        {
+            var order = OrderStore.Find(orderId);
+            if (order != null)
+            {
+                order.TrackInfo.CurrentTruck = order.TrackInfo.Assignee.Truck;
+                OrderTrackInfoStore.Update(order.TrackInfo);
+            }else
+            {
+                logger.Error($"SetOrderInTruck() - No order with id {orderId.ToString()}");
+            }
+        }
+
+        public IEnumerable<Order> GetOrders()
         {
             return OrderStore.GetAll().ToList();
         }
@@ -190,18 +196,20 @@ namespace PracticalWerewolf.Services
         {
             return OrderStore.Find(o => o.RequestInfo.Requester.CustomerInfoGuid == customerInfo.CustomerInfoGuid);
         }
-
-        public async void SetOrderAsComplete(Guid guid)
+        
+        public async Task SetOrderAsComplete(Guid guid)
         {
             Order order = GetOrder(guid);
             OrderTrackInfo orderTrackInfo = order.TrackInfo;
             orderTrackInfo.OrderStatus = OrderStatus.Complete;
             OrderStore.Update(order);
-
+        
             var customerId = order.RequestInfo.Requester.CustomerInfoGuid;
             var customer = UserManager.Users.Single(x => x.CustomerInfo.CustomerInfoGuid == customerId);
 
-            var cost = CalculateOrderCost(order);
+            var cost = CostCalculationHelper.CalculateOrderCost(order);
+
+            // TODO: Make async later
             await EmailService.SendOrderDeliveredEmail(order, customer, cost);
         }
 
@@ -217,20 +225,5 @@ namespace PracticalWerewolf.Services
             OrderStore.Insert(order);
         }
 
-        public decimal CalculateOrderCost(Guid orderGuid)
-        {
-            Order order = GetOrder(orderGuid);
-
-            return CalculateOrderCost(order);
-        }
-
-        public decimal CalculateOrderCost(Order order)
-        {
-            var directions = LocationHelper.GetRouteBetweenLocations(order.RequestInfo.PickUpAddress, order.RequestInfo.DropOffAddress);
-
-            var miles = directions.Routes.First().Legs.First().Distance.Value / METERS_PER_MILE;
-
-            return (decimal)order.RequestInfo.Size.Mass * miles * COST_PER_POUND_MILE;
-        }
     }
 }

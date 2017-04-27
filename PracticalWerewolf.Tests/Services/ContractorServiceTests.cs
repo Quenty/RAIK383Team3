@@ -115,10 +115,8 @@ namespace PracticalWerewolf.Tests.Services
 
             var result = contractorService.GetUnapprovedContractors();
 
-            Assert.AreEqual(3, result.Count());
-            Assert.IsTrue(result.Contains(contractorInfo1));
-            Assert.IsTrue(result.Contains(contractorInfo2));
-            Assert.IsTrue(result.Contains(contractorInfo3));
+            Assert.AreEqual(1, result.Count());
+            Assert.AreEqual(contractorInfo1, result.ElementAt(0));
         }
 
         [TestMethod]

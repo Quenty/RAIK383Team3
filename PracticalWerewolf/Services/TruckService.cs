@@ -8,6 +8,7 @@ using PracticalWerewolf.Models;
 using PracticalWerewolf.Controllers.UnitOfWork;
 using System.Data.Entity.Spatial;
 using log4net;
+using PracticalWerewolf.Models.Orders;
 
 namespace PracticalWerewolf.Services
 {
@@ -15,11 +16,50 @@ namespace PracticalWerewolf.Services
     {
         private readonly ILog logger = LogManager.GetLogger(typeof(TruckService));
         private readonly ITruckStore TruckStore;
+        private readonly IOrderService OrderService;
 
-        public TruckService(ITruckStore TruckStore)
+        public TruckService(ITruckStore TruckStore, IOrderService OrderService)
         {
             this.TruckStore = TruckStore;
+            this.OrderService = OrderService;
         }
+
+        public void AddItemToTruck(Guid truckGuid, Order order)
+        {
+            Truck truck = GetTruck(truckGuid);
+            if (truck == null || order == null)
+            {
+                logger.Error("Could not add item to truck becasue item or truck was null");
+                throw new ArgumentNullException();
+            }
+
+            TruckCapacityUnit newUsedCapacity = ((truck.UsedCapacity ?? TruckCapacityUnit.Zero) + order.RequestInfo.Size);
+            newUsedCapacity.TruckCapacityUnitGuid = Guid.NewGuid();
+            truck.UsedCapacity = newUsedCapacity;
+
+            TruckStore.Update(truck);
+        }
+
+        public void RemoveItemFromTruck(Guid truckGuid, Order order)
+        {
+            Truck truck = GetTruck(truckGuid);
+            if (truck == null || order == null)
+            {
+                logger.Error("Could not add item to truck becasue item or truck guid was null");
+                throw new ArgumentNullException();
+            }
+            truck.CurrentOrders.Remove(order.TrackInfo);
+
+            TruckCapacityUnit newUsedCapacity = ((truck.UsedCapacity ?? TruckCapacityUnit.Zero) - order.RequestInfo.Size);
+            newUsedCapacity.TruckCapacityUnitGuid = Guid.NewGuid();
+            truck.UsedCapacity = newUsedCapacity;
+
+
+            TruckStore.Update(truck);
+        }
+
+
+
 
         public void CreateTruck(Truck truck)
         {
@@ -56,7 +96,21 @@ namespace PracticalWerewolf.Services
             var truck = GetTruck(truckGuid);
             if (truck != null)
             {
-                truck.MaxCapacity = capacity;
+                if (truck.MaxCapacity == null)
+                {
+                    if (capacity.TruckCapacityUnitGuid == null || capacity.TruckCapacityUnitGuid == Guid.Empty)
+                    {
+                        throw new Exception("No guid");
+                    }
+
+                    truck.MaxCapacity = capacity;
+                }
+                else
+                {
+                    truck.MaxCapacity.Mass = capacity.Mass;
+                    truck.MaxCapacity.Volume = capacity.Volume;
+                }
+               
                 TruckStore.Update(truck);
             }
             else
@@ -64,6 +118,42 @@ namespace PracticalWerewolf.Services
                 throw new Exception("Truck does not exist in database!");
             }
         }
+
+        /*
+        public void UpdateUsedCapacity(Guid truckGuid, TruckCapacityUnit capacity)
+        {
+            if (capacity == null)
+            {
+                logger.Error("UpdateCapacity() - null TruckCapacityUnit passed in");
+                throw new ArgumentNullException("TruckCapacityUnit is null");
+            }
+            var truck = GetTruck(truckGuid);
+            if (truck != null)
+            {
+                if (truck.UsedCapacity == null)
+                {
+                    if (capacity.TruckCapacityUnitGuid == null || capacity.TruckCapacityUnitGuid == Guid.Empty)
+                    {
+                        throw new Exception("No guid");
+                    }
+
+                    truck.UsedCapacity = capacity;
+                }
+                else
+                {
+                    truck.UsedCapacity.Mass = capacity.Mass;
+                    truck.UsedCapacity.Volume = capacity.Volume;
+                }
+
+                TruckStore.Update(truck);
+            }
+            else
+            {
+                throw new Exception("Truck does not exist in database!");
+            }
+        }
+        */
+
 
         public void UpdateLicenseNumber(Guid truckGuid, string licenseNumber)
         {
