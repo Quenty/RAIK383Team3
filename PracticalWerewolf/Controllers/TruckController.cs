@@ -59,7 +59,7 @@ namespace PracticalWerewolf.Controllers
 
 
         [OverrideAuthorization]
-        //[Authorize(Roles = "Employee")]
+        [Authorize(Roles = "Employee")]
         public ActionResult Index()
         {
              IEnumerable<Truck> trucks = TruckService.GetAllTrucks();
