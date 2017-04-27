@@ -119,19 +119,6 @@ namespace PracticalWerewolf.Controllers
             }
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult ConfirmOrderCreate(CreateOrderRequestViewModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View("Create", model);
-        //    }
-
-        //    return View(model);
-        //}
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = ("Customer"))]
