@@ -305,10 +305,10 @@ namespace PracticalWerewolf.Controllers
                 {
                     ContractorService.SetIsAvailable(model.ContractorGuid, !model.IsAvailable);
                     //after changing their status
-                    if (model.IsAvailable)
+                    if (!model.IsAvailable)
                     {
                         var pendingOrders = OrderService.GetInprogressOrdersNoTruck(model.ContractorGuid);
-                        if (pendingOrders.Any())
+                        if (!pendingOrders.Any())
                         {
                             foreach (var order in pendingOrders)
                             {
