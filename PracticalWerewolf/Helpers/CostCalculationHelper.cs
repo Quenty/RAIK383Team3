@@ -12,13 +12,14 @@ namespace PracticalWerewolf.Helpers
     {
         private static readonly ILog logger = LogManager.GetLogger(typeof(CostCalculationHelper));
         private static readonly decimal METERS_PER_MILE = 1609.344m;
+        private static readonly decimal FIXED_MILES = 50;
 
-        public static decimal CalculateOrderCost(Order order)
+        public static decimal CalculateOrderCost(OrderRequestInfo requestInfo)
         {
-            var directions = LocationHelper.GetRouteBetweenLocations(order.RequestInfo.PickUpAddress, order.RequestInfo.DropOffAddress);
+            var directions = LocationHelper.GetRouteBetweenLocations(requestInfo.PickUpAddress, requestInfo.DropOffAddress);
             decimal miles = directions.Routes.First().Legs.First().Distance.Value / METERS_PER_MILE;
 
-            return order.RequestInfo.Size.CostMultiplier * miles;
+            return requestInfo.Size.CostMultiplier * (FIXED_MILES + miles);
         }
 
         public static decimal CalculateContractorPayment(IEnumerable<RouteStop> allStops)

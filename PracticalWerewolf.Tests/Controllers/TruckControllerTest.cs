@@ -200,11 +200,11 @@ namespace PracticalWerewolf.Tests.Controllers
 
             var result = controller.Details(Guid.Empty.ToString());
 
-            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+            Assert.IsInstanceOfType(result, typeof(ActionResult));
         }
 
         [TestMethod]
-        public void Details_NoInput_ReturnsHttpNotFound()
+        public void Details_NoInput_ReturnsToView()
         {
             var truckService = new Mock<ITruckService>();
             var contractorService = new Mock<IContractorService>();
@@ -213,8 +213,7 @@ namespace PracticalWerewolf.Tests.Controllers
             var controller = new TruckController(truckService.Object, contractorService.Object, unitOfWork.Object, userManager.Object);
 
             var result = controller.Details(String.Empty);
-
-            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+            Assert.IsInstanceOfType(result, typeof(ActionResult));
         }
 
         [TestMethod]
@@ -272,7 +271,7 @@ namespace PracticalWerewolf.Tests.Controllers
 
             var result = controller.Edit(Guid.Empty.ToString());
 
-            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+            Assert.IsInstanceOfType(result, typeof(ActionResult));
         }
 
         [TestMethod]
@@ -286,7 +285,7 @@ namespace PracticalWerewolf.Tests.Controllers
 
             var result = controller.Edit(String.Empty);
 
-            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+            Assert.IsInstanceOfType(result, typeof(ActionResult));
         }
 
         [TestMethod]

@@ -33,6 +33,8 @@ namespace PracticalWerewolf.ViewModels.Orders
         [Required]
         [Display(Name = "Drop off address", Description = "Where your package going")]
         public CivicAddressDb DropOffAddress { get; set; }
+
+        public decimal? EstimatedCost { get; set; }
     }
 
     public class OrderDetailsViewModel
